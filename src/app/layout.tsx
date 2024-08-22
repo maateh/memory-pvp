@@ -23,7 +23,10 @@ export const metadata: Metadata = {
 
 const BaseLayout = ({ children }: React.PropsWithChildren) => {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+    >
       <html lang="en" suppressHydrationWarning>
         <body className={cn("min-h-screen bg-background font-sans antialiased", font.variable)}>
           <ThemeProvider
