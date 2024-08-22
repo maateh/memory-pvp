@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -29,8 +23,7 @@ model Player {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   playerTag String @unique
 
-  sessions GameSession[]
-  results  Result[]
+  results Result[]
 
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId String  @unique @db.ObjectId
@@ -39,34 +32,47 @@ model Player {
   updatedAt DateTime @updatedAt
 }
 
-enum GameSessionType {
+enum GameSessionMode {
   SINGLE
   PVP
 }
 
+enum GameSessionType {
+  CASUAL
+  COMPETITIVE
+}
+
+enum TableSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
 model GameSession {
-  id        String          @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId String          @unique
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String @unique
+
+  mode      GameSessionMode
   type      GameSessionType
+  tableSize TableSize
 
   results Result[]
 
-  player   Player @relation(fields: [playerId], references: [id])
-  playerId String @db.ObjectId
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  startedAt  DateTime
+  finishedAt DateTime @default(now())
 }
 
 model Result {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  
+  score Int
+  timer Int
+
+  session   GameSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  sessionId String
 
   player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId String @db.ObjectId
 
-  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId String      @db.ObjectId
-
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
