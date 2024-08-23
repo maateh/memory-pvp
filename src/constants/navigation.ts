@@ -1,22 +1,30 @@
 // icons
 import { ChartColumn, Gamepad2, LayoutDashboard, Swords, UserCircle, UsersRound } from "lucide-react"
 
-export const navigation = {
+export const gamemodes = [
+  {
+    label: 'Single',
+    href: '/game/single',
+    Icon: Gamepad2
+  },
+  {
+    label: 'PvP',
+    href: '/game/pvp',
+    Icon: Swords
+  },
+  {
+    label: 'Co-Op',
+    href: '/game/coop',
+    Icon: UsersRound
+  }
+]
+
+export const routes = {
   public: [
     {
-      label: 'Single',
-      href: '/game/single',
-      Icon: Gamepad2
-    },
-    {
-      label: 'PvP',
-      href: '/game/pvp',
-      Icon: Swords
-    },
-    {
-      label: 'Co-Op',
-      href: '/game/coop',
-      Icon: UsersRound
+      label: 'Leaderboard',
+      href: '/leaderboard',
+      Icon: ChartColumn
     }
   ],
   protected: [
@@ -29,11 +37,6 @@ export const navigation = {
       label: 'Profile',
       href: '/profile',
       Icon: UserCircle
-    },
-    {
-      label: 'Leaderboard',
-      href: '/leaderboard',
-      Icon: ChartColumn
     }
   ]
 }
