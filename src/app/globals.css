@@ -80,3 +80,10 @@
 
 /* TYPOGRAPHY */
 .small-caps { font-variant: small-caps; }
+
+
+/* Clerk */
+.cl-userButtonOuterIdentifier,
+.cl-internal-1eekank {
+  color: hsl(var(--foreground));
+}
