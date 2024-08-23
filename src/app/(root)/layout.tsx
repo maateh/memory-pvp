@@ -8,9 +8,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <main className="min-h-screen">
       <ResizablePanelGroup className="flex" direction="horizontal">
-        <ResizablePanel className="hidden min-w-64 md:flex xl:min-w-max"
+        <ResizablePanel className="hidden min-w-64 md:flex xl:min-w-fit"
           defaultSize={18}
-          minSize={16}
+          minSize={10}
           maxSize={22.5}
         >
           <Sidebar />

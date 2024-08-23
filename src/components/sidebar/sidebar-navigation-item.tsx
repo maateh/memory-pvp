@@ -30,7 +30,7 @@ const SidebarNavigationItem = ({ route }: SidebarNavigationItemProps) => {
         <p className="text-xl font-medium">
           {label}
         </p>
-        <Icon className="size-5" />
+        <Icon className="size-5 shrink-0" />
       </Link>
     </li>
   )
