@@ -1,9 +1,9 @@
-const GamePage = () => {
+const SelectGameModePage = () => {
   return (
     <div>
-      GamePage
+      SelectGameModePage
     </div>
   )
 }
 
-export default GamePage
+export default SelectGameModePage
