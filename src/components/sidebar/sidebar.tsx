@@ -2,17 +2,18 @@
 import { Separator } from "@/components/ui/separator"
 
 // components
-import {
-  SidebarHeader,
-  SidebarGamemodes,
-  SidebarNavigation,
-  SidebarFooter
-} from "@/components/sidebar"
+import { SidebarFooter, SidebarGamemodes, SidebarNavigation } from "@/components/sidebar"
+import { Logo } from "@/components/shared"
 
 const Sidebar = () => {
   return (
     <aside className="h-screen w-full p-4 flex flex-col justify-between bg-secondary/80">
-      <SidebarHeader />
+      <Logo
+        withLabel
+        withRedirect
+      />
+
+      <Separator className="my-4" />
       
       <SidebarGamemodes />
 
