@@ -32,14 +32,9 @@ model Player {
   updatedAt DateTime @updatedAt
 }
 
-enum GameSessionMode {
+enum GameMode {
   SINGLE
   PVP
-}
-
-enum GameSessionType {
-  CASUAL
-  COMPETITIVE
 }
 
 enum TableSize {
@@ -52,8 +47,7 @@ model GameSession {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String @unique
 
-  mode      GameSessionMode
-  type      GameSessionType
+  mode      GameMode
   tableSize TableSize
 
   results Result[]
