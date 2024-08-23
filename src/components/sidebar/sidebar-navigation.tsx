@@ -7,7 +7,7 @@ import { SignedIn } from "@clerk/nextjs"
 import { routes } from "@/constants/navigation"
 
 // components
-import SidebarNavigationItem from "@/components/sidebar/sidebar-navigation-item"
+import { SidebarNavigationItem } from "@/components/sidebar"
 
 const SidebarNavigation = () => {
   return (

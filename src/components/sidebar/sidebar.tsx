@@ -2,10 +2,12 @@
 import { Separator } from "@/components/ui/separator"
 
 // components
-import SidebarHeader from "@/components/sidebar/sidebar-header"
-import SidebarGamemodes from "@/components/sidebar/sidebar-gamemodes"
-import SidebarNavigation from "@/components/sidebar/sidebar-navigation"
-import SidebarFooter from "@/components/sidebar/sidebar-footer"
+import {
+  SidebarHeader,
+  SidebarGamemodes,
+  SidebarNavigation,
+  SidebarFooter
+} from "@/components/sidebar"
 
 const Sidebar = () => {
   return (

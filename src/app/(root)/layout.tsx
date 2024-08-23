@@ -2,7 +2,7 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 
 // components
-import Sidebar from "@/components/sidebar"
+import { Sidebar } from "@/components/sidebar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import ThemeToggle from "@/components/shared/theme-toggle"
+import { ThemeToggle } from "@/components/shared"
 
 const SidebarFooter = () => {
   return (
