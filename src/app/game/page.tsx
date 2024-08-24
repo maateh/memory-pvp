@@ -1,9 +1,5 @@
-const SelectGameModePage = () => {
-  return (
-    <div>
-      SelectGameModePage
-    </div>
-  )
-}
+import { redirect } from "next/navigation"
 
-export default SelectGameModePage
+const GamePage = () => redirect('/game/setup')
+
+export default GamePage

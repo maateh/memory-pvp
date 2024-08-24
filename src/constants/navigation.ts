@@ -4,17 +4,17 @@ import { ChartColumn, Gamepad2, LayoutDashboard, Swords, UserCircle, UsersRound 
 export const gamemodes = [
   {
     label: 'Single',
-    href: '/game/single',
+    href: '/game/setup?mode=single',
     Icon: Gamepad2
   },
   {
     label: 'PvP',
-    href: '/game/pvp',
+    href: '/game/setup?mode=pvp',
     Icon: Swords
   },
   {
     label: 'Co-Op',
-    href: '/game/coop',
+    href: '/game/setup?mode=coop',
     Icon: UsersRound
   }
 ]
