@@ -22,8 +22,8 @@ const SidebarNavigationItem = ({ route }: SidebarNavigationItemProps) => {
 
   return (
     <li>
-      <Link className={cn("px-3.5 py-2.5 flex items-center justify-between border border-transparent rounded-2xl hover:bg-primary/15 hover:border-primary/20 transition", {
-        "bg-primary/5 border border-primary/10": pathname === href
+      <Link className={cn("px-3.5 py-2.5 flex items-center justify-between border border-transparent rounded-2xl hover:bg-accent/75 hover:border-accent/85 transition", {
+        "bg-accent/75 border border-accent/85": pathname === href
       })}
         href={href}
       >

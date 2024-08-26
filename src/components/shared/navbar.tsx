@@ -5,7 +5,7 @@ import { Logo, MobileToggle } from "@/components/shared"
 
 const Navbar = () => {
   return (
-    <div className="mx-5 my-3 px-5 py-2 flex justify-between items-center gap-x-6 bg-secondary/60 rounded-full">
+    <div className="mx-5 my-3 px-5 py-2 flex justify-between items-center gap-x-6 bg-primary/40 rounded-full">
       <div className="flex items-center gap-x-2">
         <MobileToggle />
 
@@ -19,9 +19,9 @@ const Navbar = () => {
       </div>
 
       <div className="flex gap-x-2">
-        <p className="p-1 bg-secondary rounded-full">player1</p>
-        <p className="p-1 bg-secondary rounded-full">player2</p>
-        <p className="p-1 bg-secondary rounded-full">player3</p>
+        <p className="p-1 rounded-full">player1</p>
+        <p className="p-1 rounded-full">player2</p>
+        <p className="p-1 rounded-full">player3</p>
 
         <button>+ Add new</button>
       </div>

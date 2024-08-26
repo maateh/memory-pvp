@@ -6,7 +6,7 @@ import { GameSessionPlayerInfo } from "@/components/game"
 
 const GameSessionInfoFooter = () => {
   return (
-    <div className="w-full min-h-14 mx-auto py-3 px-6 flex items-center justify-center gap-x-6 bg-secondary md:rounded-t-xl md:w-[44rem] lg:w-[52rem]">
+    <div className="w-full min-h-14 mx-auto py-3 px-6 flex items-center justify-center gap-x-6 bg-primary md:rounded-t-xl md:w-[44rem] lg:w-[52rem]">
       <GameSessionPlayerInfo
         playerName="playername"
         userAvatar=""

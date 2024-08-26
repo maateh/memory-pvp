@@ -7,7 +7,7 @@ import { Logo } from "@/components/shared"
 
 const Sidebar = () => {
   return (
-    <aside className="h-screen w-full p-4 flex flex-col justify-between bg-secondary/80">
+    <aside className="h-screen w-full p-4 flex flex-col justify-between bg-primary/90 text-primary-foreground">
       <Logo
         withLabel
         withRedirect
