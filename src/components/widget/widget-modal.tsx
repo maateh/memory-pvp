@@ -1,27 +1,41 @@
+"use client"
+
 // utils
 import { cn } from "@/lib/utils"
-
-// icons
-import { LucideIcon } from "lucide-react"
 
 // shadcn
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
+// hooks
+import { useWidgetModal } from "@/hooks/use-widget-modal"
+
 type WidgetModalProps = {
-  widgetKey: string
   title: string
   description?: string
-  Icon?: LucideIcon
+  icon?: React.ReactNode
+  isOpen: boolean
 } & React.PropsWithChildren
 
-const WidgetModal = ({ widgetKey, title, description, Icon, children }: WidgetModalProps) => {
+const WidgetModal = ({
+  title,
+  description,
+  icon,
+  isOpen,
+  children
+}: WidgetModalProps) => {
+  const { closeModal } = useWidgetModal()
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent>
         <DialogHeader>
           <div className="flex-1 flex gap-x-4">
-            {Icon && <Icon className="size-6 sm:size-7" />}
+            {icon && (
+              <div className="size-6 sm:size-7">
+                {icon}
+              </div>
+            )}
 
             <DialogTitle className="text-2xl sm:text-3xl font-heading heading-decorator">
               {title}
