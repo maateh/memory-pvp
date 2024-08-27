@@ -51,10 +51,7 @@ const WidgetCard = ({
           <Button className="bg-accent/10 hover:bg-accent/15 hover:text-foreground"
             variant="ghost"
             size="icon"
-            onClick={() => {
-              openModal(widgetKey, { title, description, icon })
-              console.log('asdasd')
-            }}
+            onClick={() => openModal(widgetKey, { title, description, icon })}
           >
             <Expand className="size-5"
               strokeWidth={2.25}
@@ -69,7 +66,7 @@ const WidgetCard = ({
 
       {children && (
         <>
-          <Separator className="w-1/3 mx-auto mt-1 mb-4 bg-border/10" />
+          <Separator className="w-1/3 mx-auto mt-1 mb-4 bg-border/25" />
 
           <CardContent>
             {children}

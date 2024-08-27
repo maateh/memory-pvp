@@ -47,7 +47,7 @@ const WidgetModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Separator className="w-1/3 mx-auto mt-1 mb-4 bg-border/10" />
+        <Separator className="w-1/3 mx-auto mt-1 mb-4 bg-border/25" />
 
         {children}
       </DialogContent>
