@@ -6,24 +6,14 @@ import { Sidebar } from "@/components/sidebar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
-    <main className="min-h-screen">
-      <ResizablePanelGroup className="flex" direction="horizontal">
-        <ResizablePanel className="hidden min-w-64 md:flex xl:min-w-fit"
-          defaultSize={18}
-          minSize={10}
-          maxSize={22.5}
-        >
-          <Sidebar />
-        </ResizablePanel>
+    <main className="min-h-screen flex">
+      <div className="z-50 hidden h-full w-72 fixed inset-y-0 md:flex lg:w-80">
+        <Sidebar />
+      </div>
 
-        <ResizableHandle className="hidden xl:flex" withHandle />
-
-        <ResizablePanel
-          defaultSize={82}
-        >
-          {children}
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <div className="h-full w-full md:ml-72 lg:ml-80">
+        {children}
+      </div>
     </main>
   )
 }

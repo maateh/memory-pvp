@@ -66,6 +66,10 @@
   .toggle:not(:hover) > svg:last-of-type {
     @apply hidden;
   }
+
+  /* HEADING DECORATOR */
+  .heading-decorator { @apply relative w-fit; }
+  .heading-decorator::before { @apply absolute w-2/3 h-[0.2rem] -top-[0.675rem] bg-accent rounded-full content-['']; }
 }
 
 /* TYPOGRAPHY */
