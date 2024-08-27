@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Josefin_Sans } from "next/font/google"
+import { Josefin_Sans, Geologica } from "next/font/google"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
@@ -11,9 +11,14 @@ import "@/app/globals.css"
 // utils
 import { cn } from "@/lib/utils"
 
-const font = Josefin_Sans({
+const josefin = Josefin_Sans({
   subsets: ["latin"],
-  variable: '--font-sans'
+  variable: '--font-josefin'
+})
+
+const geologica = Geologica({
+  subsets: ["latin"],
+  variable: '--font-geologica'
 })
 
 export const metadata: Metadata = {
@@ -29,7 +34,7 @@ const BaseLayout = ({ children }: React.PropsWithChildren) => {
       afterSignOutUrl="/"
     >
       <html lang="en" suppressHydrationWarning>
-        <body className={cn("min-h-screen bg-background font-sans antialiased", font.variable)}>
+        <body className={cn("min-h-screen bg-background font-body antialiased", josefin.variable, geologica.variable)}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

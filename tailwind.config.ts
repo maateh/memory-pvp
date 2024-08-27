@@ -20,7 +20,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        heading: ["var(--font-josefin)", ...fontFamily.sans],
+        body: ["var(--font-geologica)", ...fontFamily.sans],
       },
       colors: {
         border: "hsl(var(--border))",
