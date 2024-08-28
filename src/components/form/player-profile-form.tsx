@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // icons
-import { Check, Square } from "lucide-react"
+import { Check } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 
 // components
 import { Form } from "@/components/form"
+import { ColorPicker } from "@/components/inputs"
 
 type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
@@ -28,11 +29,11 @@ const PlayerProfileForm = () => {
     <Form<PlayerProfileFormValues>
       className="flex items-center gap-x-4"
       schema={playerProfileFormSchema}
+      onSubmit={onSubmit}
       defaultValues={{
         playerName: '',
         color: ''
       }}
-      onSubmit={onSubmit}
     >
       {({ control }) => (
         <>
@@ -58,8 +59,7 @@ const PlayerProfileForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  {/* TODO: color select */}
-                  <Square className="size-9" />
+                  <ColorPicker {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
