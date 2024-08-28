@@ -4,7 +4,7 @@
 import { cn } from "@/lib/utils"
 
 // icons
-import { Expand } from "lucide-react"
+import { Edit, Expand } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -48,11 +48,16 @@ const WidgetCard = ({
             </CardTitle>
           </div>
 
-          <Button className="bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"
+          <Button className="expandable bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"
             variant="ghost"
             size="icon"
             onClick={() => openModal(widgetKey, { title, description, icon })}
           >
+            <div className="mr-1 space-x-1.5">
+              <Edit className="size-3" />
+              <span>Manage</span>
+            </div>
+
             <Expand className="size-5"
               strokeWidth={2.25}
             />

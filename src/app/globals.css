@@ -53,23 +53,31 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
 @layer utilities {
-  /* TOGGLE */
-  .toggle:hover > svg:first-of-type {
-    @apply hidden;
-  }
-  .toggle:not(:hover) > svg:last-of-type {
+  /* EXPANDABLE BUTTON */
+  button.expandable > div {
     @apply hidden;
   }
 
+  button.expandable:hover > div,
+  button.expandable[data-state="open"] > div {
+    @apply flex items-center justify-center px-1 animate-in slide-in-from-right-1/2 duration-300;
+  }
+
   /* HEADING DECORATOR */
-  .heading-decorator { @apply relative w-fit; }
-  .heading-decorator::before { @apply absolute w-2/3 h-[0.2rem] -top-[0.675rem] bg-accent rounded-full content-['']; }
+  .heading-decorator {
+    @apply relative w-fit;
+  }
+
+  .heading-decorator::before {
+    @apply absolute w-2/3 h-[0.2rem] -top-[0.675rem] bg-accent rounded-full content-[''];
+  }
 }
 
 /* TYPOGRAPHY */
