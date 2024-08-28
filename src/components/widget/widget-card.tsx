@@ -34,7 +34,7 @@ const WidgetCard = ({
 
   return (
     <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>
-      <CardHeader className="mt-2">
+      <CardHeader>
         <div className="flex items-center justify-between gap-5">
           <div className="flex-1 flex gap-x-4">
             {icon && (
@@ -48,7 +48,7 @@ const WidgetCard = ({
             </CardTitle>
           </div>
 
-          <Button className="bg-accent/10 hover:bg-accent/15 hover:text-foreground"
+          <Button className="bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"
             variant="ghost"
             size="icon"
             onClick={() => openModal(widgetKey, { title, description, icon })}
@@ -66,7 +66,7 @@ const WidgetCard = ({
 
       {children && (
         <>
-          <Separator className="w-1/3 mx-auto mt-1 mb-4 bg-border/25" />
+          <Separator className="w-1/3 mx-auto mb-4 bg-border/25" />
 
           <CardContent>
             {children}
