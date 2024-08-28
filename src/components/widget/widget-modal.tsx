@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useWidgetModal } from "@/hooks/use-widget-modal"
+import { useWidget } from "@/hooks/use-widget"
 
 type WidgetModalProps = {
   title: string
@@ -24,7 +24,7 @@ const WidgetModal = ({
   isOpen,
   children
 }: WidgetModalProps) => {
-  const { closeModal } = useWidgetModal()
+  const { closeModal } = useWidget()
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>

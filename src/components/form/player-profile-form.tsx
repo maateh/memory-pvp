@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Form } from "@/components/form"
 import { ColorPicker } from "@/components/inputs"
 
-type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
+export type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
 const playerProfileFormSchema = z.object({
   playerName: z.string(),

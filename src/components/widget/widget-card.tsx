@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useWidgetModal, WidgetKey } from "@/hooks/use-widget-modal"
+import { useWidget, WidgetKey } from "@/hooks/use-widget"
 
 type WidgetCardProps = {
   widgetKey: WidgetKey
@@ -30,7 +30,7 @@ const WidgetCard = ({
   className,
   children
 }: WidgetCardProps) => {
-  const { openModal } = useWidgetModal()
+  const { openModal } = useWidget()
 
   return (
     <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>

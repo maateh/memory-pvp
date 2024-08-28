@@ -4,14 +4,14 @@
 import { WidgetModal } from "@/components/widget"
 
 // hooks
-import { useWidgetModal } from "@/hooks/use-widget-modal"
+import { useWidget } from "@/hooks/use-widget"
 
 const ManageAccountWidgetModal = () => {
-  const { widgetKey, data, isOpen } = useWidgetModal()
+  const { widgetKey, info, isOpen } = useWidget()
   const isModalOpen = isOpen && widgetKey === "manageAccount"
 
   return (
-    <WidgetModal isOpen={isModalOpen} {...data}>
+    <WidgetModal isOpen={isModalOpen} {...info}>
       ManageAccount
     </WidgetModal>
   )

@@ -2,18 +2,19 @@
 
 // components
 import { PlayerProfileForm } from "@/components/form"
+import { PlayerProfileFormValues } from "@/components/form/player-profile-form"
 import { Separator } from "@/components/ui/separator"
 import { WidgetModal } from "@/components/widget"
 
 // hooks
-import { useWidgetModal } from "@/hooks/use-widget-modal"
+import { useWidget } from "@/hooks/use-widget"
 
 const PlayerProfilesWidgetModal = () => {
-  const { widgetKey, data, isOpen } = useWidgetModal()
+  const { widgetKey, info, isOpen, data: profiles } = useWidget<PlayerProfileFormValues[]>()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
   return (
-    <WidgetModal isOpen={isModalOpen} {...data}>
+    <WidgetModal isOpen={isModalOpen} {...info}>
       <div className="space-y-8">
         <h4 className="text-lg font-heading font-bold small-caps">
           Create a new player profile
@@ -27,7 +28,7 @@ const PlayerProfilesWidgetModal = () => {
       <h4 className="text-lg font-heading font-bold small-caps">
         Manage your current profiles
       </h4>
-      
+
       TODO: profile list
     </WidgetModal>
   )
