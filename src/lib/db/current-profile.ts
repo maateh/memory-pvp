@@ -8,7 +8,7 @@ import { Profile } from "@prisma/client"
 import { db } from "@/lib/db"
 import { handleError } from "@/lib/utils"
 
-export async function currentProfile(): Promise<Profile> {
+export async function currentProfile({ initProfile = false } = {}): Promise<Profile> {
   try {
     const clerkUser = await currentUser()
 
@@ -22,7 +22,7 @@ export async function currentProfile(): Promise<Profile> {
       }
     })
 
-    if (!profile && process.env.NODE_ENV === 'development') {
+    if (!profile && process.env.NODE_ENV === 'development' && initProfile) {
       profile = await initialProfile()
     }
     
