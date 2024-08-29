@@ -1,3 +1,10 @@
+"use client"
+
+import axios from "axios"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
 import { z } from "zod"
 
 // icons
@@ -11,18 +18,33 @@ import { Input } from "@/components/ui/input"
 // components
 import { Form } from "@/components/form"
 import { ColorPicker } from "@/components/inputs"
+import { UseFormReturn } from "react-hook-form"
 
 export type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
-const playerProfileFormSchema = z.object({
-  playerName: z.string(),
+export const playerProfileFormSchema = z.object({
+  playerTag: z.string(),
   color: z.string()
 })
 
 const PlayerProfileForm = () => {
-  const onSubmit = async (values: PlayerProfileFormValues) => {
-    // TODO: create player profile
-    console.log({ values })
+  const router = useRouter()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onSubmit = async (values: PlayerProfileFormValues, form: UseFormReturn<PlayerProfileFormValues>) => {
+    setIsLoading(true)
+
+    try {
+      await axios.post('/api/players', values)
+
+      form.reset()
+      router.refresh()
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -31,19 +53,19 @@ const PlayerProfileForm = () => {
       schema={playerProfileFormSchema}
       onSubmit={onSubmit}
       defaultValues={{
-        playerName: '',
-        color: ''
+        playerTag: '',
+        color: '#92aa92'
       }}
     >
-      {({ control }) => (
+      {(form) => (
         <>
           <FormField
-            control={control}
-            name="playerName"
+            control={form.control}
+            name="playerTag"
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>
-                  Player Name
+                  Player Tag
                 </FormLabel>
                 <FormControl>
                   <Input {...field} />
@@ -52,9 +74,9 @@ const PlayerProfileForm = () => {
               </FormItem>
             )}
           />
-
+    
           <FormField
-            control={control}
+            control={form.control}
             name="color"
             render={({ field }) => (
               <FormItem>
@@ -65,8 +87,8 @@ const PlayerProfileForm = () => {
               </FormItem>
             )}
           />
-
-          <Button className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/5"
+    
+          <Button className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
             variant="ghost"
             size="icon"
           >

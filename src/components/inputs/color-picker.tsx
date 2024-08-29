@@ -11,10 +11,8 @@ type ColorPickerProps = {
   onChange: (value: string) => void
 }
 
-const DEFAULT_COLOR_VALUE = "#e3e3e3"
-
 const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
-  value = DEFAULT_COLOR_VALUE,
+  value,
   onChange
 }, ref) => {
   return (
