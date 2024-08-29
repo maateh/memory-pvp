@@ -14,11 +14,9 @@ type LogoProps = {
   withRedirect?: boolean
 } & LucideProps
 
-const Logo = ({ withLabel, withRedirect, className, strokeWidth = 2.75, ...props }: LogoProps) => {
+const Logo = ({ withLabel, withRedirect, className, strokeWidth = 2.35, ...props }: LogoProps) => {
   const icon = (
-    <Spade className={cn("size-6", className, {
-      'cursor-pointer': withRedirect
-    })}
+    <Spade className={cn("size-6", className)}
       strokeWidth={strokeWidth}
       {...props}
     />

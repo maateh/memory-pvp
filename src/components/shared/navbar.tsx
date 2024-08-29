@@ -1,3 +1,4 @@
+// shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
@@ -5,7 +6,7 @@ import { Logo, MobileToggle } from "@/components/shared"
 
 const Navbar = () => {
   return (
-    <div className="mx-5 my-3 px-5 py-2 flex justify-between items-center gap-x-6 bg-primary/40 rounded-full">
+    <div className="mx-5 my-3 px-5 py-2 flex justify-between items-center gap-x-6 bg-primary/40 rounded-full shadow-lg">
       <div className="flex items-center gap-x-2">
         <MobileToggle />
 
