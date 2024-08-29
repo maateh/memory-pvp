@@ -20,8 +20,10 @@ model Profile {
 }
 
 model Player {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  playerTag String @unique
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  tag        String @unique
+  color      String
+  totalScore Int    @default(0)
 
   results Result[]
 
@@ -57,8 +59,8 @@ model GameSession {
 }
 
 model Result {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
   score Int
   timer Int
 
