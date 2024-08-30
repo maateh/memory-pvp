@@ -1,7 +1,7 @@
 // components
 import { Navbar } from "@/components/shared"
 
-const DashboardLayot = ({ children }: React.PropsWithChildren) => {
+const ProtectedLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <>
       <div className="w-full">
@@ -15,4 +15,4 @@ const DashboardLayot = ({ children }: React.PropsWithChildren) => {
   )
 }
 
-export default DashboardLayot
+export default ProtectedLayout
