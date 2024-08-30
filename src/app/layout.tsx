@@ -3,7 +3,7 @@ import { Josefin_Sans, Geologica } from "next/font/google"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider, WidgetModalProvider } from "@/components/providers"
+import { ThemeProvider, TRPCProvider, WidgetModalProvider } from "@/components/providers"
 
 // styles
 import "@/app/globals.css"
@@ -35,15 +35,17 @@ const BaseLayout = ({ children }: React.PropsWithChildren) => {
     >
       <html lang="en" suppressHydrationWarning>
         <body className={cn("min-h-screen bg-background font-body antialiased", josefin.variable, geologica.variable)}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            storageKey="memory-theme"
-            enableSystem
-          >
-            <WidgetModalProvider />
-            {children}
-          </ThemeProvider>
+          <TRPCProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              storageKey="memory-theme"
+              enableSystem
+            >
+              <WidgetModalProvider />
+              {children}
+            </ThemeProvider>
+          </TRPCProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -1,11 +1,13 @@
 "use client"
 
-import axios from "axios"
+import { z } from "zod"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { z } from "zod"
+import { UseFormReturn } from "react-hook-form"
+
+// trpc
+import { api } from "@/trpc/client"
 
 // icons
 import { Check } from "lucide-react"
@@ -18,7 +20,6 @@ import { Input } from "@/components/ui/input"
 // components
 import { Form } from "@/components/form"
 import { ColorPicker } from "@/components/inputs"
-import { UseFormReturn } from "react-hook-form"
 
 export type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
@@ -29,21 +30,20 @@ export const playerProfileFormSchema = z.object({
 
 const PlayerProfileForm = () => {
   const router = useRouter()
+  const createPlayer = api.player.create.useMutation({
+    onSuccess: () => {
+      router.refresh()
+    }
+  })
 
-  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (values: PlayerProfileFormValues, form: UseFormReturn<PlayerProfileFormValues>) => {
-    setIsLoading(true)
-
     try {
-      await axios.post('/api/players', values)
+      await createPlayer.mutateAsync(values)
 
       form.reset()
-      router.refresh()
     } catch (err) {
       console.error(err)
-    } finally {
-      setIsLoading(false)
     }
   }
 
