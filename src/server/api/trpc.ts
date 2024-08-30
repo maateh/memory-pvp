@@ -3,27 +3,29 @@ import { cache } from 'react'
 // trpc
 import { initTRPC, TRPCError } from '@trpc/server'
 
-// clerk
-import { currentUser } from '@clerk/nextjs/server'
+// db
+import { db } from '@/server/db'
+import { currentProfile } from '@/server/db/current-profile'
 
-// lib
-import { db } from '@/lib/db'
+export const createTRPCContext = cache(
+  async (opts: { req: Request }) => {
+    return { db, ...opts }
+  }
+)
 
-export const createTRPCContext = cache(async (opts: { req: Request }) => {
-  return { db, ...opts }
-})
-
-const t = initTRPC.context<typeof createTRPCContext>().create({})
+const t = initTRPC
+  .context<typeof createTRPCContext>()
+  .create({})
 
 const isAuth = t.middleware(async ({ ctx, next }) => {
-  const user = await currentUser()
+  const profile = await currentProfile()
 
-  if (!user) {
+  if (!profile) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   return next({
-    ctx: { user }
+    ctx: { profile }
   })
 })
 
