@@ -1,5 +1,6 @@
 // components
-import { ManageAccountWidgetCard, PlayerProfilesWidgetCard } from "@/components/widget/cards"
+import { ManageAccountWidgetCard } from "@/components/widgets/manage-account"
+import { PlayerProfilesWidgetCard } from "@/components/widgets/player-profiles"
 
 const ProfilePage = () => {
   // - manage profile

@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/form"
-import { WidgetModal } from "@/components/widget"
+import { WidgetModal } from "@/components/widgets"
 
 // hooks
 import { useWidget } from "@/hooks/use-widget"

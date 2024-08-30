@@ -5,7 +5,7 @@ import { api } from "@/trpc/server"
 import { Gamepad2 } from "lucide-react"
 
 // components
-import { WidgetCard } from "@/components/widget"
+import { WidgetCard } from "@/components/widgets"
 
 const PlayerProfilesWidgetCard = async () => {
   const players = await api.player.getAll()

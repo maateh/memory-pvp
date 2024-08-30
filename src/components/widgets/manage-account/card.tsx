@@ -2,7 +2,7 @@
 import { UserCircle } from "lucide-react"
 
 // components
-import { WidgetCard } from "@/components/widget"
+import { WidgetCard } from "@/components/widgets"
 
 const ManageAccountWidgetCard = () => {
   return (

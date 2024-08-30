@@ -1,8 +1,6 @@
 // widget-modals
-import {
-  ManageAccountWidgetModal,
-  PlayerProfilesWidgetModal
-} from "@/components/widget/modals"
+import { ManageAccountWidgetModal } from "@/components/widgets/manage-account"
+import { PlayerProfilesWidgetModal } from "@/components/widgets/player-profiles"
 
 const WidgetModalProvider = () => {
   return (
