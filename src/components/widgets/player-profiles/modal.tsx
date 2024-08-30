@@ -1,11 +1,13 @@
 "use client"
 
 // shadcn
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/form"
 import { WidgetModal } from "@/components/widgets"
+import PlayerDetailsCard from "./player-details-card"
 
 // hooks
 import { useWidget } from "@/hooks/use-widget"
@@ -24,21 +26,21 @@ const PlayerProfilesWidgetModal = () => {
         <PlayerProfileForm />
       </div>
 
-      <Separator className="w-11/12 my-6 mx-auto bg-border/60" />
+      <Separator className="w-11/12 my-2.5 mx-auto bg-border/60" />
 
       <h4 className="text-lg font-heading font-bold small-caps">
         Manage your current profiles
       </h4>
 
-      {/* TODO: design */}
-      <ul>
-        {players?.map((player) => (
-          <li key={player.id}>
-            {player.tag}
-            {player.color}
-          </li>
-        ))}
-      </ul>
+      <ScrollArea className="max-h-60 pr-4">
+        <ul className="flex flex-col gap-y-1">
+          {players?.map((player) => (
+            <li key={player.id}>
+              <PlayerDetailsCard player={player} />
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
     </WidgetModal>
   )
 }
