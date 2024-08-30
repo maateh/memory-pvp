@@ -14,7 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useWidget, WidgetKey } from "@/hooks/use-widget"
+import { useWidget, WidgetKey, WidgetStore } from "@/hooks/use-widget"
 
 type WidgetCardProps<D> = {
   widgetKey: WidgetKey
@@ -34,11 +34,12 @@ function WidgetCard<D>({
   className,
   children
 }: WidgetCardProps<D>) {
-  const { openModal, setData } = useWidget<D>()
+  const setWidgetData = useWidget<D, WidgetStore<D>['setData']>((state) => state.setData)
+  const openModal = useWidget<D, WidgetStore<D>['openModal']>((state) => state.openModal)
 
   useEffect(() => {
-    if (data) setData(data)
-  }, [data, setData])
+    if (data) setWidgetData(data)
+  }, [data, setWidgetData])
 
   return (
     <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>

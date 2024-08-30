@@ -15,7 +15,7 @@ type ModalStore = {
   closeModal: () => void
 }
 
-type WidgetStore<D> = {
+export type WidgetStore<D> = {
   widgetKey: WidgetKey | null
   info: WidgetInfo
   data: D | null
@@ -37,6 +37,8 @@ const useWidgetImpl = create<WidgetStore<unknown>>((set) => ({
 }))
 
 export const useWidget = useWidgetImpl as {
-  <D>(): WidgetStore<D>
-  <D, U>(selector: (s: WidgetStore<D>) => U): U
+  <D>(): WidgetStore<D>;
+  <D, U>(selector: (state: WidgetStore<D>) => U): U;
+  setState: <D>(partial: WidgetStore<D> | Partial<WidgetStore<D>> | ((state: WidgetStore<D>) => WidgetStore<D> | Partial<WidgetStore<D>>), replace?: boolean | undefined) => void;
+  getState: <D>() => WidgetStore<D>;
 }

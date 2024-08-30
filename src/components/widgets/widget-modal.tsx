@@ -24,7 +24,7 @@ const WidgetModal = ({
   isOpen,
   children
 }: WidgetModalProps) => {
-  const { closeModal } = useWidget()
+  const closeModal = useWidget((state) => state.closeModal)
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
