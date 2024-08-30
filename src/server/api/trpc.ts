@@ -1,3 +1,5 @@
+import SuperJSON from 'superjson'
+
 import { cache } from 'react'
 
 // trpc
@@ -15,7 +17,9 @@ export const createTRPCContext = cache(
 
 const t = initTRPC
   .context<typeof createTRPCContext>()
-  .create({})
+  .create({
+    transformer: SuperJSON
+  })
 
 const isAuth = t.middleware(async ({ ctx, next }) => {
   const profile = await currentProfile()
