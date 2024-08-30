@@ -19,6 +19,7 @@ type WidgetStore<D> = {
   widgetKey: WidgetKey | null
   info: WidgetInfo
   data: D | null
+  setData: (data: D) => void
 } & ModalStore
 
 const DEFAULT_WIDGET_INFO: WidgetInfo = {
@@ -29,6 +30,7 @@ const useWidgetImpl = create<WidgetStore<unknown>>((set) => ({
   widgetKey: null,
   info: DEFAULT_WIDGET_INFO,
   data: null,
+  setData: (data) => set({ data }),
   isOpen: false,
   openModal: (widgetKey, info = DEFAULT_WIDGET_INFO) => set({ widgetKey, info, isOpen: true }),
   closeModal: () => set({ widgetKey: null, isOpen: false })

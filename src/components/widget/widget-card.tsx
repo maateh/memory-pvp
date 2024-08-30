@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -14,23 +16,29 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { useWidget, WidgetKey } from "@/hooks/use-widget"
 
-type WidgetCardProps = {
+type WidgetCardProps<D> = {
   widgetKey: WidgetKey
   title: string
   description?: string
   icon?: React.ReactNode
+  data?: D
   className?: string
 } & React.PropsWithChildren
 
-const WidgetCard = ({
+function WidgetCard<D>({
   widgetKey,
   title,
   description,
   icon,
+  data,
   className,
   children
-}: WidgetCardProps) => {
-  const { openModal } = useWidget()
+}: WidgetCardProps<D>) {
+  const { openModal, setData } = useWidget<D>()
+
+  useEffect(() => {
+    if (data) setData(data)
+  }, [data, setData])
 
   return (
     <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>

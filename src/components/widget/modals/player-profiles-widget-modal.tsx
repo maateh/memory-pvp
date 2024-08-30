@@ -1,18 +1,17 @@
 "use client"
 
-// prisma
-import { Player } from "@prisma/client"
+// shadcn
+import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/form"
-import { Separator } from "@/components/ui/separator"
 import { WidgetModal } from "@/components/widget"
 
 // hooks
 import { useWidget } from "@/hooks/use-widget"
 
 const PlayerProfilesWidgetModal = () => {
-  const { widgetKey, info, isOpen, data: profiles } = useWidget<Player[]>()
+  const { widgetKey, info, isOpen, data: players } = useWidget<PlayerWithProfile[]>()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
   return (
@@ -31,7 +30,15 @@ const PlayerProfilesWidgetModal = () => {
         Manage your current profiles
       </h4>
 
-      TODO: profile list
+      {/* TODO: design */}
+      <ul>
+        {players?.map((player) => (
+          <li key={player.id}>
+            {player.tag}
+            {player.color}
+          </li>
+        ))}
+      </ul>
     </WidgetModal>
   )
 }

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { UseFormReturn } from "react-hook-form"
 
 // trpc
+import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // lib
@@ -28,10 +29,12 @@ type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
 const PlayerProfileForm = () => {
   const router = useRouter()
+  const utils = api.useUtils()
 
   const createPlayer = api.player.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       router.refresh()
+      await utils.player.getAll.invalidate()
     }
   })
 
@@ -41,7 +44,7 @@ const PlayerProfileForm = () => {
 
       form.reset()
     } catch (err) {
-      console.error(err)
+      throw new TRPCClientError('Failed to create player profile', { cause: err as Error })
     }
   }
 
