@@ -1,5 +1,5 @@
 // icons
-import { Edit, Star } from "lucide-react"
+import { Edit, Star, Trash2 } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -32,12 +32,23 @@ const PlayerDetails = ({ player }: PlayerDetailsProps) => {
         </div>
       </div>
 
-      <Button className="p-1.5"
-        variant="ghost"
-        size="icon"
-      >
-        <Edit className="size-5" />
-      </Button>
+      <div className="flex items-center gap-x-3">
+        <Button className="p-1.5"
+          variant="ghost"
+          size="icon"
+          onClick={() => {}}
+        >
+          <Edit className="size-5" />
+        </Button>
+
+        <Button className="p-1.5"
+          variant="destructive"
+          size="icon"
+          onClick={() => {}}
+        >
+          <Trash2 className="size-4" />
+        </Button>
+      </div>
     </div>
   )
 }
