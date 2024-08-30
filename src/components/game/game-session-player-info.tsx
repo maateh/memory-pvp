@@ -21,8 +21,8 @@ const GameSessionPlayerInfo = ({
   return (
     <div className={cn("flex-1 flex justify-between items-center", { 'flex-row-reverse': flipOrder })}>
       <div className={cn("flex items-center gap-x-4", { 'flex-row-reverse': flipOrder })}>
-        <div className="relative size-8 rounded-full overflow-hidden">
-          <Image className="object-cover"
+        <div className="size-8 rounded-full img-wrapper">
+          <Image
             src={userAvatar}
             alt="user avatar"
             fill

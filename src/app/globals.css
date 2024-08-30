@@ -78,6 +78,14 @@
   .heading-decorator::before {
     @apply absolute w-2/3 h-[0.2rem] -top-[0.675rem] bg-accent rounded-full content-[''];
   }
+
+  /* IMAGE WRAPPER */
+  .img-wrapper {
+    @apply relative overflow-hidden;
+  }
+  .img-wrapper > img {
+    @apply object-cover;
+  }
 }
 
 /* TYPOGRAPHY */
