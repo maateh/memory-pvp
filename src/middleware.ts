@@ -5,7 +5,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/',
-  '/toplist',
+  '/leaderboard',
   '/game(.*)'
 ])
 
