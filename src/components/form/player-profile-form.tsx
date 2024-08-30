@@ -9,6 +9,9 @@ import { UseFormReturn } from "react-hook-form"
 // trpc
 import { api } from "@/trpc/client"
 
+// lib
+import { playerProfileFormSchema } from "@/lib/validations"
+
 // icons
 import { Check } from "lucide-react"
 
@@ -21,21 +24,16 @@ import { Input } from "@/components/ui/input"
 import { Form } from "@/components/form"
 import { ColorPicker } from "@/components/inputs"
 
-export type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
-
-export const playerProfileFormSchema = z.object({
-  playerTag: z.string(),
-  color: z.string()
-})
+type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
 
 const PlayerProfileForm = () => {
   const router = useRouter()
+
   const createPlayer = api.player.create.useMutation({
     onSuccess: () => {
       router.refresh()
     }
   })
-
 
   const onSubmit = async (values: PlayerProfileFormValues, form: UseFormReturn<PlayerProfileFormValues>) => {
     try {

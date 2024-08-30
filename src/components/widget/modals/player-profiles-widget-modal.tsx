@@ -1,8 +1,10 @@
 "use client"
 
+// prisma
+import { Player } from "@prisma/client"
+
 // components
 import { PlayerProfileForm } from "@/components/form"
-import { PlayerProfileFormValues } from "@/components/form/player-profile-form"
 import { Separator } from "@/components/ui/separator"
 import { WidgetModal } from "@/components/widget"
 
@@ -10,7 +12,7 @@ import { WidgetModal } from "@/components/widget"
 import { useWidget } from "@/hooks/use-widget"
 
 const PlayerProfilesWidgetModal = () => {
-  const { widgetKey, info, isOpen, data: profiles } = useWidget<PlayerProfileFormValues[]>()
+  const { widgetKey, info, isOpen, data: profiles } = useWidget<Player[]>()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
   return (
