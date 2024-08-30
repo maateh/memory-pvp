@@ -13,7 +13,7 @@ model Profile {
   email    String  @unique
   imageUrl String?
 
-  player Player?
+  player Player[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,7 +28,7 @@ model Player {
   results Result[]
 
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String  @unique @db.ObjectId
+  profileId String  @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,6 +37,7 @@ model Player {
 enum GameMode {
   SINGLE
   PVP
+  COOP
 }
 
 enum TableSize {
