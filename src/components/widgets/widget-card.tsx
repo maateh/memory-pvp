@@ -80,7 +80,7 @@ function WidgetCard<D>({
 
       {children && (
         <>
-          <Separator className="w-1/3 mx-auto mb-4 bg-border/25" />
+          <Separator className="w-1/3 mx-auto mt-0.5 mb-2 bg-border/25" />
 
           <CardContent>
             {children}

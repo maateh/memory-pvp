@@ -5,10 +5,16 @@ import { api } from "@/trpc/server"
 import { Gamepad2 } from "lucide-react"
 
 // components
+import { Warning } from "@/components/shared"
 import { WidgetCard } from "@/components/widgets"
+import PlayerProfileCard from "./player-profile-card"
 
 const PlayerProfilesWidgetCard = async () => {
   const userWithPlayers = await api.user.getWithPlayerProfiles()
+
+  const activePlayerProfile = userWithPlayers?.playerProfiles.find(
+    (player) => player.isActive
+  )
 
   return (
     <WidgetCard<UserWithPlayerProfiles>
@@ -18,7 +24,15 @@ const PlayerProfilesWidgetCard = async () => {
       icon={<Gamepad2 />}
       data={userWithPlayers}
     >
-      <div>Current player profiles</div>
+      <h4 className="mt-2 mb-4 w-fit border-t border-t-accent text-lg font-heading font-semibold small-caps">
+        Active player profile
+      </h4>
+
+      {activePlayerProfile ? (
+        <PlayerProfileCard player={activePlayerProfile} />
+      ) : (
+        <Warning message="Currently, you don't have any player profile." />
+      )}
     </WidgetCard>
   )
 }
