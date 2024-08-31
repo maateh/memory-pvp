@@ -7,28 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Profile {
+model User {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   clerkId  String  @unique
+  username String
   email    String  @unique
   imageUrl String?
 
-  player Player[]
+  playerProfiles PlayerProfile[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Player {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  tag        String @unique
+model PlayerProfile {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  tag        String  @unique
   color      String
-  totalScore Int    @default(0)
+  totalScore Int     @default(0)
+  isActive   Boolean
 
   results Result[]
 
-  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String  @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,8 +70,8 @@ model Result {
   session   GameSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
   sessionId String
 
-  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  playerId String @db.ObjectId
+  playerProfile   PlayerProfile @relation(fields: [playerProfileId], references: [id], onDelete: Cascade)
+  playerProfileId String        @db.ObjectId
 
   createdAt DateTime @default(now())
 }

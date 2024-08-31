@@ -8,15 +8,15 @@ import { Gamepad2 } from "lucide-react"
 import { WidgetCard } from "@/components/widgets"
 
 const PlayerProfilesWidgetCard = async () => {
-  const players = await api.player.getAll()
+  const userWithPlayers = await api.user.getWithPlayerProfiles()
 
   return (
-    <WidgetCard<PlayerWithProfile[]>
+    <WidgetCard<UserWithPlayerProfiles>
       widgetKey="playerProfiles"
       title="Player Profiles"
       description="Create different player profiles to play with it. It makes easily possible to use smurf profiles if you want."
       icon={<Gamepad2 />}
-      data={players}
+      data={userWithPlayers}
     >
       <div>Current player profiles</div>
     </WidgetCard>

@@ -1,7 +1,7 @@
-import { Player, Profile } from "@prisma/client"
+import { PlayerProfile, User } from "@prisma/client"
 
 declare global {
-  declare type PlayerWithProfile = Player & {
-    profile: Profile
+  declare type UserWithPlayerProfiles = User & {
+    playerProfiles: PlayerProfile[]
   }
 }

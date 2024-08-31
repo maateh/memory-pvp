@@ -13,7 +13,7 @@ import PlayerDetailsCard from "./player-details-card"
 import { useWidget } from "@/hooks/use-widget"
 
 const PlayerProfilesWidgetModal = () => {
-  const { widgetKey, info, isOpen, data: players } = useWidget<PlayerWithProfile[]>()
+  const { widgetKey, info, isOpen, data: userWithPlayers } = useWidget<UserWithPlayerProfiles>()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
   return (
@@ -34,7 +34,7 @@ const PlayerProfilesWidgetModal = () => {
 
       <ScrollArea className="max-h-60 pr-4">
         <ul className="flex flex-col gap-y-1">
-          {players?.map((player) => (
+          {userWithPlayers?.playerProfiles?.map((player) => (
             <li key={player.id}>
               <PlayerDetailsCard player={player} />
             </li>

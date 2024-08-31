@@ -1,3 +1,6 @@
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
 // icons
 import { Edit, Star, Trash2 } from "lucide-react"
 
@@ -8,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { ColorPicker } from "@/components/inputs"
 
 type PlayerDetailsProps = {
-  player: PlayerWithProfile
+  player: PlayerProfile
 }
 
 const PlayerDetails = ({ player }: PlayerDetailsProps) => {

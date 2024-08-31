@@ -7,7 +7,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 
 // db
 import { db } from '@/server/db'
-import { currentProfile } from '@/server/db/current-profile'
+import { currentUser } from '@/server/db/current-user'
 
 export const createTRPCContext = cache(
   async (opts: { req: Request }) => {
@@ -17,19 +17,17 @@ export const createTRPCContext = cache(
 
 const t = initTRPC
   .context<typeof createTRPCContext>()
-  .create({
-    transformer: SuperJSON
-  })
+  .create({ transformer: SuperJSON })
 
 const isAuth = t.middleware(async ({ ctx, next }) => {
-  const profile = await currentProfile()
+  const user = await currentUser()
 
-  if (!profile) {
+  if (!user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   return next({
-    ctx: { profile }
+    ctx: { user }
   })
 })
 

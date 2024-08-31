@@ -21,7 +21,7 @@ type WidgetCardProps<D> = {
   title: string
   description?: string
   icon?: React.ReactNode
-  data?: D
+  data?: D | null
   className?: string
 } & React.PropsWithChildren
 

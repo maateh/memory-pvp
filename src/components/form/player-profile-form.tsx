@@ -31,10 +31,10 @@ const PlayerProfileForm = () => {
   const router = useRouter()
   const utils = api.useUtils()
 
-  const createPlayer = api.player.create.useMutation({
+  const createPlayer = api.playerProfile.create.useMutation({
     onSuccess: async () => {
       router.refresh()
-      await utils.player.getAll.invalidate()
+      await utils.user.getWithPlayerProfiles.invalidate()
     }
   })
 
