@@ -1,18 +1,29 @@
-// icons
-import { UserCircle } from "lucide-react"
+"use client"
+
+// clerk
+import { useClerk } from "@clerk/nextjs"
+
+// prisma
+import { User } from "@prisma/client"
 
 // components
-import { WidgetCard } from "@/components/widgets"
+import { WidgetCard, type WidgetInfo } from "@/components/widgets"
 
-const ManageAccountWidgetCard = () => {
+type ManageAccountWidgetCardProps = {
+  user: User
+} & WidgetInfo
+
+const ManageAccountWidgetCard = ({ user, ...props }: ManageAccountWidgetCardProps) => {
+  const { openUserProfile } = useClerk()
+
   return (
     <WidgetCard
-      widgetKey="manageAccount"
-      title="Your Account"
-      description="Manage your account with Clerk."
-      icon={<UserCircle />}
+      widgetAction={openUserProfile}
+      {...props}
     >
-      <div>Display account info</div>
+      <div>
+        {user?.username}
+      </div>
     </WidgetCard>
   )
 }

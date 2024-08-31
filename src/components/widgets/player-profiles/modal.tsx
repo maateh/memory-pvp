@@ -5,18 +5,22 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/form"
-import { WidgetModal } from "@/components/widgets"
-
-// hooks
-import { useWidget } from "@/hooks/use-widget"
+import { type WidgetInfo, WidgetModal } from "@/components/widgets"
 import PlayerProfileList from "./player-profile-list"
 
-const PlayerProfilesWidgetModal = () => {
-  const { widgetKey, info, isOpen, data: userWithPlayers } = useWidget<UserWithPlayerProfiles>()
+// hooks
+import { useWidgetModal } from "@/hooks/use-widget-modal"
+
+type PlayerProfilesWidgetModalProps = {
+  user: UserWithPlayerProfiles | null
+} & WidgetInfo
+
+const PlayerProfilesWidgetModal = ({ user, ...props }: PlayerProfilesWidgetModalProps) => {
+  const { widgetKey, isOpen } = useWidgetModal()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
   return (
-    <WidgetModal isOpen={isModalOpen} {...info}>
+    <WidgetModal isOpen={isModalOpen} {...props}>
       <div className="space-y-8">
         <h4 className="text-lg font-heading font-bold small-caps">
           Create a new player profile
@@ -31,9 +35,7 @@ const PlayerProfilesWidgetModal = () => {
         Manage your current profiles
       </h4>
 
-      <PlayerProfileList
-        players={userWithPlayers?.playerProfiles || []}
-      />
+      <PlayerProfileList players={user?.playerProfiles} />
     </WidgetModal>
   )
 }

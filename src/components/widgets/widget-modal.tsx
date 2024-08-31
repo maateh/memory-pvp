@@ -3,28 +3,23 @@
 // utils
 import { cn } from "@/lib/utils"
 
+// components
+import { WidgetInfo } from "@/components/widgets"
+
 // shadcn
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useWidget } from "@/hooks/use-widget"
+import { useWidgetModal } from "@/hooks/use-widget-modal"
 
 type WidgetModalProps = {
-  title: string
-  description?: string
-  icon?: React.ReactNode
   isOpen: boolean
-} & React.PropsWithChildren
+} & WidgetInfo
+  & React.PropsWithChildren
 
-const WidgetModal = ({
-  title,
-  description,
-  icon,
-  isOpen,
-  children
-}: WidgetModalProps) => {
-  const closeModal = useWidget((state) => state.closeModal)
+const WidgetModal = ({ title, description, icon, isOpen, children }: WidgetModalProps) => {
+  const closeModal = useWidgetModal((state) => state.closeModal)
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
