@@ -42,7 +42,6 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   })
 
   const { deletePlayer, handleDeletePlayer } = useDeletePlayer({ player })
-
   const { selectAsActive, handleSelectAsActive } = useSelectAsActive({ player })
 
   return (
@@ -147,15 +146,17 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               <Edit className="size-5" />
             </ButtonTooltip>
 
-            <ButtonTooltip className="p-1.5"
-              tooltip="Delete player profile"
-              variant="destructive"
-              size="icon"
-              onClick={handleDeletePlayer}
-              disabled={deletePlayer.isPending || updatePlayer.isPending}
-            >
-              <Trash2 className="size-4" />
-            </ButtonTooltip>
+            {!player.isActive && (
+              <ButtonTooltip className="p-1.5"
+                tooltip="Delete player profile"
+                variant="destructive"
+                size="icon"
+                onClick={handleDeletePlayer} // TODO: show confirm before deletion
+                disabled={deletePlayer.isPending || updatePlayer.isPending}
+              >
+                <Trash2 className="size-4" />
+              </ButtonTooltip>
+            )}
           </>
         )}
       </div>
