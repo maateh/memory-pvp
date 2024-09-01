@@ -10,6 +10,7 @@ import { Edit, ShieldCheck, Star, Trash2 } from "lucide-react"
 import { ButtonTooltip } from "@/components/ui/button"
 
 // components
+import { CustomTooltip } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
 
 type PlayerProfileCardProps = {
@@ -32,7 +33,14 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             </p>
 
             {player.isActive && (
-              <ShieldCheck className="inline size-4 text-secondary" />
+              <CustomTooltip tooltip={(
+                <div className="flex items-center gap-x-2">
+                  <ShieldCheck className="inline size-5 text-secondary" />
+                  <p>Selected as <span className="text-accent font-semibold">active</span></p>
+                </div>
+              )}>
+                <ShieldCheck className="inline size-4 text-secondary" />
+              </CustomTooltip>
             )}
           </div>
 
