@@ -1,5 +1,5 @@
 // components
-import { Navbar } from "@/components/shared"
+import { Navbar } from "@/components/navbar"
 
 const ProtectedLayout = ({ children }: React.PropsWithChildren) => {
   return (

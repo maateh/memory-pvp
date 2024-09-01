@@ -12,7 +12,7 @@ const MobileToggle = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="md:hidden"
+        <Button className="p-1.5 md:hidden"
           variant="ghost"
           size="icon"
         >
