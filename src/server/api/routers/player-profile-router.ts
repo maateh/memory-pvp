@@ -2,7 +2,7 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
-import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
+import { playerProfileCreateSchema, playerProfileUpdateSchema, playerTagSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
@@ -40,6 +40,30 @@ export const playerProfileRouter = createTRPCRouter({
         data: {
           tag: playerTag,
           color
+        }
+      })
+    }),
+
+  selectAsActive: protectedProcedure
+    .input(playerTagSchema)
+    .mutation(async ({ ctx, input: playerTag }) => {
+      await ctx.db.playerProfile.updateMany({
+        where: {
+          userId: ctx.user.id,
+          isActive: true
+        },
+        data: {
+          isActive: false
+        }
+      })
+
+      return ctx.db.playerProfile.update({
+        where: {
+          userId: ctx.user.id,
+          tag: playerTag
+        },
+        data: {
+          isActive: true
         }
       })
     })

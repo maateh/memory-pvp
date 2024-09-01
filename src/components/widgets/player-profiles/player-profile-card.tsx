@@ -1,20 +1,15 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { useRouter } from "next/navigation"
 
 // prisma
 import { PlayerProfile } from "@prisma/client"
-
-// trpc
-import { TRPCClientError } from "@trpc/client"
-import { api } from "@/trpc/client"
 
 // lib
 import { cn } from "@/lib/utils"
 
 // icons
-import { CheckCircle2, Edit, ShieldCheck, Star, Trash2, XCircle } from "lucide-react"
+import { CheckCircle2, Edit, ShieldCheck, ShieldPlus, Star, Trash2, XCircle } from "lucide-react"
 
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
@@ -24,51 +19,32 @@ import { Input } from "@/components/ui/input"
 import { CustomTooltip } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
 
+// hooks
+import { useUpdatePlayer } from "./queries/use-update-player"
+import { useSelectAsActive } from "./queries/use-select-as-active"
+
 type PlayerProfileCardProps = {
   player: PlayerProfile
 }
 
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
-  const router = useRouter()
-  const utils = api.useUtils()
-
   const [editing, setEditing] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [color, setColor] = useState(player.color)
 
-  const updatePlayer = api.playerProfile.update.useMutation({
-    onSuccess: async () => {
-      // TODO: add toast
-      router.refresh()
-      setEditing(false)
-
-      await utils.user.getWithPlayerProfiles.invalidate()
+  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayer({
+    player,
+    updatedPlayer: {
+      tag: inputRef.current?.value || '',
+      color
     },
-    onError: (err) => {
-      console.log({err})
-      console.log(JSON.parse(err.message))
-      // TODO: add toast
-    }
+    setEditing
   })
 
-  const handleUpdatePlayer = async () => {
-    const playerTag = inputRef.current?.value || ''
-
-    if (playerTag === player.tag && color === player.color) {
-      setEditing(false)
-    }
-
-    try {
-      await updatePlayer.mutateAsync({
-        id: player.id,
-        color,
-        playerTag
-      })
-    } catch (err) {
-      throw new TRPCClientError('Failed to edit player profile.', { cause: err as Error })
-    }
-  }
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActive({
+    playerTag: player.tag
+  })
 
   return (
     <div className="py-2.5 px-3 flex justify-between items-center rounded-lg hover:bg-transparent/5 dark:hover:bg-transparent/20">
@@ -143,6 +119,25 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           </>
         ) : (
           <>
+            {!player.isActive && (
+              <ButtonTooltip className="p-1"
+                tooltip={(
+                  <div className="flex items-center gap-x-2">
+                    <ShieldPlus className="size-4" />
+                    <p>
+                      Select as <span className="text-accent font-medium">active</span>
+                    </p>
+                  </div>
+                )}
+                variant="ghost"
+                size="icon"
+                onClick={handleSelectAsActive}
+                disabled={selectAsActive.isPending}
+              >
+                <ShieldPlus className="size-4 text-muted-foreground" />
+              </ButtonTooltip>
+            )}
+
             <ButtonTooltip className="p-1.5"
               tooltip="Edit player profile"
               variant="ghost"
