@@ -9,14 +9,14 @@ import { PlayerProfile } from "@prisma/client"
 import { cn } from "@/lib/utils"
 
 // icons
-import { ShieldCheck, Star } from "lucide-react"
+import { Star } from "lucide-react"
 
 // shadcn
 import { Input } from "@/components/ui/input"
 
 // components
-import { CustomTooltip } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
+import { PlayerVerifiedBadge } from "@/components/player"
 
 // hooks
 import PlayerProfileActions from "./player-profile-actions"
@@ -57,16 +57,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               </p>
             )}
 
-            {player.isActive && (
-              <CustomTooltip tooltip={(
-                <div className="flex items-center gap-x-2">
-                  <ShieldCheck className="size-5 text-secondary" />
-                  <p>Selected as <span className="text-accent font-semibold">active</span></p>
-                </div>
-              )}>
-                <ShieldCheck className="size-4 text-secondary" />
-              </CustomTooltip>
-            )}
+            {player.isActive && <PlayerVerifiedBadge />}
           </div>
 
           <div className="flex items-center gap-x-1.5 text-sm font-extralight small-caps">
