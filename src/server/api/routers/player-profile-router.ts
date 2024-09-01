@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 // trpc
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
@@ -30,12 +32,12 @@ export const playerProfileRouter = createTRPCRouter({
   update: protectedProcedure
     .input(playerProfileUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, playerTag, color } = input
+      const { playerId, playerTag, color } = input
 
       return ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
-          id
+          id: playerId
         },
         data: {
           tag: playerTag,
@@ -45,8 +47,10 @@ export const playerProfileRouter = createTRPCRouter({
     }),
 
   selectAsActive: protectedProcedure
-    .input(playerTagSchema)
-    .mutation(async ({ ctx, input: playerTag }) => {
+    .input(z.object({ playerId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { playerId } = input
+
       await ctx.db.playerProfile.updateMany({
         where: {
           userId: ctx.user.id,
@@ -60,7 +64,7 @@ export const playerProfileRouter = createTRPCRouter({
       return ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
-          tag: playerTag
+          id: playerId
         },
         data: {
           isActive: true

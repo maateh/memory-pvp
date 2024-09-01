@@ -39,7 +39,7 @@ export const useUpdatePlayer = ({ player, updatedPlayer, setEditing }: UpdatePla
 
     try {
       await updatePlayer.mutateAsync({
-        id: player.id,
+        playerId: player.id,
         playerTag: tag,
         color
       })

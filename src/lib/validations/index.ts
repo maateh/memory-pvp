@@ -12,5 +12,5 @@ export const playerProfileCreateSchema = z.object({
 })
 
 export const playerProfileUpdateSchema = playerProfileCreateSchema.extend({
-  id: z.string()
+  playerId: z.string()
 })

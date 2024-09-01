@@ -5,10 +5,10 @@ import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 type UpdatePlayerProps = {
-  playerTag: string
+  playerId: string
 }
 
-export const useSelectAsActive = ({ playerTag }: UpdatePlayerProps) => {
+export const useSelectAsActive = ({ playerId }: UpdatePlayerProps) => {
   const router = useRouter()
   const utils = api.useUtils()
 
@@ -26,7 +26,7 @@ export const useSelectAsActive = ({ playerTag }: UpdatePlayerProps) => {
 
   const handleSelectAsActive = async () => {
     try {
-      await selectAsActive.mutateAsync(playerTag)
+      await selectAsActive.mutateAsync({ playerId })
     } catch (err) {
       throw new TRPCClientError('Failed to update player profile.', { cause: err as Error })
     }

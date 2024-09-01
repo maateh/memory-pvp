@@ -43,7 +43,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   })
 
   const { selectAsActive, handleSelectAsActive } = useSelectAsActive({
-    playerTag: player.tag
+    playerId: player.id
   })
 
   return (
