@@ -1,5 +1,5 @@
 // api
-import { currentUser } from "@/server/db/current-user"
+import { api } from "@/trpc/server"
 
 // icons
 import { UserCircle } from "lucide-react"
@@ -15,7 +15,7 @@ const widgetInfo: WidgetInfo = {
 }
 
 const ManageAccountWidget = async () => {
-  const user = await currentUser()
+  const user = await api.user.get()
 
   return <ManageAccountWidgetCard user={user!} {...widgetInfo} />
 }
