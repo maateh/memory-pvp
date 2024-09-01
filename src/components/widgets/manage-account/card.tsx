@@ -9,7 +9,7 @@ import { useClerk } from "@clerk/nextjs"
 import { User } from "@prisma/client"
 
 // icons
-import { Mail } from "lucide-react"
+import { Mail, SquareUser } from "lucide-react"
 
 // components
 import { WidgetCard, type WidgetInfo } from "@/components/widgets"
@@ -35,11 +35,12 @@ const ManageAccountWidgetCard = ({ user, ...props }: ManageAccountWidgetCardProp
         <UserInfoItem
           label="Username"
           info={`@${user.username}`}
-          icon={(
+          icon={!user.imageUrl ? <SquareUser className="size-7" /> : (
             <div className="size-8 rounded-2xl img-wrapper">
               <Image
-                src={user.imageUrl} // FIXME: add fallback src
-                alt="user profile"
+                src={user.imageUrl}
+                alt="user avatar"
+                sizes="32px"
                 fill
               />
             </div>
