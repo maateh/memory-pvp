@@ -9,10 +9,9 @@ import { PlayerProfile } from "@prisma/client"
 import { cn } from "@/lib/utils"
 
 // icons
-import { CheckCircle2, Edit, ShieldCheck, ShieldPlus, Star, Trash2, XCircle } from "lucide-react"
+import { ShieldCheck, Star } from "lucide-react"
 
 // shadcn
-import { ButtonTooltip } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 // components
@@ -20,7 +19,7 @@ import { CustomTooltip } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
 
 // hooks
-import { useDeletePlayer, useSelectAsActive, useUpdatePlayer } from "./queries"
+import PlayerProfileActions from "./player-profile-actions"
 
 type PlayerProfileCardProps = {
   player: PlayerProfile
@@ -29,20 +28,8 @@ type PlayerProfileCardProps = {
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   const [editing, setEditing] = useState(false)
 
-  const inputRef = useRef<HTMLInputElement>(null)
+  const playerTagRef = useRef<HTMLInputElement>(null)
   const [color, setColor] = useState(player.color)
-
-  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayer({
-    player,
-    updatedPlayer: {
-      tag: inputRef.current?.value || '',
-      color
-    },
-    setEditing
-  })
-
-  const { deletePlayer, handleDeletePlayer } = useDeletePlayer({ player })
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActive({ player })
 
   return (
     <div className="py-2.5 px-3 flex justify-between items-center rounded-lg hover:bg-transparent/5 dark:hover:bg-transparent/20">
@@ -62,7 +49,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             {editing ? (
               <Input className="h-fit py-0.5 mb-0.5 border-input/40"
                 defaultValue={player.tag}
-                ref={inputRef}
+                ref={playerTagRef}
               />
             ) : (
               <p className="font-light">
@@ -89,77 +76,16 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-x-2.5">
-        {editing ? (
-          <>
-            <ButtonTooltip className="p-1"
-              tooltip="Save changes"
-              variant="ghost"
-              size="icon"
-              onClick={handleUpdatePlayer}
-              disabled={updatePlayer.isPending}
-            >
-              <CheckCircle2 className="size-5 text-accent" />
-            </ButtonTooltip>
-
-            <ButtonTooltip className="p-1"
-              tooltip="Cancel"
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setEditing(false)
-                setColor(player.color)
-              }}
-              disabled={updatePlayer.isPending}
-            >
-              <XCircle className="size-5 text-destructive" />
-            </ButtonTooltip>
-          </>
-        ) : (
-          <>
-            {!player.isActive && (
-              <ButtonTooltip className="p-1"
-                tooltip={(
-                  <div className="flex items-center gap-x-2">
-                    <ShieldPlus className="size-4" />
-                    <p>
-                      Select as <span className="text-accent font-medium">active</span>
-                    </p>
-                  </div>
-                )}
-                variant="ghost"
-                size="icon"
-                onClick={handleSelectAsActive}
-                disabled={selectAsActive.isPending || deletePlayer.isPending}
-              >
-                <ShieldPlus className="size-4 text-muted-foreground" />
-              </ButtonTooltip>
-            )}
-
-            <ButtonTooltip className="p-1.5"
-              tooltip="Edit player profile"
-              variant="ghost"
-              size="icon"
-              onClick={() => setEditing(true)}
-              disabled={updatePlayer.isPending || deletePlayer.isPending}
-            >
-              <Edit className="size-5" />
-            </ButtonTooltip>
-
-            {!player.isActive && (
-              <ButtonTooltip className="p-1.5"
-                tooltip="Delete player profile"
-                variant="destructive"
-                size="icon"
-                onClick={handleDeletePlayer} // TODO: show confirm before deletion
-                disabled={deletePlayer.isPending || updatePlayer.isPending}
-              >
-                <Trash2 className="size-4" />
-              </ButtonTooltip>
-            )}
-          </>
-        )}
-      </div>
+      <PlayerProfileActions
+        player={player}
+        updatedPlayer={{
+          tag: playerTagRef.current?.value || '',
+          color: color
+        }}
+        editing={editing}
+        setEditing={setEditing}
+        setColor={setColor}
+      />
     </div>
   )
 }
