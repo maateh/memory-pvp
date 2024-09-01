@@ -17,7 +17,7 @@ import { playerProfileFormSchema } from "@/lib/validations"
 import { Check } from "lucide-react"
 
 // shadcn
-import { Button } from "@/components/ui/button"
+import { Button, ButtonTooltip } from "@/components/ui/button"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
@@ -33,8 +33,13 @@ const PlayerProfileForm = () => {
 
   const createPlayer = api.playerProfile.create.useMutation({
     onSuccess: async () => {
+      // TODO: add toast
       router.refresh()
+
       await utils.user.getWithPlayerProfiles.invalidate()
+    },
+    onError: () => {
+      // TODO: add toast
     }
   })
 
@@ -89,14 +94,15 @@ const PlayerProfileForm = () => {
             )}
           />
     
-          <Button className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
+          <ButtonTooltip className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
+            tooltip="Add player profile"
             variant="ghost"
             size="icon"
           >
             <Check className="size-5 text-accent"
               strokeWidth={4}
             />
-          </Button>
+          </ButtonTooltip>
         </>
       )}
     </Form>

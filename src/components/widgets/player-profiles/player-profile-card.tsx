@@ -7,7 +7,7 @@ import { PlayerProfile } from "@prisma/client"
 import { Edit, ShieldCheck, Star, Trash2 } from "lucide-react"
 
 // shadcn
-import { Button } from "@/components/ui/button"
+import { ButtonTooltip } from "@/components/ui/button"
 
 // components
 import { ColorPicker } from "@/components/inputs"
@@ -19,49 +19,48 @@ type PlayerProfileCardProps = {
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   return (
     <div className="py-2.5 px-3 flex justify-between items-center rounded-lg hover:bg-transparent/5 dark:hover:bg-transparent/20">
-      <div className="flex gap-x-6 items-center">
-        <div className="flex gap-x-4 items-center">
-          <ColorPicker className="size-4 border"
-            value={player.color}
-            onChange={() => {}}
-          />
+      <div className="flex gap-x-4 items-center">
+        <ColorPicker className="size-4 border"
+          value={player.color}
+          onChange={() => {}}
+        />
 
-          <div className="leading-snug">
+        <div className="leading-snug">
+          <div className="flex items-center gap-x-2">
             <p className="font-light">
               {player.tag}
             </p>
 
-            <div className="flex items-center gap-x-1.5 text-sm font-extralight small-caps">
-              <Star className="size-3.5" />
-              <span>Total score - {player.totalScore} points</span>
-            </div>
+            {player.isActive && (
+              <ShieldCheck className="inline size-4 text-secondary" />
+            )}
+          </div>
+
+          <div className="flex items-center gap-x-1.5 text-sm font-extralight small-caps">
+            <Star className="size-3.5" />
+            <span>Total score - {player.totalScore} points</span>
           </div>
         </div>
-
-        {player.isActive && (
-          // TODO: add tooltip
-          <ShieldCheck className="size-6 text-secondary" />
-        )}
       </div>
 
       <div className="flex items-center gap-x-3">
-        {/* TODO: add tooltip */}
-        <Button className="p-1.5"
+        <ButtonTooltip className="p-1.5"
+          tooltip="Edit player profile"
           variant="ghost"
           size="icon"
           onClick={() => {}}
         >
           <Edit className="size-5" />
-        </Button>
+        </ButtonTooltip>
 
-        {/* TODO: add tooltip */}
-        <Button className="p-1.5"
+        <ButtonTooltip className="p-1.5"
+          tooltip="Remove player profile"
           variant="destructive"
           size="icon"
           onClick={() => {}}
         >
           <Trash2 className="size-4" />
-        </Button>
+        </ButtonTooltip>
       </div>
     </div>
   )
