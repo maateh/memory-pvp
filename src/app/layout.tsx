@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider, TRPCProvider } from "@/components/providers"
 
 // styles
+import { dark } from "@clerk/themes"
 import "@/app/globals.css"
 
 // utils
@@ -32,6 +33,7 @@ const BaseLayout = ({ children }: React.PropsWithChildren) => {
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/dashboard"
       afterSignOutUrl="/"
+      appearance={{ baseTheme: dark }}
     >
       <html lang="en" suppressHydrationWarning>
         <body className={cn("min-h-screen bg-background font-body antialiased", josefin.variable, geologica.variable)}>

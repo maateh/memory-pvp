@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.3.2",
+    "@clerk/themes": "^2.1.25",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.19.0",
     "@radix-ui/react-dialog": "^1.1.1",
