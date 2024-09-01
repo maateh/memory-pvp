@@ -4,7 +4,7 @@ import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
-import { playerProfileCreateSchema, playerProfileUpdateSchema, playerTagSchema } from "@/lib/validations"
+import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
