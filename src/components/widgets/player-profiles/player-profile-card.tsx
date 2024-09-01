@@ -28,7 +28,7 @@ type PlayerProfileCardProps = {
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   const [editing, setEditing] = useState(false)
 
-  const playerTagRef = useRef<HTMLInputElement>(null)
+  const [playerTag, setPlayerTag] = useState(player.tag)
   const [color, setColor] = useState(player.color)
 
   return (
@@ -48,8 +48,8 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           <div className="flex items-center gap-x-2">
             {editing ? (
               <Input className="h-fit py-0.5 mb-0.5 border-input/40"
-                defaultValue={player.tag}
-                ref={playerTagRef}
+                value={playerTag}
+                onChange={(e) => setPlayerTag(e.target.value)}
               />
             ) : (
               <p className="font-light">
@@ -79,7 +79,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
       <PlayerProfileActions
         player={player}
         updatedPlayer={{
-          tag: playerTagRef.current?.value || '',
+          tag: playerTag,
           color: color
         }}
         editing={editing}

@@ -35,6 +35,7 @@ export const useUpdatePlayer = ({ player, updatedPlayer, setEditing }: UpdatePla
 
     if (tag === player.tag && color === player.color) {
       setEditing(false)
+      return
     }
 
     try {
