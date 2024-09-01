@@ -6,27 +6,29 @@ import { HexColorPicker } from "react-colorful"
 import { cn } from "@/lib/utils"
 
 // shadcn
-import { Button } from "@/components/ui/button"
+import { Button, ButtonProps } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type ColorPickerProps = {
   value: string
   onChange: (value: string) => void
-  className?: string
-}
+} & Omit<ButtonProps, 'value' | 'onChange'>
 
 const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
   value,
   onChange,
-  className
+  className,
+  style = { backgroundColor: value },
+  ...props
 }, ref) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className={cn("size-8 rounded-lg border-2 border-border", className)}
+        <Button className={cn("size-8 rounded-lg border-2 border-border disabled:opacity-100", className)}
           size="icon"
           style={{ backgroundColor: value }}
           ref={ref}
+          {...props}
         />
       </PopoverTrigger>
       <PopoverContent>

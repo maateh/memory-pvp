@@ -11,13 +11,13 @@ import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // lib
-import { playerProfileFormSchema } from "@/lib/validations"
+import { playerProfileCreateSchema } from "@/lib/validations"
 
 // icons
 import { Check } from "lucide-react"
 
 // shadcn
-import { Button, ButtonTooltip } from "@/components/ui/button"
+import { ButtonTooltip } from "@/components/ui/button"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Form } from "@/components/form"
 import { ColorPicker } from "@/components/inputs"
 
-type PlayerProfileFormValues = z.infer<typeof playerProfileFormSchema>
+type PlayerProfileFormValues = z.infer<typeof playerProfileCreateSchema>
 
 const PlayerProfileForm = () => {
   const router = useRouter()
@@ -56,7 +56,7 @@ const PlayerProfileForm = () => {
   return (
     <Form<PlayerProfileFormValues>
       className="flex items-center gap-x-4"
-      schema={playerProfileFormSchema}
+      schema={playerProfileCreateSchema}
       onSubmit={onSubmit}
       defaultValues={{
         playerTag: '',

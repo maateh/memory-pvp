@@ -1,4 +1,4 @@
-// api
+// trpc
 import { api } from "@/trpc/server"
 
 // icons
