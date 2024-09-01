@@ -20,8 +20,7 @@ import { CustomTooltip } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
 
 // hooks
-import { useUpdatePlayer } from "./queries/use-update-player"
-import { useSelectAsActive } from "./queries/use-select-as-active"
+import { useDeletePlayer, useSelectAsActive, useUpdatePlayer } from "./queries"
 
 type PlayerProfileCardProps = {
   player: PlayerProfile
@@ -41,6 +40,8 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     },
     setEditing
   })
+
+  const { deletePlayer, handleDeletePlayer } = useDeletePlayer({ player })
 
   const { selectAsActive, handleSelectAsActive } = useSelectAsActive({
     playerId: player.id
@@ -132,7 +133,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
                 variant="ghost"
                 size="icon"
                 onClick={handleSelectAsActive}
-                disabled={selectAsActive.isPending}
+                disabled={selectAsActive.isPending || deletePlayer.isPending}
               >
                 <ShieldPlus className="size-4 text-muted-foreground" />
               </ButtonTooltip>
@@ -143,6 +144,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               variant="ghost"
               size="icon"
               onClick={() => setEditing(true)}
+              disabled={updatePlayer.isPending || deletePlayer.isPending}
             >
               <Edit className="size-5" />
             </ButtonTooltip>
@@ -151,7 +153,8 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               tooltip="Delete player profile"
               variant="destructive"
               size="icon"
-              onClick={() => {}}
+              onClick={handleDeletePlayer}
+              disabled={deletePlayer.isPending || updatePlayer.isPending}
             >
               <Trash2 className="size-4" />
             </ButtonTooltip>

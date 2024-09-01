@@ -46,6 +46,22 @@ export const playerProfileRouter = createTRPCRouter({
       })
     }),
 
+  delete: protectedProcedure
+    .input(z.object({ playerId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { playerId } = input
+
+      return ctx.db.playerProfile.delete({
+        where: {
+          userId: ctx.user.id,
+          id: playerId,
+          isActive: {
+            not: true
+          }
+        }
+      })
+    }),
+
   selectAsActive: protectedProcedure
     .input(z.object({ playerId: z.string() }))
     .mutation(async ({ ctx, input }) => {
