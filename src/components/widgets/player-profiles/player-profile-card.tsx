@@ -43,9 +43,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
   const { deletePlayer, handleDeletePlayer } = useDeletePlayer({ player })
 
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActive({
-    playerId: player.id
-  })
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActive({ player })
 
   return (
     <div className="py-2.5 px-3 flex justify-between items-center rounded-lg hover:bg-transparent/5 dark:hover:bg-transparent/20">

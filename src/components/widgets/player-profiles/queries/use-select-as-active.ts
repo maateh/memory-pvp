@@ -1,14 +1,17 @@
 import { useRouter } from "next/navigation"
 
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
 // trpc
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 type SelectAsActiveProps = {
-  playerId: string
+  player: PlayerProfile
 }
 
-export const useSelectAsActive = ({ playerId }: SelectAsActiveProps) => {
+export const useSelectAsActive = ({ player }: SelectAsActiveProps) => {
   const router = useRouter()
   const utils = api.useUtils()
 
@@ -25,8 +28,12 @@ export const useSelectAsActive = ({ playerId }: SelectAsActiveProps) => {
   })
 
   const handleSelectAsActive = async () => {
+    if (player.isActive) {
+      // TODO: add toast
+    }
+
     try {
-      await selectAsActive.mutateAsync({ playerId })
+      await selectAsActive.mutateAsync({ playerId: player.id })
     } catch (err) {
       throw new TRPCClientError('Failed to update player profile.', { cause: err as Error })
     }
