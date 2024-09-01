@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
-type UpdatePlayerProps = {
+type SelectAsActiveProps = {
   playerId: string
 }
 
-export const useSelectAsActive = ({ playerId }: UpdatePlayerProps) => {
+export const useSelectAsActive = ({ playerId }: SelectAsActiveProps) => {
   const router = useRouter()
   const utils = api.useUtils()
 
