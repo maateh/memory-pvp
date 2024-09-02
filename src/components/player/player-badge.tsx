@@ -1,28 +1,45 @@
+// utils
+import { cn } from "@/lib/utils"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
 // shadcn
-import { Badge } from "@/components/ui/badge"
+import { Badge, BadgeProps } from "@/components/ui/badge"
 
 // components
 import { PlayerVerifiedBadge } from "@/components/player"
 
 type PlayerBadgeProps = {
-  player: Pick<PlayerProfile, 'tag' | 'color'>
-}
+  player: Pick<PlayerProfile, 'tag' | 'color' | 'isActive'>
+  hideVerified?: boolean
+  flagSize?: number
+} & BadgeProps
 
-const PlayerBadge = ({ player }: PlayerBadgeProps) => {
+const PlayerBadge = ({
+  player,
+  hideVerified = false,
+  flagSize = 2.5,
+  className,
+  ...props
+}: PlayerBadgeProps) => {
   return (
-    <Badge className="py-1 flex items-center gap-x-1.5">
-      <div className="size-3 rounded-sm transition hover:opacity-90"
+    <Badge className={cn("group py-1 text-sm flex items-center gap-x-1.5 border-secondary/50 dark:border-secondary/20", className)}
+      {...props}
+    >
+      <div className={`size-${flagSize} rounded-md transition border border-foreground/25 group-hover:opacity-85`}
         style={{ backgroundColor: player.color }}
       />
 
-      <span className="font-light">
+      <span className="font-medium">
         #{player.tag}
       </span>
 
-      <PlayerVerifiedBadge />
+      {!hideVerified && player.isActive && (
+        <div className="flex-1 flex justify-end">
+          <PlayerVerifiedBadge className="mx-auto" />
+        </div>
+      )}
     </Badge>
   )
 }
