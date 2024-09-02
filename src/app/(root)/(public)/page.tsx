@@ -1,10 +1,18 @@
+import { redirect } from "next/navigation"
+
+// clerk
+import { currentUser } from "@clerk/nextjs/server"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { Logo, MobileToggle } from "@/components/shared"
 
-const HomePage = () => {
+const HomePage = async () => {
+  const user = await currentUser()
+  if (user) redirect('/dashboard')
+
   return (
     <>
       <div className="px-2.5 py-3.5 flex items-center gap-x-1.5 md:hidden">

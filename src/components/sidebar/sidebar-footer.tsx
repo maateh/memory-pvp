@@ -2,7 +2,7 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
 
 // icons
-import { UserRound } from "lucide-react"
+import { LogIn } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -25,11 +25,9 @@ const SidebarFooter = () => {
 
         <SignedOut>
           <SignInButton>
-            <Button className="rounded-2xl"
-              variant="outline"
-              size="icon"
-            >
-              <UserRound className="size-5" />
+            <Button variant="secondary" size="sm">
+              <LogIn className="size-4 mr-2" />
+              <span>Sign In</span>
             </Button>
           </SignInButton>
         </SignedOut>

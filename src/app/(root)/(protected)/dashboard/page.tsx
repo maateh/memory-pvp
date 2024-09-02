@@ -1,14 +1,8 @@
-// actions
-import { currentProfile } from "@/lib/db/current-profile"
-
 const DashboardPage = async () => {
-  const profile = await currentProfile()
-
-  // - show player statistics
-  //  - player name
-  //  - leaderboard rank
-  // - show previous game sessions
-  // - show friends
+  // WIDGETS
+  // - player statistics
+  // - previous game sessions
+  // - friends
 
   return (
     <div>
