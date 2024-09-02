@@ -12,7 +12,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { ThemeToggle } from "../shared"
+
+// components
+import { ThemeToggle } from "@/components/shared"
 
 const NavbarActions = () => {
   return (
@@ -39,6 +41,7 @@ const NavbarActions = () => {
 
         <DropdownMenuSeparator />
 
+        {/* TODO: sub-dropdown -> select player */}
         <DropdownMenuGroup>
           <DropdownMenuItem className="flex items-center gap-x-1.5">
             <Plus className="size-4 text-accent" />
