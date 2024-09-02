@@ -1,64 +1,22 @@
 // icons
-import { ChevronDown, LogOut, Plus } from "lucide-react"
+import { History, Plus } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-
-// components
-import { ThemeToggle } from "@/components/shared"
 
 const NavbarActions = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="p-1"
-          variant="ghost"
-          size="icon"
-        >
-          <ChevronDown className="size-6" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel className="flex items-center justify-between">
-          <p className="text-base font-semibold small-caps">
-            Actions
-          </p>
+    <div className="hidden mr-3 items-center gap-x-5 xl:flex">
+      <Button className="h-fit py-1.5 gap-x-2 hidden 2xl:flex">
+        <History className="size-4" strokeWidth={2.5} />
+        Game sessions {/* TODO: add previous game sessions modal or page */}
+      </Button>
 
-          <ThemeToggle className="p-1.5"
-            variant="ghost"
-            iconProps={{ className: "size-4" }}
-          />
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-
-        {/* TODO: sub-dropdown -> select player */}
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="flex items-center gap-x-1.5">
-            <Plus className="size-4 text-accent" />
-            Create new player
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuItem className="flex items-center gap-x-1.5 text-destructive focus:bg-destructive focus:text-destructive-foreground">
-            <LogOut className="size-4" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <Button className="h-fit py-1.5 gap-x-2 bg-accent/30 hover:bg-accent/35 hidden xl:flex">
+        <Plus className="size-4" strokeWidth={4} />
+        Create new player {/* TODO: open manage player profiles dialog */}
+      </Button>
+    </div>
   )
 }
 
