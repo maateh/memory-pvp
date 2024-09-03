@@ -1,13 +1,7 @@
 import { z } from "zod"
 
-export const userCreateSchema = z.object({
+export const userSchema = z.object({
   clerkId: z.string(),
-  username: z.string(),
-  email: z.string().email(),
-  imageUrl: z.string().url()
-})
-
-export const userUpdateSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   imageUrl: z.string().url()

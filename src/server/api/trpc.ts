@@ -3,7 +3,7 @@ import SuperJSON from 'superjson'
 import { cache } from 'react'
 
 // clerk
-import { currentUser as currentClerkUser } from "@clerk/nextjs/server"
+import { auth } from "@clerk/nextjs/server"
 
 // trpc
 import { initTRPC, TRPCError } from '@trpc/server'
@@ -22,28 +22,16 @@ const t = initTRPC
   .create({ transformer: SuperJSON })
 
 /* MIDDLEWARES */
-const isAuth = t.middleware(async ({ next }) => {
-  const clerkUser = await currentClerkUser()
-
-  if (!clerkUser) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
-  }
-
-  return next({
-    ctx: { clerkUser }
-  })
-})
-
 const isProtected = t.middleware(async ({ ctx, next }) => {
-  const clerkUser = await currentClerkUser()
+  const { userId: clerkId } = auth()
 
-  if (!clerkUser) {
+  if (!clerkId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
 
   const user = await ctx.db.user.findUnique({
     where: {
-      clerkId: clerkUser.id
+      clerkId
     }
   })
 
@@ -60,5 +48,4 @@ export const createCallerFactory = t.createCallerFactory
 export const createTRPCRouter = t.router
 export const addTRPCMiddleware = t.middleware
 export const publicProcedure = t.procedure
-export const authProcedure = t.procedure.use(isAuth)
 export const protectedProcedure = t.procedure.use(isProtected)

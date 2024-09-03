@@ -1,15 +1,15 @@
 // trpc
-import { authProcedure, createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc"
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc"
 
 // validations
-import { userCreateSchema, userDeleteSchema, userUpdateSchema } from "@/lib/validations"
+import { userSchema, userDeleteSchema } from "@/lib/validations"
 
 export const userRouter = createTRPCRouter({
   get: protectedProcedure
     .query(({ ctx }) => ctx.user),
 
   create: publicProcedure
-    .input(userCreateSchema)
+    .input(userSchema)
     .query(async ({ ctx, input }) => {
       const { clerkId, email, username, imageUrl } = input
 
@@ -23,14 +23,14 @@ export const userRouter = createTRPCRouter({
       })
     }),
 
-  update: authProcedure
-    .input(userUpdateSchema)
+  update: publicProcedure
+    .input(userSchema)
     .query(async ({ ctx, input }) => {
-      const { email, username, imageUrl } = input
+      const { clerkId, email, username, imageUrl } = input
 
       return ctx.db.user.update({
         where: {
-          clerkId: ctx.clerkUser.id
+          clerkId
         },
         data: {
           username,
@@ -40,7 +40,7 @@ export const userRouter = createTRPCRouter({
       })
     }),
 
-  delete: authProcedure
+  delete: publicProcedure
     .input(userDeleteSchema)
     .query(async ({ ctx, input }) => {
       const { clerkId } = input
