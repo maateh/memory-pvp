@@ -1,9 +1,7 @@
-// clerk
-import { SignedIn } from "@clerk/nextjs"
-
 // components
 import { Sidebar } from "@/components/sidebar"
 import { Navbar } from "@/components/navbar"
+import { SignedIn } from "@/components/shared"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
