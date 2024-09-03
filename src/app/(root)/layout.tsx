@@ -1,8 +1,9 @@
-// shadcn
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+// clerk
+import { SignedIn } from "@clerk/nextjs"
 
 // components
 import { Sidebar } from "@/components/sidebar"
+import { Navbar } from "@/components/navbar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
@@ -12,7 +13,15 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
       </div>
 
       <div className="h-full w-full md:ml-72 lg:ml-80">
-        {children}
+        <SignedIn>
+          <div className="w-full">
+            <Navbar />
+          </div>
+        </SignedIn>
+
+        <div className="px-8 py-5">
+          {children}
+        </div>
       </div>
     </main>
   )
