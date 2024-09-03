@@ -13,13 +13,13 @@ import { PlayerVerifiedBadge } from "@/components/player"
 type PlayerBadgeProps = {
   player: Pick<PlayerProfile, 'tag' | 'color' | 'isActive'>
   hideVerified?: boolean
-  flagSize?: number
+  flagProps?: React.HTMLAttributes<HTMLDivElement>
 } & BadgeProps
 
 const PlayerBadge = ({
   player,
   hideVerified = false,
-  flagSize = 2.5,
+  flagProps,
   className,
   ...props
 }: PlayerBadgeProps) => {
@@ -27,8 +27,12 @@ const PlayerBadge = ({
     <Badge className={cn("group py-1 text-sm flex items-center gap-x-1.5 border-secondary/50 dark:border-secondary/20", className)}
       {...props}
     >
-      <div className={`size-${flagSize} rounded-md transition border border-foreground/25 group-hover:opacity-85`}
-        style={{ backgroundColor: player.color }}
+      <div {...flagProps}
+        className={cn("size-2.5 rounded-md transition border border-foreground/25 group-hover:opacity-85", flagProps?.className)}
+        style={{
+          ...flagProps?.style,
+          backgroundColor: player.color
+        }}
       />
 
       <span className="font-medium">
