@@ -1,5 +1,5 @@
-// trpc
-import { api } from "@/trpc/server"
+// prisma
+import { PlayerProfile } from "@prisma/client"
 
 // icons
 import { ChevronRightCircle, Gamepad2, Sparkles, Timer } from "lucide-react"
@@ -10,13 +10,11 @@ import { Badge } from "@/components/ui/badge"
 // components
 import { PlayerBadge } from "@/components/player"
 
-const NavbarPlayerInfo = async () => {
-  // TODO: add [getActivePlayer] api endpoint
-  const user = await api.user.getWithPlayerProfiles()
+type NavbarPlayerInfoProps = {
+  activePlayer: PlayerProfile
+}
 
-  const activePlayer = user?.playerProfiles.find((player) => player.isActive)
-  if (!activePlayer) return
-
+const NavbarPlayerInfo = ({ activePlayer }: NavbarPlayerInfoProps) => {
   return (
     <div className="h-full flex items-center gap-x-2">
       <PlayerBadge player={activePlayer} />

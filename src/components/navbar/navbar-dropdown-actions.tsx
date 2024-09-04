@@ -1,11 +1,14 @@
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
 // clerk
 import { SignedIn, SignOutButton } from "@clerk/nextjs"
 
-// trpc
-import { api } from "@/trpc/server"
-
 // icons
 import { ChevronDown, Gamepad2, LogOut, Plus, UserCog } from "lucide-react"
+
+// utils
+import { cn } from "@/lib/utils"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -26,9 +29,11 @@ import {
 import { ThemeToggle } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
 
-const NavbarActions = async () => {
-  const user = await api.user.getWithPlayerProfiles()
+type NavbarDropdownActionsProps = {
+  players: PlayerProfile[]
+}
 
+const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,7 +56,7 @@ const NavbarActions = async () => {
           />
         </DropdownMenuLabel>
 
-        {user && (user.playerProfiles.length || 0) > 1 && (
+        {players.length > 1 && (
           <>
             <DropdownMenuSeparator />
 
@@ -64,7 +69,7 @@ const NavbarActions = async () => {
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
-                  {user.playerProfiles.map((player) => (
+                  {players.map((player) => (
                     <DropdownMenuItem className="focus:bg-transparent/5 dark:focus:bg-transparent/35"
                       key={player.id}
                     >
@@ -77,16 +82,26 @@ const NavbarActions = async () => {
           </>
         )}
 
-        <DropdownMenuSeparator className="2xl:hidden" />
+        <DropdownMenuSeparator className={cn("2xl:hidden", {
+          "lg:hidden": players.length === 0
+        })} />
 
-        <DropdownMenuItem className="xl:hidden" variant="secondary">
+        <DropdownMenuItem className={cn("xl:hidden", {
+          "hidden": players.length === 0
+        })}
+          variant="secondary"
+        >
           <Plus className="size-4" strokeWidth={3} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
             Create new player
           </span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="2xl:hidden" variant="secondary">
+        <DropdownMenuItem className={cn("2xl:hidden", {
+          "lg:hidden": players.length === 0
+        })}
+          variant="secondary"
+        >
           <Gamepad2 className="size-4" strokeWidth={2.75} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
             Game sessions
@@ -108,4 +123,4 @@ const NavbarActions = async () => {
   )
 }
 
-export default NavbarActions
+export default NavbarDropdownActions

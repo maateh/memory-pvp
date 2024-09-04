@@ -16,7 +16,7 @@ const MobileToggle = () => {
           variant="ghost"
           size="icon"
         >
-          <Menu className="size-7 shrink-0"
+          <Menu className="size-6 sm:size-7 shrink-0"
             strokeWidth={3}
           />
         </Button>
