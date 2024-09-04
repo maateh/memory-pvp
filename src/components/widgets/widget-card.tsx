@@ -1,6 +1,9 @@
 // utils
 import { cn } from "@/lib/utils"
 
+// types
+import { type WidgetInfo } from "@/components/widgets"
+
 // icons
 import { Edit, Expand } from "lucide-react"
 
@@ -8,12 +11,6 @@ import { Edit, Expand } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-
-export type WidgetInfo = {
-  title: string
-  description?: string
-  icon?: React.ReactNode
-}
 
 type WidgetCardProps = {
   widgetAction?: () => void

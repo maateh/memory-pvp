@@ -4,7 +4,7 @@
 import { cn } from "@/lib/utils"
 
 // components
-import { WidgetInfo } from "@/components/widgets"
+import { type WidgetInfo } from "@/components/widgets"
 
 // shadcn
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"

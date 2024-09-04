@@ -1,23 +1,21 @@
 // trpc
 import { api } from "@/trpc/server"
 
-// icons
-import { UserCircle } from "lucide-react"
+// constants
+import { manageAccountWidgetInfo } from "./constants"
 
 // components
-import { type WidgetInfo } from "@/components/widgets"
 import ManageAccountWidgetCard from "./card"
-
-const widgetInfo: WidgetInfo = {
-  title: "Your Account",
-  description: "Manage your account with Clerk.",
-  icon: <UserCircle />
-}
 
 const ManageAccountWidget = async () => {
   const user = await api.user.get()
 
-  return <ManageAccountWidgetCard user={user} {...widgetInfo} />
+  return (
+    <ManageAccountWidgetCard
+      user={user}
+      {...manageAccountWidgetInfo}
+    />
+  )
 }
 
 export default ManageAccountWidget
