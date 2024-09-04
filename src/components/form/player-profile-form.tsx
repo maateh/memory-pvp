@@ -14,7 +14,7 @@ import { api } from "@/trpc/client"
 import { playerProfileCreateSchema } from "@/lib/validations"
 
 // icons
-import { Check } from "lucide-react"
+import { Check, Loader2 } from "lucide-react"
 
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
@@ -98,10 +98,17 @@ const PlayerProfileForm = () => {
             tooltip="Add player profile"
             variant="ghost"
             size="icon"
+            disabled={createPlayer.isPending}
           >
-            <Check className="size-5 text-accent"
-              strokeWidth={4}
-            />
+            {createPlayer.isPending ? (
+              <Loader2 className="size-5 text-accent animate-spin"
+                strokeWidth={4}
+              />
+            ) : (
+              <Check className="size-5 text-accent"
+                strokeWidth={4}
+              />
+            )}
           </ButtonTooltip>
         </>
       )}

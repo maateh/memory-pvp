@@ -4,7 +4,7 @@
 import { PlayerProfile } from "@prisma/client"
 
 // icons
-import { CheckCircle2, Edit, ShieldPlus, Trash2, XCircle } from "lucide-react"
+import { CheckCircle2, Edit, Loader2, ShieldPlus, Trash2, XCircle } from "lucide-react"
 
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
@@ -45,9 +45,13 @@ const PlayerProfileActions = ({
             variant="ghost"
             size="icon"
             onClick={handleUpdatePlayer}
-            disabled={updatePlayer.isPending}
+            disabled={updatePlayer.isPending || deletePlayer.isPending}
           >
-            <CheckCircle2 className="size-5 text-accent" />
+            {updatePlayer.isPending ? (
+              <Loader2 className="size-5 text-accent" />
+            ) : (
+              <CheckCircle2 className="size-5 text-accent" />
+            )}
           </ButtonTooltip>
 
           <ButtonTooltip className="p-1"
@@ -80,7 +84,11 @@ const PlayerProfileActions = ({
               onClick={handleSelectAsActive}
               disabled={selectAsActive.isPending || deletePlayer.isPending}
             >
-              <ShieldPlus className="size-4 text-muted-foreground" />
+              {selectAsActive.isPending ? (
+                <Loader2 className="size-4 text-muted-foreground" />
+              ) : (
+                <ShieldPlus className="size-4 text-muted-foreground" />
+              )}
             </ButtonTooltip>
           )}
 
@@ -89,7 +97,7 @@ const PlayerProfileActions = ({
             variant="ghost"
             size="icon"
             onClick={() => setEditing(true)}
-            disabled={updatePlayer.isPending || deletePlayer.isPending}
+            disabled={updatePlayer.isPending || selectAsActive.isPending || deletePlayer.isPending}
           >
             <Edit className="size-5" />
           </ButtonTooltip>
@@ -100,9 +108,13 @@ const PlayerProfileActions = ({
               variant="destructive"
               size="icon"
               onClick={handleDeletePlayer} // TODO: show confirm before deletion
-              disabled={deletePlayer.isPending || updatePlayer.isPending}
+              disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
             >
-              <Trash2 className="size-4" />
+              {deletePlayer.isPending ? (
+                <Loader2 className="size-4" />
+              ) : (
+                <Trash2 className="size-4" />
+              )}
             </ButtonTooltip>
           )}
         </>
