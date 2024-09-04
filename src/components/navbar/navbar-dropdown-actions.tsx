@@ -1,14 +1,16 @@
+"use client"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
 // clerk
 import { SignedIn, SignOutButton } from "@clerk/nextjs"
 
-// icons
-import { ChevronDown, Gamepad2, LogOut, Plus, UserCog } from "lucide-react"
-
 // utils
 import { cn } from "@/lib/utils"
+
+// icons
+import { ChevronDown, Gamepad2, LogOut, Plus, UserCog, UserRoundCheck } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -29,11 +31,19 @@ import {
 import { ThemeToggle } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
 
+// hooks
+import { useWidgetModal } from "@/hooks/use-widget-modal"
+import { useSelectAsActive } from "@/components/widgets/player-profiles/queries"
+
 type NavbarDropdownActionsProps = {
   players: PlayerProfile[]
 }
 
 const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
+  const openWidgetModal = useWidgetModal((state) => state.openModal)
+
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActive()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -69,8 +79,17 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
+                  <DropdownMenuLabel className="flex items-center gap-x-1.5 font-normal">
+                    <UserRoundCheck className="size-4" strokeWidth={2.25} />
+                    <span>Select a player</span>
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator />
+
                   {players.map((player) => (
                     <DropdownMenuItem className="focus:bg-transparent/5 dark:focus:bg-transparent/35"
+                      onClick={() => handleSelectAsActive(player)}
+                      disabled={selectAsActive.isPending}
                       key={player.id}
                     >
                       <PlayerBadge className="flex-1" player={player} />
@@ -90,6 +109,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "hidden": players.length === 0
         })}
           variant="secondary"
+          onClick={() => openWidgetModal('playerProfiles')}
         >
           <Plus className="size-4" strokeWidth={3} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
