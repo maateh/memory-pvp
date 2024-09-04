@@ -7,11 +7,7 @@ import { PlayerProfile } from "@prisma/client"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
-type SelectAsActiveProps = {
-  player: PlayerProfile
-}
-
-export const useSelectAsActive = ({ player }: SelectAsActiveProps) => {
+export const useSelectAsActive = () => {
   const router = useRouter()
   const utils = api.useUtils()
 
@@ -27,7 +23,7 @@ export const useSelectAsActive = ({ player }: SelectAsActiveProps) => {
     }
   })
 
-  const handleSelectAsActive = async () => {
+  const handleSelectAsActive = async (player: PlayerProfile) => {
     if (player.isActive) {
       // TODO: add toast
     }

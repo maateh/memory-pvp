@@ -27,14 +27,9 @@ const PlayerProfileActions = ({
   setEditing,
   setColor
 }: PlayerProfileActionsProps) => {
-  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayer({
-    player,
-    updatedPlayer,
-    setEditing
-  })
-
-  const { deletePlayer, handleDeletePlayer } = useDeletePlayer({ player })
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActive({ player })
+  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayer({ setEditing })
+  const { deletePlayer, handleDeletePlayer } = useDeletePlayer()
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActive()
 
   return (
     <div className="flex items-center gap-x-2.5">
@@ -44,7 +39,7 @@ const PlayerProfileActions = ({
             tooltip="Save changes"
             variant="ghost"
             size="icon"
-            onClick={handleUpdatePlayer}
+            onClick={() => handleUpdatePlayer({ player, updatedPlayer })}
             disabled={updatePlayer.isPending || deletePlayer.isPending}
           >
             {updatePlayer.isPending ? (
@@ -81,7 +76,7 @@ const PlayerProfileActions = ({
               )}
               variant="ghost"
               size="icon"
-              onClick={handleSelectAsActive}
+              onClick={() => handleSelectAsActive(player)}
               disabled={selectAsActive.isPending || deletePlayer.isPending}
             >
               {selectAsActive.isPending ? (
@@ -107,7 +102,7 @@ const PlayerProfileActions = ({
               tooltip="Delete player profile"
               variant="destructive"
               size="icon"
-              onClick={handleDeletePlayer} // TODO: show confirm before deletion
+              onClick={() => handleDeletePlayer(player)} // TODO: show confirm before deletion
               disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
             >
               {deletePlayer.isPending ? (

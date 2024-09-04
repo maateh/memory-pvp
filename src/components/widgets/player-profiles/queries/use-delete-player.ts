@@ -7,11 +7,7 @@ import { PlayerProfile } from "@prisma/client"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
-type DeletePlayerProps = {
-  player: PlayerProfile
-}
-
-export const useDeletePlayer = ({ player }: DeletePlayerProps) => {
+export const useDeletePlayer = () => {
   const router = useRouter()
   const utils = api.useUtils()
 
@@ -27,7 +23,7 @@ export const useDeletePlayer = ({ player }: DeletePlayerProps) => {
     }
   })
 
-  const handleDeletePlayer = async () => {
+  const handleDeletePlayer = async (player: PlayerProfile) => {
     if (player.isActive) {
       // TODO: add toast
       return

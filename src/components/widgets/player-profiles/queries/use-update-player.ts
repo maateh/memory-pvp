@@ -7,13 +7,16 @@ import { PlayerProfile } from "@prisma/client"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
-type UpdatePlayerProps = {
-  player: PlayerProfile
-  updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
+type UseUpdatePlayerProps = {
   setEditing: (editing: boolean) => void
 }
 
-export const useUpdatePlayer = ({ player, updatedPlayer, setEditing }: UpdatePlayerProps) => {
+type HandleUpdatePlayerProps = {
+  player: PlayerProfile
+  updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
+}
+
+export const useUpdatePlayer = ({ setEditing }: UseUpdatePlayerProps) => {
   const router = useRouter()
   const utils = api.useUtils()
 
@@ -30,7 +33,7 @@ export const useUpdatePlayer = ({ player, updatedPlayer, setEditing }: UpdatePla
     }
   })
 
-  const handleUpdatePlayer = async () => {
+  const handleUpdatePlayer = async ({ player, updatedPlayer }: HandleUpdatePlayerProps) => {
     const { tag, color } = updatedPlayer
 
     if (tag === player.tag && color === player.color) {
