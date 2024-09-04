@@ -9,29 +9,25 @@ import { type WidgetInfo } from "@/components/widgets"
 import PlayerProfilesWidgetCard from "./card"
 import PlayerProfilesWidgetModal from "./modal"
 
-const widgetInfo: WidgetInfo = {
+export const widgetInfo: WidgetInfo = {
   title: "Player Profiles",
   description: "Create different player profiles to play with it. It makes easily possible to use smurf profiles if you want.",
   icon: <Gamepad2 />
 }
 
 const PlayerProfilesWidget = async () => {
-  const userWithPlayers = await api.user.getWithPlayerProfiles()
-
-  const activePlayerProfile = userWithPlayers?.playerProfiles.find(
-    (player) => player.isActive
-  )
+  const user = await api.user.getWithPlayerProfiles()
+  const activePlayer = user?.playerProfiles.find((player) => player.isActive)
 
   return (
     <>
       <PlayerProfilesWidgetCard
-        playerProfiles={userWithPlayers?.playerProfiles}
-        activePlayerProfile={activePlayerProfile}
+        activePlayer={activePlayer}
         {...widgetInfo}
       />
 
       <PlayerProfilesWidgetModal
-        user={userWithPlayers}
+        players={user?.playerProfiles || []}
         {...widgetInfo}
       />
     </>

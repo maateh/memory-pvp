@@ -1,5 +1,8 @@
 "use client"
 
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
@@ -12,10 +15,10 @@ import PlayerProfileList from "./player-profile-list"
 import { useWidgetModal } from "@/hooks/use-widget-modal"
 
 type PlayerProfilesWidgetModalProps = {
-  user: UserWithPlayerProfiles | null
+  players: PlayerProfile[]
 } & WidgetInfo
 
-const PlayerProfilesWidgetModal = ({ user, ...props }: PlayerProfilesWidgetModalProps) => {
+const PlayerProfilesWidgetModal = ({ players, ...props }: PlayerProfilesWidgetModalProps) => {
   const { widgetKey, isOpen } = useWidgetModal()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
@@ -35,7 +38,7 @@ const PlayerProfilesWidgetModal = ({ user, ...props }: PlayerProfilesWidgetModal
         Manage your current profiles
       </h4>
 
-      <PlayerProfileList players={user?.playerProfiles} />
+      <PlayerProfileList players={players} />
     </WidgetModal>
   )
 }

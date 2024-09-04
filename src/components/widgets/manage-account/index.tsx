@@ -17,7 +17,7 @@ const widgetInfo: WidgetInfo = {
 const ManageAccountWidget = async () => {
   const user = await api.user.get()
 
-  return <ManageAccountWidgetCard user={user!} {...widgetInfo} />
+  return <ManageAccountWidgetCard user={user} {...widgetInfo} />
 }
 
 export default ManageAccountWidget

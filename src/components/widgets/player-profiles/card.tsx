@@ -12,15 +12,10 @@ import PlayerProfileCard from "./player-profile-card"
 import { useWidgetModal } from "@/hooks/use-widget-modal"
 
 type PlayerProfilesWidgetCardProps = {
-  playerProfiles?: PlayerProfile[] | null
-  activePlayerProfile?: PlayerProfile | null
+  activePlayer?: PlayerProfile | null
 } & WidgetInfo
 
-const PlayerProfilesWidgetCard = ({
-  playerProfiles,
-  activePlayerProfile,
-  ...widgetProps
-}: PlayerProfilesWidgetCardProps) => {
+const PlayerProfilesWidgetCard = ({ activePlayer, ...widgetProps }: PlayerProfilesWidgetCardProps) => {
   const openModal = useWidgetModal((state) => state.openModal)
 
   return (
@@ -32,8 +27,8 @@ const PlayerProfilesWidgetCard = ({
         Active player profile
       </h4>
 
-      {activePlayerProfile ? (
-        <PlayerProfileCard player={activePlayerProfile} />
+      {activePlayer ? (
+        <PlayerProfileCard player={activePlayer} />
       ) : (
         <Warning message="Currently, you don't have any player profile." />
       )}
