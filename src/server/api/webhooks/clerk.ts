@@ -53,17 +53,17 @@ export async function userCreated(evt: WebhookEvent) {
 
   const { id, email_addresses, username, image_url } = evt.data
 
-  const clerkUser = await api.user.create({
+  const user = await api.user.create({
     clerkId: id,
     email: email_addresses[0].email_address,
     username: username!,
     imageUrl: image_url
   })
 
-  if (clerkUser) {
+  if (user) {
     await clerkClient.users.updateUserMetadata(id, {
       publicMetadata: {
-        userId: clerkUser.id
+        userId: user.id
       }
     })
   }

@@ -10,10 +10,10 @@ export const userRouter = createTRPCRouter({
 
   create: publicProcedure
     .input(userSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { clerkId, email, username, imageUrl } = input
 
-      return ctx.db.user.create({
+      return await ctx.db.user.create({
         data: {
           clerkId,
           username,
@@ -25,10 +25,10 @@ export const userRouter = createTRPCRouter({
 
   update: publicProcedure
     .input(userSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { clerkId, email, username, imageUrl } = input
 
-      return ctx.db.user.update({
+      return await ctx.db.user.update({
         where: {
           clerkId
         },
@@ -42,10 +42,10 @@ export const userRouter = createTRPCRouter({
 
   delete: publicProcedure
     .input(userDeleteSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { clerkId } = input
 
-      return ctx.db.user.delete({
+      return await ctx.db.user.delete({
         where: {
           clerkId
         }
@@ -54,7 +54,7 @@ export const userRouter = createTRPCRouter({
 
   getWithPlayerProfiles: protectedProcedure
     .query(async ({ ctx }) => {
-      return ctx.db.user.findUnique({
+      return await ctx.db.user.findUnique({
         where: {
           id: ctx.user.id
         },

@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 // trpc
+import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
@@ -12,6 +13,16 @@ export const playerProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { playerTag, color } = input
 
+      const player = await ctx.db.playerProfile.findUnique({
+        where: {
+          tag: playerTag
+        }
+      })
+
+      if (player) {
+        throw new TRPCError({ code: 'CONFLICT' })
+      }
+
       const isActive = await ctx.db.playerProfile.count({
         where: {
           userId: ctx.user.id,
@@ -19,7 +30,7 @@ export const playerProfileRouter = createTRPCRouter({
         }
       })
 
-      return ctx.db.playerProfile.create({
+      return await ctx.db.playerProfile.create({
         data: {
           userId: ctx.user.id,
           tag: playerTag,
@@ -34,7 +45,17 @@ export const playerProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { playerId, playerTag, color } = input
 
-      return ctx.db.playerProfile.update({
+      const player = await ctx.db.playerProfile.findUnique({
+        where: {
+          tag: playerTag
+        }
+      })
+
+      if (player) {
+        throw new TRPCError({ code: 'CONFLICT' })
+      }
+
+      return await ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
           id: playerId
@@ -51,7 +72,18 @@ export const playerProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { playerId } = input
 
-      return ctx.db.playerProfile.delete({
+      const isActive = await ctx.db.playerProfile.findUnique({
+        where: {
+          id: playerId,
+          isActive: true
+        }
+      })
+
+      if (isActive) {
+        throw new TRPCError({ code: 'CONFLICT' })
+      }
+
+      return await ctx.db.playerProfile.delete({
         where: {
           userId: ctx.user.id,
           id: playerId,
@@ -77,7 +109,7 @@ export const playerProfileRouter = createTRPCRouter({
         }
       })
 
-      return ctx.db.playerProfile.update({
+      return await ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
           id: playerId
