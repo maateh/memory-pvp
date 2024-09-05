@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation"
 
+import { toast } from "sonner"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
@@ -12,20 +14,26 @@ export const useDeletePlayer = () => {
   const utils = api.useUtils()
 
   const deletePlayer = api.playerProfile.delete.useMutation({
-    onSuccess: async () => {
-      // TODO: add toast
-      router.refresh()
+    onSuccess: async (player) => {
+      toast.warning('Player deleted!', {
+        description: `You've deleted your player profile: ${player.tag}`
+      })
 
+      router.refresh()
       await utils.user.getWithPlayerProfiles.invalidate()
     },
     onError: () => {
-      // TODO: add toast
+      toast.error('Something went wrong.', {
+        description: 'Failed to delete player profile. Please try again later.'
+      })
     }
   })
 
   const handleDeletePlayer = async (player: PlayerProfile) => {
     if (player.isActive) {
-      // TODO: add toast
+      toast.warning(`${player.tag} cannot be deleted!`, {
+        description: "You can't delete an active player profile."
+      })
       return
     }
 

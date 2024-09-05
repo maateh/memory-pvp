@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation"
 
+import { toast } from "sonner"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
@@ -21,15 +23,19 @@ export const useUpdatePlayer = ({ setEditing }: UseUpdatePlayerProps) => {
   const utils = api.useUtils()
 
   const updatePlayer = api.playerProfile.update.useMutation({
-    onSuccess: async () => {
-      // TODO: add toast
-      router.refresh()
-      setEditing(false)
+    onSuccess: async (player) => {
+      toast.success('Player updated!', {
+        description: `You've updated your player profile: ${player.tag}`
+      })
 
+      setEditing(false)
+      router.refresh()
       await utils.user.getWithPlayerProfiles.invalidate()
     },
     onError: () => {
-      // TODO: add toast
+      toast.error('Something went wrong.', {
+        description: 'Failed to update player profile. Please try again later.'
+      })
     }
   })
 

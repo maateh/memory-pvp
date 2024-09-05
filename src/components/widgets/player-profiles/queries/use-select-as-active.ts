@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation"
 
+import { toast } from "sonner"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
@@ -12,21 +14,23 @@ export const useSelectAsActive = () => {
   const utils = api.useUtils()
 
   const selectAsActive = api.playerProfile.selectAsActive.useMutation({
-    onSuccess: async () => {
-      // TODO: add toast
-      router.refresh()
+    onSuccess: async (player) => {
+      toast.success('Player selected!', {
+        description: `You've selected ${player.tag} as your active player profile.`
+      })
 
+      router.refresh()
       await utils.user.getWithPlayerProfiles.invalidate()
     },
     onError: () => {
-      // TODO: add toast
+      toast.error('Something went wrong.', {
+        description: 'Failed to select player profile as active. Please try again later.'
+      })
     }
   })
 
   const handleSelectAsActive = async (player: PlayerProfile) => {
-    if (player.isActive) {
-      // TODO: add toast
-    }
+    if (player.isActive) return
 
     try {
       await selectAsActive.mutateAsync({ playerId: player.id })

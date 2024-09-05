@@ -5,6 +5,7 @@ import { z } from "zod"
 import { useRouter } from "next/navigation"
 
 import { UseFormReturn } from "react-hook-form"
+import { toast } from "sonner"
 
 // trpc
 import { TRPCClientError } from "@trpc/client"
@@ -33,13 +34,17 @@ const PlayerProfileForm = () => {
 
   const createPlayer = api.playerProfile.create.useMutation({
     onSuccess: async () => {
-      // TODO: add toast
-      router.refresh()
+      toast.success('Player created!', {
+        description: `You've created a new player profile: asd`
+      })
 
+      router.refresh()
       await utils.user.getWithPlayerProfiles.invalidate()
     },
     onError: () => {
-      // TODO: add toast
+      toast.error('Something went wrong.', {
+        description: 'Failed to create player profile. Please try again later.'
+      })
     }
   })
 
