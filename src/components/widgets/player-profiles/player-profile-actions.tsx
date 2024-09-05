@@ -43,7 +43,7 @@ const PlayerProfileActions = ({
             disabled={updatePlayer.isPending || deletePlayer.isPending}
           >
             {updatePlayer.isPending ? (
-              <Loader2 className="size-5 text-accent" />
+              <Loader2 className="size-5 text-accent animate-spin" />
             ) : (
               <CheckCircle2 className="size-5 text-accent" />
             )}
@@ -80,7 +80,7 @@ const PlayerProfileActions = ({
               disabled={selectAsActive.isPending || deletePlayer.isPending}
             >
               {selectAsActive.isPending ? (
-                <Loader2 className="size-4 text-muted-foreground" />
+                <Loader2 className="size-4 text-muted-foreground animate-spin" />
               ) : (
                 <ShieldPlus className="size-4 text-muted-foreground" />
               )}
@@ -106,7 +106,7 @@ const PlayerProfileActions = ({
               disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
             >
               {deletePlayer.isPending ? (
-                <Loader2 className="size-4" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
                 <Trash2 className="size-4" />
               )}
