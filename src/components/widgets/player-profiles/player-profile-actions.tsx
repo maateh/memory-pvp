@@ -10,7 +10,7 @@ import { CheckCircle2, Edit, Loader2, ShieldPlus, Trash2, XCircle } from "lucide
 import { ButtonTooltip } from "@/components/ui/button"
 
 // hooks
-import { useDeletePlayer, useSelectAsActive, useUpdatePlayer } from "./queries"
+import { useDeletePlayer, useSelectAsActive, useUpdatePlayer } from "./mutations"
 
 type PlayerProfileActionsProps = {
   player: PlayerProfile

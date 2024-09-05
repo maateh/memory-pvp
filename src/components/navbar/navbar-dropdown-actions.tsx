@@ -33,7 +33,7 @@ import { PlayerBadge } from "@/components/player"
 
 // hooks
 import { useWidgetModal } from "@/hooks/use-widget-modal"
-import { useSelectAsActive } from "@/components/widgets/player-profiles/queries"
+import { useSelectAsActive } from "@/components/widgets/player-profiles/mutations"
 
 type NavbarDropdownActionsProps = {
   players: PlayerProfile[]
