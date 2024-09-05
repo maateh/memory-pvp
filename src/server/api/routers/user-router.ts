@@ -50,17 +50,5 @@ export const userRouter = createTRPCRouter({
           clerkId
         }
       })
-    }),
-
-  getWithPlayerProfiles: protectedProcedure
-    .query(async ({ ctx }) => {
-      return await ctx.db.user.findUnique({
-        where: {
-          id: ctx.user.id
-        },
-        include: {
-          playerProfiles: true
-        }
-      })
     })
 })
