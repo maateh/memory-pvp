@@ -1,9 +1,6 @@
 // trpc
 import { api } from "@/trpc/server"
 
-// constants
-import { playerProfilesWidgetInfo } from "./constants"
-
 // components
 import PlayerProfilesWidgetCard from "./card"
 
@@ -13,7 +10,6 @@ const PlayerProfilesWidget = async () => {
   return (
     <PlayerProfilesWidgetCard
       activePlayer={activePlayer}
-      {...playerProfilesWidgetInfo}
     />
   )
 }

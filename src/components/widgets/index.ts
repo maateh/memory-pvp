@@ -1,7 +1,10 @@
+// types
+import { LucideIcon } from "lucide-react"
+
 export type WidgetInfo = {
   title: string
   description?: string
-  icon?: React.ReactNode
+  Icon?: LucideIcon
 }
 
 export { default as WidgetCard } from "./widget-card"

@@ -3,9 +3,12 @@
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
+// constants
+import { playerProfilesWidgetInfo } from "./constants"
+
 // components
 import { Warning } from "@/components/shared"
-import { WidgetCard, type WidgetInfo } from "@/components/widgets"
+import { WidgetCard } from "@/components/widgets"
 import PlayerProfileCard from "./player-profile-card"
 
 // hooks
@@ -13,15 +16,15 @@ import { useWidgetModal } from "@/hooks/use-widget-modal"
 
 type PlayerProfilesWidgetCardProps = {
   activePlayer?: PlayerProfile | null
-} & WidgetInfo
+}
 
-const PlayerProfilesWidgetCard = ({ activePlayer, ...widgetProps }: PlayerProfilesWidgetCardProps) => {
+const PlayerProfilesWidgetCard = ({ activePlayer }: PlayerProfilesWidgetCardProps) => {
   const openModal = useWidgetModal((state) => state.openModal)
 
   return (
     <WidgetCard
       widgetAction={() => openModal("playerProfiles")}
-      {...widgetProps}
+      {...playerProfilesWidgetInfo}
     >
       <h4 className="mt-2 mb-4 w-fit border-t border-t-accent text-lg font-heading font-semibold small-caps">
         Active player profile

@@ -21,7 +21,7 @@ type WidgetCardProps = {
 const WidgetCard = ({
   title,
   description,
-  icon,
+  Icon,
   widgetAction,
   className,
   children
@@ -31,11 +31,7 @@ const WidgetCard = ({
       <CardHeader>
         <div className="flex items-center justify-between gap-5">
           <div className="flex-1 flex gap-x-4">
-            {icon && (
-              <div className="size-6 sm:size-7">
-                {icon}
-              </div>
-            )}
+            {Icon && <Icon className="size-6 sm:size-7" />}
 
             <CardTitle className="text-2xl sm:text-3xl font-heading heading-decorator">
               {title}

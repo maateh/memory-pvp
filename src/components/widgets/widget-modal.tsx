@@ -18,7 +18,7 @@ type WidgetModalProps = {
 } & WidgetInfo
   & React.PropsWithChildren
 
-const WidgetModal = ({ title, description, icon, isOpen, children }: WidgetModalProps) => {
+const WidgetModal = ({ title, description, Icon, isOpen, children }: WidgetModalProps) => {
   const closeModal = useWidgetModal((state) => state.closeModal)
 
   return (
@@ -26,11 +26,7 @@ const WidgetModal = ({ title, description, icon, isOpen, children }: WidgetModal
       <DialogContent>
         <DialogHeader>
           <div className="flex-1 flex gap-x-4">
-            {icon && (
-              <div className="size-6 sm:size-7">
-                {icon}
-              </div>
-            )}
+            {Icon && <Icon className="size-6 sm:size-7" />}
 
             <DialogTitle className="text-2xl sm:text-3xl font-heading heading-decorator">
               {title}
