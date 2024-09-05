@@ -6,24 +6,15 @@ import { playerProfilesWidgetInfo } from "./constants"
 
 // components
 import PlayerProfilesWidgetCard from "./card"
-import PlayerProfilesWidgetModal from "./modal"
 
 const PlayerProfilesWidget = async () => {
-  const user = await api.user.getWithPlayerProfiles()
-  const activePlayer = user?.playerProfiles.find((player) => player.isActive)
+  const activePlayer = await api.playerProfile.getActive()
 
   return (
-    <>
-      <PlayerProfilesWidgetCard
-        activePlayer={activePlayer}
-        {...playerProfilesWidgetInfo}
-      />
-
-      <PlayerProfilesWidgetModal
-        players={user?.playerProfiles || []}
-        {...playerProfilesWidgetInfo}
-      />
-    </>
+    <PlayerProfilesWidgetCard
+      activePlayer={activePlayer}
+      {...playerProfilesWidgetInfo}
+    />
   )
 }
 

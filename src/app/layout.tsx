@@ -3,7 +3,7 @@ import { Josefin_Sans, Geologica } from "next/font/google"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider, TRPCProvider } from "@/components/providers"
+import { ThemeProvider, TRPCProvider, WidgetModalProvider } from "@/components/providers"
 import { Toaster } from "@/components/ui/sonner"
 
 // styles
@@ -45,6 +45,7 @@ const BaseLayout = ({ children }: React.PropsWithChildren) => {
               storageKey="memory-theme"
               enableSystem
             >
+              <WidgetModalProvider />
               <Toaster />
 
               {children}

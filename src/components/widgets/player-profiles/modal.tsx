@@ -1,26 +1,24 @@
 "use client"
 
-// prisma
-import { PlayerProfile } from "@prisma/client"
+// trpc
+import { api } from "@/trpc/client"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/form"
-import { type WidgetInfo, WidgetModal } from "@/components/widgets"
+import { WidgetModal, type WidgetInfo } from "@/components/widgets"
 import PlayerProfileList from "./player-profile-list"
 
 // hooks
 import { useWidgetModal } from "@/hooks/use-widget-modal"
 
-type PlayerProfilesWidgetModalProps = {
-  players: PlayerProfile[]
-} & WidgetInfo
-
-const PlayerProfilesWidgetModal = ({ players, ...props }: PlayerProfilesWidgetModalProps) => {
+const PlayerProfilesWidgetModal = ({ ...props }: WidgetInfo) => {
   const { widgetKey, isOpen } = useWidgetModal()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
+
+  const { data: players, isLoading } = api.playerProfile.getAll.useQuery()
 
   return (
     <WidgetModal isOpen={isModalOpen} {...props}>
@@ -38,7 +36,11 @@ const PlayerProfilesWidgetModal = ({ players, ...props }: PlayerProfilesWidgetMo
         Manage your current profiles
       </h4>
 
-      <PlayerProfileList players={players} />
+      {isLoading ? (
+        <>TODO: loading skeleton</>
+      ) : (
+        <PlayerProfileList players={players} />
+      )}
     </WidgetModal>
   )
 }
