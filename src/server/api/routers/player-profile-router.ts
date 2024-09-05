@@ -8,6 +8,37 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
+  getAll: protectedProcedure
+    .query(async ({ ctx }) => {
+      const players = await ctx.db.playerProfile.findMany({
+        where: {
+          userId: ctx.user.id
+        }
+      })
+
+      if (players.length === 0) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return players
+    }),
+
+  getActive: protectedProcedure
+    .query(async ({ ctx }) => {
+      const activePlayer = await ctx.db.playerProfile.findFirst({
+        where: {
+          userId: ctx.user.id,
+          isActive: true
+        }
+      })
+
+      if (!activePlayer) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return activePlayer
+    }),
+
   create: protectedProcedure
     .input(playerProfileCreateSchema)
     .mutation(async ({ ctx, input }) => {

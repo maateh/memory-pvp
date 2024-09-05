@@ -20,7 +20,7 @@ export const useDeletePlayer = () => {
       })
 
       router.refresh()
-      await utils.user.getWithPlayerProfiles.invalidate()
+      await utils.playerProfile.getAll.invalidate()
     },
     onError: () => {
       toast.error('Something went wrong.', {

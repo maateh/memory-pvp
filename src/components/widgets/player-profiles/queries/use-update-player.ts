@@ -30,7 +30,7 @@ export const useUpdatePlayer = ({ setEditing }: UseUpdatePlayerProps) => {
 
       setEditing(false)
       router.refresh()
-      await utils.user.getWithPlayerProfiles.invalidate()
+      await utils.playerProfile.invalidate()
     },
     onError: () => {
       toast.error('Something went wrong.', {
