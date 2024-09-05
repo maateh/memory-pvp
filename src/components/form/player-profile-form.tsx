@@ -1,6 +1,6 @@
 "use client"
 
-import { z } from "zod"
+import { z, ZodError } from "zod"
 
 import { useRouter } from "next/navigation"
 
@@ -41,7 +41,21 @@ const PlayerProfileForm = () => {
       router.refresh()
       await utils.playerProfile.invalidate()
     },
-    onError: () => {
+    onError: (err) => {
+      if (err.data?.code === 'CONFLICT') {
+        toast.error('Player tag is already in use.', {
+          description: 'Please try another player tag.'
+        })
+        return
+      }
+
+      if (err instanceof ZodError) {
+        toast.error('Validation error', {
+          description: 'Please fill in fields correctly.'
+        })
+        return
+      }
+
       toast.error('Something went wrong.', {
         description: 'Failed to create player profile. Please try again later.'
       })

@@ -22,7 +22,14 @@ export const useDeletePlayer = () => {
       router.refresh()
       await utils.playerProfile.getAll.invalidate()
     },
-    onError: () => {
+    onError: (err) => {
+      if (err.data?.code === 'CONFLICT') {
+        toast.error('Active player profiles cannot be deleted!', {
+          description: "Please try select another player as active before you delete this one."
+        })
+        return
+      }
+
       toast.error('Something went wrong.', {
         description: 'Failed to delete player profile. Please try again later.'
       })
