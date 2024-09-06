@@ -21,7 +21,9 @@ const PlayerProfilesWidgetModal = () => {
   const { widgetKey, isOpen } = useWidgetModal()
   const isModalOpen = isOpen && widgetKey === "playerProfiles"
 
-  const { data: players, isLoading } = api.playerProfile.getAll.useQuery()
+  const { data: players, isLoading } = api.playerProfile.getAll.useQuery(undefined, {
+    enabled: isModalOpen
+  })
 
   return (
     <WidgetModal isOpen={isModalOpen} {...playerProfilesWidgetInfo}>
