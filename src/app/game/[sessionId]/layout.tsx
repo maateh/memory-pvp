@@ -1,18 +1,16 @@
 // components
-import { GameActionBar, GameSessionInfoFooter } from "@/components/game"
+import { GameActionBar, GameSessionFooter } from "@/components/game"
 
 const GameSessionLayout = ({ children }: React.PropsWithChildren) => {
   return (
-    <div className="relative h-screen">
-      <div className="absolute inset-x-0">
-        <GameActionBar />
+    <div className="h-screen w-full mx-auto flex flex-col items-center gap-y-4 bg-foreground/5 md:max-w-screen-lg lg:max-w-screen-xl">
+      <GameActionBar />
+
+      <div className="flex-1">
+        {children}
       </div>
 
-      {children}
-
-      <div className="absolute bottom-0 inset-x-0">
-        <GameSessionInfoFooter />
-      </div>
+      <GameSessionFooter />
     </div>
   )
 }
