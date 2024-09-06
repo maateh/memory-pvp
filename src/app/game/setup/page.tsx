@@ -10,7 +10,7 @@ import { gamemodes, tableSizes } from "@/constants/navigation"
 import { cn } from "@/lib/utils"
 
 // icons
-import { LayoutDashboard } from "lucide-react"
+import { CirclePlay, LayoutDashboard } from "lucide-react"
 
 // shadcn
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -26,7 +26,7 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
   return (
     <div className="flex-1 pt-16 pb-8 px-4 flex flex-col gap-y-3">
       <div className="w-fit mx-auto text-center">
-        <h1 className="mx-auto text-3xl font-heading font-semibold heading-decorator sm:text-4xl">
+        <h1 className="w-fit mx-auto text-3xl font-heading font-semibold sm:heading-decorator sm:text-4xl max-sm:border-t-2 max-sm:border-t-accent max-sm:pt-2">
           Let&apos;s memorize!
         </h1>
 
@@ -38,7 +38,7 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
       <Separator className="w-3/5 mx-auto my-6 sm:w-2/5 lg:w-1/5" />
 
       <div className="space-y-2 text-center">
-        <h2 className="text-xl font-heading font-semibold small-caps">
+        <h2 className="text-lg font-heading font-semibold small-caps sm:text-xl">
           Select Gamemode
         </h2>
 
@@ -50,8 +50,8 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
               disabled={key !== GameMode.SINGLE}
               key={key}
             >
-              <Icon className="size-5 shrink-0" />
-              <p className="text-lg small-caps">
+              <Icon className="size-4 sm:size-5 shrink-0" />
+              <p className="text-base sm:text-lg small-caps">
                 {label}
               </p>
             </Button>
@@ -60,7 +60,7 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
       </div>
 
       <div className="mt-12 space-y-2 text-center sm:mt-8">
-        <h2 className="text-xl font-heading font-semibold small-caps">
+        <h2 className="text-lg font-heading font-semibold small-caps sm:text-xl">
           Table Size
         </h2>
 
@@ -71,8 +71,8 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
               size="icon"
               key={key}
             >
-              <Icon className="size-5 shrink-0" />
-              <p className="text-lg small-caps">
+              <Icon className="size-4 sm:size-5 shrink-0" />
+              <p className="text-base sm:text-lg small-caps">
                 {label}
               </p>
             </Button>
@@ -80,15 +80,26 @@ const GameSetupPage = ({ searchParams }: GameSetupPageProps) => {
         </div>
       </div>
 
-      <Link className={cn(buttonVariants({
-        className: "py-7 px-6 mx-auto mt-auto gap-x-2 text-base",
-        variant: "destructive"
-      }))}
-        href="/"
-      >
-        <LayoutDashboard />
-        Back to the homepage
-      </Link>
+
+      <div className="mt-auto flex flex-col items-center gap-y-4">
+        <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
+          variant="secondary"
+          // TODO: onClick={startGame}
+        >
+          <CirclePlay className="size-5 sm:size-6 shrink-0" />
+          Start new game
+        </Button>
+
+        <Link className={cn(buttonVariants({
+          className: "gap-x-2 text-sm sm:text-base",
+          variant: "destructive"
+        }))}
+          href="/"
+        >
+          <LayoutDashboard className="size-5 sm:size-6 shrink-0" />
+          Go back
+        </Link>
+      </div>
     </div>
   )
 }
