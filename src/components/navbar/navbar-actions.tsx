@@ -29,14 +29,16 @@ const NavbarActions = ({ hasActivePlayer }: NavbarActionsProps) => {
         onClick={() => openWidgetModal('playerProfiles')}
       >
         <Plus className="size-4" strokeWidth={4} />
-        New player {/* TODO: open manage player profiles dialog */}
+        New player
       </Button>
 
       <Button className={cn("h-fit py-1.5 gap-x-2 hidden 2xl:flex", {
         "lg:flex": !hasActivePlayer
-      })}>
+      })}
+        onClick={() => openWidgetModal('gameSessions')}
+      >
         <History className="size-4" strokeWidth={2.5} />
-        Game sessions {/* TODO: add previous game sessions modal or page */}
+        Game sessions
       </Button>
     </div>
   )

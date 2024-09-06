@@ -121,6 +121,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "lg:hidden": players.length === 0
         })}
           variant="secondary"
+          onClick={() => openWidgetModal('gameSessions')}
         >
           <Gamepad2 className="size-4" strokeWidth={2.75} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">

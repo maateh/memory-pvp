@@ -1,7 +1,7 @@
 // zustand
 import { create } from "zustand"
 
-export type WidgetKey = "" | "manageAccount" | "playerProfiles"
+export type WidgetKey = "" | "manageAccount" | "playerProfiles" | "gameSessions"
 
 type WidgetModalStore = {
   widgetKey: WidgetKey
