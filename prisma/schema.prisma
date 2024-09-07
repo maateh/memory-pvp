@@ -21,18 +21,58 @@ model User {
 }
 
 model PlayerProfile {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  tag        String  @unique
-  color      String
-  isActive   Boolean
-
-  results Result[]
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  tag      String  @unique
+  color    String
+  isActive Boolean
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
 
+  results Result[]
+
+  sessions      GameSession[] @relation("SessionOwner")
+  guestSessions GameSession[] @relation("SessionGuest")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model GameSession {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String @unique
+
+  status GameStatus
+
+  type      GameType
+  mode      GameMode
+  tableSize TableSize
+
+  sessionOwner   PlayerProfile @relation("SessionOwner", fields: [sessionOwnerId], references: [id], onDelete: Cascade)
+  sessionOwnerId String        @db.ObjectId
+
+  sessionGuest   PlayerProfile? @relation("SessionGuest", fields: [sessionGuestId], references: [id], onDelete: Cascade)
+  sessionGuestId String?        @db.ObjectId
+
+  results Result[]
+
+  startedAt  DateTime
+  finishedAt DateTime?
+}
+
+model Result {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  score Int
+  timer Int
+
+  session   GameSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+  sessionId String
+
+  playerProfile   PlayerProfile @relation(fields: [playerProfileId], references: [id], onDelete: Cascade)
+  playerProfileId String        @db.ObjectId
+
+  createdAt DateTime @default(now())
 }
 
 enum GameStatus {
@@ -56,35 +96,4 @@ enum TableSize {
   SMALL
   MEDIUM
   LARGE
-}
-
-model GameSession {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId String @unique
-
-  status GameStatus
-
-  type      GameType
-  mode      GameMode
-  tableSize TableSize
-
-  results Result[]
-
-  startedAt  DateTime
-  finishedAt DateTime @default(now())
-}
-
-model Result {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  score Int
-  timer Int
-
-  session   GameSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
-  sessionId String
-
-  playerProfile   PlayerProfile @relation(fields: [playerProfileId], references: [id], onDelete: Cascade)
-  playerProfileId String        @db.ObjectId
-
-  createdAt DateTime @default(now())
 }
