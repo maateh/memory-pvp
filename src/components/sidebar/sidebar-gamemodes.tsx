@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 // constants
-import { gamemodes } from "@/constants/navigation"
+import { gameModes } from "@/constants/game"
 
 // shadcn
 import { buttonVariants } from "@/components/ui/button"
@@ -14,7 +14,7 @@ const SidebarGamemodes = () => {
       </h2>
 
       <div className="max-w-xl mx-auto grid grid-cols-2 gap-2">
-        {gamemodes.map(({ key, label, query, Icon }) => (
+        {gameModes.map(({ key, label, query, Icon }) => (
           <Link className={buttonVariants({
             className: "px-2.5 py-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 rounded-xl last-of-type:col-span-2",
             variant: "outline",
