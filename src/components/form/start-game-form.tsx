@@ -3,11 +3,13 @@
 import { z } from "zod"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { DefaultValues, UseFormReturn } from "react-hook-form"
 
 // trpc
 import { TRPCClientError } from "@trpc/client"
+import { api } from "@/trpc/client"
 
 // constants
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
@@ -36,11 +38,27 @@ type StartGameFormProps = {
 }
 
 const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
-  const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
-    try {
-      // TODO: handle submit
-      console.log(values)
+  const router = useRouter()
 
+  const startGame = api.game.create.useMutation({
+    onSuccess: () => {
+      
+    },
+    onError: () => {
+      
+    }
+  })
+
+  const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
+    // TODO: check if there is any session still in progress for the user
+    //    -> ask user to continue that session or cancel it
+    //        (with a thrown custom error, it is doable)
+    // note: this might be implemented inside a procedure on backend
+
+    try {
+      const { sessionId } = await startGame.mutateAsync(values)
+
+      router.push(`/game/${sessionId}`)
       form.reset()
     } catch (err) {
       throw new TRPCClientError('Failed to register a game session', { cause: err as Error })
@@ -110,6 +128,7 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
                         <ButtonGroupItem className="p-2.5 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
                           size="icon"
                           value={key}
+                          disabled={key !== 'SINGLE'}
                         >
                           <Icon className="size-4 sm:size-5 shrink-0" />
                           <p className="text-base sm:text-lg small-caps">
@@ -159,7 +178,6 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
           <div className="mt-auto flex flex-col items-center gap-y-4">
             <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
               variant="secondary"
-              // TODO: onClick={startGame}
             >
               <CirclePlay className="size-5 sm:size-6 shrink-0" />
               Start new game

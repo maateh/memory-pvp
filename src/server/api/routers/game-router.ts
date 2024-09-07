@@ -1,9 +1,6 @@
 // clerk
 import { auth } from "@clerk/nextjs/server"
 
-// prisma
-import { GameSession } from "@prisma/client"
-
 // trpc
 import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
@@ -15,6 +12,10 @@ export const gameRouter = createTRPCRouter({
   create: publicProcedure
     .input(startGameSchema)
     .mutation(async ({ ctx, input }) => {
+      // TODO: check if there is any session still in progress for the user
+      //    -> ask user to continue that session or cancel it
+      // note: consider to move this under a procedure
+
       const { type, mode, tableSize } = input
       const { userId: clerkId } = auth()
 
@@ -27,20 +28,13 @@ export const gameRouter = createTRPCRouter({
         })
       }
 
-      const session: Omit<GameSession,
-        'id' |
-        'sessionOwner' |
-        'sessionOwnerId' |
-        'sessionGuest' |
-        'sessionGuestId'
-      > = {
+      const session: UnsignedGameSessionClient = {
         sessionId: '#sessionId', // TODO: generate session id
         status: 'RUNNING',
         type,
         mode,
         tableSize,
-        startedAt: new Date(),
-        finishedAt: null
+        startedAt: new Date()
       }
       
       if (clerkId) {
