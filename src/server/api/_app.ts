@@ -3,10 +3,12 @@ import { createCallerFactory, createTRPCRouter, publicProcedure } from "@/server
 // routers
 import { userRouter } from "./routers/user-router"
 import { playerProfileRouter } from "./routers/player-profile-router"
+import { gameRouter } from "./routers/game-router"
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
-  playerProfile: playerProfileRouter
+  playerProfile: playerProfileRouter,
+  game: gameRouter
 })
 
 export const createCaller = createCallerFactory(appRouter)
