@@ -3,19 +3,15 @@ import { auth } from "@clerk/nextjs/server"
 
 // trpc
 import { TRPCError } from "@trpc/server"
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
+import { createTRPCRouter, gameProcedure } from "@/server/api/trpc"
 
 // validations
 import { startGameSchema } from "@/lib/validations"
 
 export const gameRouter = createTRPCRouter({
-  create: publicProcedure
+  create: gameProcedure
     .input(startGameSchema)
     .mutation(async ({ ctx, input }) => {
-      // TODO: check if there is any session still in progress for the user
-      //    -> ask user to continue that session or cancel it
-      // note: consider to move this under a procedure
-
       const { type, mode, tableSize } = input
       const { userId: clerkId } = auth()
 

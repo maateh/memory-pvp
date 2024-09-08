@@ -3,7 +3,7 @@ import SuperJSON from 'superjson'
 import { cache } from 'react'
 
 // clerk
-import { auth } from "@clerk/nextjs/server"
+import { auth } from '@clerk/nextjs/server'
 
 // trpc
 import { initTRPC, TRPCError } from '@trpc/server'
@@ -21,7 +21,7 @@ const t = initTRPC
   .context<typeof createTRPCContext>()
   .create({ transformer: SuperJSON })
 
-/* MIDDLEWARES */
+// MIDDLEWARES
 const isProtected = t.middleware(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
@@ -44,8 +44,50 @@ const isProtected = t.middleware(async ({ ctx, next }) => {
   })
 })
 
+const hasActiveSession = t.middleware(async ({ ctx, next }) => {
+  const { userId: clerkId } = auth()
+
+  if (!clerkId) {
+    return next({
+      ctx: { activeSession: null }
+    })
+  }
+
+  const activeSession = await ctx.db.gameSession.findFirst({
+    select: {
+      sessionOwnerId: true,
+      sessionOwner: {
+        select: {
+          user: {
+            select: { clerkId: true }
+          }
+        }
+      }
+    },
+    where: {
+      status: 'RUNNING',
+      sessionOwner: {
+        user: { clerkId }
+      }
+    }
+  })
+
+  if (activeSession) {
+    throw new TRPCError({
+      message: 'You cannot participate in two game sessions at once.',
+      code: 'CONFLICT'
+    })
+  }
+
+  return next({
+    ctx: { activeSession }
+  })
+})
+
 export const createCallerFactory = t.createCallerFactory
 export const createTRPCRouter = t.router
-export const addTRPCMiddleware = t.middleware
+export const createTRPCMiddleware = t.middleware
+
 export const publicProcedure = t.procedure
 export const protectedProcedure = t.procedure.use(isProtected)
+export const gameProcedure = t.procedure.use(hasActiveSession)

@@ -1,10 +1,11 @@
 "use client"
 
-import { z } from "zod"
+import { z, ZodError } from "zod"
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
+import { toast } from "sonner"
 import { DefaultValues, UseFormReturn } from "react-hook-form"
 
 // trpc
@@ -44,17 +45,33 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
     onSuccess: () => {
       
     },
-    onError: () => {
-      
+    onError: (err) => {
+      let message = 'Something went wrong'
+      let description = 'Failed to start game session. Please try again later.'
+
+      if (err.data?.code === 'CONFLICT') {
+        message = 'Failed to start game session'
+        description = err.message
+        
+        // TODO: redirect or open a dialog with options of
+        // continue or stop the previous game session
+      }
+
+      if (err.data?.code === 'NOT_IMPLEMENTED') {
+        message = 'Game mode is not available'
+        description = err.message
+      }
+
+      if (err instanceof ZodError) {
+        message = 'Validation error'
+        description = err.message
+      }
+
+      toast.error(message, { description })
     }
   })
 
   const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
-    // TODO: check if there is any session still in progress for the user
-    //    -> ask user to continue that session or cancel it
-    //        (with a thrown custom error, it is doable)
-    // note: this might be implemented inside a procedure on backend
-
     try {
       const { sessionId } = await startGame.mutateAsync(values)
 
