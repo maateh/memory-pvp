@@ -2,12 +2,15 @@ import { v4 as uuidv4 } from "uuid"
 
 // trpc
 import { TRPCError } from "@trpc/server"
-import { createTRPCRouter, gameProcedure } from "@/server/api/trpc"
+import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
 // validations
 import { startGameSchema } from "@/lib/validations"
 
 export const gameRouter = createTRPCRouter({
+  getActive: protectedGameProcedure
+    .query(({ ctx }) => ctx.activeSession),
+
   create: gameProcedure
     .input(startGameSchema)
     .mutation(async ({ ctx, input }) => {
@@ -15,7 +18,7 @@ export const gameRouter = createTRPCRouter({
 
       if (ctx.activeSession) {
         throw new TRPCError({
-          message: 'You cannot participate in two game sessions at once.',
+          message: 'You cannot participate in two game sessions at once with the same player.',
           code: 'CONFLICT'
         })
       }

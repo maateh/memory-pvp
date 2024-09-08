@@ -79,3 +79,24 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
     ctx: { playerProfile, activeSession }
   })
 })
+
+export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) => {
+  if (!ctx.activeSession || ctx.activeSession.status !== 'RUNNING') {
+    throw new TRPCError({
+      message: "You aren't currently participating in any game session.",
+      code: 'NOT_FOUND'
+    })
+  }
+
+  if (
+    ctx.activeSession.sessionOwner.userId !== ctx.user.id &&
+    ctx.activeSession.sessionGuest?.userId !== ctx.user.id
+  ) {
+    throw new TRPCError({
+      message: "You don't have access to this game session.",
+      code: 'FORBIDDEN'
+    })
+  }
+
+  return next()
+})
