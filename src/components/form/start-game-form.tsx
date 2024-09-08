@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { DefaultValues, UseFormReturn } from "react-hook-form"
 
+// clerk
+import { useClerk } from "@clerk/nextjs"
+
 // trpc
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
@@ -43,16 +46,14 @@ type StartGameFormProps = {
 
 const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   const router = useRouter()
+  const { user: clerkUser } = useClerk()
 
   const registerSession = useGameStore((state) => state.register)
 
   const startGame = api.game.create.useMutation({
-    onSuccess: (session) => {
-      const { sessionId, type, mode, tableSize } = session
-
-      registerSession(session)
+    onSuccess: ({ sessionId, type, mode, tableSize }) => {
       router.push(`/game/${sessionId}`)
-      
+
       toast.success('Game started!', {
         description: `${type} | ${mode} | ${tableSize}`
       })
@@ -84,6 +85,20 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   })
 
   const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
+    if (!clerkUser) {
+      registerSession({
+        startedAt: new Date(),
+        ...values
+      })
+
+      router.push('/game/offline')
+      toast.success('Game started in offline mode!', {
+        description: `${values.type} | ${values.mode} | ${values.tableSize}`
+      })
+
+      return
+    }
+
     try {
       await startGame.mutateAsync(values)
 

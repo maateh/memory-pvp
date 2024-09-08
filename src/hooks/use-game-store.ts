@@ -1,4 +1,14 @@
-import { create } from "zustand";
+import { create } from "zustand"
+
+// prisma
+import { GameMode, GameType, TableSize } from "@prisma/client"
+
+export type UnsignedGameSessionClient = {
+  type: GameType
+  mode: GameMode
+  tableSize: TableSize
+  startedAt: Date
+}
 
 type GameStore = {
   session: UnsignedGameSessionClient | null

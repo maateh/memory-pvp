@@ -1,8 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
 
-// clerk
-import { auth } from "@clerk/nextjs/server"
-
 // trpc
 import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, gameProcedure } from "@/server/api/trpc"
@@ -15,7 +12,13 @@ export const gameRouter = createTRPCRouter({
     .input(startGameSchema)
     .mutation(async ({ ctx, input }) => {
       const { type, mode, tableSize } = input
-      const { userId: clerkId } = auth()
+
+      if (ctx.activeSession) {
+        throw new TRPCError({
+          message: 'You cannot participate in two game sessions at once.',
+          code: 'CONFLICT'
+        })
+      }
 
       // TODO: implement "PVP" & "COOP" game modes
       // ...but first be ready with the basics.
@@ -26,60 +29,21 @@ export const gameRouter = createTRPCRouter({
         })
       }
 
-      const session: UnsignedGameSessionClient = {
-        sessionId: uuidv4(),
-        status: 'RUNNING',
-        type,
-        mode,
-        tableSize,
-        startedAt: new Date()
-      }
-      
-      if (clerkId) {
-        const playerProfile = await ctx.db.playerProfile.findFirst({
-          select: {
-            id: true,
-            user: {
-              select: {
-                clerkId: true
-              }
+      // TODO: save guest -> in pvp & coop modes
+      return await ctx.db.gameSession.create({
+        data: {
+          sessionId: uuidv4(),
+          status: 'RUNNING',
+          type,
+          mode,
+          tableSize,
+          startedAt: new Date(),
+          sessionOwner: {
+            connect: {
+              id: ctx.playerProfile.id
             }
-          },
-          where: {
-            user: { clerkId }
           }
-        })
-
-        if (!playerProfile) {
-          throw new TRPCError({
-            message: 'Player profile not found.',
-            code: 'NOT_FOUND'
-          })
         }
-
-        return await ctx.db.gameSession.create({
-          data: {
-            sessionOwner: {
-              connect: {
-                id: playerProfile.id
-              }
-            },
-            ...session
-          }
-        })
-      }
-
-      if (type === 'CASUAL' && !clerkId) {
-        return session
-      }
-
-      if (type === 'COMPETITIVE' && !clerkId) {
-        throw new TRPCError({
-          message: 'If you want to play in competitive, you must sign in first.',
-          code: 'CONFLICT'
-        })
-      }
-
-      throw new TRPCError({ code: 'BAD_REQUEST' })
+      })
     })
 })

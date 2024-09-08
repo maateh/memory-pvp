@@ -21,8 +21,13 @@ const t = initTRPC
   .context<typeof createTRPCContext>()
   .create({ transformer: SuperJSON })
 
-// MIDDLEWARES
-const isProtected = t.middleware(async ({ ctx, next }) => {
+export const createCallerFactory = t.createCallerFactory
+export const createTRPCRouter = t.router
+export const createTRPCMiddleware = t.middleware
+
+export const publicProcedure = t.procedure
+
+export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {
@@ -44,50 +49,33 @@ const isProtected = t.middleware(async ({ ctx, next }) => {
   })
 })
 
-const hasActiveSession = t.middleware(async ({ ctx, next }) => {
-  const { userId: clerkId } = auth()
+export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const playerProfile = await ctx.db.playerProfile.findFirst({
+    where: {
+      userId: ctx.user.id,
+      isActive: true
+    }
+  })
 
-  if (!clerkId) {
-    return next({
-      ctx: { activeSession: null }
+  if (!playerProfile) {
+    throw new TRPCError({
+      message: 'Player profile not found',
+      code: 'NOT_FOUND'
     })
   }
 
   const activeSession = await ctx.db.gameSession.findFirst({
-    select: {
-      sessionOwnerId: true,
-      sessionOwner: {
-        select: {
-          user: {
-            select: { clerkId: true }
-          }
-        }
-      }
-    },
     where: {
       status: 'RUNNING',
-      sessionOwner: {
-        user: { clerkId }
-      }
+      sessionOwnerId: playerProfile.id
+    },
+    include: {
+      sessionOwner: true,
+      sessionGuest: true
     }
   })
 
-  if (activeSession) {
-    throw new TRPCError({
-      message: 'You cannot participate in two game sessions at once.',
-      code: 'CONFLICT'
-    })
-  }
-
   return next({
-    ctx: { activeSession }
+    ctx: { playerProfile, activeSession }
   })
 })
-
-export const createCallerFactory = t.createCallerFactory
-export const createTRPCRouter = t.router
-export const createTRPCMiddleware = t.middleware
-
-export const publicProcedure = t.procedure
-export const protectedProcedure = t.procedure.use(isProtected)
-export const gameProcedure = t.procedure.use(hasActiveSession)
