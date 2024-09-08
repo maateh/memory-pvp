@@ -22,7 +22,7 @@ import { startGameSchema } from "@/lib/validations"
 import { cn } from "@/lib/utils"
 
 // icons
-import { CirclePlay, LayoutDashboard } from "lucide-react"
+import { CirclePlay, LayoutDashboard, Loader2 } from "lucide-react"
 
 // shadcn
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -42,8 +42,12 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   const router = useRouter()
 
   const startGame = api.game.create.useMutation({
-    onSuccess: () => {
+    onSuccess: ({ sessionId, type, mode, tableSize }) => {
+      router.push(`/game/${sessionId}`)
       
+      toast.success('Game started!', {
+        description: `${type} | ${mode} | ${tableSize}`
+      })
     },
     onError: (err) => {
       let message = 'Something went wrong'
@@ -52,7 +56,7 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
       if (err.data?.code === 'CONFLICT') {
         message = 'Failed to start game session'
         description = err.message
-        
+
         // TODO: redirect or open a dialog with options of
         // continue or stop the previous game session
       }
@@ -73,12 +77,13 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
 
   const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
     try {
-      const { sessionId } = await startGame.mutateAsync(values)
+      await startGame.mutateAsync(values)
 
-      router.push(`/game/${sessionId}`)
       form.reset()
     } catch (err) {
-      throw new TRPCClientError('Failed to register a game session', { cause: err as Error })
+      throw new TRPCClientError('Failed to register a game session', {
+        cause: err as Error
+      })
     }
   }
 
@@ -195,15 +200,23 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
           <div className="mt-auto flex flex-col items-center gap-y-4">
             <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
               variant="secondary"
+              disabled={startGame.isPending}
             >
-              <CirclePlay className="size-5 sm:size-6 shrink-0" />
+              {startGame.isPending ? (
+                <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
+              ) : (
+                <CirclePlay className="size-5 sm:size-6 shrink-0" />
+              )}
               Start new game
             </Button>
 
-            <Link className={cn(buttonVariants({
-              className: "gap-x-2 text-sm sm:text-base",
-              variant: "destructive"
-            }))}
+            <Link className={cn(
+              buttonVariants({
+                className: "gap-x-2 text-sm sm:text-base",
+                variant: "destructive"
+              }), {
+                "opacity-40 pointer-events-none": startGame.isPending
+              })}
               href="/"
             >
               <LayoutDashboard className="size-5 sm:size-6 shrink-0" />
