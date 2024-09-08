@@ -32,6 +32,9 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 // components
 import { Form } from "@/components/form"
 
+// hooks
+import { useGameStore } from "@/hooks/use-game-store"
+
 type StartGameFormValues = z.infer<typeof startGameSchema>
 
 type StartGameFormProps = {
@@ -41,8 +44,13 @@ type StartGameFormProps = {
 const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   const router = useRouter()
 
+  const registerSession = useGameStore((state) => state.register)
+
   const startGame = api.game.create.useMutation({
-    onSuccess: ({ sessionId, type, mode, tableSize }) => {
+    onSuccess: (session) => {
+      const { sessionId, type, mode, tableSize } = session
+
+      registerSession(session)
       router.push(`/game/${sessionId}`)
       
       toast.success('Game started!', {
