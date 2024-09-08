@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid"
+
 // clerk
 import { auth } from "@clerk/nextjs/server"
 
@@ -25,7 +27,7 @@ export const gameRouter = createTRPCRouter({
       }
 
       const session: UnsignedGameSessionClient = {
-        sessionId: '#sessionId', // TODO: generate session id
+        sessionId: uuidv4(),
         status: 'RUNNING',
         type,
         mode,
