@@ -31,9 +31,7 @@ const GamePlayPage = async () => {
 
   return (
     <>
-      <div className="flex-1 w-full flex justify-center items-center">
-        <TablePlayground session={session} />
-      </div>
+      <TablePlayground session={session} />
       
       <GameSessionFooter session={session} />
     </>

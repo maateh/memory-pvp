@@ -7,7 +7,7 @@ type TablePlaygroundProps = {
 
 const TablePlayground = ({ session }: TablePlaygroundProps) => {
   return (
-    <div>
+    <div className="flex-1 w-full flex justify-center items-center">
       TablePlayground
     </div>
   )

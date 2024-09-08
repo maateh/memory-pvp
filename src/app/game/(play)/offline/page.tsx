@@ -23,11 +23,7 @@ const GamePlayOfflinePage = () => {
     return
   }
 
-  return (
-    <div className="flex-1 w-full flex justify-center items-center">
-      <TablePlayground session={clientSession} />
-    </div>
-  )
+  return <TablePlayground session={clientSession} />
 }
 
 export default GamePlayOfflinePage
