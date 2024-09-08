@@ -12,12 +12,12 @@ import { ScanEye, Sparkles, User } from "lucide-react"
 // components
 import { PlayerBadge } from "@/components/player"
 
-type GameSessionPlayerInfoProps = {
+type GamePlayerInfoProps = {
   playerTag: string
   flipOrder?: boolean
 }
 
-const GameSessionPlayerInfo = async ({ playerTag, flipOrder }: GameSessionPlayerInfoProps) => {
+const GamePlayerInfo = async ({ playerTag, flipOrder }: GamePlayerInfoProps) => {
   const player = await db.playerProfile.findUnique({
     where: {
       tag: playerTag
@@ -88,4 +88,4 @@ const GameSessionPlayerInfo = async ({ playerTag, flipOrder }: GameSessionPlayer
   )
 }
 
-export default GameSessionPlayerInfo
+export default GamePlayerInfo

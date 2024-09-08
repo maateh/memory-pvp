@@ -5,18 +5,18 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { GameSessionPlayerInfo } from "@/components/game"
+import { GamePlayerInfo } from "@/components/game"
 
-type GameSessionFooterProps = {
+type GameInfoFooterProps = {
   session: GameSessionWithPlayerProfiles
 }
 
-const GameSessionFooter = ({ session }: GameSessionFooterProps) => {
+const GameInfoFooter = ({ session }: GameInfoFooterProps) => {
   return (
     <div className={cn("w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-6 bg-primary md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]", {
       "sm:px-6 md:px-10": session.mode === 'SINGLE'
     })}>
-      <GameSessionPlayerInfo
+      <GamePlayerInfo
         playerTag={session.sessionOwner.tag}
       />
 
@@ -30,7 +30,7 @@ const GameSessionFooter = ({ session }: GameSessionFooterProps) => {
             orientation="vertical"
           />
 
-          <GameSessionPlayerInfo
+          <GamePlayerInfo
             playerTag={session.sessionGuest.tag}
             flipOrder
           />
@@ -40,4 +40,4 @@ const GameSessionFooter = ({ session }: GameSessionFooterProps) => {
   )
 }
 
-export default GameSessionFooter
+export default GameInfoFooter
