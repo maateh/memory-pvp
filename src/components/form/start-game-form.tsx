@@ -51,8 +51,8 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   const registerSession = useGameStore((state) => state.register)
 
   const startGame = api.game.create.useMutation({
-    onSuccess: ({ sessionId, type, mode, tableSize }) => {
-      router.push(`/game/${sessionId}`)
+    onSuccess: ({ type, mode, tableSize }) => {
+      router.push('/game')
 
       toast.success('Game started!', {
         description: `${type} | ${mode} | ${tableSize}`
