@@ -20,7 +20,7 @@ type HandleUpdatePlayerProps = {
   updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
 }
 
-export const useUpdatePlayer = ({ setEditing }: UseUpdatePlayerProps) => {
+export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) => {
   const router = useRouter()
   const utils = api.useUtils()
 

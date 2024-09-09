@@ -10,7 +10,7 @@ import { CheckCircle2, Edit, Loader2, ShieldPlus, Trash2, XCircle } from "lucide
 import { ButtonTooltip } from "@/components/ui/button"
 
 // hooks
-import { useDeletePlayer, useSelectAsActive, useUpdatePlayer } from "./mutations"
+import { useDeletePlayerMutation, useSelectAsActiveMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerProfileActionsProps = {
   player: PlayerProfile
@@ -27,9 +27,9 @@ const PlayerProfileActions = ({
   setEditing,
   setColor
 }: PlayerProfileActionsProps) => {
-  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayer({ setEditing })
-  const { deletePlayer, handleDeletePlayer } = useDeletePlayer()
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActive()
+  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation({ setEditing })
+  const { deletePlayer, handleDeletePlayer } = useDeletePlayerMutation()
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
     <div className="flex items-center gap-x-2.5">

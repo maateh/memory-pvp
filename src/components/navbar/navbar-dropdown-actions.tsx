@@ -33,7 +33,7 @@ import { PlayerBadge } from "@/components/player"
 
 // hooks
 import { useWidgetModal } from "@/hooks/use-widget-modal"
-import { useSelectAsActive } from "@/components/widgets/player-profiles/mutations"
+import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type NavbarDropdownActionsProps = {
   players: PlayerProfile[]
@@ -42,7 +42,7 @@ type NavbarDropdownActionsProps = {
 const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
   const openWidgetModal = useWidgetModal((state) => state.openModal)
 
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActive()
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
     <DropdownMenu>
