@@ -14,7 +14,7 @@ import { useGameStore } from "@/hooks/use-game-store"
 const GamePlayOfflinePage = () => {
   const { user } = useClerk()
 
-  const clientSession = useGameStore((state) => state.session)
+  const clientSession = useGameStore((state) => state.get)()
 
   if (user || !clientSession) {
     redirect('/game/setup')

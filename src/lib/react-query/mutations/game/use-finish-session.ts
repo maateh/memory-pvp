@@ -1,4 +1,4 @@
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
@@ -17,7 +17,7 @@ import { useGameStore } from "@/hooks/use-game-store"
 
 export const useFinishSessionMutation = () => {
   const router = useRouter()
-  const { user: clerkUser } = useClerk()
+  const { user: clerkUser, redirectToSignIn } = useClerk()
 
   const unregisterClientSession = useGameStore((state) => state.unregister)
 
@@ -27,7 +27,10 @@ export const useFinishSessionMutation = () => {
         description: `Session status: ${status}`
       })
       
-      router.replace('/game/setup')
+      const route = status === 'ABANDONED'
+        ? '/game/setup'
+        : '/dashboard'
+      router.replace(route)
     },
     onError: () => {
       toast.error('Something went wrong.', {
@@ -36,19 +39,24 @@ export const useFinishSessionMutation = () => {
     }
   })
 
-  const handleFinishSession = (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {
-    if (!clerkUser) {
-      unregisterClientSession()
-      
+  const handleFinishSession = async (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {
+    if (!clerkUser) {      
       toast.success('Your session has ended.', {
         description: `Session status: ${status}`
       })
       
-      redirect('/game/setup')
+      if (status === 'ABANDONED') {
+        unregisterClientSession()
+        router.replace('/game/setup')
+        return
+      }
+
+      // TODO: after sign in, submit the offline session (?)
+      return redirectToSignIn()
     }
 
     try {
-      finishSession.mutate(status)
+      await finishSession.mutateAsync(status)
     } catch (err) {
       throw new TRPCClientError('Failed to update session status.', { cause: err as Error })
     }

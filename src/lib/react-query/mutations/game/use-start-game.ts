@@ -68,9 +68,8 @@ export const useStartGameMutation = () => {
 
     if (!clerkUser) {
       registerSession({
-        startedAt: new Date(),
-        status: 'RUNNING',
-        ...values
+        tableSize: values.tableSize,
+        startedAt: new Date()
       })
 
       router.replace('/game/offline')
