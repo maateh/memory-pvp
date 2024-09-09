@@ -17,10 +17,8 @@ export const gameRouter = createTRPCRouter({
       return await ctx.db.gameSession.update({
         where: {
           id: ctx.activeSession.id,
-          NOT: {
-            status: {
-              equals: 'RUNNING'
-            }
+          status: {
+            equals: 'RUNNING'
           }
         },
         data: {
