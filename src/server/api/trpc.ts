@@ -98,5 +98,7 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
     })
   }
 
-  return next()
+  return next({
+    ctx: { activeSession: ctx.activeSession }
+  })
 })

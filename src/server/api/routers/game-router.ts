@@ -5,11 +5,30 @@ import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
 // validations
-import { startGameSchema } from "@/lib/validations"
+import { startGameSchema, updateGameStatusSchema } from "@/lib/validations"
 
 export const gameRouter = createTRPCRouter({
   getActive: protectedGameProcedure
     .query(({ ctx }) => ctx.activeSession),
+
+  updateStatus: protectedGameProcedure
+    .input(updateGameStatusSchema)
+    .mutation(async ({ ctx, input: status }) => {
+      return await ctx.db.gameSession.update({
+        where: {
+          id: ctx.activeSession.id,
+          NOT: {
+            status: {
+              equals: 'RUNNING'
+            }
+          }
+        },
+        data: {
+          status,
+          finishedAt: new Date()
+        }
+      })
+    }),
 
   create: gameProcedure
     .input(startGameSchema)
