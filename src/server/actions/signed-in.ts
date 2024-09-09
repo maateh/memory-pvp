@@ -7,23 +7,17 @@ import { auth } from "@clerk/nextjs/server"
 // server
 import { db } from "@/server/db"
 
-export async function signedIn(): Promise<User | null> {
-  const { userId } = auth()
+export async function signedIn({ redirect = false }: { redirect?: boolean }): Promise<User | null> {
+  const { userId: clerkId } = auth()
 
-  if (!userId) {
-    auth().redirectToSignIn()
-    return null
+  if (!clerkId) {
+    return redirect ? auth().redirectToSignIn() : null
   }
 
-  const user = await db.user.findUnique({
-    where: {
-      clerkId: userId
-    }
-  })
+  const user = await db.user.findUnique({ where: { clerkId } })
 
   if (!user) {
-    auth().redirectToSignIn()
-    return null
+    return redirect ? auth().redirectToSignIn() : null
   }
 
   return user

@@ -6,14 +6,17 @@ import { SignedIn as ClerkSignedIn } from "@clerk/nextjs"
 // actions
 import { signedIn } from "@/server/actions/signed-in"
 
-const SignedIn = async ({ children }: React.PropsWithChildren) => {
-  const user = await signedIn()
-  
+type SignedInProps = {
+  redirect?: boolean
+} & React.PropsWithChildren
+
+const SignedIn = async ({ redirect = false, children }: SignedInProps) => {
+  const user = await signedIn({ redirect })
   if (!user) return
 
   return (
     <ClerkSignedIn>
-      {user && children}
+      {children}
     </ClerkSignedIn>
   )
 }
