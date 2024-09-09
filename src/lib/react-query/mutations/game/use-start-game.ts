@@ -69,6 +69,7 @@ export const useStartGameMutation = () => {
     if (!clerkUser) {
       registerSession({
         startedAt: new Date(),
+        status: 'RUNNING',
         ...values
       })
 

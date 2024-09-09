@@ -1,15 +1,18 @@
 // types
-import { UnsignedGameSessionClient } from "@/hooks/use-game-store"
+import { GameSessionClient } from "@/hooks/use-game-store"
+
+// components
+import { SessionPreparer } from "@/components/game"
 
 type TablePlaygroundProps = {
-  session: UnsignedGameSessionClient
+  session: GameSessionClient
 }
 
 const TablePlayground = ({ session }: TablePlaygroundProps) => {
   return (
-    <div className="flex-1 w-full flex justify-center items-center">
+    <SessionPreparer session={session}>
       TablePlayground
-    </div>
+    </SessionPreparer>
   )
 }
 

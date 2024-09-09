@@ -1,18 +1,19 @@
 import { create } from "zustand"
 
 // prisma
-import { GameMode, GameType, TableSize } from "@prisma/client"
+import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
-export type UnsignedGameSessionClient = {
+export type GameSessionClient = {
   type: GameType
   mode: GameMode
   tableSize: TableSize
+  status: GameStatus
   startedAt: Date
 }
 
 type GameStore = {
-  session: UnsignedGameSessionClient | null
-  register: (session: UnsignedGameSessionClient) => void
+  session: GameSessionClient | null
+  register: (session: GameSessionClient) => void
   unregister: () => void
 }
 
