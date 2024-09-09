@@ -85,6 +85,14 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   })
 
   const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
+    // TODO: implement
+    if (values.type === 'COMPETITIVE' || values.mode !== 'SINGLE') {
+      toast.warning('Work in progress', {
+        description: "Sorry, but the configuration contains values that are not implemented yet. Please come back later, or select another game type or mode to play."
+      })
+      return
+    }
+
     if (!clerkUser) {
       registerSession({
         startedAt: new Date(),
@@ -141,6 +149,7 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
                         <ButtonGroupItem className="w-full p-2.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
                           size="icon"
                           value={key}
+                          disabled={key === 'COMPETITIVE'}
                         >
                           <Icon className="size-4 sm:size-5 shrink-0" />
                           <p className="text-base sm:text-lg small-caps">

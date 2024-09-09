@@ -23,6 +23,15 @@ export const gameRouter = createTRPCRouter({
         })
       }
 
+      // TODO: implement "Competitive" game
+      // Socket.io is going to be required for this.
+      if (type === 'COMPETITIVE') {
+        throw new TRPCError({
+          message: 'Sorry, but currently you can only play in Casual.',
+          code: 'NOT_IMPLEMENTED'
+        })
+      }
+
       // TODO: implement "PVP" & "COOP" game modes
       // ...but first be ready with the basics.
       if (mode !== 'SINGLE') {
