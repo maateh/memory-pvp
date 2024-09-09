@@ -1,7 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-
 // icons
 import { DoorOpen, Gamepad, Menu } from "lucide-react"
 
@@ -9,8 +7,11 @@ import { DoorOpen, Gamepad, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
+// hooks
+import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
+
 const GameActionsDropdown = () => {
-  const router = useRouter()
+  const { finishSession, handleFinishSession } = useFinishSessionMutation()
 
   return (
     <DropdownMenu>
@@ -31,7 +32,8 @@ const GameActionsDropdown = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive"
-          onClick={() => router.push('/')} // TODO: handle exit game
+          onClick={() => handleFinishSession('ABANDONED')}
+          disabled={finishSession.isPending}
         >
           <DoorOpen className="size-4" />
           <span>Exit game</span>

@@ -10,12 +10,17 @@ import { GameSessionClient } from "@/hooks/use-game-store"
 // shadcn
 import { Button } from "@/components/ui/button"
 
+// hooks
+import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
+
 type SessionPreparerProps = {
   session: GameSessionClient
 } & React.PropsWithChildren
 
 const SessionPreparer = ({ session, children }: SessionPreparerProps) => {
   const [forceRunning, setForceRunning] = useState(false)
+
+  const { finishSession, handleFinishSession } = useFinishSessionMutation()
 
   /**
    * In this case, we care only about CASUAL sessions.
@@ -31,15 +36,17 @@ const SessionPreparer = ({ session, children }: SessionPreparerProps) => {
 
   return (
     <div className="flex-1 w-full flex justify-center items-center">
+      {/* TODO: design */}
       {hasActiveCasualSession && !forceRunning ? (
         <>
           <Button variant="secondary"
-            // onClick={continueSession}
+            onClick={() => setForceRunning(true)}
           >
             Continue
           </Button>
           <Button variant="destructive"
-            // onClick={abandonSession}
+            onClick={() => handleFinishSession('ABANDONED')}
+            disabled={finishSession.isPending}
           >
             Abandon
           </Button>

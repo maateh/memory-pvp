@@ -13,16 +13,19 @@ const GamePlayPage = async () => {
   const { userId } = auth()
   if (!userId) redirect('/game/setup')
 
-  const session = await api.game.getActive()
-  if (!session) redirect('/game/setup')
+  try {
+    const session = await api.game.getActive()
+  
+    return (
+      <>
+        <TablePlayground session={session} />
 
-  return (
-    <>
-      <TablePlayground session={session} />
-      
-      <GameInfoFooter session={session} />
-    </>
-  )
+        <GameInfoFooter session={session} />
+      </>
+    )
+  } catch (err) {
+    redirect('/game/setup')
+  }
 }
 
 export default GamePlayPage
