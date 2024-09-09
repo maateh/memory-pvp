@@ -25,7 +25,7 @@ export const useStartGameMutation = () => {
 
   const startGame = api.game.create.useMutation({
     onSuccess: ({ type, mode, tableSize }) => {
-      router.push('/game')
+      router.replace('/game')
 
       toast.success('Game started!', {
         description: `${type} | ${mode} | ${tableSize}`
@@ -73,11 +73,10 @@ export const useStartGameMutation = () => {
         ...values
       })
 
-      router.push('/game/offline')
+      router.replace('/game/offline')
       toast.success('Game started in offline mode!', {
         description: `${values.type} | ${values.mode} | ${values.tableSize}`
       })
-
       return
     }
 
