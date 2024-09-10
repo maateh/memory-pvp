@@ -2,9 +2,10 @@
 
 import { z } from "zod"
 
-import Link from "next/link"
-
 import { DefaultValues } from "react-hook-form"
+
+// clerk
+import { useClerk } from "@clerk/nextjs"
 
 // constants
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
@@ -16,10 +17,10 @@ import { startGameSchema } from "@/lib/validations"
 import { cn } from "@/lib/utils"
 
 // icons
-import { CirclePlay, LayoutDashboard, Loader2 } from "lucide-react"
+import { CirclePlay, Loader2, WifiOff } from "lucide-react"
 
 // shadcn
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 
@@ -28,6 +29,7 @@ import { Form } from "@/components/form"
 
 // hooks
 import { useStartGameMutation } from "@/lib/react-query/mutations/game"
+import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
 
 export type StartGameFormValues = z.infer<typeof startGameSchema>
 
@@ -37,10 +39,11 @@ type StartGameFormProps = {
 
 const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   const { startGame, onSubmit } = useStartGameMutation()
+  const { startOfflineSession } = useOfflineSessionHandler()
 
   return (
     <Form<StartGameFormValues>
-      className="flex-1 flex flex-col justify-end gap-y-10"
+      className="flex-1 flex flex-col justify-end gap-y-8"
       schema={startGameSchema}
       onSubmit={onSubmit}
       defaultValues={{
@@ -162,18 +165,18 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
               Start new game
             </Button>
 
-            <Link className={cn(
-              buttonVariants({
-                className: "gap-x-2 text-sm sm:text-base",
-                variant: "destructive"
-              }), {
-                "opacity-40 pointer-events-none": startGame.isPending
-              })}
-              href="/"
+            {/* TODO: separate offline & online sessions */}
+            <Button className={cn("gap-x-2 bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm sm:text-base", {
+              "opacity-40 pointer-events-none": startGame.isPending
+            })}
+              size="sm"
+              type="button"
+              onClick={() => form.handleSubmit((data) => startOfflineSession(data, form))()}
+              disabled={startGame.isPending}
             >
-              <LayoutDashboard className="size-5 sm:size-6 shrink-0" />
-              Go back
-            </Link>
+              <WifiOff className="size-4 sm:size-5 shrink-0" />
+              Start offline
+            </Button>
           </div>
         </>
       )}

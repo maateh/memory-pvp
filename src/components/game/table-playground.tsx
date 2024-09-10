@@ -24,7 +24,7 @@ const TablePlayground = ({ session }: TablePlaygroundProps) => {
   return (
     <SessionPreparer session={session}>
       <Button
-        onClick={() => handleFinishSession('FINISHED')}
+        onClick={() => handleFinishSession('FINISHED', { offline: session.status === 'OFFLINE' })}
         disabled={finishSession.isPending}
       >
         Finish game

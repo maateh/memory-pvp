@@ -1,9 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { redirect } from "next/navigation"
-
-// clerk
-import { useClerk } from "@clerk/nextjs"
 
 // components
 import { TablePlayground } from "@/components/game"
@@ -12,15 +10,17 @@ import { TablePlayground } from "@/components/game"
 import { useGameStore } from "@/hooks/use-game-store"
 
 const GamePlayOfflinePage = () => {
-  const { user } = useClerk()
+  /** Note: prevent SSR */
+  const [mounted, setMounted] = useState(false)
 
   const clientSession = useGameStore((state) => state.get)()
+  if (!clientSession && mounted) redirect('/game/setup')
 
-  if (user || !clientSession) {
-    redirect('/game/setup')
-  }
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-  return <TablePlayground session={clientSession} />
+  return mounted && <TablePlayground session={clientSession!} />
 }
 
 export default GamePlayOfflinePage

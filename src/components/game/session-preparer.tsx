@@ -45,7 +45,7 @@ const SessionPreparer = ({ session, children }: SessionPreparerProps) => {
             Continue
           </Button>
           <Button variant="destructive"
-            onClick={() => handleFinishSession('ABANDONED')}
+            onClick={() => handleFinishSession('ABANDONED', { offline: session.status === 'OFFLINE' })}
             disabled={finishSession.isPending}
           >
             Abandon

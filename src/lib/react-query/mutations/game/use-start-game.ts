@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
-// clerk
-import { useClerk } from "@clerk/nextjs"
-
 // trpc
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
@@ -14,14 +11,8 @@ import { ZodError } from "zod"
 import { UseFormReturn } from "react-hook-form"
 import { StartGameFormValues } from "@/components/form/start-game-form"
 
-// hooks
-import { useGameStore } from "@/hooks/use-game-store"
-
 export const useStartGameMutation = () => {
   const router = useRouter()
-  const { user: clerkUser } = useClerk()
-
-  const registerSession = useGameStore((state) => state.register)
 
   const startGame = api.game.create.useMutation({
     onSuccess: ({ type, mode, tableSize }) => {
@@ -62,25 +53,6 @@ export const useStartGameMutation = () => {
     if (values.type === 'COMPETITIVE' || values.mode !== 'SINGLE') {
       toast.warning('Work in progress', {
         description: "Sorry, but the configuration contains values that are not implemented yet. Please come back later, or select another game type or mode to play."
-      })
-      return
-    }
-
-    /**
-     * Offline game sessions must be handled in a different way.
-     * At game start, we don't interact with the API, but save
-     * the game session locally.
-     */
-    if (!clerkUser) {
-      registerSession({
-        tableSize: values.tableSize,
-        startedAt: new Date()
-      })
-
-      form.reset()
-      router.replace('/game/offline')
-      toast.success('Game started in offline mode!', {
-        description: `${values.type} | ${values.mode} | ${values.tableSize}`
       })
       return
     }

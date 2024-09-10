@@ -37,8 +37,8 @@ export const useGameStore = create<GameStore>((set) => ({
 
     const session = JSON.parse(rawSession)
     return {
-      ...OFFLINE_SESSION,
-      ...session
+      ...session,
+      ...OFFLINE_SESSION
     }
   },
   register: (session) => {
@@ -47,8 +47,8 @@ export const useGameStore = create<GameStore>((set) => ({
     localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
     set({
       session: {
-        ...OFFLINE_SESSION,
-        ...session
+        ...session,
+        ...OFFLINE_SESSION
       }
     })
   },

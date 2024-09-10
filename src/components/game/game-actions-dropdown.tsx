@@ -32,6 +32,8 @@ const GameActionsDropdown = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive"
+          // TODO: get session
+          // onClick={() => handleFinishSession('ABANDONED', { offline: session.status === 'offline' })}
           onClick={() => handleFinishSession('ABANDONED')}
           disabled={finishSession.isPending}
         >
