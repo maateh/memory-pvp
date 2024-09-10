@@ -40,6 +40,12 @@ export const useFinishSessionMutation = () => {
   })
 
   const handleFinishSession = async (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {
+    /**
+     * If session is offline and status:
+     * - 'ABANDONED' -> remove the game session from local store
+     * - 'FINISHED' -> redirect user to sign in and save session
+     * to database with an 'OFFLINE' game status.
+     */
     if (!clerkUser) {      
       toast.success('Your session has ended.', {
         description: `Session status: ${status}`
@@ -52,7 +58,10 @@ export const useFinishSessionMutation = () => {
       }
 
       // TODO: after sign in, submit the offline session (?)
-      return redirectToSignIn()
+      return redirectToSignIn({
+        signInForceRedirectUrl: '/game/offline/save',
+        signUpForceRedirectUrl: '/game/offline/save'
+      })
     }
 
     try {

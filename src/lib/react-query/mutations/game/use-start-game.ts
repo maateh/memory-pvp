@@ -66,12 +66,18 @@ export const useStartGameMutation = () => {
       return
     }
 
+    /**
+     * Offline game sessions must be handled in a different way.
+     * At game start, we don't interact with the API, but save
+     * the game session locally.
+     */
     if (!clerkUser) {
       registerSession({
         tableSize: values.tableSize,
         startedAt: new Date()
       })
 
+      form.reset()
       router.replace('/game/offline')
       toast.success('Game started in offline mode!', {
         description: `${values.type} | ${values.mode} | ${values.tableSize}`
