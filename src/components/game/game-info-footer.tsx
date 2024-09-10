@@ -17,10 +17,10 @@ const GameInfoFooter = ({ session }: GameInfoFooterProps) => {
       "sm:px-6 md:px-10": session.mode === 'SINGLE'
     })}>
       <GamePlayerInfo
-        playerTag={session.sessionOwner.tag}
+        playerTag={session.owner.tag}
       />
 
-      {session.mode !== 'SINGLE' && session.sessionGuest && (
+      {session.mode !== 'SINGLE' && session.guest && (
         <>
           <Separator className="flex w-4/5 h-1 mx-auto my-4 bg-secondary-foreground/80 rounded-full md:hidden"
             orientation="vertical"
@@ -31,7 +31,7 @@ const GameInfoFooter = ({ session }: GameInfoFooterProps) => {
           />
 
           <GamePlayerInfo
-            playerTag={session.sessionGuest.tag}
+            playerTag={session.guest.tag}
             flipOrder
           />
         </>

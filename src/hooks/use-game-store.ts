@@ -3,7 +3,7 @@ import { create } from "zustand"
 // prisma
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
-export type UnsignedGameSessionClient = {
+type UnsignedGameSessionClient = {
   tableSize: TableSize
   startedAt: Date
 }
@@ -21,6 +21,12 @@ type GameStore = {
   unregister: () => void
 }
 
+const OFFLINE_SESSION: Omit<GameSessionClient, keyof UnsignedGameSessionClient> = {
+  type: 'CASUAL',
+  mode: 'SINGLE',
+  status: 'OFFLINE'
+}
+
 export const useGameStore = create<GameStore>((set) => ({
   session: null,
   get: () => {
@@ -29,9 +35,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
     const session = JSON.parse(rawSession)
     return {
-      type: 'CASUAL',
-      mode: 'SINGLE',
-      status: 'RUNNING',
+      ...OFFLINE_SESSION,
       ...session
     }
   },
@@ -39,9 +43,7 @@ export const useGameStore = create<GameStore>((set) => ({
     localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
     set({
       session: {
-        type: 'CASUAL',
-        mode: 'SINGLE',
-        status: 'RUNNING',
+        ...OFFLINE_SESSION,
         ...session
       }
     })

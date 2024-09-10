@@ -48,13 +48,13 @@ model GameSession {
   mode      GameMode
   tableSize TableSize
 
-  sessionOwner   PlayerProfile @relation("SessionOwner", fields: [sessionOwnerId], references: [id], onDelete: Cascade)
-  sessionOwnerId String        @db.ObjectId
-
-  sessionGuest   PlayerProfile? @relation("SessionGuest", fields: [sessionGuestId], references: [id], onDelete: Cascade)
-  sessionGuestId String?        @db.ObjectId
-
   results Result[]
+
+  owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String        @db.ObjectId
+
+  guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: Cascade)
+  guestId String?        @db.ObjectId
 
   startedAt  DateTime
   finishedAt DateTime?
@@ -75,10 +75,12 @@ model Result {
   createdAt DateTime @default(now())
 }
 
+// ENUMS
 enum GameStatus {
   RUNNING
   FINISHED
   ABANDONED
+  OFFLINE
 }
 
 enum GameType {

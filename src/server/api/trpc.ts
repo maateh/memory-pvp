@@ -67,11 +67,11 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
-      sessionOwnerId: playerProfile.id
+      ownerId: playerProfile.id
     },
     include: {
-      sessionOwner: true,
-      sessionGuest: true
+      owner: true,
+      guest: true
     }
   })
 
@@ -89,8 +89,8 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
   }
 
   if (
-    ctx.activeSession.sessionOwner.userId !== ctx.user.id &&
-    ctx.activeSession.sessionGuest?.userId !== ctx.user.id
+    ctx.activeSession.owner.userId !== ctx.user.id &&
+    ctx.activeSession.guest?.userId !== ctx.user.id
   ) {
     throw new TRPCError({
       message: "You don't have access to this game session.",

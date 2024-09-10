@@ -67,7 +67,7 @@ export const gameRouter = createTRPCRouter({
           mode,
           tableSize,
           startedAt: new Date(),
-          sessionOwner: {
+          owner: {
             connect: {
               id: ctx.playerProfile.id
             }
