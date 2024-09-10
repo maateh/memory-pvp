@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 // clerk
 import { currentUser } from "@clerk/nextjs/server"
 
@@ -7,7 +9,11 @@ import { GameMode, GameType, TableSize } from "@prisma/client"
 // trpc
 import { api } from "@/trpc/server"
 
+// icons
+import { Home } from "lucide-react"
+
 // shadcn
+import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
@@ -29,8 +35,21 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const player = await api.playerProfile.getActive()
 
   return (
-    <div className="relative flex-1 pt-12 pb-8 px-4 flex flex-col gap-y-3 sm:pt-16">
-      <ThemeToggle className="p-2 bg-accent/30 absolute top-2 right-2 sm:top-4 sm:right-4 sm:p-2"
+    <div className="relative flex-1 pt-16 pb-8 px-4 flex flex-col gap-y-3">
+      <Link className={buttonVariants({
+        className: "bg-destructive/85 rounded-2xl expandable absolute top-3 left-3 sm:top-4 sm:left-4",
+        variant: "destructive",
+        size: "icon"
+      })}
+        href="/"
+      >
+        <Home className="size-4 sm:size-5 shrink-0" />
+        <div className="ml-1 sm:ml-1.5">
+          Homepage
+        </div>
+      </Link>
+
+      <ThemeToggle className="p-2 bg-accent/30 absolute top-3 right-3 sm:top-4 sm:right-4"
         variant="ghost"
       />
 
