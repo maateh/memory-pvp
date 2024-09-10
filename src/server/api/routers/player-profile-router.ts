@@ -29,6 +29,11 @@ export const playerProfileRouter = createTRPCRouter({
         where: {
           userId: ctx.user.id,
           isActive: true
+        },
+        include: {
+          user: {
+            select: { imageUrl: true }
+          }
         }
       })
 

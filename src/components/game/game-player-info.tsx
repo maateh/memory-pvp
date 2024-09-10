@@ -1,6 +1,3 @@
-// prisma
-import { db } from "@/server/db"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -11,30 +8,11 @@ import { ScanEye, Sparkles } from "lucide-react"
 import { PlayerWithAvatar } from "@/components/player"
 
 type GamePlayerInfoProps = {
-  playerTag: string
+  player: PlayerProfileWithUserAvatar
   flipOrder?: boolean
 }
 
-const GamePlayerInfo = async ({ playerTag, flipOrder }: GamePlayerInfoProps) => {
-  // TODO: add user.imageUrl to getActive endpoint
-  const player = await db.playerProfile.findUnique({
-    where: {
-      tag: playerTag
-    },
-    include: {
-      user: {
-        select: {
-          imageUrl: true
-        }
-      }
-    }
-  })
-
-  if (!player) {
-    // TODO: handle it
-    return
-  }
-
+const GamePlayerInfo = ({ player, flipOrder }: GamePlayerInfoProps) => {
   const sessionScore = 5
   const overallScore = 100
 

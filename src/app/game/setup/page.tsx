@@ -1,8 +1,5 @@
 import Link from "next/link"
 
-// clerk
-import { currentUser } from "@clerk/nextjs/server"
-
 // prisma
 import { GameMode, GameType, TableSize } from "@prisma/client"
 
@@ -30,8 +27,6 @@ type GameSetupPageProps = {
 }
 
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
-  // TODO: add user.imageUrl to getActive endpoint
-  const clerkUser = await currentUser()
   const player = await api.playerProfile.getActive()
 
   return (
@@ -65,7 +60,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
       <PlayerWithAvatar className="mt-2 mx-auto"
         playerBadgeProps={{ className: "sm:text-base" }}
-        imageUrl={clerkUser?.imageUrl}
+        imageUrl={player.user.imageUrl}
         imageSize={32}
         player={player}
       />

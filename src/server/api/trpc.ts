@@ -70,8 +70,20 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
       ownerId: playerProfile.id
     },
     include: {
-      owner: true,
-      guest: true
+      owner: {
+        include: {
+          user: {
+            select: { imageUrl: true }
+          }
+        }
+      },
+      guest: {
+        include: {
+          user: {
+            select: { imageUrl: true }
+          }
+        }
+      }
     }
   })
 

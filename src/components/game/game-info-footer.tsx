@@ -17,7 +17,7 @@ const GameInfoFooter = ({ session }: GameInfoFooterProps) => {
       "sm:px-6 md:px-10": session.mode === 'SINGLE'
     })}>
       <GamePlayerInfo
-        playerTag={session.owner.tag}
+        player={session.owner}
       />
 
       {session.mode !== 'SINGLE' && session.guest && (
@@ -31,7 +31,7 @@ const GameInfoFooter = ({ session }: GameInfoFooterProps) => {
           />
 
           <GamePlayerInfo
-            playerTag={session.guest.tag}
+            player={session.guest}
             flipOrder
           />
         </>
