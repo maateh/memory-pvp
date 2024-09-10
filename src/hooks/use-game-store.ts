@@ -30,6 +30,8 @@ const OFFLINE_SESSION: Omit<GameSessionClient, keyof UnsignedGameSessionClient> 
 export const useGameStore = create<GameStore>((set) => ({
   session: null,
   get: () => {
+    if (typeof window === 'undefined') return null
+
     const rawSession = localStorage.getItem('CLIENT_GAME_SESSION')
     if (!rawSession) return null
 
@@ -40,6 +42,8 @@ export const useGameStore = create<GameStore>((set) => ({
     }
   },
   register: (session) => {
+    if (typeof window === 'undefined') return null
+
     localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
     set({
       session: {
@@ -49,6 +53,8 @@ export const useGameStore = create<GameStore>((set) => ({
     })
   },
   unregister: () => {
+    if (typeof window === 'undefined') return null
+    
     localStorage.removeItem('CLIENT_GAME_SESSION')
     set({ session: null })
   }
