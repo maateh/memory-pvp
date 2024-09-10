@@ -10,7 +10,7 @@ import { Badge, BadgeProps } from "@/components/ui/badge"
 // components
 import { PlayerVerifiedBadge } from "@/components/player"
 
-type PlayerBadgeProps = {
+export type PlayerBadgeProps = {
   player: Pick<PlayerProfile, 'tag' | 'color' | 'isActive'>
   hideVerified?: boolean
   flagProps?: React.HTMLAttributes<HTMLDivElement>

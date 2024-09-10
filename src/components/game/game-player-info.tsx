@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 // prisma
 import { db } from "@/server/db"
 
@@ -7,10 +5,10 @@ import { db } from "@/server/db"
 import { cn } from "@/lib/utils"
 
 // icons
-import { ScanEye, Sparkles, User } from "lucide-react"
+import { ScanEye, Sparkles } from "lucide-react"
 
 // components
-import { PlayerBadge } from "@/components/player"
+import { PlayerWithAvatar } from "@/components/player"
 
 type GamePlayerInfoProps = {
   playerTag: string
@@ -18,6 +16,7 @@ type GamePlayerInfoProps = {
 }
 
 const GamePlayerInfo = async ({ playerTag, flipOrder }: GamePlayerInfoProps) => {
+  // TODO: add user.imageUrl to getActive endpoint
   const player = await db.playerProfile.findUnique({
     where: {
       tag: playerTag
@@ -45,25 +44,10 @@ const GamePlayerInfo = async ({ playerTag, flipOrder }: GamePlayerInfoProps) => 
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
       <div className="space-y-1">
-        <div className={cn("flex items-center gap-x-2", { "flex-row-reverse": flipOrder })}>
-          {player.user.imageUrl ? (
-            <div className="size-6 border border-border/50 rounded-full img-wrapper">
-              <Image
-                src={player.user.imageUrl}
-                alt={`${player.tag}'s avatar`}
-                fill
-              />
-            </div>
-          ) : <User className="size-6 border border-border/50 rounded-full" />}
-
-          <PlayerBadge className={cn("w-fit", { "ml-auto": flipOrder })}
-            player={{
-              tag: player.tag,
-              color: player.color,
-              isActive: false
-            }}
-          />
-        </div>
+        <PlayerWithAvatar className={cn({ "flex-row-reverse": flipOrder })}
+          player={player}
+          imageUrl={player.user.imageUrl}
+        />
 
         <div className="flex items-center gap-x-1.5">
           <Sparkles className="size-4 flex-none" />
