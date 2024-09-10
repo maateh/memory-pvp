@@ -57,7 +57,6 @@ export const useFinishSessionMutation = () => {
         return
       }
 
-      // TODO: after sign in, submit the offline session (?)
       return redirectToSignIn({
         signInForceRedirectUrl: '/game/offline/save',
         signUpForceRedirectUrl: '/game/offline/save'
