@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
 // validations
-import { startGameSchema, updateGameStatusSchema } from "@/lib/validations"
+import { saveOfflineGameSchema, startGameSchema, updateGameStatusSchema } from "@/lib/validations"
 
 export const gameRouter = createTRPCRouter({
   getActive: protectedGameProcedure
@@ -70,6 +70,45 @@ export const gameRouter = createTRPCRouter({
           owner: {
             connect: {
               id: ctx.playerProfile.id
+            }
+          }
+        }
+      })
+    }),
+  
+  saveOffline: gameProcedure
+    .input(saveOfflineGameSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { playerTag, tableSize, startedAt } = input
+
+      const playerProfile = await ctx.db.playerProfile.findFirst({
+        where: {
+          userId: ctx.user.id,
+          tag: playerTag
+        },
+        select: {
+          id: true
+        }
+      })
+
+      if (!playerProfile) {
+        throw new TRPCError({
+          message: 'Player profile not found.',
+          code: 'NOT_FOUND'
+        })
+      }
+
+      return await ctx.db.gameSession.create({
+        data: {
+          sessionId: uuidv4(),
+          status: 'OFFLINE',
+          type: 'CASUAL',
+          mode: 'SINGLE',
+          tableSize,
+          startedAt,
+          owner: {
+            connect: {
+              id: playerProfile.id
             }
           }
         }

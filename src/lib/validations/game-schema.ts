@@ -10,3 +10,9 @@ export const startGameSchema = z.object({
 })
 
 export const updateGameStatusSchema = z.enum([GameStatus.ABANDONED, GameStatus.FINISHED])
+
+export const saveOfflineGameSchema = z.object({
+  playerTag: z.string(),
+  tableSize: z.nativeEnum(TableSize),
+  startedAt: z.coerce.date()
+})
