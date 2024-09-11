@@ -33,7 +33,17 @@ export const gameRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { type, mode, tableSize } = input
 
-      if (ctx.activeSession) {
+      const activeSession = await ctx.db.gameSession.findFirst({
+        where: {
+          status: 'RUNNING',
+          OR: [
+            { ownerId: ctx.playerProfile.id },
+            { guestId: ctx.playerProfile.id }
+          ]
+        }
+      })
+
+      if (activeSession) {
         throw new TRPCError({
           message: 'You cannot participate in two game sessions at once with the same player.',
           code: 'CONFLICT'

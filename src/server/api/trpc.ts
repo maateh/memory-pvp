@@ -75,11 +75,16 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
     })
   }
 
-  // TODO: move under protected
+  return next({
+    ctx: { playerProfile }
+  })
+})
+
+export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
-      ownerId: playerProfile.id
+      ownerId: ctx.playerProfile.id
     },
     include: {
       owner: {
@@ -99,13 +104,7 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
     }
   })
 
-  return next({
-    ctx: { playerProfile, activeSession }
-  })
-})
-
-export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.activeSession) {
+  if (!activeSession) {
     throw new TRPCApiError({
       key: 'SESSION_NOT_FOUND',
       code: 'NOT_FOUND',
@@ -115,8 +114,8 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
   }
 
   if (
-    ctx.activeSession.owner.userId !== ctx.user.id &&
-    ctx.activeSession.guest?.userId !== ctx.user.id
+    activeSession.owner.userId !== ctx.user.id &&
+    activeSession.guest?.userId !== ctx.user.id
   ) {
     throw new TRPCApiError({
       key: 'SESSION_NOT_FOUND',
@@ -127,6 +126,6 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
   }
 
   return next({
-    ctx: { activeSession: ctx.activeSession }
+    ctx: { activeSession }
   })
 })
