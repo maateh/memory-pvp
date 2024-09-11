@@ -5,8 +5,8 @@ import { headers } from "next/headers"
 // clerk
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server"
 
-// api
-import { api } from "@/trpc/server"
+// prisma
+import { db } from "@/server/db"
 
 export async function verifyWebhook(req: Request): Promise<WebhookEvent> {
   const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
@@ -53,11 +53,13 @@ export async function userCreated(evt: WebhookEvent) {
 
   const { id, email_addresses, username, image_url } = evt.data
 
-  const user = await api.user.create({
-    clerkId: id,
-    email: email_addresses[0].email_address,
-    username: username!,
-    imageUrl: image_url
+  const user = await db.user.create({
+    data: {
+      clerkId: id,
+      username: email_addresses[0].email_address,
+      email: username!,
+      imageUrl: image_url
+    }
   })
 
   if (user) {
@@ -78,11 +80,15 @@ export async function userUpdated(evt: WebhookEvent) {
 
   const { id, email_addresses, username, image_url } = evt.data
 
-  await api.user.update({
-    clerkId: id,
-    email: email_addresses[0].email_address,
-    username: username!,
-    imageUrl: image_url
+  await db.user.update({
+    where: {
+      clerkId: id
+    },
+    data: {
+      username: username!,
+      email: email_addresses[0].email_address,
+      imageUrl: image_url
+    }
   })
 
   return new Response('User updated', { status: 201 })
@@ -99,7 +105,11 @@ export async function userDeleted(evt: WebhookEvent) {
     return new Response('User ID missing', { status: 404 })
   }
 
-  await api.user.delete({ clerkId: id })
+  await db.user.delete({
+    where: {
+      clerkId: id
+    }
+  })
 
   return new Response('User deleted', { status: 200 })
 }
