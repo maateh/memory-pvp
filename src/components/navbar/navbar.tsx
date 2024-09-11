@@ -1,3 +1,6 @@
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
 // server
 import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
@@ -11,11 +14,15 @@ import { NavbarActions, NavbarDropdownActions, NavbarPlayerInfo } from "@/compon
 
 const Navbar = async () => {
   const user = await signedIn()
-  const players = await db.playerProfile.findMany({
-    where: {
-      userId: user?.id
-    }
-  })
+
+  let players: PlayerProfile[] = []
+  if (user) {
+    players = await db.playerProfile.findMany({
+      where: {
+        userId: user.id
+      }
+    })
+  }
 
   const activePlayer = players.find((player) => player.isActive)
 

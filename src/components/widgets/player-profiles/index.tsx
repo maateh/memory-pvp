@@ -8,17 +8,20 @@ import PlayerProfilesWidgetCard from "./card"
 const PlayerProfilesWidget = async () => {
   const user = await signedIn()
 
-  const activePlayer = await db.playerProfile.findFirst({
-    where: {
-      userId: user?.id,
-      isActive: true
-    },
-    include: {
-      user: {
-        select: { imageUrl: true }
+  let activePlayer: PlayerProfileWithUserAvatar | null | undefined
+  if (user) {
+    activePlayer = await db.playerProfile.findFirst({
+      where: {
+        userId: user.id,
+        isActive: true
+      },
+      include: {
+        user: {
+          select: { imageUrl: true }
+        }
       }
-    }
-  })
+    })
+  }
 
   return (
     <PlayerProfilesWidgetCard

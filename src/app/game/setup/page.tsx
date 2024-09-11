@@ -28,19 +28,22 @@ type GameSetupPageProps = {
 }
 
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
-  const user = await signedIn({ redirect: false })
+  const user = await signedIn()
 
-  const activePlayer = await db.playerProfile.findFirst({
-    where: {
-      userId: user?.id,
-      isActive: true
-    },
-    include: {
-      user: {
-        select: { imageUrl: true }
+  let activePlayer: PlayerProfileWithUserAvatar | null | undefined
+  if (user) {
+    activePlayer = await db.playerProfile.findFirst({
+      where: {
+        userId: user.id,
+        isActive: true
+      },
+      include: {
+        user: {
+          select: { imageUrl: true }
+        }
       }
-    }
-  })
+    })
+  }
 
   return (
     <div className="relative flex-1 pt-16 pb-8 px-4 flex flex-col gap-y-3">
