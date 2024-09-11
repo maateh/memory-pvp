@@ -8,6 +8,8 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
+  // TODO: remove (?)
+  // note: needs to implement parallel routes for widget modals
   getAll: protectedProcedure
     .query(async ({ ctx }) => {
       const players = await ctx.db.playerProfile.findMany({
@@ -16,32 +18,7 @@ export const playerProfileRouter = createTRPCRouter({
         }
       })
 
-      if (players.length === 0) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
       return players
-    }),
-
-  getActive: protectedProcedure
-    .query(async ({ ctx }) => {
-      const activePlayer = await ctx.db.playerProfile.findFirst({
-        where: {
-          userId: ctx.user.id,
-          isActive: true
-        },
-        include: {
-          user: {
-            select: { imageUrl: true }
-          }
-        }
-      })
-
-      if (!activePlayer) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
-      return activePlayer
     }),
 
   create: protectedProcedure

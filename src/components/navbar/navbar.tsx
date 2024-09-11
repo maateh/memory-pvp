@@ -1,5 +1,6 @@
-// trpc
-import { api } from "@/trpc/server"
+// server
+import { db } from "@/server/db"
+import { signedIn } from "@/server/actions/signed-in"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -9,8 +10,14 @@ import { Logo, MobileToggle } from "@/components/shared"
 import { NavbarActions, NavbarDropdownActions, NavbarPlayerInfo } from "@/components/navbar"
 
 const Navbar = async () => {
-  const activePlayer = await api.playerProfile.getActive()
-  const players = await api.playerProfile.getAll()
+  const user = await signedIn()
+  const players = await db.playerProfile.findMany({
+    where: {
+      userId: user?.id
+    }
+  })
+
+  const activePlayer = players.find((player) => player.isActive)
 
   return (
     <div className="min-w-max mx-2.5 my-3 px-2.5 py-2.5 flex gap-x-4 justify-between items-center bg-primary/40 rounded-3xl shadow-lg sm:mx-5 sm:px-5">

@@ -1,5 +1,6 @@
-// trpc
-import { api } from "@/trpc/server"
+// server
+import { db } from "@/server/db"
+import { signedIn } from "@/server/actions/signed-in"
 
 // icons
 import { BadgeInfo, Users2 } from "lucide-react"
@@ -12,7 +13,12 @@ import { PlayerProfileForm } from "@/components/form"
 import SelectPlayerProfile from "./select-player-profile"
 
 const GameOfflineSavePage = async () => {
-  const players = await api.playerProfile.getAll()
+  const user = await signedIn()
+  const players = await db.playerProfile.findMany({
+    where: {
+      userId: user?.id
+    }
+  })
 
   return (
     <div className="flex-1 space-y-16">

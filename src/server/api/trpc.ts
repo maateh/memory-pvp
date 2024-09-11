@@ -6,7 +6,7 @@ import { cache } from 'react'
 import { auth } from '@clerk/nextjs/server'
 
 // trpc
-import { initTRPC, TRPCError } from '@trpc/server'
+import { initTRPC } from '@trpc/server'
 import { TRPCApiError } from '@/trpc/error'
 
 // db
