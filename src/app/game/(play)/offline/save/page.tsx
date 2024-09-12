@@ -1,5 +1,9 @@
-// trpc
-import { api } from "@/trpc/server"
+// prisma
+import { PlayerProfile } from "@prisma/client"
+
+// server
+import { db } from "@/server/db"
+import { signedIn } from "@/server/actions/signed-in"
 
 // icons
 import { BadgeInfo, Users2 } from "lucide-react"
@@ -12,7 +16,16 @@ import { PlayerProfileForm } from "@/components/form"
 import SelectPlayerProfile from "./select-player-profile"
 
 const GameOfflineSavePage = async () => {
-  const players = await api.playerProfile.getAll()
+  const user = await signedIn()
+
+  let players: PlayerProfile[] = []
+  if (user) {
+    players = await db.playerProfile.findMany({
+      where: {
+        userId: user.id
+      }
+    })
+  }
 
   return (
     <div className="flex-1 space-y-16">
@@ -30,6 +43,8 @@ const GameOfflineSavePage = async () => {
 
       {/* TODO: show results here */}
 
+
+      {/* TODO: show alternate layout if user not logged in */}
       <section className="w-11/12 max-w-md mx-auto space-y-2 sm:w-fit">
         <PlayerProfileForm />
 

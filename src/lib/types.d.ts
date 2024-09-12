@@ -8,11 +8,7 @@ declare global {
   }
 
   declare type GameSessionWithPlayerProfiles = GameSession & {
-    owner: PlayerProfile & {
-      user: { imageUrl: string | null }
-    }
-    guest: (PlayerProfile & {
-      user: { imageUrl: string | null }
-    }) | null
+    owner: PlayerProfileWithUserAvatar
+    guest: PlayerProfileWithUserAvatar | null
   }
 }

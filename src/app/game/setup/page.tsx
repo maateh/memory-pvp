@@ -3,8 +3,9 @@ import Link from "next/link"
 // prisma
 import { GameMode, GameType, TableSize } from "@prisma/client"
 
-// trpc
-import { api } from "@/trpc/server"
+// server
+import { db } from "@/server/db"
+import { signedIn } from "@/server/actions/signed-in"
 
 // icons
 import { Home } from "lucide-react"
@@ -27,7 +28,22 @@ type GameSetupPageProps = {
 }
 
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
-  const player = await api.playerProfile.getActive()
+  const user = await signedIn()
+
+  let activePlayer: PlayerProfileWithUserAvatar | null | undefined
+  if (user) {
+    activePlayer = await db.playerProfile.findFirst({
+      where: {
+        userId: user.id,
+        isActive: true
+      },
+      include: {
+        user: {
+          select: { imageUrl: true }
+        }
+      }
+    })
+  }
 
   return (
     <div className="relative flex-1 pt-16 pb-8 px-4 flex flex-col gap-y-3">
@@ -58,12 +74,14 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
         </p>
       </div>
 
-      <PlayerWithAvatar className="mt-2 mx-auto"
-        playerBadgeProps={{ className: "sm:text-base" }}
-        imageUrl={player.user.imageUrl}
-        imageSize={32}
-        player={player}
-      />
+      {activePlayer && (
+        <PlayerWithAvatar className="mt-2 mx-auto"
+          playerBadgeProps={{ className: "sm:text-base" }}
+          imageUrl={activePlayer.user.imageUrl}
+          imageSize={32}
+          player={activePlayer}
+        />
+      )}
 
       <Separator className="w-3/5 mx-auto mt-1 mb-5 sm:w-2/5 lg:w-1/5" />
 

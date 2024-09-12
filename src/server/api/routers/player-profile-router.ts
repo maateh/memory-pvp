@@ -2,48 +2,13 @@ import { z } from "zod"
 
 // trpc
 import { TRPCError } from "@trpc/server"
+import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
 import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
-  getAll: protectedProcedure
-    .query(async ({ ctx }) => {
-      const players = await ctx.db.playerProfile.findMany({
-        where: {
-          userId: ctx.user.id
-        }
-      })
-
-      if (players.length === 0) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
-      return players
-    }),
-
-  getActive: protectedProcedure
-    .query(async ({ ctx }) => {
-      const activePlayer = await ctx.db.playerProfile.findFirst({
-        where: {
-          userId: ctx.user.id,
-          isActive: true
-        },
-        include: {
-          user: {
-            select: { imageUrl: true }
-          }
-        }
-      })
-
-      if (!activePlayer) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
-      return activePlayer
-    }),
-
   create: protectedProcedure
     .input(playerProfileCreateSchema)
     .mutation(async ({ ctx, input }) => {
@@ -56,7 +21,14 @@ export const playerProfileRouter = createTRPCRouter({
       })
 
       if (player) {
-        throw new TRPCError({ code: 'CONFLICT' })
+        throw new TRPCError({
+          code: 'CONFLICT',
+          cause: new TRPCApiError({
+            key: 'ALREADY_TAKEN',
+            message: 'Player tag is already in use.',
+            description: 'Sorry, but this player tag is already taken. Please try another one.'
+          })
+        })
       }
 
       const isActive = await ctx.db.playerProfile.count({
@@ -88,7 +60,14 @@ export const playerProfileRouter = createTRPCRouter({
       })
 
       if (player) {
-        throw new TRPCError({ code: 'CONFLICT' })
+        throw new TRPCError({
+          code: 'CONFLICT',
+          cause: new TRPCApiError({
+            key: 'ALREADY_TAKEN',
+            message: 'Player tag is already in use.',
+            description: 'Sorry, but this player is already taken. Please try another one.'
+          })
+        })
       }
 
       return await ctx.db.playerProfile.update({
@@ -108,15 +87,23 @@ export const playerProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { playerId } = input
 
-      const isActive = await ctx.db.playerProfile.findUnique({
+      const player = await ctx.db.playerProfile.findUnique({
         where: {
           id: playerId,
           isActive: true
         }
       })
 
-      if (isActive) {
-        throw new TRPCError({ code: 'CONFLICT' })
+      if (player) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          cause: new TRPCApiError({
+            key: 'ACTIVE_PLAYER_PROFILE',
+            message: 'Player profile cannot be deleted.',
+            description: `${player.tag} is an active player profile. Please select a new active profile before dleting this one.`
+
+          })
+        })
       }
 
       return await ctx.db.playerProfile.delete({

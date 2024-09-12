@@ -6,11 +6,13 @@ import { toast } from "sonner"
 import { GameStatus } from "@prisma/client"
 
 // trpc
-import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // hooks
 import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
+
+// utils
+import { handleApiError } from "@/lib/utils"
 
 export const useFinishSessionMutation = () => {
   const router = useRouter()
@@ -28,24 +30,18 @@ export const useFinishSessionMutation = () => {
         : '/dashboard'
       router.replace(route)
     },
-    onError: () => {
-      toast.error('Something went wrong.', {
-        description: 'Failed to update session status. Please try again.'
-      })
+    onError: (err) => {
+      handleApiError(err.shape?.cause, 'Failed to update session status. Please try again.')
     }
   })
 
   const handleFinishSession = async (
     status: typeof GameStatus['ABANDONED' | 'FINISHED'],
-    { offline = false }: { offline?: boolean } = {}
+    offline: boolean = false
   ) => {
     if (offline) return finishOfflineSession(status)
 
-    try {
-      await finishSession.mutateAsync(status)
-    } catch (err) {
-      throw new TRPCClientError('Failed to update session status.', { cause: err as Error })
-    }
+    await finishSession.mutateAsync(status)
   }
 
   return { finishSession, handleFinishSession }

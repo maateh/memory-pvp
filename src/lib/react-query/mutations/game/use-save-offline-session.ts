@@ -7,7 +7,10 @@ import { toast } from "sonner"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
-// types
+// utils
+import { handleApiError } from "@/lib/utils"
+
+// hooks
 import { useGameStore } from "@/hooks/use-game-store"
 
 export const useSaveOfflineSessionMutation = () => {
@@ -29,15 +32,7 @@ export const useSaveOfflineSessionMutation = () => {
       router.replace('/dashboard')
     },
     onError: (err) => {
-      let message = 'Something went wrong.'
-      let description = "Sorry, but we couldn't save your offline game session."
-
-      if (err.data?.code === 'NOT_FOUND') {
-        message = 'Active player profile not found.'
-        description = "Please select a player profile first."
-      }
-
-      toast.error(message, { description })
+      handleApiError(err.shape?.cause, "Sorry, but we couldn't save your offline game session.")
     }
   })
   
@@ -52,11 +47,7 @@ export const useSaveOfflineSessionMutation = () => {
       return
     }
 
-    try {
-      await saveOfflineSession.mutateAsync({ playerTag, ...clientSession })
-    } catch (err) {
-      throw new TRPCClientError('Failed to save offline session.', { cause: err as Error })
-    }
+    await saveOfflineSession.mutateAsync({ playerTag, ...clientSession })
   }
 
   return { saveOfflineSession, handleSaveOfflineSession }

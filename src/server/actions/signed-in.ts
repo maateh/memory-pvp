@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server"
 // server
 import { db } from "@/server/db"
 
-export async function signedIn({ redirect = false }: { redirect?: boolean }): Promise<User | null> {
+export async function signedIn({ redirect = false }: { redirect?: boolean } = {}): Promise<User | null> {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {

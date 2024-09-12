@@ -4,9 +4,6 @@ import { z } from "zod"
 
 import { DefaultValues } from "react-hook-form"
 
-// clerk
-import { useClerk } from "@clerk/nextjs"
-
 // constants
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
 
