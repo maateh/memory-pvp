@@ -1,9 +1,15 @@
 // components
 import { SignedIn } from "@/components/shared"
 
-const ProtectedLayout = ({ children }: React.PropsWithChildren) => {
+type ProtectedLayoutProps = {
+  widget: React.ReactNode
+  children: React.ReactNode
+}
+
+const ProtectedLayout = ({ widget, children }: ProtectedLayoutProps) => {
   return (
     <SignedIn>
+      {widget}
       {children}
     </SignedIn>
   )
