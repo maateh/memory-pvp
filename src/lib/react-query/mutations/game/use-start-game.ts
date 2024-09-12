@@ -3,13 +3,14 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // trpc
-import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // types
-import { ZodError } from "zod"
-import { UseFormReturn } from "react-hook-form"
-import { StartGameFormValues } from "@/components/form/start-game-form"
+import type { UseFormReturn } from "react-hook-form"
+import type { StartGameFormValues } from "@/components/form/start-game-form"
+
+// utils
+import { handleApiError } from "@/lib/utils"
 
 export const useStartGameMutation = () => {
   const router = useRouter()
@@ -23,28 +24,7 @@ export const useStartGameMutation = () => {
       })
     },
     onError: (err) => {
-      let message = 'Something went wrong'
-      let description = 'Failed to start game session. Please try again later.'
-
-      if (err.data?.code === 'CONFLICT') {
-        message = 'Failed to start game session'
-        description = err.message
-
-        // TODO: redirect or open a dialog with options of
-        // continue or stop the previous game session
-      }
-
-      if (err.data?.code === 'NOT_IMPLEMENTED') {
-        message = 'Game mode is not available'
-        description = err.message
-      }
-
-      if (err instanceof ZodError) {
-        message = 'Validation error'
-        description = err.message
-      }
-
-      toast.error(message, { description })
+      handleApiError(err.shape?.cause, 'Failed to start game session. Please try again later.')
     }
   })
 
@@ -57,15 +37,8 @@ export const useStartGameMutation = () => {
       return
     }
 
-    try {
-      await startGame.mutateAsync(values)
-
-      form.reset()
-    } catch (err) {
-      throw new TRPCClientError('Failed to register a game session', {
-        cause: err as Error
-      })
-    }
+    await startGame.mutateAsync(values)
+    form.reset()
   }
 
   return { startGame, onSubmit }

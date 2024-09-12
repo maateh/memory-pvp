@@ -9,9 +9,11 @@ import { PlayerProfile } from "@prisma/client"
 import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
+// utils
+import { handleApiError } from "@/lib/utils"
+
 export const useSelectAsActiveMutation = () => {
   const router = useRouter()
-  const utils = api.useUtils()
 
   const selectAsActive = api.playerProfile.selectAsActive.useMutation({
     onSuccess: async (player) => {
@@ -20,23 +22,16 @@ export const useSelectAsActiveMutation = () => {
       })
 
       router.refresh()
-      await utils.playerProfile.invalidate()
     },
-    onError: () => {
-      toast.error('Something went wrong.', {
-        description: 'Failed to select player profile as active. Please try again later.'
-      })
+    onError: (err) => {
+      handleApiError(err.shape?.cause, 'Failed to select player profile as active. Please try again later.')
     }
   })
 
   const handleSelectAsActive = async (player: PlayerProfile) => {
     if (player.isActive) return
 
-    try {
-      await selectAsActive.mutateAsync({ playerId: player.id })
-    } catch (err) {
-      throw new TRPCClientError('Failed to update player profile.', { cause: err as Error })
-    }
+    await selectAsActive.mutateAsync({ playerId: player.id })
   }
 
   return { selectAsActive, handleSelectAsActive }
