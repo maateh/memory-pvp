@@ -1,32 +1,35 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 // utils
 import { cn } from "@/lib/utils"
 
-// components
-import { type WidgetInfo } from "@/components/widgets"
+// types
+import type { WidgetInfo } from "@/components/widgets/types"
 
 // shadcn
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
-
-// hooks
-import { useWidgetModal } from "@/hooks/use-widget-modal"
 
 type WidgetModalProps = {
   isOpen: boolean
 } & WidgetInfo
   & React.PropsWithChildren
 
-const WidgetModal = ({ title, description, Icon, isOpen, children }: WidgetModalProps) => {
-  const closeModal = useWidgetModal((state) => state.closeModal)
+const WidgetModal = ({ title, description, icon, isOpen, children }: WidgetModalProps) => {
+  const router = useRouter()
 
   return (
-    <Dialog open={isOpen} onOpenChange={closeModal}>
+    <Dialog open={isOpen} onOpenChange={() => router.back()}>
       <DialogContent>
         <DialogHeader>
           <div className="flex-1 flex gap-x-4">
-            {Icon && <Icon className="size-6 sm:size-7" />}
+            {icon && (
+              <div className="size-6 sm:size-7 shrink-0">
+                {icon}
+              </div>
+            )}
 
             <DialogTitle className="text-2xl sm:text-3xl font-heading heading-decorator">
               {title}
