@@ -9,7 +9,7 @@ import { useClerk } from "@clerk/nextjs"
 import { User } from "@prisma/client"
 
 // constants
-import { manageAccountWidgetInfo } from "./constants"
+import { manageAccountWidgetInfo } from "@/components/widgets/constants"
 
 // icons
 import { Mail, SquareUser } from "lucide-react"
@@ -18,11 +18,11 @@ import { Mail, SquareUser } from "lucide-react"
 import { WidgetCard } from "@/components/widgets"
 import UserInfoItem from "./user-info-item"
 
-type ManageAccountWidgetCardProps = {
+type AccountWidgetCardProps = {
   user: User
 }
 
-const ManageAccountWidgetCard = ({ user }: ManageAccountWidgetCardProps) => {
+const AccountWidgetCard = ({ user }: AccountWidgetCardProps) => {
   const { openUserProfile } = useClerk()
 
   return (
@@ -60,4 +60,4 @@ const ManageAccountWidgetCard = ({ user }: ManageAccountWidgetCardProps) => {
   )
 }
 
-export default ManageAccountWidgetCard
+export default AccountWidgetCard

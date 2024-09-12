@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
@@ -32,7 +34,6 @@ import { ThemeToggle } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
 
 // hooks
-import { useWidgetModal } from "@/hooks/use-widget-modal"
 import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type NavbarDropdownActionsProps = {
@@ -40,7 +41,7 @@ type NavbarDropdownActionsProps = {
 }
 
 const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
-  const openWidgetModal = useWidgetModal((state) => state.openModal)
+  const router = useRouter()
 
   const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
@@ -109,7 +110,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => openWidgetModal('playerProfiles')}
+          onClick={() => router.push('/profile/players')}
         >
           <Plus className="size-4" strokeWidth={3} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
@@ -121,7 +122,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "lg:hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => openWidgetModal('gameSessions')}
+          onClick={() => router.push('/dashbooard/sessions')}
         >
           <Gamepad2 className="size-4" strokeWidth={2.75} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
