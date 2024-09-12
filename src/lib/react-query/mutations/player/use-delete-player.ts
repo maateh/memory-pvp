@@ -11,7 +11,6 @@ import { api } from "@/trpc/client"
 
 export const useDeletePlayerMutation = () => {
   const router = useRouter()
-  const utils = api.useUtils()
 
   const deletePlayer = api.playerProfile.delete.useMutation({
     onSuccess: async (player) => {
@@ -20,7 +19,6 @@ export const useDeletePlayerMutation = () => {
       })
 
       router.refresh()
-      await utils.playerProfile.getAll.invalidate()
     },
     onError: (err) => {
       if (err.data?.code === 'CONFLICT') {

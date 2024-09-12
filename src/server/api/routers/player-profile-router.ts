@@ -8,19 +8,6 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
 
 export const playerProfileRouter = createTRPCRouter({
-  // TODO: remove (?)
-  // note: needs to implement parallel routes for widget modals
-  getAll: protectedProcedure
-    .query(async ({ ctx }) => {
-      const players = await ctx.db.playerProfile.findMany({
-        where: {
-          userId: ctx.user.id
-        }
-      })
-
-      return players
-    }),
-
   create: protectedProcedure
     .input(playerProfileCreateSchema)
     .mutation(async ({ ctx, input }) => {
