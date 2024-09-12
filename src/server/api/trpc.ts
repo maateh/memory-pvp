@@ -6,7 +6,7 @@ import { cache } from 'react'
 import { auth } from '@clerk/nextjs/server'
 
 // trpc
-import { initTRPC } from '@trpc/server'
+import { initTRPC, TRPCError } from '@trpc/server'
 import { TRPCApiError } from '@/trpc/error'
 
 // db
@@ -20,7 +20,15 @@ export const createTRPCContext = cache(
 
 const t = initTRPC
   .context<typeof createTRPCContext>()
-  .create({ transformer: SuperJSON })
+  .create({
+    transformer: SuperJSON,
+    errorFormatter({ shape, error }) {
+      return {
+        ...shape,
+        cause: { ...error.cause as TRPCApiError }
+      }
+    }
+  })
 
 export const createCallerFactory = t.createCallerFactory
 export const createTRPCRouter = t.router
@@ -32,10 +40,12 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {
-    throw new TRPCApiError({
-      key: 'CLERK_UNAUTHORIZED',
+    throw new TRPCError({
       code: 'UNAUTHORIZED',
-      message: 'You are not signed in to your account.'
+      cause: new TRPCApiError({
+        key: 'CLERK_UNAUTHORIZED',
+        message: 'You are not signed in to your account.'
+      })
     })
   }
 
@@ -46,11 +56,13 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   })
 
   if (!user) {
-    throw new TRPCApiError({
-      key: 'USER_NOT_FOUND',
+    throw new TRPCError({
       code: 'NOT_FOUND',
-      message: "No user data found in the database.",
-      description: "Please try to remove your Clerk account and repeat the registration process."
+      cause: new TRPCApiError({
+        key: 'USER_NOT_FOUND',
+        message: "No user data found in the database.",
+        description: "Please try to remove your Clerk account and repeat the registration process."
+      })
     })
   }
 
@@ -68,10 +80,12 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   })
 
   if (!playerProfile) {
-    throw new TRPCApiError({
-      key: 'PLAYER_PROFILE_NOT_FOUND',
+    throw new TRPCError({
       code: 'NOT_FOUND',
-      message: 'Active player profile not found.'
+      cause: new TRPCApiError({
+        key: 'PLAYER_PROFILE_NOT_FOUND',
+        message: 'Active player profile not found.'
+      })
     })
   }
 
@@ -105,11 +119,13 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
   })
 
   if (!activeSession) {
-    throw new TRPCApiError({
-      key: 'SESSION_NOT_FOUND',
+    throw new TRPCError({
       code: 'NOT_FOUND',
-      message: 'Game session not found.',
-      description: "You aren't currently participating in any game session."
+      cause: new TRPCApiError({
+        key: 'SESSION_NOT_FOUND',
+        message: 'Game session not found.',
+        description: "You aren't currently participating in any game session."
+      })
     })
   }
 
@@ -117,11 +133,13 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
     activeSession.owner.userId !== ctx.user.id &&
     activeSession.guest?.userId !== ctx.user.id
   ) {
-    throw new TRPCApiError({
-      key: 'SESSION_NOT_FOUND',
+    throw new TRPCError({
       code: 'FORBIDDEN',
-      message: "Game session access denied.",
-      description: "You don't have access to this game session."
+      cause: new TRPCApiError({
+        key: 'SESSION_NOT_FOUND',
+        message: "Game session access denied.",
+        description: "You don't have access to this game session."
+      })
     })
   }
 

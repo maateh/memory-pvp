@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
 // trpc
+import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
@@ -44,33 +45,39 @@ export const gameRouter = createTRPCRouter({
       })
 
       if (activeSession) {
-        throw new TRPCApiError({
-          key: 'ACTIVE_SESSION',
+        throw new TRPCError({
           code: 'CONFLICT',
-          message: 'Failed to start a new game session.',
-          description: 'You cannot participate in two game sessions at once with the same player.'
+          cause: {
+            key: 'ACTIVE_SESSION',
+            message: 'Failed to start a new game session.',
+            description: 'You cannot participate in two game sessions at once with the same player.'
+          } as TRPCApiError
         })
       }
 
       // TODO: implement "Competitive" game
       // Socket.io is going to be required for this.
       if (type === 'COMPETITIVE') {
-        throw new TRPCApiError({
-          key: 'ACTIVE_SESSION',
+        throw new TRPCError({
           code: 'NOT_IMPLEMENTED',
-          message: 'Sorry, but currently you can only play in Casual.',
-          description: 'This feature is still work in progress. Please, try again later.'
+          cause: new TRPCApiError({
+            key: 'ACTIVE_SESSION',
+            message: 'Sorry, but currently you can only play in Casual.',
+            description: 'This feature is still work in progress. Please, try again later.'
+          })
         })
       }
 
       // TODO: implement "PVP" & "COOP" game modes
       // ...but first be ready with the basics.
       if (mode !== 'SINGLE') {
-        throw new TRPCApiError({
-          key: 'ACTIVE_SESSION',
+        throw new TRPCError({
           code: 'NOT_IMPLEMENTED',
-          message: 'Sorry, but currently you can only play in Single.',
-          description: 'This feature is still work in progress. Please, try again later.'
+          cause: new TRPCApiError({
+            key: 'ACTIVE_SESSION',
+            message: 'Sorry, but currently you can only play in Single.',
+            description: 'This feature is still work in progress. Please, try again later.'
+          })
         })
       }
 
@@ -108,11 +115,13 @@ export const gameRouter = createTRPCRouter({
       })
 
       if (!playerProfile) {
-        throw new TRPCApiError({
-          key: 'PLAYER_PROFILE_NOT_FOUND',
+        throw new TRPCError({
           code: 'NOT_FOUND',
-          message: 'Player profile not found.',
-          description: "Please, select or create a new player profile where you'd like to save your offline session data."
+          cause: new TRPCApiError({
+            key: 'PLAYER_PROFILE_NOT_FOUND',
+            message: 'Player profile not found.',
+            description: "Please, select or create a new player profile where you'd like to save your offline session data."
+          })
         })
       }
 

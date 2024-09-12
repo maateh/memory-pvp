@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 // trpc
+import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
@@ -20,11 +21,13 @@ export const playerProfileRouter = createTRPCRouter({
       })
 
       if (player) {
-        throw new TRPCApiError({
-          key: 'ALREADY_TAKEN',
+        throw new TRPCError({
           code: 'CONFLICT',
-          message: 'Player tag is already in use.',
-          description: 'Sorry, but this player is already taken. Please try another one.'
+          cause: new TRPCApiError({
+            key: 'ALREADY_TAKEN',
+            message: 'Player tag is already in use.',
+            description: 'Sorry, but this player tag is already taken. Please try another one.'
+          })
         })
       }
 
@@ -57,11 +60,13 @@ export const playerProfileRouter = createTRPCRouter({
       })
 
       if (player) {
-        throw new TRPCApiError({
-          key: 'ALREADY_TAKEN',
+        throw new TRPCError({
           code: 'CONFLICT',
-          message: 'Player tag is already in use.',
-          description: 'Sorry, but this player is already taken. Please try another one.'
+          cause: new TRPCApiError({
+            key: 'ALREADY_TAKEN',
+            message: 'Player tag is already in use.',
+            description: 'Sorry, but this player is already taken. Please try another one.'
+          })
         })
       }
 
@@ -90,11 +95,14 @@ export const playerProfileRouter = createTRPCRouter({
       })
 
       if (player) {
-        throw new TRPCApiError({
-          key: 'ACTIVE_PLAYER_PROFILE',
+        throw new TRPCError({
           code: 'CONFLICT',
-          message: 'Player profile cannot be deleted.',
-          description: `${player.tag} is an active player profile. Please select a new active profile before deleting this one.`
+          cause: new TRPCApiError({
+            key: 'ACTIVE_PLAYER_PROFILE',
+            message: 'Player profile cannot be deleted.',
+            description: `${player.tag} is an active player profile. Please select a new active profile before dleting this one.`
+
+          })
         })
       }
 

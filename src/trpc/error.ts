@@ -1,6 +1,5 @@
-import { TRPCError } from "@trpc/server"
-
 export type CAUSE_KEYS =
+  'UNKNOWN' |
   'CLERK_UNAUTHORIZED' |
   'USER_NOT_FOUND' |
   'PLAYER_PROFILE_NOT_FOUND' |
@@ -9,16 +8,22 @@ export type CAUSE_KEYS =
   'SESSION_NOT_FOUND' |
   'ACTIVE_SESSION'
 
-export class TRPCApiError extends TRPCError {
-  public readonly key: CAUSE_KEYS
-  public readonly description: string | undefined
+type TRPCApiErrorOpts = {
+  key: CAUSE_KEYS
+  message: string
+  description?: string | undefined
+}
 
-  constructor(opts: Pick<TRPCError, 'message' | 'code' | 'cause'> & {
-    key: CAUSE_KEYS
-    description?: string
-  }) {
-    super(opts)
-    this.key = opts.key
+export class TRPCApiError {
+  public readonly key?: CAUSE_KEYS
+  public readonly message: string
+  public readonly description?: string | undefined
+
+  public readonly name: 'TRPCApiError'
+
+  constructor(opts: TRPCApiErrorOpts) {
+    this.key = opts.key || 'UNKNOWN'
+    this.message = opts.message
     this.description = opts.description
 
     this.name = 'TRPCApiError'
