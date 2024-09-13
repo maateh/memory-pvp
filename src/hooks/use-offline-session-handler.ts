@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
-// clerk
-import { useClerk } from "@clerk/nextjs"
-
 // prisma
 import { GameStatus } from "@prisma/client"
 
@@ -17,7 +14,6 @@ import { useGameStore } from "@/hooks/use-game-store"
 
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
-  const { user: clerkUser, redirectToSignIn } = useClerk()
 
   const clientSession = useGameStore((state) => state.get)()
   const registerSession = useGameStore((state) => state.register)
@@ -69,17 +65,7 @@ export const useOfflineSessionHandler = () => {
       router.replace('/game/setup')
     }
 
-    const summaryRoute = '/game/offline/save'
-
-    if (clerkUser) {
-      router.replace(summaryRoute)
-      return
-    }
-
-    return redirectToSignIn({
-      signInForceRedirectUrl: summaryRoute,
-      signUpForceRedirectUrl: summaryRoute
-    })
+    router.replace('/game/offline/summary')
   }
 
   return { startOfflineSession, finishOfflineSession }

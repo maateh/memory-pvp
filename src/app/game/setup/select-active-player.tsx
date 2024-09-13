@@ -27,10 +27,10 @@ const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
   const activePlayer = players.find((player) => player.isActive)
 
   return (
-    <div className="w-fit mx-auto text-center space-y-2">
+    <div className="w-fit mx-auto text-center space-y-2.5">
       {!user ? (
         <>
-          <Warning className="text-destructive/85"
+          <Warning className="text-destructive/90"
             message="You are not signed in yet."
           />
 

@@ -37,7 +37,7 @@ const ButtonGroupItem = React.forwardRef<
       {...props}
     >
       <RadioGroupPrimitive.RadioGroupIndicator className="absolute top-1 right-1">
-        <CheckCircle className="size-5 shrink-0 text-primary" />
+        <CheckCircle className="size-4 shrink-0 text-primary" />
       </RadioGroupPrimitive.RadioGroupIndicator>
 
       {children}
