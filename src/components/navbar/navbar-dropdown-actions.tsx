@@ -12,7 +12,7 @@ import { SignedIn, SignOutButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 
 // icons
-import { ChevronDown, Gamepad2, LogOut, Plus, UserCog, UserRoundCheck } from "lucide-react"
+import { ChevronDown, Gamepad2, LogOut, Plus, UserCog } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -24,17 +24,15 @@ import {
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuSub,
-  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
 // components
 import { ThemeToggle } from "@/components/shared"
-import { PlayerBadge } from "@/components/player"
 
 // hooks
-import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
+import { SelectActivePlayerDropdownContent } from "../player/select-active-player-dropdown"
 
 type NavbarDropdownActionsProps = {
   players: PlayerProfile[]
@@ -42,8 +40,6 @@ type NavbarDropdownActionsProps = {
 
 const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
   const router = useRouter()
-
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
     <DropdownMenu>
@@ -79,24 +75,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
                 </div>
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuLabel className="flex items-center gap-x-1.5 font-normal">
-                    <UserRoundCheck className="size-4" strokeWidth={2.25} />
-                    <span>Select a player</span>
-                  </DropdownMenuLabel>
-
-                  <DropdownMenuSeparator />
-
-                  {players.map((player) => (
-                    <DropdownMenuItem className="focus:bg-transparent/5 dark:focus:bg-transparent/35"
-                      onClick={() => handleSelectAsActive(player)}
-                      disabled={selectAsActive.isPending}
-                      key={player.id}
-                    >
-                      <PlayerBadge className="flex-1" player={player} />
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuSubContent>
+                <SelectActivePlayerDropdownContent players={players} asSub />
               </DropdownMenuPortal>
             </DropdownMenuSub>
           </>
