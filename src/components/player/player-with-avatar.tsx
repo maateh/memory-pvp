@@ -13,7 +13,7 @@ import { LucideProps, UserRound } from "lucide-react"
 import { PlayerBadge, PlayerBadgeProps } from "@/components/player"
 
 type PlayerWithAvatarProps = {
-  player: PlayerProfile
+  player: Pick<PlayerProfile, 'tag' | 'color'>
   imageUrl?: string | null
   imageSize?: number
   playerBadgeProps?: Omit<PlayerBadgeProps, 'player'>

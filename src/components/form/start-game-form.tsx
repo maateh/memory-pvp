@@ -4,6 +4,9 @@ import { z } from "zod"
 
 import { DefaultValues } from "react-hook-form"
 
+// clerk
+import { useClerk } from "@clerk/nextjs"
+
 // constants
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
 
@@ -35,6 +38,8 @@ type StartGameFormProps = {
 }
 
 const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
+  const { user: clerkUser } = useClerk()
+
   const { startGame, onSubmit } = useStartGameMutation()
   const { startOfflineSession } = useOfflineSessionHandler()
 
@@ -152,7 +157,7 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
           <div className="mt-auto flex flex-col items-center gap-y-4">
             <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
               variant="secondary"
-              disabled={startGame.isPending}
+              disabled={!clerkUser || startGame.isPending}
             >
               {startGame.isPending ? (
                 <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
@@ -162,7 +167,6 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
               Start new game
             </Button>
 
-            {/* TODO: separate offline & online sessions */}
             <Button className={cn("gap-x-2 bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm sm:text-base", {
               "opacity-40 pointer-events-none": startGame.isPending
             })}

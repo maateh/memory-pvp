@@ -13,15 +13,13 @@ type WarningProps = {
 
 const Warning = ({ message, messageProps, iconProps, className }: WarningProps) => {
   return (
-    <div className={cn("mt-2 text-center flex flex-wrap justify-center items-center gap-2.5", className)}>
+    <div className={cn("mt-2 text-center text-destructive text-sm font-semibold font-mono flex flex-wrap justify-center items-center gap-2.5", className)}>
       <AlertTriangle {...iconProps}
         className={cn("size-5 text-destructive/80 flex-none", iconProps?.className)}
         strokeWidth={iconProps?.strokeWidth || 2.5}
       />
 
-      <p {...messageProps}
-        className={cn("text-destructive text-sm font-semibold font-mono", messageProps?.className)}
-      >
+      <p {...messageProps}>
         {message}
       </p>
     </div>

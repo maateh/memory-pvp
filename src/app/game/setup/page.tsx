@@ -16,8 +16,8 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { StartGameForm } from "@/components/form"
-import { PlayerWithAvatar } from "@/components/player"
 import { ThemeToggle } from "@/components/shared"
+import SelectActivePlayer from "./select-active-player"
 
 type GameSetupPageProps = {
   searchParams: {
@@ -30,12 +30,11 @@ type GameSetupPageProps = {
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const user = await signedIn()
 
-  let activePlayer: PlayerProfileWithUserAvatar | null | undefined
+  let players: PlayerProfileWithUserAvatar[] = []
   if (user) {
-    activePlayer = await db.playerProfile.findFirst({
+    players = await db.playerProfile.findMany({
       where: {
-        userId: user.id,
-        isActive: true
+        userId: user.id
       },
       include: {
         user: {
@@ -74,14 +73,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
         </p>
       </div>
 
-      {activePlayer && (
-        <PlayerWithAvatar className="mt-2 mx-auto"
-          playerBadgeProps={{ className: "sm:text-base" }}
-          imageUrl={activePlayer.user.imageUrl}
-          imageSize={32}
-          player={activePlayer}
-        />
-      )}
+      <SelectActivePlayer user={user} players={players} />
 
       <Separator className="w-3/5 mx-auto mt-1 mb-5 sm:w-2/5 lg:w-1/5" />
 
