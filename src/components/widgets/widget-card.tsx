@@ -71,6 +71,7 @@ const WidgetCard = ({
               size: "icon"
             }))}
               href={widgetLink}
+              scroll={false}
             >
               <div className="mr-1 space-x-1.5">
                 <Edit className="size-3" />

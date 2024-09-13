@@ -25,7 +25,7 @@ const NavbarActions = ({ hasActivePlayer }: NavbarActionsProps) => {
       <Button className={cn("h-fit py-1.5 gap-x-2 bg-accent/30 hidden xl:flex hover:bg-accent/35", {
         "flex": !hasActivePlayer
       })}
-        onClick={() => router.push('/profile/players')}
+        onClick={() => router.push('/profile/players', { scroll: false })}
       >
         <Plus className="size-4" strokeWidth={4} />
         New player
@@ -34,7 +34,7 @@ const NavbarActions = ({ hasActivePlayer }: NavbarActionsProps) => {
       <Button className={cn("h-fit py-1.5 gap-x-2 hidden 2xl:flex", {
         "lg:flex": !hasActivePlayer
       })}
-        onClick={() => router.push('/dashboard/sessions')}
+        onClick={() => router.push('/dashboard/sessions', { scroll: false })}
       >
         <History className="size-4" strokeWidth={2.5} />
         Game sessions

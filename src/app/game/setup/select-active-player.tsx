@@ -40,7 +40,7 @@ const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
         </>
       ) : !activePlayer ? (
         <Button className="h-fit py-1.5 gap-x-2 bg-accent/30 hidden xl:flex hover:bg-accent/35"
-          onClick={() => router.push('/profile/players')}
+          onClick={() => router.push('/profile/players', { scroll: false })}
         >
           <UserPlus2 className="size-4" strokeWidth={2.5} />
           Create player

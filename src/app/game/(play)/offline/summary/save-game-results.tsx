@@ -38,7 +38,7 @@ const SaveGameResults = ({ players }: SaveGameResultsProps) => {
           tooltip="Add new player"
           variant="ghost"
           size="icon"
-          onClick={() => router.push('/profile/players')}
+          onClick={() => router.push('/profile/players', { scroll: false })}
         >
           <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
         </ButtonTooltip>

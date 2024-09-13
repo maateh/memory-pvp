@@ -89,7 +89,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => router.push('/profile/players')}
+          onClick={() => router.push('/profile/players', { scroll: false })}
         >
           <Plus className="size-4" strokeWidth={3} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
@@ -101,7 +101,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "lg:hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => router.push('/dashboard/sessions')}
+          onClick={() => router.push('/dashboard/sessions', { scroll: false })}
         >
           <Gamepad2 className="size-4" strokeWidth={2.75} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">
