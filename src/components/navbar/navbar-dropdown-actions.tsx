@@ -101,7 +101,7 @@ const NavbarDropdownActions = ({ players }: NavbarDropdownActionsProps) => {
           "lg:hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => router.push('/dashbooard/sessions')}
+          onClick={() => router.push('/dashboard/sessions')}
         >
           <Gamepad2 className="size-4" strokeWidth={2.75} />
           <span className="text-muted-foreground group-focus:text-secondary-foreground">

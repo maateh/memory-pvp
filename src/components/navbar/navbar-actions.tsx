@@ -34,7 +34,7 @@ const NavbarActions = ({ hasActivePlayer }: NavbarActionsProps) => {
       <Button className={cn("h-fit py-1.5 gap-x-2 hidden 2xl:flex", {
         "lg:flex": !hasActivePlayer
       })}
-        onClick={() => router.push('/dashbooard/sessions')}
+        onClick={() => router.push('/dashboard/sessions')}
       >
         <History className="size-4" strokeWidth={2.5} />
         Game sessions
