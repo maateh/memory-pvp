@@ -8,11 +8,11 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
-type PlayerProfileListProps = {
+type PlayerProfileCardListProps = {
   players: PlayerProfile[] | undefined
 }
 
-const PlayerProfileList = ({ players }: PlayerProfileListProps) => {
+const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
   if (!players || !players.length) {
     return (
       <Warning message="Currently, you don't have any player profiles." />
@@ -32,4 +32,4 @@ const PlayerProfileList = ({ players }: PlayerProfileListProps) => {
   )
 }
 
-export default PlayerProfileList
+export default PlayerProfileCardList

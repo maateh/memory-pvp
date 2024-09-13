@@ -12,7 +12,7 @@ import { ButtonTooltip } from "@/components/ui/button"
 // hooks
 import { useDeletePlayerMutation, useSelectAsActiveMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
 
-type PlayerProfileActionsProps = {
+type PlayerActionButtonsProps = {
   player: PlayerProfile
   updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
   editing: boolean
@@ -20,13 +20,13 @@ type PlayerProfileActionsProps = {
   setColor: (color: string) => void
 }
 
-const PlayerProfileActions = ({
+const PlayerActionButtons = ({
   player,
   updatedPlayer,
   editing,
   setEditing,
   setColor
-}: PlayerProfileActionsProps) => {
+}: PlayerActionButtonsProps) => {
   const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation({ setEditing })
   const { deletePlayer, handleDeletePlayer } = useDeletePlayerMutation()
   const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
@@ -118,4 +118,4 @@ const PlayerProfileActions = ({
   )
 }
 
-export default PlayerProfileActions
+export default PlayerActionButtons

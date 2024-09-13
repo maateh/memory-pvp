@@ -14,7 +14,7 @@ import { playerProfilesWidgetInfo } from "@/components/widgets/constants"
 // components
 import { PlayerProfileForm } from "@/components/form"
 import { WidgetModal } from "@/components/widgets"
-import { PlayerProfileList } from '@/components/player/card'
+import { PlayerProfileCardList } from '@/components/player/card'
 
 const PlayersWidgetModal = async () => {
   const user = await signedIn()
@@ -44,7 +44,7 @@ const PlayersWidgetModal = async () => {
         Manage your current profiles
       </h4>
 
-      <PlayerProfileList players={players} />
+      <PlayerProfileCardList players={players} />
     </WidgetModal>
   )
 }

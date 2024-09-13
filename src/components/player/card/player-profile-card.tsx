@@ -19,7 +19,7 @@ import { ColorPicker } from "@/components/inputs"
 import { PlayerVerifiedBadge } from "@/components/player"
 
 // hooks
-import PlayerProfileActions from "./player-profile-actions"
+import PlayerActionButtons from "./player-action-buttons"
 
 type PlayerProfileCardProps = {
   player: PlayerProfile
@@ -67,7 +67,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         </div>
       </div>
 
-      <PlayerProfileActions
+      <PlayerActionButtons
         player={player}
         updatedPlayer={{
           tag: playerTag,
