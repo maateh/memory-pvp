@@ -39,7 +39,6 @@ const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
           />
         </>
       ) : !activePlayer ? (
-        // FIXME: move widget parallel routes to /(root)
         <Button className="h-fit py-1.5 gap-x-2 bg-accent/30 hidden xl:flex hover:bg-accent/35"
           onClick={() => router.push('/profile/players')}
         >

@@ -28,7 +28,12 @@ export const metadata: Metadata = {
   description: "A simple memory card game with additional PvP features."
 }
 
-const BaseLayout = ({ children }: React.PropsWithChildren) => {
+type BaseLayoutProps = {
+  widget: React.ReactNode
+  children: React.ReactNode
+}
+
+const BaseLayout = ({ widget, children }: BaseLayoutProps) => {
   return (
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
@@ -47,6 +52,7 @@ const BaseLayout = ({ children }: React.PropsWithChildren) => {
             >
               <Toaster />
 
+              {widget}
               {children}
             </ThemeProvider>
           </TRPCProvider>
