@@ -55,7 +55,12 @@ export const playerProfileRouter = createTRPCRouter({
 
       const player = await ctx.db.playerProfile.findUnique({
         where: {
-          tag: playerTag
+          tag: playerTag,
+          AND: {
+            id: {
+              not: playerId
+            }
+          }
         }
       })
 
@@ -65,7 +70,7 @@ export const playerProfileRouter = createTRPCRouter({
           cause: new TRPCApiError({
             key: 'ALREADY_TAKEN',
             message: 'Player tag is already in use.',
-            description: 'Sorry, but this player is already taken. Please try another one.'
+            description: 'Sorry, but this player tag is already taken. Please try another one.'
           })
         })
       }
