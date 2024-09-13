@@ -1,15 +1,11 @@
 // clerk
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
-
-// icons
-import { LogIn } from "lucide-react"
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
 // shadcn
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { ThemeToggle } from "@/components/shared"
+import { SignInButton, ThemeToggle } from "@/components/shared"
 
 const SidebarFooter = () => {
   return (
@@ -24,12 +20,7 @@ const SidebarFooter = () => {
         </SignedIn>
 
         <SignedOut>
-          <SignInButton>
-            <Button variant="secondary" size="sm">
-              <LogIn className="size-4 mr-2" />
-              <span>Sign In</span>
-            </Button>
-          </SignInButton>
+          <SignInButton />
         </SignedOut>
       </div>
     </>
