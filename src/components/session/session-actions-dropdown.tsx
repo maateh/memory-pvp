@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 // hooks
 import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
 
-const GameActionsDropdown = () => {
+const SessionActionsDropdown = () => {
   const { finishSession, handleFinishSession } = useFinishSessionMutation()
 
   return (
@@ -45,4 +45,4 @@ const GameActionsDropdown = () => {
   )
 }
 
-export default GameActionsDropdown
+export default SessionActionsDropdown

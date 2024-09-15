@@ -7,7 +7,7 @@ import { GameSessionClient } from "@/hooks/use-game-store"
 import { Button } from "@/components/ui/button"
 
 // components
-import { SessionPreparer } from "@/components/game"
+import { SessionWrapper } from "@/components/session"
 
 // hooks
 import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
@@ -22,14 +22,14 @@ const TablePlayground = ({ session }: TablePlaygroundProps) => {
   // TODO: implement game logic
 
   return (
-    <SessionPreparer session={session}>
+    <SessionWrapper session={session}>
       <Button
         onClick={() => handleFinishSession('FINISHED', session.status === 'OFFLINE')}
         disabled={finishSession.isPending}
       >
         Finish game
       </Button>
-    </SessionPreparer>
+    </SessionWrapper>
   )
 }
 

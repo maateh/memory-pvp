@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { redirect } from "next/navigation"
 
 // components
-import { TablePlayground } from "@/components/game"
+import { TablePlayground } from "@/components/session/game"
 
 // hooks
 import { useGameStore } from "@/hooks/use-game-store"

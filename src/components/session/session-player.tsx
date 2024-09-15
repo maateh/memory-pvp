@@ -7,12 +7,12 @@ import { ScanEye, Sparkles } from "lucide-react"
 // components
 import { PlayerWithAvatar } from "@/components/player"
 
-type GamePlayerInfoProps = {
+type SessionPlayerProps = {
   player: PlayerProfileWithUserAvatar
   flipOrder?: boolean
 }
 
-const GamePlayerInfo = ({ player, flipOrder }: GamePlayerInfoProps) => {
+const SessionPlayer = ({ player, flipOrder }: SessionPlayerProps) => {
   const sessionScore = 5
   const overallScore = 100
 
@@ -50,4 +50,4 @@ const GamePlayerInfo = ({ player, flipOrder }: GamePlayerInfoProps) => {
   )
 }
 
-export default GamePlayerInfo
+export default SessionPlayer

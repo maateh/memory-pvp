@@ -7,7 +7,8 @@ import { auth } from "@clerk/nextjs/server"
 import { api } from "@/trpc/server"
 
 // components
-import { GameInfoFooter, TablePlayground } from "@/components/game"
+import { SessionFooter } from "@/components/session"
+import { TablePlayground } from "@/components/session/game"
 
 const GamePlayPage = async () => {
   const { userId } = auth()
@@ -20,7 +21,7 @@ const GamePlayPage = async () => {
       <>
         <TablePlayground session={session} />
 
-        <GameInfoFooter session={session} />
+        <SessionFooter session={session} />
       </>
     )
   } catch (err) {

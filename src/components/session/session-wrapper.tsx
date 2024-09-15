@@ -13,11 +13,11 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
 
-type SessionPreparerProps = {
+type SessionWrapperProps = {
   session: GameSessionClient
 } & React.PropsWithChildren
 
-const SessionPreparer = ({ session, children }: SessionPreparerProps) => {
+const SessionWrapper = ({ session, children }: SessionWrapperProps) => {
   const [forceRunning, setForceRunning] = useState(false)
 
   const { finishSession, handleFinishSession } = useFinishSessionMutation()
@@ -56,4 +56,4 @@ const SessionPreparer = ({ session, children }: SessionPreparerProps) => {
   )
 }
 
-export default SessionPreparer
+export default SessionWrapper
