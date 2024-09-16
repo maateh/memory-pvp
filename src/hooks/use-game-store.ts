@@ -72,9 +72,15 @@ export const useGameStore = create<GameStore>((set) => ({
     set({ session: null })
   },
 
-  updateCards: (cards) => 
+  updateCards: (cards) => {
+    if (typeof window === 'undefined') return null
+
     set((state) => {
       if (state.session === null) return state
-      return { session: { ...state.session, cards } }
+
+      const session = { ...state.session, cards }
+      localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
+      return { session }
     })
+  }
 }))
