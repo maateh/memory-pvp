@@ -22,41 +22,41 @@ const MemoryTable = ({ session, updateSessionCards }: MemoryTableProps) => {
 
   const [flippedCards, setFlippedCards] = useState<TMemoryCard[]>([])
 
-  const handleCardFlip = (clickedCard: TMemoryCard) => {
+  const handleCardFlip = async (clickedCard: TMemoryCard) => {
     if (flippedCards.length === 2 || clickedCard.isMatched) return
 
     let updatedCards = session.cards.map((card) =>
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     )
-    updateSessionCards(updatedCards)
+    await updateSessionCards(updatedCards)
 
     const flipped = [...flippedCards, clickedCard]
     setFlippedCards(flipped)
 
-    if (flipped.length === 2) {
-      if (flipped[0].key === flipped[1].key) {
-        setTimeout(() => {
-          updatedCards = updatedCards.map((card) =>
-            card.key === flipped[0].key
-              ? { ...card, isMatched: true }
-              : card
-          )
+    if (flipped.length < 2) return
 
-          updateSessionCards(updatedCards)
-          setFlippedCards([])
-        }, 1000)
-      } else {
-        setTimeout(() => {
-          updatedCards = updatedCards.map((card) =>
-            flipped.some(fc => fc.id === card.id)
-              ? { ...card, isFlipped: false }
-              : card
-          )
+    if (flipped[0].key === flipped[1].key) {
+      setTimeout(async () => {
+        updatedCards = updatedCards.map((card) =>
+          card.key === flipped[0].key
+            ? { ...card, isMatched: true }
+            : card
+        )
 
-          updateSessionCards(updatedCards)
-          setFlippedCards([])
-        }, 1000)
-      }
+        await updateSessionCards(updatedCards)
+        setFlippedCards([])
+      }, 1000)
+    } else {
+      setTimeout(async () => {
+        updatedCards = updatedCards.map((card) =>
+          flipped.some(fc => fc.id === card.id)
+            ? { ...card, isFlipped: false }
+            : card
+        )
+
+        await updateSessionCards(updatedCards)
+        setFlippedCards([])
+      }, 1000)
     }
   }
 
