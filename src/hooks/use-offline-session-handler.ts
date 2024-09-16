@@ -18,7 +18,7 @@ import { useGameStore } from "@/hooks/use-game-store"
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
 
-  const clientSession = useGameStore((state) => state.get)()
+  const clientSession = useGameStore((state) => state.session)
   const registerSession = useGameStore((state) => state.register)
   const unregisterSession = useGameStore((state) => state.unregister)
 

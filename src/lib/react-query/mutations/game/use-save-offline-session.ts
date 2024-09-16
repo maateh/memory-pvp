@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // trpc
-import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // utils
@@ -16,7 +15,7 @@ import { useGameStore } from "@/hooks/use-game-store"
 export const useSaveOfflineSessionMutation = () => {
   const router = useRouter()
 
-  const clientSession = useGameStore((state) => state.get)()
+  const clientSession = useGameStore((state) => state.session)
   const unregisterClientSession = useGameStore((state) => state.unregister)
 
   useEffect(() => {
