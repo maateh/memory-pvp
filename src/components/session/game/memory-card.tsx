@@ -3,16 +3,11 @@ import Image from "next/image"
 // utils
 import { cn } from "@/lib/utils"
 
+// types
+import type { MemoryCard as TMemoryCard } from "@/hooks/use-game-store"
+
 // shadcn
 import { Card, CardContent } from "@/components/ui/card"
-
-
-export type TMemoryCard = {
-  key: string
-  imageUrl: string
-  isFlipped: boolean
-  isMatched: boolean
-}
 
 type MemoryCardProps = {
   card: TMemoryCard
