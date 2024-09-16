@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic"
 import { redirect } from "next/navigation"
 
+// components
 const MemoryTable = dynamic(() => import("@/components/session/game/memory-table"), { ssr: false })
 
 // hooks
@@ -17,7 +18,7 @@ const InitializeOfflineGame = () => {
   return (
     <MemoryTable
       session={clientSession}
-      updateCards={updateCards}
+      updateSessionCards={updateCards}
     />
   )
 }

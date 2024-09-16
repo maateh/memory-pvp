@@ -21,7 +21,7 @@ const GamePlayPage = async () => {
       <>
         <MemoryTable
           session={session} // TODO: add cards & flip to db schema
-          updateCards={(cards) => {}} // TODO: implement
+          updateSessionCards={(cards) => {}} // TODO: implement
         />
 
         <SessionFooter session={session} />

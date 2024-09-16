@@ -14,10 +14,10 @@ import MemoryCard from "./memory-card"
 
 type MemoryTableProps = {
   session: GameSessionClient
-  updateCards: (cards: TMemoryCard[]) => Promise<void> | void
+  updateSessionCards: (cards: TMemoryCard[]) => Promise<void> | void
 }
 
-const MemoryTable = ({ session, updateCards }: MemoryTableProps) => {
+const MemoryTable = ({ session, updateSessionCards }: MemoryTableProps) => {
   const router = useRouter()
 
   const [flippedCards, setFlippedCards] = useState<TMemoryCard[]>([])
@@ -25,35 +25,35 @@ const MemoryTable = ({ session, updateCards }: MemoryTableProps) => {
   const handleCardFlip = (clickedCard: TMemoryCard) => {
     if (flippedCards.length === 2 || clickedCard.isMatched) return
 
-    const updatedCards = session.cards.map((card) =>
+    let updatedCards = session.cards.map((card) =>
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     )
-    updateCards(updatedCards)
+    updateSessionCards(updatedCards)
 
-    const newFlippedCards = [...flippedCards, clickedCard]
-    setFlippedCards(newFlippedCards)
+    const flipped = [...flippedCards, clickedCard]
+    setFlippedCards(flipped)
 
-    if (newFlippedCards.length === 2) {
-      if (newFlippedCards[0].key === newFlippedCards[1].key) {
+    if (flipped.length === 2) {
+      if (flipped[0].key === flipped[1].key) {
         setTimeout(() => {
-          const updatedCards = session.cards.map((card) =>
-            card.key === newFlippedCards[0].key
-              ? { ...card, isFlipped: true, isMatched: true }
+          updatedCards = updatedCards.map((card) =>
+            card.key === flipped[0].key
+              ? { ...card, isMatched: true }
               : card
           )
 
-          updateCards(updatedCards)
+          updateSessionCards(updatedCards)
           setFlippedCards([])
         }, 1000)
       } else {
         setTimeout(() => {
-          const updatedCards = session.cards.map((card) =>
-            newFlippedCards.some(fc => fc.id === card.id)
+          updatedCards = updatedCards.map((card) =>
+            flipped.some(fc => fc.id === card.id)
               ? { ...card, isFlipped: false }
               : card
           )
 
-          updateCards(updatedCards)
+          updateSessionCards(updatedCards)
           setFlippedCards([])
         }, 1000)
       }
