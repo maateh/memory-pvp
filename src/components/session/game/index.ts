@@ -1,1 +1,2 @@
-export { default as TablePlayground } from "./table-playground"
+export { default as MemoryTable } from "./memory-table"
+export { default as MemoryCard } from "./memory-card"

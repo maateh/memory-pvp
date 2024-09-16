@@ -1,26 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { redirect } from "next/navigation"
+import dynamic from "next/dynamic"
 
 // components
-import { TablePlayground } from "@/components/session/game"
+const GameOfflineInitialize = dynamic(() => import("./initialize-offline-game"), { ssr: false })
 
-// hooks
-import { useGameStore } from "@/hooks/use-game-store"
-
-const GamePlayOfflinePage = () => {
-  /** Note: prevent SSR */
-  const [mounted, setMounted] = useState(false)
-
-  const clientSession = useGameStore((state) => state.get)()
-  if (!clientSession && mounted) redirect('/game/setup')
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  return mounted && <TablePlayground session={clientSession!} />
-}
+const GamePlayOfflinePage = () => <GameOfflineInitialize />
 
 export default GamePlayOfflinePage

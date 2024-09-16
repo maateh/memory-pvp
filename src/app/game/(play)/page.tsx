@@ -8,7 +8,7 @@ import { api } from "@/trpc/server"
 
 // components
 import { SessionFooter } from "@/components/session"
-import { TablePlayground } from "@/components/session/game"
+import { MemoryTable } from "@/components/session/game"
 
 const GamePlayPage = async () => {
   const { userId } = auth()
@@ -19,7 +19,10 @@ const GamePlayPage = async () => {
   
     return (
       <>
-        <TablePlayground session={session} />
+        <MemoryTable
+          session={session} // TODO: add cards & flip to db schema
+          updateCards={(cards) => {}} // TODO: implement
+        />
 
         <SessionFooter session={session} />
       </>

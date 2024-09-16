@@ -52,3 +52,9 @@ export const tableSizes = [
     Icon: Dice6
   }
 ]
+
+export const tableSizeMap = {
+  [TableSize.SMALL]: 16,
+  [TableSize.MEDIUM]: 24,
+  [TableSize.LARGE]: 32
+}

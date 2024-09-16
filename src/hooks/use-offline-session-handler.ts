@@ -5,6 +5,9 @@ import { toast } from "sonner"
 // prisma
 import { GameStatus } from "@prisma/client"
 
+// utils
+import { getMockCards } from "@/lib/utils"
+
 // types
 import { UseFormReturn } from "react-hook-form"
 import { StartGameFormValues } from "@/components/form/start-game-form"
@@ -38,7 +41,9 @@ export const useOfflineSessionHandler = () => {
 
     registerSession({
       tableSize: values.tableSize,
-      startedAt: new Date()
+      startedAt: new Date(),
+      flips: 0,
+      cards: getMockCards(values.tableSize)
     })
 
     toast.success('Game started in offline mode!', {
