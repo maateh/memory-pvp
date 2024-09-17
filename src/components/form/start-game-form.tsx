@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 
-import { DefaultValues } from "react-hook-form"
+import type { DefaultValues, UseFormReturn } from "react-hook-form"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -32,6 +32,11 @@ import { useStartGameMutation } from "@/lib/react-query/mutations/game"
 import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
 
 export type StartGameFormValues = z.infer<typeof startGameSchema>
+
+export type StartGameSessionParams = {
+  values: StartGameFormValues
+  form: UseFormReturn<StartGameFormValues>
+}
 
 type StartGameFormProps = {
   defaultValues?: DefaultValues<StartGameFormValues>

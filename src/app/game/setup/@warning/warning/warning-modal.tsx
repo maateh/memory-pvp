@@ -2,6 +2,11 @@
 
 import { useRouter } from "next/navigation"
 
+import { toast } from "sonner"
+
+// types
+import type { StartGameSessionParams } from "@/components/form/start-game-form"
+
 // shadcn
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -9,6 +14,8 @@ import { Separator } from "@/components/ui/separator"
 
 // hooks
 import { useGameStore, type UnsignedClientGameSession } from "@/hooks/use-game-store"
+import { useCacheStore, type CacheStore } from "@/hooks/use-cache-store"
+import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
 
 type SessionRunningWarningModalProps = {
   session: UnsignedClientGameSession | null
@@ -18,12 +25,36 @@ type SessionRunningWarningModalProps = {
 const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarningModalProps) => {
   const router = useRouter()
 
+  const clearCache = useCacheStore((state) => state.clear)
+  const startFormCache = useCacheStore<
+    StartGameSessionParams,
+    CacheStore<StartGameSessionParams>['data']
+  >((state) => state.data)
+
+  const { startOfflineSession } = useOfflineSessionHandler()
+
   if (isOffline) {
     session = useGameStore.getState().session
   }
 
   const handleStartNew = () => {
-    // TODO: implement
+    if (!startFormCache) {
+      toast.warning("Missing data to start new game session.", {
+        description: "Sorry, but we couldn't find the necessary data to start a new game session. Please fill out the form again."
+      })
+      router.replace('/game/setup')
+      return
+    }
+
+    const { form, values } = startFormCache
+    clearCache()
+    
+    if (isOffline) {
+      startOfflineSession(values, form, true)
+      return
+    }
+
+    // TODO: start new game session
   }
 
   const handleContinue = () => {
