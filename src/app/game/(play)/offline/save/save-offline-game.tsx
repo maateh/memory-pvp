@@ -21,11 +21,11 @@ import { PlayerProfileForm } from "@/components/form"
 // hooks
 import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/game"
 
-type SaveGameResultsProps = {
+type SaveOfflineGameProps = {
   players: PlayerProfile[]
 }
 
-const SaveGameResults = ({ players }: SaveGameResultsProps) => {
+const SaveOfflineGame = ({ players }: SaveOfflineGameProps) => {
   const router = useRouter()
   const [playerTag, setPlayerTag] = useState('')
 
@@ -101,4 +101,4 @@ const SaveGameResults = ({ players }: SaveGameResultsProps) => {
   )
 }
 
-export default SaveGameResults
+export default SaveOfflineGame

@@ -10,9 +10,9 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { SignInButton, Warning } from "@/components/shared"
-import SaveGameResults from "./save-game-results"
+import SaveOfflineGame from "./save-offline-game"
 
-const GameOfflineSummaryPage = async () => {
+const GameOfflineSavePage = async () => {
   const user = await signedIn()
 
   let players: PlayerProfile[] = []
@@ -25,10 +25,10 @@ const GameOfflineSummaryPage = async () => {
   }
 
   return (
-    <div className="flex-1 px-2.5 space-y-16 sm:px-4">
-      <section className="mt-24 space-y-3">
-        <h1 className="w-fit mx-auto text-3xl font-heading font-bold small-caps heading-decorator sm:text-5xl">
-          Game over!
+    <main className="flex-1 px-2.5 space-y-16 sm:px-4">
+      <header className="mt-24 space-y-3">
+        <h1 className="w-fit pt-2 mx-auto text-3xl font-heading font-bold small-caps heading-decorator sm:text-5xl">
+          Save Offline Session
         </h1>
 
         <Separator className="w-5/6 mx-auto border-foreground/50" />
@@ -36,7 +36,7 @@ const GameOfflineSummaryPage = async () => {
         <p className="max-w-lg mx-auto text-center font-heading text-base sm:text-lg">
           You&apos;re game is over, thanks for playing!
         </p>
-      </section>
+      </header>
 
       {/* TODO: show results here */}
       {/* <GameResultsSummary /> */}
@@ -55,10 +55,10 @@ const GameOfflineSummaryPage = async () => {
           />
         </div>
       ) : (
-        <SaveGameResults players={players} />
+        <SaveOfflineGame players={players} />
       )}
-    </div>
+    </main>
   )
 }
 
-export default GameOfflineSummaryPage
+export default GameOfflineSavePage
