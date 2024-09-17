@@ -3,8 +3,8 @@
 import dynamic from "next/dynamic"
 
 // components
-const GameOfflineInitialize = dynamic(() => import("./initialize-offline-game"), { ssr: false })
+const OfflineGameHandler = dynamic(() => import("./offline-game-handler"), { ssr: false })
 
-const GamePlayOfflinePage = () => <GameOfflineInitialize />
+const GamePlayOfflinePage = () => <OfflineGameHandler />
 
 export default GamePlayOfflinePage
