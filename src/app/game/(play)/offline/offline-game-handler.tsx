@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { redirect, useRouter } from "next/navigation"
+import { redirect } from "next/navigation"
 
 // constants
 import { offlineSessionMetadata } from "@/constants/game"
@@ -11,16 +11,20 @@ import { MemoryTable } from "@/components/session/game"
 
 // hooks
 import { type MemoryCard, useGameStore } from "@/hooks/use-game-store"
+import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
 
 const OfflineGameHandler = () => {
-  const router = useRouter()
-
+  /** Check if there is any client session. */
   const clientSession = useGameStore((state) => state.session)
   if (!clientSession) redirect('/game/setup')
 
+  /** Get custom handler to finish the game. */
+  const { finishOfflineSession } = useOfflineSessionHandler()
+
+  /** Initialize required states and handlers for the game. */
   const [cards, setCards] = useState<MemoryCard[]>(clientSession.cards)
   const [flippedCards, setFlippedCards] = useState<MemoryCard[]>([])
-
+  
   const updateSessionCards = useGameStore((state) => state.updateCards)
 
   const handleCardFlip = (clickedCard: MemoryCard) => {
@@ -65,9 +69,9 @@ const OfflineGameHandler = () => {
 
   useEffect(() => {
     if (cards.every(card => card.isMatched)) {
-      router.replace('/game/offline/summary')
+      finishOfflineSession('FINISHED')
     }
-  }, [cards, router])
+  }, [cards])
 
   return (
     <MemoryTable

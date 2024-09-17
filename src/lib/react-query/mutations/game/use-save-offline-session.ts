@@ -46,6 +46,14 @@ export const useSaveOfflineSessionMutation = () => {
       return
     }
 
+    const isOver = clientSession.cards.every((card) => card.isMatched)
+    if (!isOver) {
+      toast.warning("Offline session cannot be saved.", {
+        description: "It looks like you haven't completely finished your offline session yet. Please, finish it first or you can start a new game anytime if you want."
+      })
+      return
+    }
+
     await saveOfflineSession.mutateAsync({ playerTag, ...clientSession })
   }
 

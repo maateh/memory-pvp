@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic"
+
 // prisma
 import type { PlayerProfile } from "@prisma/client"
 
@@ -11,6 +13,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { SignInButton, Warning } from "@/components/shared"
 import SaveOfflineGame from "./save-offline-game"
+const CheckOfflineSession = dynamic(() => import('./check-offline-session'), { ssr: false })
 
 const GameOfflineSavePage = async () => {
   const user = await signedIn()
@@ -57,6 +60,8 @@ const GameOfflineSavePage = async () => {
       ) : (
         <SaveOfflineGame players={players} />
       )}
+
+      <CheckOfflineSession />
     </main>
   )
 }

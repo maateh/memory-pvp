@@ -76,15 +76,21 @@ export const useOfflineSessionHandler = () => {
     if (status === 'ABANDONED') {
       unregisterSession()
 
-      toast.warning('Your session has been abandoned.')
       router.replace('/game/setup')
+      toast.warning('Your session has been abandoned.')
       return
     }
 
-    // TODO: check if game is over (all cards matched & flipped)
-
-    toast.success('You finished your game session!')
-    router.replace('/game/offline/summary')
+    router.replace('/game/offline/save')
+    toast.success('You finished your offline game session!', {
+      description: "Now, you've been redirected to save your results if you want.",
+      /**
+       * Note: for a reason, this toast would render twice,
+       * (because it is used inside a useEffect elsewhere)
+       * so it is prevented by adding a custom id.
+       */
+      id: '_'
+    })
   }
 
   return { startOfflineSession, finishOfflineSession }

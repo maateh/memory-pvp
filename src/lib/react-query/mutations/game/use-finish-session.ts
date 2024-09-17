@@ -39,7 +39,10 @@ export const useFinishSessionMutation = () => {
     status: typeof GameStatus['ABANDONED' | 'FINISHED'],
     offline: boolean = false
   ) => {
-    if (offline) return finishOfflineSession(status)
+    if (offline) {
+      finishOfflineSession(status)
+      return
+    }
 
     await finishSession.mutateAsync(status)
   }
