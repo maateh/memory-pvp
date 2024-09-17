@@ -4,9 +4,6 @@ import { differenceInMinutes } from "date-fns"
 
 import { useState } from "react"
 
-// types
-import { GameSessionClient } from "@/hooks/use-game-store"
-
 // shadcn
 import { Button } from "@/components/ui/button"
 
@@ -14,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
 
 type SessionWrapperProps = {
-  session: GameSessionClient
+  session: ClientGameSession
 } & React.PropsWithChildren
 
 const SessionWrapper = ({ session, children }: SessionWrapperProps) => {

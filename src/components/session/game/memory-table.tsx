@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 // types
-import type { GameSessionClient, MemoryCard as TMemoryCard } from "@/hooks/use-game-store"
+import type { MemoryCard as TMemoryCard } from "@/hooks/use-game-store"
 
 // components
 import MemoryCard from "./memory-card"
 
 type MemoryTableProps = {
-  session: GameSessionClient
+  session: ClientGameSession
   updateSessionCards: (cards: TMemoryCard[]) => Promise<void> | void
 }
 

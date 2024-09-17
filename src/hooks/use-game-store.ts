@@ -1,9 +1,9 @@
 import { create } from "zustand"
 
 // prisma
-import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
+import type { TableSize } from "@prisma/client"
 
-export type MemoryCard = {
+export type MemoryCard = { // TODO: temporary. (it'll be moved to a prisma schema type soon)
   id: string
   key: string
   imageUrl: string
@@ -11,64 +11,47 @@ export type MemoryCard = {
   isMatched: boolean
 }
 
-type UnsignedGameSessionClient = {
+export type UnsignedClientGameSession = {
   tableSize: TableSize
   startedAt: Date
   flips: number
   cards: MemoryCard[]
 }
 
-export type GameSessionClient = UnsignedGameSessionClient & {
-  type: GameType
-  mode: GameMode
-  status: GameStatus
-}
-
 type GameStore = {
-  session: GameSessionClient | null
-  register: (session: UnsignedGameSessionClient) => void
+  session: UnsignedClientGameSession | null
+  register: (session: UnsignedClientGameSession) => void
   unregister: () => void
   updateCards: (cards: MemoryCard[]) => void
 }
 
-const OFFLINE_SESSION: Omit<GameSessionClient, keyof UnsignedGameSessionClient> = {
-  type: 'CASUAL',
-  mode: 'SINGLE',
-  status: 'OFFLINE'
-}
+const STORAGE_KEY = "CLIENT_GAME_SESSION"
 
-const getSessionFromStorage = (): GameSessionClient | null => {
+/** Local storage utils */
+const getSessionFromStorage = (): UnsignedClientGameSession | null => {
   if (typeof window === 'undefined') return null
 
-  const rawSession = localStorage.getItem('CLIENT_GAME_SESSION')
+  const rawSession = localStorage.getItem(STORAGE_KEY)
   if (!rawSession) return null
 
-  const session = JSON.parse(rawSession)
-  return {
-    ...session,
-    ...OFFLINE_SESSION
-  }  
+  return JSON.parse(rawSession)
 }
 
+/** Zustand store hook */
 export const useGameStore = create<GameStore>((set) => ({
   session: getSessionFromStorage(),
 
   register: (session) => {
     if (typeof window === 'undefined') return null
 
-    localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
-    set({
-      session: {
-        ...session,
-        ...OFFLINE_SESSION
-      }
-    })
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    set({ session })
   },
 
   unregister: () => {
     if (typeof window === 'undefined') return null
     
-    localStorage.removeItem('CLIENT_GAME_SESSION')
+    localStorage.removeItem(STORAGE_KEY)
     set({ session: null })
   },
 
@@ -79,7 +62,8 @@ export const useGameStore = create<GameStore>((set) => ({
       if (state.session === null) return state
 
       const session = { ...state.session, cards }
-      localStorage.setItem('CLIENT_GAME_SESSION', JSON.stringify(session))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+
       return { session }
     })
   }

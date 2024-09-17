@@ -1,6 +1,9 @@
 // prisma
 import { GameMode, GameType, TableSize } from "@prisma/client"
 
+// types
+import type { UnsignedClientGameSession } from "@/hooks/use-game-store"
+
 // icons
 import { Dice4, Dice5, Dice6, Gamepad2, Swords, UsersRound } from "lucide-react"
 
@@ -57,4 +60,10 @@ export const tableSizeMap = {
   [TableSize.SMALL]: 16,
   [TableSize.MEDIUM]: 24,
   [TableSize.LARGE]: 32
+}
+
+export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClientGameSession> = {
+  type: 'CASUAL',
+  mode: 'SINGLE',
+  status: 'OFFLINE'
 }
