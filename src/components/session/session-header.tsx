@@ -2,7 +2,7 @@
 import { ThemeToggle } from "@/components/shared"
 import { SessionActionsDropdown } from "@/components/session"
 
-const SessionInfoBar = () => {
+const SessionHeader = () => {
   return (
     <div className="w-full min-h-14 mx-auto py-3 px-1.5 flex items-center justify-between bg-primary sm:px-5 sm:rounded-b-2xl sm:max-w-lg md:max-w-xl">
       <SessionActionsDropdown />
@@ -16,4 +16,4 @@ const SessionInfoBar = () => {
   )
 }
 
-export default SessionInfoBar
+export default SessionHeader
