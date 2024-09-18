@@ -2,10 +2,14 @@
 import { ThemeToggle } from "@/components/shared"
 import { SessionActionsDropdown } from "@/components/session"
 
-const SessionHeader = () => {
+type SessionHeaderProps = {
+  session: ClientGameSession
+}
+
+const SessionHeader = ({ session }: SessionHeaderProps) => {
   return (
     <div className="w-full min-h-14 mx-auto py-3 px-1.5 flex items-center justify-between bg-primary sm:px-5 sm:rounded-b-2xl sm:max-w-lg md:max-w-xl">
-      <SessionActionsDropdown />
+      <SessionActionsDropdown session={session} />
 
       <p className="text-lg">Timer</p>
 

@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server"
 import { api } from "@/trpc/server"
 
 // components
-import { SessionFooter } from "@/components/session"
+import { SessionFooter, SessionHeader } from "@/components/session"
 import { MemoryTable } from "@/components/session/game"
 
 const GamePlayPage = async () => {
@@ -15,13 +15,16 @@ const GamePlayPage = async () => {
   if (!userId) redirect('/game/setup')
 
   try {
+    // TODO: add cards & flip to db schema
     const session = await api.game.getActive()
   
     return (
       <>
+        <SessionHeader session={session} />
+
         <MemoryTable
-          session={session} // TODO: add cards & flip to db schema
-          updateSessionCards={(cards) => {}} // TODO: implement
+          session={session}
+          handleCardFlip={(clickedCard) => {}} // TODO: implement
         />
 
         <SessionFooter session={session} />

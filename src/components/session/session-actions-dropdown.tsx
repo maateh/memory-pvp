@@ -10,7 +10,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 // hooks
 import { useFinishSessionMutation } from "@/lib/react-query/mutations/game"
 
-const SessionActionsDropdown = () => {
+type SessionActionsDropdownProps = {
+  session: ClientGameSession
+}
+
+const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
   const { finishSession, handleFinishSession } = useFinishSessionMutation()
 
   return (
@@ -32,9 +36,7 @@ const SessionActionsDropdown = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive"
-          // TODO: get session
-          // onClick={() => handleFinishSession('ABANDONED', { offline: session.status === 'offline' })}
-          onClick={() => handleFinishSession('ABANDONED')}
+          onClick={() => handleFinishSession('ABANDONED', session.status === 'offline')}
           disabled={finishSession.isPending}
         >
           <DoorOpen className="size-4" />

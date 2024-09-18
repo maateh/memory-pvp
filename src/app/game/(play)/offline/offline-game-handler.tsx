@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 import { offlineSessionMetadata } from "@/constants/game"
 
 // components
+import { SessionHeader } from "@/components/session"
 import { MemoryTable } from "@/components/session/game"
 
 // hooks
@@ -76,14 +77,23 @@ const OfflineGameHandler = () => {
   }, [cards, finishOfflineSession])
 
   return (
-    <MemoryTable
-      session={{
-        ...clientSession,
-        ...offlineSessionMetadata,
-        cards
-      }}
-      handleCardFlip={handleCardFlip}
-    />
+    <>
+      <SessionHeader
+        session={{
+          ...clientSession,
+          ...offlineSessionMetadata
+        }}
+      />
+
+      <MemoryTable
+        session={{
+          ...clientSession,
+          ...offlineSessionMetadata,
+          cards
+        }}
+        handleCardFlip={handleCardFlip}
+      />
+    </>
   )
 }
 
