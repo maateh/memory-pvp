@@ -73,7 +73,7 @@ const OfflineGameHandler = () => {
     if (cards.every(card => card.isMatched)) {
       finishOfflineSession('FINISHED')
     }
-  }, [cards])
+  }, [cards, finishOfflineSession])
 
   return (
     <MemoryTable

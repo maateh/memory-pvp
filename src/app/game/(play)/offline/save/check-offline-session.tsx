@@ -26,7 +26,7 @@ const CheckOfflineSession = () => {
         id: '_'
       })
     }
-  }, [])
+  }, [router, session, isOver])
 
   return null
 }
