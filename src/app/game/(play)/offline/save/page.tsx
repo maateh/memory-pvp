@@ -37,7 +37,7 @@ const GameOfflineSavePage = async () => {
         <Separator className="w-5/6 mx-auto my-3 border-foreground/50" />
 
         <p className="max-w-lg mx-auto text-center font-heading text-base sm:text-lg">
-          You&apos;re game is over, thanks for playing!
+          Your game is over, thanks for playing!
         </p>
       </header>
 
