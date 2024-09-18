@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
@@ -72,11 +73,18 @@ export const useOfflineSessionHandler = () => {
    * - 'FINISHED' -> redirect user to sign in and save session
    * to database with an 'OFFLINE' game status. (handled by API)
    */
+
+  /** I hate the react state update crap so much _,|,, */
+  useEffect(() => {
+    if (!clientSession) {
+      router.replace('/game/setup')
+    }
+  }, [router, clientSession])
+  
   const finishOfflineSession = (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {    
     if (status === 'ABANDONED') {
       unregisterSession()
 
-      router.replace('/game/setup')
       toast.warning('Your session has been abandoned.')
       return
     }

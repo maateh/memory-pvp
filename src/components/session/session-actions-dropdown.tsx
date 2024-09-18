@@ -1,5 +1,8 @@
 "use client"
 
+// prisma
+import { GameStatus } from "@prisma/client"
+
 // icons
 import { DoorOpen, Gamepad, Menu } from "lucide-react"
 
@@ -36,11 +39,11 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive"
-          onClick={() => handleFinishSession('ABANDONED', session.status === 'offline')}
+          onClick={() => handleFinishSession('ABANDONED', session.status === GameStatus.OFFLINE)}
           disabled={finishSession.isPending}
         >
           <DoorOpen className="size-4" />
-          <span>Exit game</span>
+          <span>Abandon game</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
