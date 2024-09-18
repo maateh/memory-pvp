@@ -12,13 +12,17 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
+// components
+import { SessionStats } from "@/components/session"
+
 // hooks
-import { useGameStore, type UnsignedClientGameSession } from "@/hooks/use-game-store"
+import { useGameStore } from "@/hooks/use-game-store"
 import { useCacheStore, type CacheStore } from "@/hooks/use-cache-store"
 import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
+import { offlineSessionMetadata } from "@/constants/game"
 
 type SessionRunningWarningModalProps = {
-  session: UnsignedClientGameSession | null
+  session: ClientGameSession | null
   isOffline: boolean
 }
 
@@ -34,7 +38,8 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
   const { startOfflineSession } = useOfflineSessionHandler()
 
   if (isOffline) {
-    session = useGameStore.getState().session
+    const clientSession = useGameStore.getState().session
+    session = { ...clientSession!, ...offlineSessionMetadata }
   }
 
   const handleStartNew = () => {
@@ -77,9 +82,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
 
         <Separator className="w-3/5 mx-auto mt-1 mb-2.5 bg-border/25" />
 
-        <div>
-          TODO: show session info
-        </div>
+        <SessionStats session={session!} />
 
         <DialogFooter className="mt-2.5 mx-8 flex flex-wrap flex-row items-center justify-around gap-x-8 gap-y-2.5 sm:justify-around">
           <Button className="flex-1 max-w-64 border"
