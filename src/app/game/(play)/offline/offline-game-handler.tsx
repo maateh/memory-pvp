@@ -26,10 +26,12 @@ const OfflineGameHandler = () => {
   const [flippedCards, setFlippedCards] = useState<MemoryCard[]>([])
   
   const updateSessionCards = useGameStore((state) => state.updateCards)
+  const increaseSessionFlips = useGameStore((state) => state.increaseFlips)
 
   const handleCardFlip = (clickedCard: MemoryCard) => {
     if (flippedCards.length === 2 || clickedCard.isMatched) return
-
+    increaseSessionFlips()
+    
     const updatedCards = cards.map((card) =>
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     )

@@ -22,6 +22,7 @@ type GameStore = {
   session: UnsignedClientGameSession | null
   register: (session: UnsignedClientGameSession) => void
   unregister: () => void
+  increaseFlips: () => void
   updateCards: (cards: MemoryCard[]) => void
 }
 
@@ -53,6 +54,22 @@ export const useGameStore = create<GameStore>((set) => ({
     
     localStorage.removeItem(STORAGE_KEY)
     set({ session: null })
+  },
+
+  increaseFlips: () => {
+    if (typeof window === 'undefined') return null
+
+    set((state) => {
+      if (state.session === null) return state
+
+      const session = {
+        ...state.session,
+        flips: state.session.flips + 1
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+
+      return { session }
+    })
   },
 
   updateCards: (cards) => {
