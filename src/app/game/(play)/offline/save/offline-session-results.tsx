@@ -5,10 +5,16 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
+// constants
+import { offlineSessionMetadata } from "@/constants/game"
+
+// components
+import { SessionStats } from "@/components/session"
+
 // hooks
 import { useGameStore } from "@/hooks/use-game-store"
 
-const CheckOfflineSession = () => {
+const OfflineSessionResults = () => {
   const router = useRouter()
   const session = useGameStore((state) => state.session)
 
@@ -28,7 +34,15 @@ const CheckOfflineSession = () => {
     }
   }, [router, session, isOver])
 
-  return null
+  return session && isOver ? (
+    <SessionStats
+      session={{
+        ...session,
+        ...offlineSessionMetadata
+      }}
+      withTitle
+    />
+  ) : null
 }
 
-export default CheckOfflineSession
+export default OfflineSessionResults
