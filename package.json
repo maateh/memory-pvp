@@ -2,10 +2,11 @@
   "name": "memory-pvp",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node ./src/server/index.ts",
     "lint": "next lint"
   },
   "dependencies": {
@@ -32,13 +33,14 @@
     "date-fns": "^3.6.0",
     "lucide-react": "^0.429.0",
     "mongodb": "^6.8.0",
-    "next": "14.2.5",
+    "next": "^14.2.12",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-colorful": "^5.6.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "server-only": "^0.0.1",
+    "socket.io-client": "^4.7.5",
     "sonner": "^1.5.0",
     "superjson": "^2.2.1",
     "svix": "^1.32.0",
@@ -55,9 +57,11 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "nodemon": "^3.1.5",
     "postcss": "^8",
     "prisma": "^5.19.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.19.1",
     "typescript": "^5"
   }
 }

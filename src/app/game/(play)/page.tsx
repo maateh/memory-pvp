@@ -22,10 +22,10 @@ const GamePlayPage = async () => {
       <>
         <SessionHeader session={session} />
 
-        <MemoryTable
-          session={session}
-          handleCardFlip={(clickedCard) => {}} // TODO: implement
-        />
+        {/* <MemoryTable
+          session={session} // FIXME: add missing values to prisma schema
+          handleCardFlip={() => {}} // TODO: implement
+        /> */}
 
         <SessionFooter session={session} />
       </>
