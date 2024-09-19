@@ -7,6 +7,9 @@ import { toast } from "sonner"
 // types
 import type { StartGameSessionParams } from "@/components/form/start-game-form"
 
+// constants
+import { offlineSessionMetadata } from "@/constants/game"
+
 // shadcn
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -16,10 +19,9 @@ import { Separator } from "@/components/ui/separator"
 import { SessionStats } from "@/components/session"
 
 // hooks
-import { useGameStore } from "@/hooks/use-game-store"
-import { useCacheStore, type CacheStore } from "@/hooks/use-cache-store"
-import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
-import { offlineSessionMetadata } from "@/constants/game"
+import { useSessionStore } from "@/hooks/store/use-session-store"
+import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
+import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
 type SessionRunningWarningModalProps = {
   session: ClientGameSession | null
@@ -38,7 +40,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
   const { startOfflineSession } = useOfflineSessionHandler()
 
   if (isOffline) {
-    const clientSession = useGameStore.getState().session
+    const clientSession = useSessionStore.getState().session
     session = { ...clientSession!, ...offlineSessionMetadata }
   }
 

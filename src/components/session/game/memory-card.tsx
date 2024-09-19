@@ -4,7 +4,7 @@ import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 // types
-import type { MemoryCard as TMemoryCard } from "@/hooks/use-game-store"
+import type { MemoryCard as TMemoryCard } from "@/hooks/store/use-session-store"
 
 // shadcn
 import { Card, CardContent } from "@/components/ui/card"

@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils"
 
 // types
-import type { MemoryCard as TMemoryCard } from "@/hooks/use-game-store"
+import type { MemoryCard as TMemoryCard } from "@/hooks/store/use-session-store"
 
 // components
 import MemoryCard from "./memory-card"

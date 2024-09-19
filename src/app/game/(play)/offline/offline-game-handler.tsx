@@ -11,12 +11,12 @@ import { SessionHeader } from "@/components/session"
 import { MemoryTable } from "@/components/session/game"
 
 // hooks
-import { type MemoryCard, useGameStore } from "@/hooks/use-game-store"
-import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
+import { type MemoryCard, useSessionStore } from "@/hooks/store/use-session-store"
+import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
 const OfflineGameHandler = () => {
   /** Check if there is any client session. */
-  const clientSession = useGameStore((state) => state.session)
+  const clientSession = useSessionStore((state) => state.session)
   if (!clientSession) redirect('/game/setup')
 
   /** Get custom handler to finish the game. */
@@ -26,8 +26,8 @@ const OfflineGameHandler = () => {
   const [cards, setCards] = useState<MemoryCard[]>(clientSession.cards)
   const [flippedCards, setFlippedCards] = useState<MemoryCard[]>([])
   
-  const updateSessionCards = useGameStore((state) => state.updateCards)
-  const increaseSessionFlips = useGameStore((state) => state.increaseFlips)
+  const updateSessionCards = useSessionStore((state) => state.updateCards)
+  const increaseSessionFlips = useSessionStore((state) => state.increaseFlips)
 
   const handleCardFlip = (clickedCard: MemoryCard) => {
     if (flippedCards.length === 2 || clickedCard.isMatched) return

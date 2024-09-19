@@ -1,5 +1,5 @@
 import type { GameSession, PlayerProfile } from "@prisma/client"
-import type { UnsignedClientGameSession } from "@/hooks/use-game-store"
+import type { UnsignedClientGameSession } from "@/hooks/store/use-session-store"
 
 declare global {
   declare type ClientGameSession = UnsignedClientGameSession & {

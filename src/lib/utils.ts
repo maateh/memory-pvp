@@ -5,7 +5,7 @@ import { TRPCApiError } from "@/trpc/error"
 import { toast } from "sonner"
 
 import { v4 as uuidv4 } from "uuid"
-import { MemoryCard } from "@/hooks/use-game-store"
+import { MemoryCard } from "@/hooks/store/use-session-store"
 import { TableSize } from "@prisma/client"
 import { tableSizeMap } from "@/constants/game"
 

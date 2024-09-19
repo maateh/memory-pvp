@@ -9,7 +9,7 @@ import { GameStatus } from "@prisma/client"
 import { api } from "@/trpc/client"
 
 // hooks
-import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
+import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
 // utils
 import { handleApiError } from "@/lib/utils"

@@ -29,7 +29,7 @@ import { Form } from "@/components/form"
 
 // hooks
 import { useStartGameMutation } from "@/lib/react-query/mutations/game"
-import { useOfflineSessionHandler } from "@/hooks/use-offline-session-handler"
+import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
 export type StartGameFormValues = z.infer<typeof startGameSchema>
 

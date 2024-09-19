@@ -12,11 +12,11 @@ import { offlineSessionMetadata } from "@/constants/game"
 import { SessionStats } from "@/components/session"
 
 // hooks
-import { useGameStore } from "@/hooks/use-game-store"
+import { useSessionStore } from "@/hooks/store/use-session-store"
 
 const OfflineSessionResults = () => {
   const router = useRouter()
-  const session = useGameStore((state) => state.session)
+  const session = useSessionStore((state) => state.session)
 
   const isOver = session?.cards.every((card) => card.isFlipped && card.isMatched)
 

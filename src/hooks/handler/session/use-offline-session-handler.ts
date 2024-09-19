@@ -14,15 +14,15 @@ import type { UseFormReturn } from "react-hook-form"
 import type { StartGameFormValues, StartGameSessionParams } from "@/components/form/start-game-form"
 
 // hooks
-import { useGameStore } from "@/hooks/use-game-store"
-import { CacheStore, useCacheStore } from "@/hooks/use-cache-store"
+import { useSessionStore } from "@/hooks/store/use-session-store"
+import { type CacheStore, useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
 
-  const clientSession = useGameStore((state) => state.session)
-  const registerSession = useGameStore((state) => state.register)
-  const unregisterSession = useGameStore((state) => state.unregister)
+  const clientSession = useSessionStore((state) => state.session)
+  const registerSession = useSessionStore((state) => state.register)
+  const unregisterSession = useSessionStore((state) => state.unregister)
 
   const setCache = useCacheStore<
     StartGameSessionParams,

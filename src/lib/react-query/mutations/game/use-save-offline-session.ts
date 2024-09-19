@@ -10,13 +10,13 @@ import { api } from "@/trpc/client"
 import { handleApiError } from "@/lib/utils"
 
 // hooks
-import { useGameStore } from "@/hooks/use-game-store"
+import { useSessionStore } from "@/hooks/store/use-session-store"
 
 export const useSaveOfflineSessionMutation = () => {
   const router = useRouter()
 
-  const clientSession = useGameStore((state) => state.session)
-  const unregisterClientSession = useGameStore((state) => state.unregister)
+  const clientSession = useSessionStore((state) => state.session)
+  const unregisterClientSession = useSessionStore((state) => state.unregister)
 
   useEffect(() => {
     if (!clientSession) {

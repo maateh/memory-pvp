@@ -18,7 +18,7 @@ export type UnsignedClientGameSession = {
   cards: MemoryCard[]
 }
 
-type GameStore = {
+type SessionStore = {
   session: UnsignedClientGameSession | null
   register: (session: UnsignedClientGameSession) => void
   unregister: () => void
@@ -39,7 +39,7 @@ const getSessionFromStorage = (): UnsignedClientGameSession | null => {
 }
 
 /** Zustand store hook */
-export const useGameStore = create<GameStore>((set) => ({
+export const useSessionStore = create<SessionStore>((set) => ({
   session: getSessionFromStorage(),
 
   register: (session) => {
