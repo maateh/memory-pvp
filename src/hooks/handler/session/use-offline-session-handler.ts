@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
@@ -19,6 +19,7 @@ import { type CacheStore, useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
+  const [isOffline, setIsOffline] = useState(false)
 
   const clientSession = useSessionStore((state) => state.session)
   const registerSession = useSessionStore((state) => state.register)
@@ -76,13 +77,18 @@ export const useOfflineSessionHandler = () => {
 
   /** I hate the react state update crap so much _,|,, */
   useEffect(() => {
-    if (!clientSession) {
+    if (!clientSession && isOffline) {
       router.replace('/game/setup')
     }
-  }, [router, clientSession])
+
+    return () => {
+      setIsOffline(false)
+    }
+  }, [router, isOffline, clientSession])
   
   const finishOfflineSession = (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {    
     if (status === 'ABANDONED') {
+      setIsOffline(true)
       unregisterSession()
 
       toast.warning('Your session has been abandoned.')
