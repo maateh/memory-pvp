@@ -10,7 +10,7 @@ import type { StartGameFormValues, StartGameSessionParams } from "@/components/f
 import { offlineSessionMetadata } from "@/constants/game"
 
 // utils
-import { getMockCards } from "@/lib/utils"
+import { getMockCards } from "@/lib/utils/game"
 import { getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
 
 // hooks
