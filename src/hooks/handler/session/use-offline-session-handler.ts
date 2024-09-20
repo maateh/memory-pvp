@@ -21,18 +21,21 @@ export const useOfflineSessionHandler = () => {
   const router = useRouter()
 
   const registerSession = useSessionStore((state) => state.register)
-
   const setCache = useCacheStore<
     StartGameSessionParams,
     CacheStore<StartGameSessionParams>['set']
   >((state) => state.set)
 
   /**
-   * Offline game sessions must be handled in a different way.
-   * At game start, we don't interact with the API, but save
-   * the game session locally.
+   * Starts an offline game session based on form values.
    * 
-   * TODO: write proper documentation
+   * @param {StartGameFormValues} values - The form values for starting the game.
+   * @param {UseFormReturn<StartGameFormValues>} form - The form state and methods.
+   * @param {boolean} [forceStart=false] - Forces a new session if true.
+   * 
+   * - If an offline session exists and `forceStart` is false, redirects to a warning.
+   * - Only supports 'CASUAL' and 'SINGLE' modes in offline; shows a warning otherwise.
+   * - Creates and saves a new session, then redirects to the offline game page.
    */
   const startOfflineSession = (
     values: StartGameFormValues,
@@ -75,7 +78,13 @@ export const useOfflineSessionHandler = () => {
   }
 
   /**
-   * TODO: write documentation
+   * Continues a previously saved offline session.
+   * 
+   * @param {UseFormReturn<StartGameFormValues>} form - The form state and methods.
+   * 
+   * - Loads the offline session from storage; shows a warning if none is found.
+   * - Registers the session and continues the game, displaying a success message.
+   * - Resets the form and redirects to the offline game page.
    */
   const continueOfflineSession = (form: UseFormReturn<StartGameFormValues>,) => {
     const offlineSession = getSessionFromStorage()

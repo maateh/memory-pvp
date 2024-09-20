@@ -23,6 +23,15 @@ export const useGameHandler = ({ finishSession }: UseGameHandlerProps) => {
   const increaseFlips = useSessionStore((state) => state.increaseFlips)
   const unregisterSession = useSessionStore((state) => state.unregister)
 
+  /**
+   * Flips the clicked memory card and handles matching logic.
+   * 
+   * @param {MemoryCard} clickedCard - The card clicked by the user.
+   * 
+   * - Ignores clicks if two cards are already flipped or if the card is matched.
+   * - Updates card flip state and checks for a match once two cards are flipped.
+   * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
+   */
   const handleCardFlip = (clickedCard: MemoryCard) => {
     if (flippedCards.length === 2 || clickedCard.isMatched) return
     increaseFlips()
@@ -46,24 +55,28 @@ export const useGameHandler = ({ finishSession }: UseGameHandlerProps) => {
         )
 
         updateCards(updatedCards)
-
         setFlippedCards([])
       }, 1000)
     } else {
       setTimeout(() => {
-        updateCards(
-          updatedCards.map((card) =>
-            flipped.some(fc => fc.id === card.id)
-              ? { ...card, isFlipped: false }
-              : card
-          )
+        updatedCards = updatedCards.map((card) =>
+          flipped.some(fc => fc.id === card.id)
+            ? { ...card, isFlipped: false }
+            : card
         )
 
+        updateCards(updatedCards)
         setFlippedCards([])
       }, 1000)
     }
   }
 
+  /**
+   * Handle session updates and game completion.
+   * 
+   * - Saves session to local storage if status is 'OFFLINE'.
+   * - Ends the game if all cards are matched.
+   */
   useEffect(() => {
     if (clientSession.status === 'OFFLINE') {
       saveSessionToStorage(clientSession)

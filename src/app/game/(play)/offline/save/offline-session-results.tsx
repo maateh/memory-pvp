@@ -20,11 +20,7 @@ const OfflineSessionResults = () => {
   if (!session || !isOver) {
     toast.warning("Offline session not found.", {
       description: "Sorry, but we couldn't find any offline sessions ready to be saved.",
-      /**
-       * Note: for a reason, this toast would render twice,
-       * so it is prevented by adding a custom id.
-       */
-      id: '_'
+      id: '_' /** Note: prevent re-render by adding a custom id. */
     })
     redirect('/game/setup')
   }

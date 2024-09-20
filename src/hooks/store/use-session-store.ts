@@ -16,7 +16,12 @@ type SessionStore = {
   updateCards: (cards: MemoryCard[]) => void
 }
 
-/** Zustand store hook */
+/**
+ * Zustand store for managing the game session state.
+ * 
+ * This store manages the session data and its related operations,
+ * such as flipping cards and updating card states.
+ */
 export const useSessionStore = create<SessionStore>((set) => ({
   session: null,
   register: (session) => set({ session }),

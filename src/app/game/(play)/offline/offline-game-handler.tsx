@@ -16,12 +16,7 @@ const OfflineGameHandler = () => {
     finishSession: () => {
       toast.success('You finished your offline game session!', {
         description: "Now, you've been redirected to save your results if you want.",
-        /**
-         * Note: for a reason, this toast would render twice,
-         * (because it is used inside a useEffect elsewhere)
-         * so it is prevented by adding a custom id.
-        */
-       id: '_'
+        id: '_' /** Note: prevent re-render by adding a custom id. */
       })
 
       redirect('/game/offline/save')
