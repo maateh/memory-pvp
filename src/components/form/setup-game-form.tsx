@@ -11,7 +11,7 @@ import { useClerk } from "@clerk/nextjs"
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
 
 // validations
-import { startGameSchema } from "@/lib/validations"
+import { setupGameSchema } from "@/lib/validations"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -28,25 +28,25 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 import { Form } from "@/components/form"
 
 // hooks
-import { useStartGameMutation } from "@/lib/react-query/mutations/game"
+import { useStartSessionMutation } from "@/lib/react-query/mutations/game"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
-export type StartGameFormValues = z.infer<typeof startGameSchema>
+export type SetupGameFormValues = z.infer<typeof setupGameSchema>
 
-type StartGameFormProps = {
-  defaultValues?: DefaultValues<StartGameFormValues>
+type SetupGameFormProps = {
+  defaultValues?: DefaultValues<SetupGameFormValues>
 }
 
-const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
+const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
   const { user: clerkUser } = useClerk()
 
-  const { startGame, onSubmit } = useStartGameMutation()
+  const { startSession, onSubmit } = useStartSessionMutation()
   const { startOfflineSession } = useOfflineSessionHandler()
 
   return (
-    <Form<StartGameFormValues>
+    <Form<SetupGameFormValues>
       className="flex-1 flex flex-col justify-end gap-y-8"
-      schema={startGameSchema}
+      schema={setupGameSchema}
       onSubmit={onSubmit}
       defaultValues={{
         type: defaultValues?.type || 'CASUAL',
@@ -157,9 +157,9 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
           <div className="mt-auto flex flex-col items-center gap-y-4">
             <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
               variant="secondary"
-              disabled={!clerkUser || startGame.isPending}
+              disabled={!clerkUser || startSession.isPending}
             >
-              {startGame.isPending ? (
+              {startSession.isPending ? (
                 <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
               ) : (
                 <CirclePlay className="size-5 sm:size-6 shrink-0" />
@@ -168,12 +168,12 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
             </Button>
 
             <Button className={cn("gap-x-2 bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm sm:text-base", {
-              "opacity-40 pointer-events-none": startGame.isPending
+              "opacity-40 pointer-events-none": startSession.isPending
             })}
               size="sm"
               type="button"
               onClick={form.handleSubmit(() => startOfflineSession(form))}
-              disabled={startGame.isPending}
+              disabled={startSession.isPending}
             >
               <WifiOff className="size-4 sm:size-5 shrink-0" />
               Start offline
@@ -185,4 +185,4 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
   )
 }
 
-export default StartGameForm
+export default SetupGameForm

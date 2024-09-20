@@ -6,7 +6,7 @@ import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
 // validations
-import { saveOfflineGameSchema, startGameSchema, updateGameStatusSchema } from "@/lib/validations"
+import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations"
 
 export const gameRouter = createTRPCRouter({
   getActive: protectedGameProcedure
@@ -30,7 +30,7 @@ export const gameRouter = createTRPCRouter({
     }),
 
   create: gameProcedure
-    .input(startGameSchema)
+    .input(setupGameSchema)
     .mutation(async ({ ctx, input }) => {
       const { type, mode, tableSize } = input
 

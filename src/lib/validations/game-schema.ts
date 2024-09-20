@@ -3,7 +3,7 @@ import { z } from "zod"
 // prisma
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
-export const startGameSchema = z.object({
+export const setupGameSchema = z.object({
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
   tableSize: z.nativeEnum(TableSize)

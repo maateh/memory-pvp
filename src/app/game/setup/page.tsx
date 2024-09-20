@@ -15,7 +15,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { StartGameForm } from "@/components/form"
+import { SetupGameForm } from "@/components/form"
 import { ThemeToggle } from "@/components/shared"
 import SelectActivePlayer from "./select-active-player"
 
@@ -77,7 +77,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
       <Separator className="w-3/5 mx-auto mt-1 mb-5 sm:w-2/5 lg:w-1/5" />
 
-      <StartGameForm defaultValues={searchParams} />
+      <SetupGameForm defaultValues={searchParams} />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { StartGameFormValues } from "@/components/form/start-game-form"
+import type { SetupGameFormValues } from "@/components/form/setup-game-form"
 
 // constants
 import { offlineSessionMetadata } from "@/constants/game"
@@ -36,8 +36,8 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
 
   const clearCache = useCacheStore((state) => state.clear)
   const startFormCache = useCacheStore<
-    UseFormReturn<StartGameFormValues>,
-    CacheStore<UseFormReturn<StartGameFormValues>>['data']
+    UseFormReturn<SetupGameFormValues>,
+    CacheStore<UseFormReturn<SetupGameFormValues>>['data']
   >((state) => state.data)
 
   const { startOfflineSession, continueOfflineSession } = useOfflineSessionHandler()

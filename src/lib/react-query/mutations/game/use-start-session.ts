@@ -7,15 +7,15 @@ import { api } from "@/trpc/client"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { StartGameFormValues } from "@/components/form/start-game-form"
+import type { SetupGameFormValues } from "@/components/form/setup-game-form"
 
 // utils
 import { handleApiError } from "@/lib/utils"
 
-export const useStartGameMutation = () => {
+export const useStartSessionMutation = () => {
   const router = useRouter()
 
-  const startGame = api.game.create.useMutation({
+  const startSession = api.game.create.useMutation({
     onSuccess: ({ type, mode, tableSize }) => {
       router.replace('/game')
 
@@ -28,7 +28,7 @@ export const useStartGameMutation = () => {
     }
   })
 
-  const onSubmit = async (form: UseFormReturn<StartGameFormValues>) => {
+  const onSubmit = async (form: UseFormReturn<SetupGameFormValues>) => {
     const values = form.getValues()
 
     // TODO: implement
@@ -39,9 +39,9 @@ export const useStartGameMutation = () => {
       return
     }
 
-    await startGame.mutateAsync(values)
+    await startSession.mutateAsync(values)
     form.reset()
   }
 
-  return { startGame, onSubmit }
+  return { startSession, onSubmit }
 }
