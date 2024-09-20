@@ -1,7 +1,14 @@
-import type { GameSession, PlayerProfile } from "@prisma/client"
-import type { UnsignedClientGameSession } from "@/hooks/store/use-session-store"
+import type { MemoryCard } from "@/hooks/store/use-session-store"
+import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
 
 declare global {
+  declare type UnsignedClientGameSession = {
+    tableSize: TableSize
+    startedAt: Date
+    flips: number
+    cards: MemoryCard[]
+  }
+
   declare type ClientGameSession = UnsignedClientGameSession & {
     type: GameType
     mode: GameMode

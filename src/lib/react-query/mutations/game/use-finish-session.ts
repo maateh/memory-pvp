@@ -3,24 +3,26 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // prisma
-import { GameStatus } from "@prisma/client"
+import type { GameStatus } from "@prisma/client"
 
 // trpc
 import { api } from "@/trpc/client"
 
 // hooks
-import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
+import { useSessionStore } from "@/hooks/store/use-session-store"
 
 // utils
 import { handleApiError } from "@/lib/utils"
+import { clearSessionFromStorage } from "@/lib/utils/storage"
 
 export const useFinishSessionMutation = () => {
   const router = useRouter()
 
-  const { finishOfflineSession } = useOfflineSessionHandler()
+  const unregisterSession = useSessionStore((state) => state.unregister)
 
   const finishSession = api.game.updateStatus.useMutation({
     onSuccess: ({ status }) => {
+      unregisterSession()
       toast.success('Your session has ended.', {
         description: `Session status: ${status}`
       })
@@ -40,7 +42,9 @@ export const useFinishSessionMutation = () => {
     offline: boolean = false
   ) => {
     if (offline) {
-      finishOfflineSession(status)
+      clearSessionFromStorage()
+      unregisterSession()
+      toast.warning('Your offline session has been abandoned.')
       return
     }
 

@@ -1,29 +1,26 @@
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
-
-// prisma
-import { GameStatus } from "@prisma/client"
-
-// utils
-import { getMockCards } from "@/lib/utils"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
 import type { StartGameFormValues, StartGameSessionParams } from "@/components/form/start-game-form"
 
+// constants
+import { offlineSessionMetadata } from "@/constants/game"
+
+// utils
+import { getMockCards } from "@/lib/utils"
+import { getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
+
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
-import { type CacheStore, useCacheStore } from "@/hooks/store/use-cache-store"
+import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
 
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
-  const [isOffline, setIsOffline] = useState(false)
 
-  const clientSession = useSessionStore((state) => state.session)
   const registerSession = useSessionStore((state) => state.register)
-  const unregisterSession = useSessionStore((state) => state.unregister)
 
   const setCache = useCacheStore<
     StartGameSessionParams,
@@ -34,13 +31,16 @@ export const useOfflineSessionHandler = () => {
    * Offline game sessions must be handled in a different way.
    * At game start, we don't interact with the API, but save
    * the game session locally.
+   * 
+   * TODO: write proper documentation
    */
   const startOfflineSession = (
     values: StartGameFormValues,
     form: UseFormReturn<StartGameFormValues>,
     forceStart: boolean = false
   ) => {
-    if (clientSession && !forceStart) {
+    const offlineSession = getSessionFromStorage()
+    if (offlineSession && !forceStart) {
       setCache({ values, form })
       router.replace('/game/setup/warning?sessionId=offline')
       return
@@ -53,12 +53,18 @@ export const useOfflineSessionHandler = () => {
       return
     }
 
-    registerSession({
+    const storageSession: UnsignedClientGameSession = {
       tableSize: values.tableSize,
       startedAt: new Date(),
       flips: 0,
       cards: getMockCards(values.tableSize)
+    }
+
+    registerSession({
+      ...storageSession,
+      ...offlineSessionMetadata
     })
+    saveSessionToStorage(storageSession)
 
     toast.success('Game started in offline mode!', {
       description: `${values.type} | ${values.mode} | ${values.tableSize}`
@@ -69,43 +75,34 @@ export const useOfflineSessionHandler = () => {
   }
 
   /**
-   * If session is offline and status:
-   * - 'ABANDONED' -> remove the game session from local store
-   * - 'FINISHED' -> redirect user to sign in and save session
-   * to database with an 'OFFLINE' game status. (handled by API)
+   * TODO: write documentation
    */
+  const continueOfflineSession = (form: UseFormReturn<StartGameFormValues>,) => {
+    const offlineSession = getSessionFromStorage()
 
-  /** I hate the react state update crap so much _,|,, */
-  useEffect(() => {
-    if (!clientSession && isOffline) {
-      router.replace('/game/setup')
-    }
-
-    return () => {
-      setIsOffline(false)
-    }
-  }, [router, isOffline, clientSession])
-  
-  const finishOfflineSession = (status: typeof GameStatus['ABANDONED' | 'FINISHED']) => {    
-    if (status === 'ABANDONED') {
-      setIsOffline(true)
-      unregisterSession()
-
-      toast.warning('Your session has been abandoned.')
+    if (!offlineSession) {
+      toast.warning("Offline session not found.", {
+        description: "Sorry, but we couldn't load your previous offline session data. Please start a new game instead."
+      })
       return
     }
 
-    router.replace('/game/offline/save')
-    toast.success('You finished your offline game session!', {
-      description: "Now, you've been redirected to save your results if you want.",
-      /**
-       * Note: for a reason, this toast would render twice,
-       * (because it is used inside a useEffect elsewhere)
-       * so it is prevented by adding a custom id.
-       */
-      id: '_'
+    registerSession({
+      ...offlineSession,
+      ...offlineSessionMetadata
     })
+
+    const { type, mode } = offlineSessionMetadata
+    toast.info('Offline game continued!', {
+      description: `${type} | ${mode} | ${offlineSession.tableSize}`
+    })
+
+    form.reset()
+    router.replace('/game/offline')
   }
 
-  return { startOfflineSession, finishOfflineSession }
+  return {
+    startOfflineSession,
+    continueOfflineSession
+  }
 }

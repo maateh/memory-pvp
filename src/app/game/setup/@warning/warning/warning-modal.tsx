@@ -10,6 +10,9 @@ import type { StartGameSessionParams } from "@/components/form/start-game-form"
 // constants
 import { offlineSessionMetadata } from "@/constants/game"
 
+// utils
+import { getSessionFromStorage } from "@/lib/utils/storage"
+
 // shadcn
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -19,7 +22,6 @@ import { Separator } from "@/components/ui/separator"
 import { SessionStats } from "@/components/session"
 
 // hooks
-import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
@@ -37,11 +39,11 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
     CacheStore<StartGameSessionParams>['data']
   >((state) => state.data)
 
-  const { startOfflineSession } = useOfflineSessionHandler()
+  const { startOfflineSession, continueOfflineSession } = useOfflineSessionHandler()
 
   if (isOffline) {
-    const clientSession = useSessionStore.getState().session
-    session = { ...clientSession!, ...offlineSessionMetadata }
+    const offlineSession = getSessionFromStorage()
+    session = { ...offlineSession!, ...offlineSessionMetadata }
   }
 
   const handleStartNew = () => {
@@ -65,8 +67,20 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
   }
 
   const handleContinue = () => {
-    const route = isOffline ? '/game/offline' : '/game'
-    router.replace(route)
+    if (!startFormCache) {
+      toast.warning("Missing data to continue game session.", {
+        description: "Sorry, but we couldn't find the necessary data to continue your game session. Please fill out the form again."
+      })
+      router.replace('/game/setup')
+      return
+    }
+
+    if (isOffline) {
+      continueOfflineSession(startFormCache.form)
+      return
+    }
+
+    // TODO: continue game session
   }
 
   return (

@@ -1,8 +1,5 @@
 import { create } from "zustand"
 
-// prisma
-import type { TableSize } from "@prisma/client"
-
 export type MemoryCard = { // TODO: temporary. (it'll be moved to a prisma schema type soon)
   id: string
   key: string
@@ -11,54 +8,21 @@ export type MemoryCard = { // TODO: temporary. (it'll be moved to a prisma schem
   isMatched: boolean
 }
 
-export type UnsignedClientGameSession = {
-  tableSize: TableSize
-  startedAt: Date
-  flips: number
-  cards: MemoryCard[]
-}
-
 type SessionStore = {
-  session: UnsignedClientGameSession | null
-  register: (session: UnsignedClientGameSession) => void
+  session: ClientGameSession | null
+  register: (session: ClientGameSession) => void
   unregister: () => void
   increaseFlips: () => void
   updateCards: (cards: MemoryCard[]) => void
 }
 
-const STORAGE_KEY = "CLIENT_GAME_SESSION"
-
-/** Local storage utils */
-const getSessionFromStorage = (): UnsignedClientGameSession | null => {
-  if (typeof window === 'undefined') return null
-
-  const rawSession = localStorage.getItem(STORAGE_KEY)
-  if (!rawSession) return null
-
-  return JSON.parse(rawSession)
-}
-
 /** Zustand store hook */
 export const useSessionStore = create<SessionStore>((set) => ({
-  session: getSessionFromStorage(),
-
-  register: (session) => {
-    if (typeof window === 'undefined') return null
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
-    set({ session })
-  },
-
-  unregister: () => {
-    if (typeof window === 'undefined') return null
-    
-    localStorage.removeItem(STORAGE_KEY)
-    set({ session: null })
-  },
+  session: null,
+  register: (session) => set({ session }),
+  unregister: () => set({ session: null }),
 
   increaseFlips: () => {
-    if (typeof window === 'undefined') return null
-
     set((state) => {
       if (state.session === null) return state
 
@@ -66,21 +30,17 @@ export const useSessionStore = create<SessionStore>((set) => ({
         ...state.session,
         flips: state.session.flips + 1
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
 
       return { session }
     })
   },
 
   updateCards: (cards) => {
-    if (typeof window === 'undefined') return null
-
     set((state) => {
       if (state.session === null) return state
 
       const session = { ...state.session, cards }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
-
+      
       return { session }
     })
   }

@@ -1,9 +1,6 @@
 // prisma
 import { GameMode, GameType, TableSize } from "@prisma/client"
 
-// types
-import type { UnsignedClientGameSession } from "@/hooks/store/use-session-store"
-
 // icons
 import { Dice4, Dice5, Dice6, Gamepad2, Swords, UsersRound } from "lucide-react"
 
