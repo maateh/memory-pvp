@@ -33,11 +33,6 @@ import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-se
 
 export type StartGameFormValues = z.infer<typeof startGameSchema>
 
-export type StartGameSessionParams = {
-  values: StartGameFormValues
-  form: UseFormReturn<StartGameFormValues>
-}
-
 type StartGameFormProps = {
   defaultValues?: DefaultValues<StartGameFormValues>
 }
@@ -177,7 +172,7 @@ const StartGameForm = ({ defaultValues }: StartGameFormProps) => {
             })}
               size="sm"
               type="button"
-              onClick={() => form.handleSubmit((data) => startOfflineSession(data, form))()}
+              onClick={form.handleSubmit(() => startOfflineSession(form))}
               disabled={startGame.isPending}
             >
               <WifiOff className="size-4 sm:size-5 shrink-0" />

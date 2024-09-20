@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { StartGameSessionParams } from "@/components/form/start-game-form"
+import type { UseFormReturn } from "react-hook-form"
+import type { StartGameFormValues } from "@/components/form/start-game-form"
 
 // constants
 import { offlineSessionMetadata } from "@/constants/game"
@@ -35,8 +36,8 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
 
   const clearCache = useCacheStore((state) => state.clear)
   const startFormCache = useCacheStore<
-    StartGameSessionParams,
-    CacheStore<StartGameSessionParams>['data']
+    UseFormReturn<StartGameFormValues>,
+    CacheStore<UseFormReturn<StartGameFormValues>>['data']
   >((state) => state.data)
 
   const { startOfflineSession, continueOfflineSession } = useOfflineSessionHandler()
@@ -55,11 +56,9 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
       return
     }
 
-    const { form, values } = startFormCache
-    clearCache()
-    
     if (isOffline) {
-      startOfflineSession(values, form, true)
+      startOfflineSession(startFormCache, true)
+      clearCache()
       return
     }
 
@@ -76,7 +75,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
     }
 
     if (isOffline) {
-      continueOfflineSession(startFormCache.form)
+      continueOfflineSession(startFormCache)
       return
     }
 

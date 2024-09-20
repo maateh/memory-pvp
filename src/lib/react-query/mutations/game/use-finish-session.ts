@@ -44,6 +44,7 @@ export const useFinishSessionMutation = () => {
     if (offline) {
       clearSessionFromStorage()
       unregisterSession()
+      
       toast.warning('Your offline session has been abandoned.')
       return
     }

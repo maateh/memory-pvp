@@ -28,7 +28,9 @@ export const useStartGameMutation = () => {
     }
   })
 
-  const onSubmit = async (values: StartGameFormValues, form: UseFormReturn<StartGameFormValues>) => {
+  const onSubmit = async (form: UseFormReturn<StartGameFormValues>) => {
+    const values = form.getValues()
+
     // TODO: implement
     if (values.type === 'COMPETITIVE' || values.mode !== 'SINGLE') {
       toast.warning('Work in progress', {

@@ -28,7 +28,9 @@ export const useCreatePlayerMutation = () => {
     }
   })
 
-  const onSubmit = async (values: PlayerProfileFormValues, form: UseFormReturn<PlayerProfileFormValues>) => {
+  const onSubmit = async (form: UseFormReturn<PlayerProfileFormValues>) => {
+    const values = form.getValues()
+
     await createPlayer.mutateAsync(values)
     form.reset()
   }

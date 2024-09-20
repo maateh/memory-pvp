@@ -10,7 +10,7 @@ import { Form as ShadcnForm } from "@/components/ui/form"
 
 type FormProps<FV extends FieldValues> = {
   schema: ZodType<FV>
-  onSubmit: (values: FV, form: UseFormReturn<FV>) => void
+  onSubmit: (form: UseFormReturn<FV>) => void
   className?: string
   children: (form: UseFormReturn<FV>) => React.ReactNode
 } & UseFormProps<FV>
@@ -24,7 +24,7 @@ function Form<FV extends FieldValues> ({ schema, onSubmit, className, children, 
   return (
     <ShadcnForm {...form}>
       <form className={className}
-        onSubmit={form.handleSubmit((data) => onSubmit(data, form))}
+        onSubmit={form.handleSubmit(() => onSubmit(form))}
       >
         {children(form)}
       </form>
