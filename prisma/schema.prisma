@@ -29,8 +29,6 @@ model PlayerProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
 
-  results Result[]
-
   sessions      GameSession[] @relation("SessionOwner")
   guestSessions GameSession[] @relation("SessionGuest")
 
@@ -42,13 +40,17 @@ model GameSession {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String @unique
 
+  timer Int
+  cards Json
+
   status GameStatus
 
   type      GameType
   mode      GameMode
   tableSize TableSize
 
-  results Result[]
+  result Result? @relation("OwnerResult")
+  guestResult Result? @relation("GuestResult")
 
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String        @db.ObjectId
@@ -56,7 +58,8 @@ model GameSession {
   guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: Cascade)
   guestId String?        @db.ObjectId
 
-  startedAt  DateTime
+  startedAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
   finishedAt DateTime?
 }
 
@@ -64,16 +67,31 @@ model Result {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   score Int
-  timer Int
+  flips Int
 
-  session   GameSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
-  sessionId String
-
-  playerProfile   PlayerProfile @relation(fields: [playerProfileId], references: [id], onDelete: Cascade)
-  playerProfileId String        @db.ObjectId
+  session  GameSession @relation("OwnerResult", fields: [sessionId], references: [id])
+  sessionGuest  GameSession @relation("GuestResult", fields: [sessionId], references: [id])
+  sessionId String @db.ObjectId @unique
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+// NOTE: It's a question how the cards will be stored exactly.
+// Images will potentially be handled by a cdn, but the cards
+// must have a custom ID - and in the future, it would be a good
+// feature also, if users could upload their custom image sets
+// to create custom memory cards.
+// I just leave this as a note because for now cards
+// will be random generated for every session
+// and saved in JSON.
+
+// model MemoryCard {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+//   key String @unique
+//   imageUrl String @unique
+// }
 
 // ENUMS
 enum GameStatus {
