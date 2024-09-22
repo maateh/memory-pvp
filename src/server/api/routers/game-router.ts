@@ -7,6 +7,7 @@ import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/serve
 
 // validations
 import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations"
+import { getMockCards } from "@/lib/utils/game"
 
 export const gameRouter = createTRPCRouter({
   getActive: protectedGameProcedure
@@ -84,12 +85,11 @@ export const gameRouter = createTRPCRouter({
       // TODO: save guest -> in pvp & coop modes
       return await ctx.db.gameSession.create({
         data: {
+          type, mode, tableSize,
           sessionId: uuidv4(),
           status: 'RUNNING',
-          type,
-          mode,
-          tableSize,
-          startedAt: new Date(),
+          timer: 0,
+          cards: getMockCards(tableSize), // TODO: generate cards
           owner: {
             connect: {
               id: ctx.playerProfile.id
@@ -102,7 +102,14 @@ export const gameRouter = createTRPCRouter({
   saveOffline: gameProcedure
     .input(saveOfflineGameSchema)
     .mutation(async ({ ctx, input }) => {
-      const { playerTag, tableSize, startedAt } = input
+      const {
+        playerTag,
+        tableSize,
+        startedAt,
+        timer,
+        flips,
+        cards
+      } = input
 
       const playerProfile = await ctx.db.playerProfile.findFirst({
         where: {
@@ -127,12 +134,17 @@ export const gameRouter = createTRPCRouter({
 
       return await ctx.db.gameSession.create({
         data: {
+          tableSize, startedAt, timer, cards,
           sessionId: uuidv4(),
           status: 'OFFLINE',
           type: 'CASUAL',
           mode: 'SINGLE',
-          tableSize,
-          startedAt,
+          result: {
+            create: {
+              flips,
+              score: 0 // TODO: think it over -> make it optional or is it okay this way?
+            }
+          },
           owner: {
             connect: { id: playerProfile.id }
           }
