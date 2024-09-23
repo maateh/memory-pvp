@@ -28,7 +28,7 @@ const MemoryCard = ({ card, onClick }: MemoryCardProps) => {
           <CardContent className="p-0 size-full img-wrapper">
             <Image
               src={card.imageUrl}
-              alt={card.key} // TODO: remove after dev
+              alt="card image"
               fill
             />
           </CardContent>

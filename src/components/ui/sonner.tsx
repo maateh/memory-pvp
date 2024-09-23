@@ -24,8 +24,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
           cancelButton: "group-[.toast]:data-[cancel=true]:p-3.5 group-[.toast]:data-[cancel=true]:bg-muted/60 group-[.toast]:data-[cancel=true]:text-foreground/90 group-[.toast]:data-[cancel=true]:rounded-lg group-[.toast]:data-[cancel=true]:hover:bg-muted/75"
         },
       }}
-      duration={50000}
-      // richColors
       {...props}
     />
   )
