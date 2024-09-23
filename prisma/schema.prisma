@@ -49,7 +49,7 @@ model GameSession {
   mode      GameMode
   tableSize TableSize
 
-  result Result? @relation("OwnerResult")
+  result      Result? @relation("OwnerResult")
   guestResult Result? @relation("GuestResult")
 
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
@@ -58,9 +58,11 @@ model GameSession {
   guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: Cascade)
   guestId String?        @db.ObjectId
 
-  startedAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  finishedAt DateTime?
+  continuedAt DateTime?
+  finishedAt  DateTime?
+
+  startedAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Result {
@@ -69,9 +71,9 @@ model Result {
   score Int
   flips Int
 
-  session  GameSession @relation("OwnerResult", fields: [sessionId], references: [id])
-  sessionGuest  GameSession @relation("GuestResult", fields: [sessionId], references: [id])
-  sessionId String @db.ObjectId @unique
+  session      GameSession @relation("OwnerResult", fields: [sessionId], references: [id])
+  sessionGuest GameSession @relation("GuestResult", fields: [sessionId], references: [id])
+  sessionId    String      @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
