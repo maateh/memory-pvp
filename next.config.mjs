@@ -5,6 +5,10 @@ const nextConfig = {
       {
         hostname: 'img.clerk.com',
         protocol: 'https'
+      },
+      {
+        hostname: 'picsum.photos',
+        protocol: 'https'
       }
     ]
   }

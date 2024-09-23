@@ -64,3 +64,10 @@ export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClien
   mode: 'SINGLE',
   status: 'OFFLINE'
 }
+
+/**
+ * Note: These image placeholders is used only for testing purposes.
+ * In the future, there will be an option for users to upload
+ * their custom image sets for memory card placeholders.
+ */
+export const baseCardUrl = "https://picsum.photos/id"

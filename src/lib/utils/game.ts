@@ -5,9 +5,9 @@ import { intervalToDuration } from "date-fns"
 import type { TableSize } from "@prisma/client"
 
 // constants
-import { tableSizeMap } from "@/constants/game"
+import { baseCardUrl, tableSizeMap } from "@/constants/game"
 
-export function formatTimer(timerInMs: number) {
+export function formatTimer(timerInMs: number): string {
   const duration = intervalToDuration({
     start: 0,
     end: timerInMs
@@ -23,18 +23,35 @@ export function formatTimer(timerInMs: number) {
   return `${minutes}:${seconds}`
 }
 
-export const getMockCards = (tableSize: TableSize): MemoryCard[] => {
-  const cards: MemoryCard[] = []
+export function getMockCards(tableSize: TableSize): MemoryCard[] {
+  const cardsMap: Record<string, MemoryCard> = {}
 
   for (let i = 0; i < tableSizeMap[tableSize] / 2; i++) {
-    const card = {
+    /**
+     * Approximately, the maximum image placeholder
+     * capacity of the 'picsum.photos' API.
+     */
+    const placeholderCapacity = 1000
+    const key = Math.floor(Math.random() * placeholderCapacity).toString()
+
+    if (cardsMap[key]) {
+      i--
+      continue
+    }
+
+    cardsMap[key] = {
       id: uuidv4(),
-      key: `card-${i}`,
-      imageUrl: `/`, // TODO: upload cards
+      key,
+      imageUrl: `${baseCardUrl}/${key}/640/640`,
       isFlipped: false,
       isMatched: false
     }
-    cards.push(card, { ...card, id: uuidv4() })
   }
+
+  const cards = Object.values(cardsMap).reduce((cards, card) => ([
+    ...cards,
+    ...[card, { ...card, id: uuidv4() }]
+  ]), [] as MemoryCard[])
+
   return cards.sort(() => Math.random() - 0.5)
 }
