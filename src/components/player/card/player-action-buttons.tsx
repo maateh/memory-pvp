@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 // prisma
 import { PlayerProfile } from "@prisma/client"
 
@@ -9,8 +11,15 @@ import { CheckCircle2, Edit, Loader2, ShieldPlus, Trash2, XCircle } from "lucide
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
 
+// components
+import PlayerDeleteWarning from "./player-delete-warning"
+
 // hooks
-import { useDeletePlayerMutation, useSelectAsActiveMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
+import {
+  useDeletePlayerMutation,
+  useSelectAsActiveMutation,
+  useUpdatePlayerMutation
+} from "@/lib/react-query/mutations/player"
 
 type PlayerActionButtonsProps = {
   player: PlayerProfile
@@ -27,8 +36,10 @@ const PlayerActionButtons = ({
   setEditing,
   setColor
 }: PlayerActionButtonsProps) => {
+  const [showDeleteWarning, setShowDeleteWarning] = useState(false)
+
   const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation({ setEditing })
-  const { deletePlayer, handleDeletePlayer } = useDeletePlayerMutation()
+  const { deletePlayer } = useDeletePlayerMutation()
   const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
@@ -98,19 +109,27 @@ const PlayerActionButtons = ({
           </ButtonTooltip>
 
           {!player.isActive && (
-            <ButtonTooltip className="p-1.5"
-              tooltip="Delete player profile"
-              variant="destructive"
-              size="icon"
-              onClick={() => handleDeletePlayer(player)} // TODO: show confirm before deletion
-              disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
-            >
-              {deletePlayer.isPending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Trash2 className="size-4" />
-              )}
-            </ButtonTooltip>
+            <>
+              <ButtonTooltip className="p-1.5"
+                tooltip="Delete player profile"
+                variant="destructive"
+                size="icon"
+                onClick={() => setShowDeleteWarning(true)}
+                disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
+              >
+                {deletePlayer.isPending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Trash2 className="size-4" />
+                )}
+              </ButtonTooltip>
+
+              <PlayerDeleteWarning
+                player={player}
+                open={showDeleteWarning}
+                onOpenChange={() => setShowDeleteWarning(false)}
+              />
+            </>
           )}
         </>
       )}
