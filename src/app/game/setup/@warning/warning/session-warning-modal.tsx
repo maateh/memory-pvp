@@ -14,13 +14,9 @@ import { offlineSessionMetadata } from "@/constants/game"
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"
 
-// shadcn
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Separator } from "@/components/ui/separator"
-
 // components
 import { SessionStats } from "@/components/session"
+import { WarningActionButton, WarningCancelButton, WarningModal, WarningModalFooter } from "@/components/shared"
 
 // hooks
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
@@ -83,38 +79,31 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
   }
 
   return (
-    <Dialog open onOpenChange={() => router.replace('/game/setup')}>
-      <DialogContent>
-        <DialogHeader className="text-center">
-          <DialogTitle className="text-xl sm:text-2xl font-heading font-normal underline decoration-destructive underline-offset-8">
-            <span className="text-destructive font-semibold">Active</span> session found
-          </DialogTitle>
+    <WarningModal
+      title={(
+        <>
+          <span className="text-destructive font-semibold">Active</span> session found
+        </>
+      )}
+      description="We found a previous session that you haven&apos;t finished yet. Do you want to finish it now or start a new session?"
+      onOpenChange={() => router.replace('/game/setup')}
+      open
+    >
+      <SessionStats session={session!} />
 
-          <DialogDescription className="w-5/6 mx-auto">
-            We found a previous session that you haven&apos;t finished yet. Do you want to finish it now or start a new session?
-          </DialogDescription>
-        </DialogHeader>
+      <WarningModalFooter>
+        <WarningCancelButton onClick={handleStartNew}>
+          Start new game
+        </WarningCancelButton>
 
-        <Separator className="w-3/5 mx-auto mt-1 mb-2.5 bg-border/25" />
-
-        <SessionStats session={session!} />
-
-        <DialogFooter className="mt-2.5 mx-8 flex flex-wrap flex-row items-center justify-around gap-x-8 gap-y-2.5 sm:justify-around">
-          <Button className="flex-1 max-w-64 border"
-            variant="ghost"
-            onClick={handleStartNew}
-          >
-            Start new game
-          </Button>
-          <Button className="flex-1 max-w-64"
-            variant="secondary"
-            onClick={handleContinue}
-          >
-            Continue previous
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        <WarningActionButton
+          variant="secondary"
+          onClick={handleContinue}
+        >
+          Continue previous
+        </WarningActionButton>
+      </WarningModalFooter>
+    </WarningModal>
   )
 }
 

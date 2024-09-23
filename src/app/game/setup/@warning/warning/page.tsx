@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 // components
-const SessionRunningWarningModal = dynamic(() => import("./warning-modal"), { ssr: false })
+const SessionRunningWarningModal = dynamic(() => import("./session-warning-modal"), { ssr: false })
 
 type SessionRunningWarningPageProps = {
   searchParams?: {
