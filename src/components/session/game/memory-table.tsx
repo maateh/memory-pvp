@@ -1,15 +1,12 @@
 // utils
 import { cn } from "@/lib/utils"
 
-// types
-import type { MemoryCard as TMemoryCard } from "@/hooks/store/use-session-store"
-
 // components
 import MemoryCard from "./memory-card"
 
 type MemoryTableProps = {
   session: ClientGameSession
-  handleCardFlip: (clickedCard: TMemoryCard) => void
+  handleCardFlip: (clickedCard: MemoryCard) => void
 }
 
 const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {

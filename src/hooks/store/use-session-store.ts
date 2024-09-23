@@ -1,13 +1,5 @@
 import { create } from "zustand"
 
-export type MemoryCard = { // TODO: temporary. (it'll be moved to a prisma schema type soon)
-  id: string
-  key: string
-  imageUrl: string
-  isFlipped: boolean
-  isMatched: boolean
-}
-
 type SessionStore = {
   session: ClientGameSession | null
   register: (session: ClientGameSession) => void

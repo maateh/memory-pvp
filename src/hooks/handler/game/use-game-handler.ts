@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { saveSessionToStorage } from "@/lib/utils/storage"
 
 // hooks
-import { useSessionStore, type MemoryCard } from "@/hooks/store/use-session-store"
+import { useSessionStore } from "@/hooks/store/use-session-store"
 
 type UseGameHandlerProps = {
   finishSession: () => void

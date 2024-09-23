@@ -3,7 +3,6 @@ import { intervalToDuration } from "date-fns"
 
 // types
 import type { TableSize } from "@prisma/client"
-import type { MemoryCard } from "@/hooks/store/use-session-store"
 
 // constants
 import { tableSizeMap } from "@/constants/game"

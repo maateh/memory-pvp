@@ -1,7 +1,14 @@
-import type { MemoryCard } from "@/hooks/store/use-session-store"
 import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
 
 declare global {
+  declare type MemoryCard = {
+    id: string
+    key: string
+    imageUrl: string
+    isFlipped: boolean
+    isMatched: boolean
+  }
+
   declare type UnsignedClientGameSession = {
     tableSize: TableSize
     startedAt: Date
