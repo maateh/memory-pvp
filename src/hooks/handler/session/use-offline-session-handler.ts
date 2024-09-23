@@ -52,11 +52,9 @@ export const useOfflineSessionHandler = () => {
       return
     }
 
-    const startedAt = new Date()
     const offlineSession: UnsignedClientGameSession = {
       tableSize: values.tableSize,
-      startedAt,
-      continuedAt: startedAt,
+      startedAt: new Date(),
       timer: 0,
       flips: 0,
       cards: getMockCards(values.tableSize)

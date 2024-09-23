@@ -5,7 +5,7 @@ declare global {
   declare type UnsignedClientGameSession = {
     tableSize: TableSize
     startedAt: Date
-    continuedAt: Date
+    continuedAt?: Date
     timer: number
     flips: number
     cards: MemoryCard[]

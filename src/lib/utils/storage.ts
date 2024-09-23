@@ -29,7 +29,7 @@ export function saveSessionToStorage(session: UnsignedClientGameSession): Unsign
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     ...session,
-    timer: differenceInSeconds(new Date(), session.continuedAt)
+    timer: differenceInSeconds(Date.now(), session.continuedAt || session.startedAt) + session.timer
   }))
 }
 
