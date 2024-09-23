@@ -1,3 +1,5 @@
+import { differenceInSeconds } from "date-fns"
+
 /** Local storage key for the active offline session. */
 const STORAGE_KEY = "CLIENT_GAME_SESSION"
 
@@ -24,7 +26,11 @@ export function getSessionFromStorage(): UnsignedClientGameSession | null {
  */
 export function saveSessionToStorage(session: UnsignedClientGameSession): UnsignedClientGameSession | void {
   if (typeof window === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    ...session,
+    timer: differenceInSeconds(new Date(), session.continuedAt)
+  }))
 }
 
 /**
