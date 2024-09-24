@@ -128,7 +128,7 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
     throw new TRPCError({
       code: 'FORBIDDEN',
       cause: new TRPCApiError({
-        key: 'SESSION_NOT_FOUND',
+        key: 'SESSION_ACCESS_DENIED',
         message: "Game session access denied.",
         description: "You don't have access to this game session."
       })

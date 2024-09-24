@@ -47,23 +47,6 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  updateStatus: protectedGameProcedure
-    .input(updateGameStatusSchema)
-    .mutation(async ({ ctx, input: status }) => {
-      return await ctx.db.gameSession.update({
-        where: {
-          id: ctx.activeSession.id,
-          status: {
-            equals: 'RUNNING'
-          }
-        },
-        data: {
-          status,
-          finishedAt: new Date()
-        }
-      })
-    }),
-
   create: gameProcedure
     .input(setupGameSchema)
     .mutation(async ({ ctx, input }) => {
@@ -97,7 +80,7 @@ export const sessionRouter = createTRPCRouter({
         throw new TRPCError({
           code: 'NOT_IMPLEMENTED',
           cause: new TRPCApiError({
-            key: 'ACTIVE_SESSION',
+            key: 'UNKNOWN',
             message: 'Sorry, but currently you can only play in Casual.',
             description: 'This feature is still work in progress. Please, try again later.'
           })
@@ -110,7 +93,7 @@ export const sessionRouter = createTRPCRouter({
         throw new TRPCError({
           code: 'NOT_IMPLEMENTED',
           cause: new TRPCApiError({
-            key: 'ACTIVE_SESSION',
+            key: 'UNKNOWN',
             message: 'Sorry, but currently you can only play in Single.',
             description: 'This feature is still work in progress. Please, try again later.'
           })
@@ -185,5 +168,22 @@ export const sessionRouter = createTRPCRouter({
           }
         }
       })
+    }),
+
+  updateStatus: protectedGameProcedure
+  .input(updateGameStatusSchema)
+  .mutation(async ({ ctx, input: status }) => {
+    return await ctx.db.gameSession.update({
+      where: {
+        id: ctx.activeSession.id,
+        status: {
+          equals: 'RUNNING'
+        }
+      },
+      data: {
+        status,
+        finishedAt: new Date()
+      }
     })
+  }),
 })
