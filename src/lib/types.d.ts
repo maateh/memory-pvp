@@ -1,3 +1,4 @@
+import type { AppRouter } from "@/server/api/_app"
 import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
 
 declare global {
@@ -9,10 +10,12 @@ declare global {
     isMatched: boolean
   }
 
+  declare type ActiveGameSession = Awaited<ReturnType<AppRouter['game']['getActive']>>
+
   declare type UnsignedClientGameSession = {
     tableSize: TableSize
     startedAt: Date
-    continuedAt?: Date
+    continuedAt?: Date | null
     timer: number
     flips: number
     cards: MemoryCard[]

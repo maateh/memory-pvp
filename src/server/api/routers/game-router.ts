@@ -95,6 +95,22 @@ export const gameRouter = createTRPCRouter({
               id: ctx.playerProfile.id
             }
           }
+        },
+        include: {
+          owner: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
+          },
+          guest: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
+          }
         }
       })
     }),

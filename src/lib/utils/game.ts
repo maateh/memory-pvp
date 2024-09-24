@@ -7,6 +7,14 @@ import type { TableSize } from "@prisma/client"
 // constants
 import { baseCardUrl, tableSizeMap } from "@/constants/game"
 
+export function parseSchemaToClientSession(session: ActiveGameSession): ClientGameSession {
+  return {
+    ...session,
+    cards: session.cards as MemoryCard[],
+    flips: session.result?.flips || 0
+  }
+}
+
 export function formatTimer(timerInMs: number): string {
   const duration = intervalToDuration({
     start: 0,

@@ -101,6 +101,7 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
       ownerId: ctx.playerProfile.id
     },
     include: {
+      result: true,
       owner: {
         include: {
           user: {
