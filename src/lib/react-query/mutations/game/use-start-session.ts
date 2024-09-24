@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
@@ -19,10 +20,9 @@ import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
 
 export const useStartSessionMutation = () => {
-  let setupForm: UseFormReturn<SetupGameFormValues>
-
   const router = useRouter()
 
+  const [setupForm, setSetupForm] = useState<UseFormReturn<SetupGameFormValues>>()
   const setCache = useCacheStore<
     SessionRunningWarningActions,
     CacheStore<SessionRunningWarningActions>['set']
@@ -45,7 +45,7 @@ export const useStartSessionMutation = () => {
     onError: (err) => {
       if (err.shape?.cause.key === 'ACTIVE_SESSION') {
         setCache({
-          forceStart: () => onSubmit(setupForm, true),
+          forceStart: () => onSubmit(setupForm!, true),
           continuePrevious: () => {
             const session = err.shape?.cause.data as ActiveGameSession
             if (!session) {
@@ -75,6 +75,13 @@ export const useStartSessionMutation = () => {
     }
   })
 
+  const abandonSession = api.game.updateStatus.useMutation({
+    onSuccess: () => toast.info('Your previous session has been abandoned.'),
+    onError: (err) => {
+      handleApiError(err.shape?.cause, 'Failed to abandon session. Please try again.')
+    }
+  })
+
   const onSubmit = async (form: UseFormReturn<SetupGameFormValues>, forceStart: boolean = false) => {
     const values = form.getValues()
 
@@ -90,10 +97,9 @@ export const useStartSessionMutation = () => {
      * Form has to be saved because it needs
      * to be accessible from the 'onError' method.
      */
-    if (!forceStart) setupForm = form
+    if (!forceStart) setSetupForm(form)
 
-    // TODO: implement mutation
-    // if (forceStart) await abandonSession.mutateAsync()
+    if (forceStart) await abandonSession.mutateAsync('ABANDONED')
     await startSession.mutateAsync(values)
     form.reset()
   }
