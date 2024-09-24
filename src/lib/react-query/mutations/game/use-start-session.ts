@@ -12,12 +12,16 @@ import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/war
 
 // utils
 import { handleApiError } from "@/lib/utils"
+import { parseSchemaToClientSession } from "@/lib/utils/game"
 
 // hooks
+import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
 
 export const useStartSessionMutation = () => {
   const router = useRouter()
+
+  const registerSession = useSessionStore((state) => state.register)
 
   const setCache = useCacheStore<
     SessionRunningWarningActions,
@@ -26,10 +30,14 @@ export const useStartSessionMutation = () => {
   const clearCache = useCacheStore((state) => state.clear)
 
   const startSession = api.game.create.useMutation({
-    onSuccess: ({ type, mode, tableSize }) => {
+    onSuccess: (session) => {
       clearCache()
+
+      const clientSession = parseSchemaToClientSession({ ...session, result: null })
+      registerSession(clientSession)
       router.replace('/game')
 
+      const { type, mode, tableSize } = session
       toast.success('Game started!', {
         description: `${type} | ${mode} | ${tableSize}`
       })

@@ -1,3 +1,5 @@
+"use client"
+
 // utils
 import { formatTimer } from "@/lib/utils/game"
 

@@ -1,38 +1,31 @@
-import { redirect } from "next/navigation"
-
-// clerk
-import { auth } from "@clerk/nextjs/server"
-
-// trpc
-import { api } from "@/trpc/server"
+"use client"
 
 // components
 import { SessionFooter, SessionHeader } from "@/components/session"
 import { MemoryTable } from "@/components/session/game"
 
-const GamePlayPage = async () => {
-  const { userId } = auth()
-  if (!userId) redirect('/game/setup')
+// hooks
+import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 
-  try {
-    // TODO: add cards & flip to db schema
-    const session = await api.game.getActive()
-  
-    return (
-      <>
-        <SessionHeader session={session} />
+const GamePlayPage = () => {
+  const { clientSession, handleCardFlip } = useGameHandler({
+    finishSession: () => {
+      // TODO: implement
+    }
+  })
 
-        <MemoryTable
-          session={session}
-          handleCardFlip={(clickedCard) => {}} // TODO: implement
-        />
+  return (
+    <>
+      <SessionHeader session={clientSession} />
 
-        <SessionFooter session={session} />
-      </>
-    )
-  } catch (err) {
-    redirect('/game/setup')
-  }
+      <MemoryTable
+        session={clientSession}
+        handleCardFlip={handleCardFlip} // TODO: implement
+      />
+
+      <SessionFooter session={clientSession} />
+    </>
+  )
 }
 
 export default GamePlayPage

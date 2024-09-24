@@ -1,3 +1,5 @@
+"use client"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -8,15 +10,17 @@ import { Separator } from "@/components/ui/separator"
 import { SessionPlayer } from "@/components/session"
 
 type SessionFooterProps = {
-  session: GameSessionWithPlayerProfiles
+  session: ClientGameSession
 }
 
 const SessionFooter = ({ session }: SessionFooterProps) => {
+  // TODO: fetch session players
+
   return (
     <div className={cn("w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-6 bg-primary md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]", {
       "sm:px-6 md:px-10": session.mode === 'SINGLE'
     })}>
-      <SessionPlayer
+      {/* <SessionPlayer
         player={session.owner}
       />
 
@@ -35,7 +39,7 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
             flipOrder
           />
         </>
-      )}
+      )} */}
     </div>
   )
 }
