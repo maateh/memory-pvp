@@ -1,5 +1,8 @@
 "use client"
 
+// trpc
+import { api } from "@/trpc/client"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -14,17 +17,21 @@ type SessionFooterProps = {
 }
 
 const SessionFooter = ({ session }: SessionFooterProps) => {
-  // TODO: fetch session players
+  const { data: players, isLoading } = api.game.getPlayers.useQuery()
 
   return (
     <div className={cn("w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-6 bg-primary md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]", {
       "sm:px-6 md:px-10": session.mode === 'SINGLE'
     })}>
-      {/* <SessionPlayer
-        player={session.owner}
-      />
+      {players && !isLoading ? (
+        <SessionPlayer
+          player={players?.owner}
+        />
+      ) : (
+        <>TODO: loading skeleton</>
+      )}
 
-      {session.mode !== 'SINGLE' && session.guest && (
+      {session.mode !== 'SINGLE' && players?.guest && (
         <>
           <Separator className="flex w-4/5 h-1 mx-auto my-4 bg-secondary-foreground/80 rounded-full md:hidden"
             orientation="vertical"
@@ -35,11 +42,11 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
           />
 
           <SessionPlayer
-            player={session.guest}
+            player={players.guest}
             flipOrder
           />
         </>
-      )} */}
+      )}
     </div>
   )
 }

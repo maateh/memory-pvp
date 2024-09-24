@@ -11,7 +11,41 @@ import { getMockCards } from "@/lib/utils/game"
 
 export const gameRouter = createTRPCRouter({
   getActive: protectedGameProcedure
-    .query(({ ctx }) => ctx.activeSession),
+    .query(async ({ ctx }) => {
+      return await ctx.db.gameSession.findUnique({
+        where: {
+          id: ctx.activeSession.id
+        },
+        include: {
+          result: true 
+        }
+      })
+    }),
+  
+  getPlayers: protectedGameProcedure
+    .query(async ({ ctx }) => {
+      return await ctx.db.gameSession.findUnique({
+        where: {
+          id: ctx.activeSession.id
+        },
+        select: {
+          owner: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
+          },
+          guest: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
+          }
+        }
+      })
+    }),
 
   updateStatus: protectedGameProcedure
     .input(updateGameStatusSchema)
@@ -93,22 +127,6 @@ export const gameRouter = createTRPCRouter({
           owner: {
             connect: {
               id: ctx.playerProfile.id
-            }
-          }
-        },
-        include: {
-          owner: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
-            }
-          },
-          guest: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
             }
           }
         }
