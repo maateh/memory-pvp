@@ -3,14 +3,13 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // prisma
-import { PlayerProfile } from "@prisma/client"
+import type { PlayerProfile } from "@prisma/client"
 
 // trpc
-import { TRPCClientError } from "@trpc/client"
 import { api } from "@/trpc/client"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 
 export const useSelectAsActiveMutation = () => {
   const router = useRouter()
@@ -31,7 +30,11 @@ export const useSelectAsActiveMutation = () => {
   const handleSelectAsActive = async (player: PlayerProfile) => {
     if (player.isActive) return
 
-    await selectAsActive.mutateAsync({ playerId: player.id })
+    try {
+      await selectAsActive.mutateAsync({ playerId: player.id })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { selectAsActive, handleSelectAsActive }

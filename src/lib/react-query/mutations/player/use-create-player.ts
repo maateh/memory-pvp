@@ -6,11 +6,11 @@ import { toast } from "sonner"
 import { api } from "@/trpc/client"
 
 // types
-import { UseFormReturn } from "react-hook-form"
-import { PlayerProfileFormValues } from "@/components/form/player-profile-form"
+import type { UseFormReturn } from "react-hook-form"
+import type { PlayerProfileFormValues } from "@/components/form/player-profile-form"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 
 export const useCreatePlayerMutation = () => {
   const router = useRouter()
@@ -31,8 +31,12 @@ export const useCreatePlayerMutation = () => {
   const onSubmit = async (form: UseFormReturn<PlayerProfileFormValues>) => {
     const values = form.getValues()
 
-    await createPlayer.mutateAsync(values)
-    form.reset()
+    try {
+      await createPlayer.mutateAsync(values)
+      form.reset()
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { createPlayer, onSubmit }

@@ -12,7 +12,7 @@ import { api } from "@/trpc/client"
 import { useSessionStore } from "@/hooks/store/use-session-store"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 import { clearSessionFromStorage } from "@/lib/utils/storage"
 
 export const useFinishSessionMutation = () => {
@@ -49,7 +49,11 @@ export const useFinishSessionMutation = () => {
       return
     }
 
-    await finishSession.mutateAsync(status)
+    try {
+      await finishSession.mutateAsync(status)
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { finishSession, handleFinishSession }

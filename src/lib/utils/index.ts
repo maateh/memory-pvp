@@ -30,3 +30,16 @@ export function handleApiError(
 
   toast.error('Something went wrong.', { description: fallbackDescription })
 }
+
+/**
+ * Logs errors to the console in development mode.
+ * 
+ * @param {unknown} err - The error to log.
+ * 
+ * - Only logs the error if the environment is set to 'development'.
+ */
+export function logError(err: unknown) {
+  if (process.env.NODE_ENV === 'development') {
+    console.error(err)
+  }
+}

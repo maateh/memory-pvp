@@ -12,7 +12,7 @@ import type { SetupGameFormValues } from "@/components/form/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 import { parseSchemaToClientSession } from "@/lib/utils/game"
 
 // hooks
@@ -99,9 +99,14 @@ export const useStartSessionMutation = () => {
      */
     if (!forceStart) setSetupForm(form)
 
-    if (forceStart) await abandonSession.mutateAsync('ABANDONED')
-    await startSession.mutateAsync(values)
-    form.reset()
+    try {
+      if (forceStart) await abandonSession.mutateAsync('ABANDONED')
+      await startSession.mutateAsync(values)
+
+      form.reset()
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { startSession, onSubmit }

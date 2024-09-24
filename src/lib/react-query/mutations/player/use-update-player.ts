@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // prisma
-import { PlayerProfile } from "@prisma/client"
+import type { PlayerProfile } from "@prisma/client"
 
 // trpc
 import { api } from "@/trpc/client"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 
 type UseUpdatePlayerProps = {
   setEditing: (editing: boolean) => void
@@ -45,11 +45,15 @@ export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) =>
       return
     }
 
-    await updatePlayer.mutateAsync({
-      playerId: player.id,
-      playerTag: tag,
-      color
-    })
+    try {
+      await updatePlayer.mutateAsync({
+        playerId: player.id,
+        playerTag: tag,
+        color
+      })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { updatePlayer, handleUpdatePlayer }

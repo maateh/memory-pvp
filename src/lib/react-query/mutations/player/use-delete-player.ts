@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // prisma
-import { PlayerProfile } from "@prisma/client"
+import type { PlayerProfile } from "@prisma/client"
 
 // trpc
 import { api } from "@/trpc/client"
 
 // utils
-import { handleApiError } from "@/lib/utils"
+import { logError, handleApiError } from "@/lib/utils"
 
 export const useDeletePlayerMutation = () => {
   const router = useRouter()
@@ -35,7 +35,11 @@ export const useDeletePlayerMutation = () => {
       return
     }
 
-    await deletePlayer.mutateAsync({ playerId: player.id })
+    try {
+      await deletePlayer.mutateAsync({ playerId: player.id })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return { deletePlayer, handleDeletePlayer }
