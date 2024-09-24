@@ -1,5 +1,11 @@
 import dynamic from "next/dynamic"
 
+// trpc
+import { api } from "@/trpc/server"
+
+// utils
+import { parseSchemaToClientSession } from "@/lib/utils/game"
+
 // components
 const SessionRunningWarningModal = dynamic(() => import("./session-warning-modal"), { ssr: false })
 
@@ -12,17 +18,22 @@ type SessionRunningWarningPageProps = {
 const SessionRunningWarningPage = async ({ searchParams }: SessionRunningWarningPageProps) => { 
   const isOffline = searchParams?.sessionId === 'offline'
 
-  let session = null
-  if (!isOffline) {
-    // TODO: fetch session by sessionId
+  try {
+    let clientSession: ClientGameSession | null = null
+    if (!isOffline) {
+      const session = await api.game.getActive()
+      clientSession = parseSchemaToClientSession(session)
+    }
+  
+    return (
+      <SessionRunningWarningModal
+        session={clientSession}
+        isOffline={isOffline}
+      />
+    )
+  } catch (err) {
+    return
   }
-
-  return (
-    <SessionRunningWarningModal
-      session={session}
-      isOffline={isOffline}
-    />
-  )
 }
 
 export default SessionRunningWarningPage

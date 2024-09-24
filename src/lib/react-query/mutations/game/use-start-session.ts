@@ -8,15 +8,26 @@ import { api } from "@/trpc/client"
 // types
 import type { UseFormReturn } from "react-hook-form"
 import type { SetupGameFormValues } from "@/components/form/setup-game-form"
+import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // utils
 import { handleApiError } from "@/lib/utils"
 
+// hooks
+import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
+
 export const useStartSessionMutation = () => {
   const router = useRouter()
 
+  const setCache = useCacheStore<
+    SessionRunningWarningActions,
+    CacheStore<SessionRunningWarningActions>['set']
+  >((state) => state.set)
+  const clearCache = useCacheStore((state) => state.clear)
+
   const startSession = api.game.create.useMutation({
     onSuccess: ({ type, mode, tableSize }) => {
+      clearCache()
       router.replace('/game')
 
       toast.success('Game started!', {
@@ -24,11 +35,17 @@ export const useStartSessionMutation = () => {
       })
     },
     onError: (err) => {
+      if (err.shape?.cause.key === 'ACTIVE_SESSION') {
+        router.replace('/game/setup/warning', { scroll: false })
+        return
+      }
+
+      clearCache()
       handleApiError(err.shape?.cause, 'Failed to start game session. Please try again later.')
     }
   })
 
-  const onSubmit = async (form: UseFormReturn<SetupGameFormValues>) => {
+  const onSubmit = async (form: UseFormReturn<SetupGameFormValues>, forceStart: boolean = false) => {
     const values = form.getValues()
 
     // TODO: implement
@@ -39,6 +56,24 @@ export const useStartSessionMutation = () => {
       return
     }
 
+    /**
+     * Caching warning actions here because inside the 'onSuccess'
+     * and 'onError' methods, we cannot access form.
+     */
+    if (!forceStart) {
+      setCache({
+        forceStart: () => onSubmit(form, true),
+        continuePrevious: () => {
+          // TODO: implement
+          // - get session -> show warning toast if session not found
+          // - register session -> show info toast (session continued)
+          // - redirect to /game
+        }
+      })
+    }
+
+    // TODO: implement mutation
+    // if (forceStart) await abandonSession.mutateAsync()
     await startSession.mutateAsync(values)
     form.reset()
   }
