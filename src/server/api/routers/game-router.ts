@@ -85,7 +85,8 @@ export const gameRouter = createTRPCRouter({
           cause: {
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
-            description: 'You cannot participate in two game sessions at once with the same player.'
+            description: 'You cannot participate in two game sessions at once with the same player.',
+            data: activeSession
           } as TRPCApiError
         })
       }

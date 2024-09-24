@@ -18,6 +18,7 @@ export class TRPCApiError {
   public readonly key?: CAUSE_KEYS
   public readonly message: string
   public readonly description?: string | undefined
+  public readonly data?: unknown
 
   public readonly name: 'TRPCApiError'
 
