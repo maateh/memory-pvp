@@ -19,22 +19,22 @@ import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
 
 export const useStartSessionMutation = () => {
-  const router = useRouter()
+  let setupForm: UseFormReturn<SetupGameFormValues>
 
-  const registerSession = useSessionStore((state) => state.register)
+  const router = useRouter()
 
   const setCache = useCacheStore<
     SessionRunningWarningActions,
     CacheStore<SessionRunningWarningActions>['set']
   >((state) => state.set)
-  const clearCache = useCacheStore((state) => state.clear)
+
+  const registerSession = useSessionStore((state) => state.register)
 
   const startSession = api.game.create.useMutation({
     onSuccess: (session) => {
-      clearCache()
-
       const clientSession = parseSchemaToClientSession({ ...session, result: null })
       registerSession(clientSession)
+
       router.replace('/game')
 
       const { type, mode, tableSize } = session
@@ -44,11 +44,33 @@ export const useStartSessionMutation = () => {
     },
     onError: (err) => {
       if (err.shape?.cause.key === 'ACTIVE_SESSION') {
+        setCache({
+          forceStart: () => onSubmit(setupForm, true),
+          continuePrevious: () => {
+            const session = err.shape?.cause.data as ActiveGameSession
+            if (!session) {
+              toast.warning("Active session not found.", {
+                description: "Sorry, but we couldn't load your previous session data. Please start a new game instead."
+              })
+              return
+            }
+
+            const clientSession = parseSchemaToClientSession(session)
+            registerSession(clientSession)
+
+            router.replace('/game')
+
+            const { type, mode, tableSize } = session
+            toast.info('Game session continued!', {
+              description: `${type} | ${mode} | ${tableSize}`
+            })
+          }
+        })
+
         router.replace('/game/setup/warning', { scroll: false })
         return
       }
 
-      clearCache()
       handleApiError(err.shape?.cause, 'Failed to start game session. Please try again later.')
     }
   })
@@ -65,20 +87,10 @@ export const useStartSessionMutation = () => {
     }
 
     /**
-     * Caching warning actions here because inside the 'onSuccess'
-     * and 'onError' methods, we cannot access form.
+     * Form has to be saved because it needs
+     * to be accessible from the 'onError' method.
      */
-    if (!forceStart) {
-      setCache({
-        forceStart: () => onSubmit(form, true),
-        continuePrevious: () => {
-          // TODO: implement
-          // - get session -> show warning toast if session not found
-          // - register session -> show info toast (session continued)
-          // - redirect to /game
-        }
-      })
-    }
+    if (!forceStart) setupForm = form
 
     // TODO: implement mutation
     // if (forceStart) await abandonSession.mutateAsync()
