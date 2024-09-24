@@ -12,7 +12,7 @@ import { clearSessionFromStorage, getSessionFromStorage } from "@/lib/utils/stor
 export const useSaveOfflineSessionMutation = () => {
   const router = useRouter()
 
-  const saveOfflineSession = api.game.saveOffline.useMutation({
+  const saveOfflineSession = api.session.saveOffline.useMutation({
     onSuccess: () => {
       clearSessionFromStorage()
       toast.success('Your offline session has been saved.')

@@ -9,7 +9,7 @@ import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/serve
 import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations"
 import { getMockCards } from "@/lib/utils/game"
 
-export const gameRouter = createTRPCRouter({
+export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
     .query(async ({ ctx }) => {
       return await ctx.db.gameSession.findUnique({

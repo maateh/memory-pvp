@@ -21,7 +21,7 @@ const SessionRunningWarningPage = async ({ searchParams }: SessionRunningWarning
   try {
     let clientSession: ClientGameSession | null = null
     if (!isOffline) {
-      const session = await api.game.getActive()
+      const session = await api.session.getActive()
       clientSession = parseSchemaToClientSession(session)
     }
   

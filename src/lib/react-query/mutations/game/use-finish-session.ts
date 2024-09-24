@@ -20,7 +20,7 @@ export const useFinishSessionMutation = () => {
 
   const unregisterSession = useSessionStore((state) => state.unregister)
 
-  const finishSession = api.game.updateStatus.useMutation({
+  const finishSession = api.session.updateStatus.useMutation({
     onSuccess: ({ status }) => {
       unregisterSession()
       toast.success('Your session has ended.', {

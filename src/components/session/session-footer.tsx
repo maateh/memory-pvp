@@ -17,7 +17,7 @@ type SessionFooterProps = {
 }
 
 const SessionFooter = ({ session }: SessionFooterProps) => {
-  const { data: players, isLoading } = api.game.getPlayers.useQuery()
+  const { data: players, isLoading } = api.session.getPlayers.useQuery()
 
   return (
     <div className={cn("w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-6 bg-primary md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]", {

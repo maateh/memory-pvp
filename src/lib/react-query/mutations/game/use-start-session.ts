@@ -30,7 +30,7 @@ export const useStartSessionMutation = () => {
 
   const registerSession = useSessionStore((state) => state.register)
 
-  const startSession = api.game.create.useMutation({
+  const startSession = api.session.create.useMutation({
     onSuccess: (session) => {
       const clientSession = parseSchemaToClientSession({ ...session, result: null })
       registerSession(clientSession)
@@ -75,7 +75,7 @@ export const useStartSessionMutation = () => {
     }
   })
 
-  const abandonSession = api.game.updateStatus.useMutation({
+  const abandonSession = api.session.updateStatus.useMutation({
     onSuccess: () => toast.info('Your previous session has been abandoned.'),
     onError: (err) => {
       handleApiError(err.shape?.cause, 'Failed to abandon session. Please try again.')
