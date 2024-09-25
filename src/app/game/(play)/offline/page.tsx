@@ -4,6 +4,9 @@ import { redirect } from "next/navigation"
 
 import { toast } from "sonner"
 
+// utils
+import { saveSessionToStorage } from "@/lib/utils/storage"
+
 // components
 import { SessionHeader } from "@/components/session"
 import { MemoryTable } from "@/components/session/game"
@@ -13,7 +16,10 @@ import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 
 const GamePlayOfflinePage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
-    finishSession: () => {
+    onIngameUpdate: () => saveSessionToStorage(clientSession),
+    onFinish: () => {
+      saveSessionToStorage(clientSession)
+
       toast.success('You finished your offline game session!', {
         description: "Now, you've been redirected to save your results if you want.",
         id: '_' /** Note: prevent re-render by adding a custom id. */

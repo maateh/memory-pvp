@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react"
 import { redirect } from "next/navigation"
 
-// utils
-import { saveSessionToStorage } from "@/lib/utils/storage"
-
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
 
 type UseGameHandlerProps = {
-  finishSession: () => void
+  onIngameUpdate: () => void
+  onFinish: () => void
 }
 
-export const useGameHandler = ({ finishSession }: UseGameHandlerProps) => {
+export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps) => {
   /** Check if there is any registered session. */
   const clientSession = useSessionStore((state) => state.session)
   if (!clientSession) redirect('/game/setup')
@@ -74,20 +72,20 @@ export const useGameHandler = ({ finishSession }: UseGameHandlerProps) => {
   /**
    * Handle session updates and game completion.
    * 
-   * - Saves session to local storage if status is 'OFFLINE'.
    * - Ends the game if all cards are matched.
    */
   useEffect(() => {
-    if (clientSession.status === 'OFFLINE') {
-      saveSessionToStorage(clientSession)
+    const isOver = clientSession.cards.every(card => card.isMatched)
+    if (!isOver) {
+      onIngameUpdate()
+      return
     }
 
-    const isOver = clientSession.cards.every(card => card.isMatched)
-    if (!isOver) return
-
-    unregisterSession()
-    finishSession()
-  }, [clientSession, unregisterSession, finishSession])
+    onFinish()
+    return () => {
+      unregisterSession()
+    }
+  }, [clientSession, unregisterSession, onIngameUpdate, onFinish])
 
   return { clientSession, handleCardFlip }
 }
