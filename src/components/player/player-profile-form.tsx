@@ -14,7 +14,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input"
 
 // components
-import { Form } from "@/components/form"
+import { Form } from "@/components/shared"
 import { ColorPicker } from "@/components/inputs"
 
 // hooks

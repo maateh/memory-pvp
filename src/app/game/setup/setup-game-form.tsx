@@ -25,7 +25,7 @@ import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 
 // components
-import { Form } from "@/components/form"
+import { Form } from "@/components/shared"
 
 // hooks
 import { useStartSessionMutation } from "@/lib/react-query/mutations/game"

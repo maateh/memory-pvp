@@ -12,8 +12,8 @@ import { Separator } from "@/components/ui/separator"
 import { playerProfilesWidgetInfo } from "@/components/widgets/constants"
 
 // components
-import { PlayerProfileForm } from "@/components/form"
 import { WidgetModal } from "@/components/widgets"
+import { PlayerProfileForm } from "@/components/player"
 import { PlayerProfileCardList } from '@/components/player/card'
 
 const PlayersWidgetModal = async () => {
