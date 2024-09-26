@@ -41,6 +41,7 @@ model GameSession {
   sessionId String @unique
 
   timer Int
+  flippedCards Json
   cards Json
 
   status GameStatus

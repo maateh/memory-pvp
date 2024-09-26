@@ -107,6 +107,7 @@ export const sessionRouter = createTRPCRouter({
           sessionId: uuidv4(),
           status: 'RUNNING',
           timer: 0,
+          flippedCards: [],
           cards: getMockCards(tableSize), // TODO: generate cards
           owner: {
             connect: {
@@ -153,6 +154,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           tableSize, startedAt, timer, cards,
+          flippedCards: [],
           sessionId: uuidv4(),
           status: 'OFFLINE',
           type: 'CASUAL',
