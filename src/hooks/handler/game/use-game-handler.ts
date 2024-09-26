@@ -5,16 +5,55 @@ import { redirect } from "next/navigation"
 import { useSessionStore } from "@/hooks/store/use-session-store"
 
 type UseGameHandlerProps = {
-  onIngameUpdate: () => void
-  onFinish: () => void
+  onIngameUpdate?: () => void
+  onHeartbeat?: () => Promise<void>
+  onBeforeUnload?: (event: BeforeUnloadEvent) => Promise<void>
+  onFinish: () => Promise<void> | void | never
 }
 
-export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps) => {
+type UseGameHandlerReturn = {
+  clientSession: ClientGameSession
+  handleCardFlip: (clickedCard: MemoryCard) => void
+}
+
+/**
+ * Custom hook to manage game session handling, including card flips,
+ * sending heartbeats, session updates, and game completion.
+ * 
+ * @param {UseGameHandlerProps} props - The props containing callbacks for session updates, heartbeat, before unload, and finish events.
+ * 
+ * - `onIngameUpdate`: Called for updates during the game.
+ * - `onHeartbeat`: Periodically sends a heartbeat to keep the session alive in online 'Single' mode.
+ * - `onBeforeUnload`: Called before the window is closed, potentially for session saving.
+ * - `onFinish`: Called when the game ends, i.e., all cards are matched.
+ * 
+ * This hook provides:
+ * 
+ * 1. **Card flipping logic** (`handleCardFlip`):
+ *    - Flips cards and handles matching, updating the session accordingly.
+ * 
+ * 2. **Heartbeat listener**:
+ *    - Sends periodic heartbeats (every 5 seconds) to keep the session alive if `onHeartbeat` is provided.
+ * 
+ * 3. **Session management**:
+ *    - Registers the session, tracks game progress, and triggers the finish logic when the game is over.
+ * 
+ * @returns {UseGameHandlerReturn} - An object containing:
+ * - `clientSession`: The current session data.
+ * - `handleCardFlip`: Function to handle card flipping logic.
+ */
+export const useGameHandler = ({
+  onIngameUpdate,
+  onHeartbeat,
+  onBeforeUnload,
+  onFinish
+}: UseGameHandlerProps): UseGameHandlerReturn => {
   /** Check if there is any registered session. */
   const clientSession = useSessionStore((state) => state.session)
   if (!clientSession) redirect('/game/setup')
 
   /** Initialize required states and handlers for the game. */
+  const shouldStore = useSessionStore((state) => state.shouldStore)
   const updateCards = useSessionStore((state) => state.updateCards)
   const updateFlippedCards = useSessionStore((state) => state.updateFlippedCards)
   const clearFlippedCards = useSessionStore((state) => state.clearFlippedCards)
@@ -68,6 +107,37 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
   }
 
   /**
+   * Create a heartbeat listener to keep the game session alive.
+   * 
+   * - It's useful in online 'Single' mode to ensure that the
+   *   session remains active by sending periodic heartbeats.
+   * 
+   * - The `heartbeat` function triggers the `onHeartbeat` callback
+   *   every 5 seconds, but only if `shouldStore` is true.
+   * 
+   * - Automatically starts the heartbeat listener when
+   *   `onHeartbeat` is provided and cleans up the interval
+   *   when the component unmounts or dependencies change.
+   */
+  const heartbeat = useCallback(() => {
+    if (onHeartbeat && shouldStore) {
+      onHeartbeat()
+    }
+  }, [shouldStore, onHeartbeat])
+
+  useEffect(() => {
+    if (!onHeartbeat) return
+
+    const heartbeatInterval = setInterval(() => {
+      heartbeat()
+    }, 5000)
+
+    return () => {
+      clearInterval(heartbeatInterval)
+    }
+  }, [heartbeat, onHeartbeat])
+
+  /**
    * Handles session updates and game completion.
    * 
    * - Perform updates if the session has not yet ended.
@@ -78,17 +148,25 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
    * - Executes session finish callback if all cards are matched (game ended).
    */
   useEffect(() => {
+    if (onBeforeUnload) {
+      window.addEventListener('beforeunload', onBeforeUnload)
+    }
+
     const isOver = clientSession.cards.every(card => card.isMatched)
     if (!isOver) {
-      onIngameUpdate()
+      onIngameUpdate?.()
       return
     }
 
     onFinish()
     return () => {
+      if (onBeforeUnload) {
+        window.removeEventListener('beforeunload', onBeforeUnload)
+      }
+
       unregisterSession()
     }
-  }, [clientSession, unregisterSession, onIngameUpdate, onFinish])
+  }, [clientSession, unregisterSession, onIngameUpdate, onBeforeUnload, onFinish])
 
   return { clientSession, handleCardFlip }
 }
