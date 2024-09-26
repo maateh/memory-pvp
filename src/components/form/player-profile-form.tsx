@@ -3,7 +3,7 @@
 import { z } from "zod"
 
 // lib
-import { playerProfileCreateSchema } from "@/lib/validations"
+import { playerProfileCreateSchema } from "@/lib/validations/player-profile-schema"
 
 // icons
 import { Check, Loader2 } from "lucide-react"

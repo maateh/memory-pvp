@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 
-import type { DefaultValues, UseFormReturn } from "react-hook-form"
+import type { DefaultValues } from "react-hook-form"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -11,7 +11,7 @@ import { useClerk } from "@clerk/nextjs"
 import { gameModes, gameTypes, tableSizes } from "@/constants/game"
 
 // validations
-import { setupGameSchema } from "@/lib/validations"
+import { setupGameSchema } from "@/lib/validations/game-schema"
 
 // utils
 import { cn } from "@/lib/utils"

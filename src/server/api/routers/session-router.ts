@@ -6,7 +6,7 @@ import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
 // validations
-import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations"
+import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations/game-schema"
 import { getMockCards } from "@/lib/utils/game"
 
 export const sessionRouter = createTRPCRouter({

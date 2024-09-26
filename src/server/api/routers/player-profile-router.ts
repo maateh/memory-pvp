@@ -6,7 +6,7 @@ import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
-import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations"
+import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations/player-profile-schema"
 
 export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
