@@ -47,8 +47,15 @@ export const useSaveOfflineSessionMutation = () => {
     try {
       await saveOfflineSession.mutateAsync({
         ...offlineSession,
-        cards: offlineSession.cards.map((card) => ({ ...card, isMatched: true, isFlipped: true })),
         playerTag,
+        type: "CASUAL",
+        mode: "SINGLE",
+        status: "OFFLINE",
+        cards: offlineSession.cards.map((card) => ({
+          ...card,
+          isMatched: true,
+          isFlipped: true
+        }))
       })
     } catch (err) {
       logError(err)
