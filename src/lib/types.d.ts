@@ -18,6 +18,7 @@ declare global {
     continuedAt?: Date | null
     timer: number
     flips: number
+    flippedCards: MemoryCard[]
     cards: MemoryCard[]
   }
 

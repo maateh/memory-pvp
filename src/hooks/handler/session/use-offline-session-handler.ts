@@ -62,6 +62,7 @@ export const useOfflineSessionHandler = () => {
       startedAt: new Date(),
       timer: 0,
       flips: 0,
+      flippedCards: [],
       cards: getMockCards(values.tableSize)
     }
 

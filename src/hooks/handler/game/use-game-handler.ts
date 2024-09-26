@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import { redirect } from "next/navigation"
 
 // hooks
@@ -15,10 +15,9 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
   if (!clientSession) redirect('/game/setup')
 
   /** Initialize required states and handlers for the game. */
-  const [flippedCards, setFlippedCards] = useState<MemoryCard[]>([])
-
   const updateCards = useSessionStore((state) => state.updateCards)
-  const increaseFlips = useSessionStore((state) => state.increaseFlips)
+  const updateFlippedCards = useSessionStore((state) => state.updateFlippedCards)
+  const clearFlippedCards = useSessionStore((state) => state.clearFlippedCards)
   const unregisterSession = useSessionStore((state) => state.unregister)
 
   /**
@@ -31,16 +30,15 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
    * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
    */
   const handleCardFlip = (clickedCard: MemoryCard) => {
-    if (flippedCards.length === 2 || clickedCard.isMatched) return
-    increaseFlips()
+    if (clientSession.flippedCards.length === 2 || clickedCard.isMatched) return
     
     let updatedCards = clientSession.cards.map((card) =>
       card.id === clickedCard.id ? { ...card, isFlipped: true } : card
     )
     updateCards(updatedCards)
 
-    const flipped = [...flippedCards, clickedCard]
-    setFlippedCards(flipped)
+    const flipped = [...clientSession.flippedCards, clickedCard]
+    updateFlippedCards(clickedCard)
 
     if (flipped.length < 2) return
 
@@ -53,7 +51,7 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
         )
 
         updateCards(updatedCards)
-        setFlippedCards([])
+        clearFlippedCards()
       }, 1000)
     } else {
       setTimeout(() => {
@@ -64,15 +62,20 @@ export const useGameHandler = ({ onIngameUpdate, onFinish }: UseGameHandlerProps
         )
 
         updateCards(updatedCards)
-        setFlippedCards([])
+        clearFlippedCards()
       }, 1000)
     }
   }
 
   /**
-   * Handle session updates and game completion.
+   * Handles session updates and game completion.
    * 
-   * - Ends the game if all cards are matched.
+   * - Perform updates if the session has not yet ended.
+   * 
+   * - Captures browser tab/window closing events and executes
+   *   a (possibly) session saving callback.
+   * 
+   * - Executes session finish callback if all cards are matched (game ended).
    */
   useEffect(() => {
     const isOver = clientSession.cards.every(card => card.isMatched)

@@ -2,9 +2,11 @@ import { create } from "zustand"
 
 type SessionStore = {
   session: ClientGameSession | null
+  shouldStore: boolean | null
   register: (session: ClientGameSession) => void
   unregister: () => void
-  increaseFlips: () => void
+  updateFlippedCards: (clickedCard: MemoryCard) => void
+  clearFlippedCards: () => void
   updateCards: (cards: MemoryCard[]) => void
 }
 
@@ -16,17 +18,29 @@ type SessionStore = {
  */
 export const useSessionStore = create<SessionStore>((set) => ({
   session: null,
+  shouldStore: false,
   register: (session) => set({ session }),
   unregister: () => set({ session: null }),
 
-  increaseFlips: () => {
+  updateFlippedCards: (clickedCard) => {
     set((state) => {
       if (state.session === null) return state
 
       const session = {
         ...state.session,
+        flippedCards: [...state.session.flippedCards, clickedCard],
         flips: state.session.flips + 1
       }
+
+      return { session }
+    })
+  },
+
+  clearFlippedCards: () => {
+    set((state) => {
+      if (state.session === null) return state
+
+      const session = { ...state.session, flippedCards: [] }
 
       return { session }
     })
@@ -38,7 +52,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
       const session = { ...state.session, cards }
       
-      return { session }
+      return { session, shouldStore: true }
     })
   }
 }))
