@@ -5,8 +5,16 @@ import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
+// redis
+import { redis } from "@/lib/redis"
+
 // validations
-import { saveOfflineGameSchema, setupGameSchema, updateGameStatusSchema } from "@/lib/validations/game-schema"
+import {
+  clientSessionSchema,
+  saveOfflineGameSchema,
+  setupGameSchema,
+  updateGameStatusSchema
+} from "@/lib/validations/game-schema"
 import { getMockCards } from "@/lib/utils/game"
 
 export const sessionRouter = createTRPCRouter({
@@ -117,23 +125,40 @@ export const sessionRouter = createTRPCRouter({
         }
       })
     }),
+
+  store: protectedGameProcedure
+    .input(clientSessionSchema)
+    .mutation(async ({ ctx, input: session }) => {
+      return await redis.set(`session:${ctx.activeSession.sessionId}`, session, { ex: 300 })
+    }),
+
+  save: protectedGameProcedure
+    .input(clientSessionSchema)
+    .mutation(async ({ ctx, input: session }) => {
+      return await ctx.db.gameSession.create({
+        data: {
+          ...session,
+          sessionId: uuidv4(),
+          result: {
+            create: {
+              flips: session.flips,
+              score: 0 // TODO: implement scoring system
+            }
+          },
+          owner: {
+            connect: { id: ctx.playerProfile.id }
+          }
+        }
+      })
+    }),
   
   saveOffline: gameProcedure
     .input(saveOfflineGameSchema)
-    .mutation(async ({ ctx, input }) => {
-      const {
-        playerTag,
-        tableSize,
-        startedAt,
-        timer,
-        flips,
-        cards
-      } = input
-
+    .mutation(async ({ ctx, input: session }) => {
       const playerProfile = await ctx.db.playerProfile.findFirst({
         where: {
           userId: ctx.user.id,
-          tag: playerTag
+          tag: session.playerTag
         },
         select: {
           id: true
@@ -153,15 +178,11 @@ export const sessionRouter = createTRPCRouter({
 
       return await ctx.db.gameSession.create({
         data: {
-          tableSize, startedAt, timer, cards,
-          flippedCards: [],
+          ...session,
           sessionId: uuidv4(),
-          status: 'OFFLINE',
-          type: 'CASUAL',
-          mode: 'SINGLE',
           result: {
             create: {
-              flips,
+              flips: session.flips,
               score: 0 // TODO: think it over -> make it optional or is it okay this way?
             }
           },
@@ -173,19 +194,19 @@ export const sessionRouter = createTRPCRouter({
     }),
 
   updateStatus: protectedGameProcedure
-  .input(updateGameStatusSchema)
-  .mutation(async ({ ctx, input: status }) => {
-    return await ctx.db.gameSession.update({
-      where: {
-        id: ctx.activeSession.id,
-        status: {
-          equals: 'RUNNING'
+    .input(updateGameStatusSchema)
+    .mutation(async ({ ctx, input: status }) => {
+      return await ctx.db.gameSession.update({
+        where: {
+          id: ctx.activeSession.id,
+          status: {
+            equals: 'RUNNING'
+          }
+        },
+        data: {
+          status,
+          finishedAt: new Date()
         }
-      },
-      data: {
-        status,
-        finishedAt: new Date()
-      }
+      })
     })
-  }),
 })
