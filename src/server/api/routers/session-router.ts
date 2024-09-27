@@ -176,6 +176,9 @@ export const sessionRouter = createTRPCRouter({
         },
         data: {
           ...session,
+          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED'
+            ? new Date()
+            : null,
           result: {
             update: session.result
           },
@@ -215,6 +218,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session,
+          closedAt: new Date(),
           result: {
             create: session.result
           },
@@ -237,7 +241,7 @@ export const sessionRouter = createTRPCRouter({
         },
         data: {
           status,
-          finishedAt: new Date()
+          closedAt: new Date()
         }
       })
     })

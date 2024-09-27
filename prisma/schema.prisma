@@ -63,7 +63,7 @@ model GameSession {
   guestResultId String? @db.ObjectId
 
   continuedAt DateTime?
-  finishedAt  DateTime?
+  closedAt  DateTime?
 
   startedAt DateTime @default(now())
   updatedAt DateTime @updatedAt
