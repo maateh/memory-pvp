@@ -84,6 +84,26 @@ export const useGameHandler = ({
   }
 
   /**
+   * Initialize callbacks. It needs to be done this way (by refs)
+   * to prevent 'useEffects' from retriggering every time
+   * when any of these callbacks change.
+   * 
+   * Reason: Callbacks usually uses 'clientSession' which would lead
+   * to retrigger 'useEffect' unnecessarily in most of the case.
+   */
+  const heartbeatRef = useRef(onHeartbeat)
+  const ingameUpdateRef = useRef(onIngameUpdate)
+  const beforeUnloadRef = useRef(onBeforeUnload)
+  const finishRef = useRef(onFinish)
+
+  useEffect(() => {
+    heartbeatRef.current = onHeartbeat
+    ingameUpdateRef.current = onIngameUpdate
+    beforeUnloadRef.current = onBeforeUnload
+    finishRef.current = onFinish
+  }, [onHeartbeat, onIngameUpdate, onBeforeUnload, onFinish])
+
+  /**
    * Create a heartbeat listener to keep the game session alive.
    * 
    * - Heartbeat listener automatically starts when `onHeartbeat` is
@@ -92,18 +112,7 @@ export const useGameHandler = ({
    * 
    * - It's useful in online 'Single' mode to ensure that the
    *   session remains active by sending periodic heartbeats.
-   * 
-   * - Note: The first 'useEffect' is necessary because it keeps
-   *   the 'heartbeatRef' up to date. Using 'heartbeatRef' makes
-   *   it possible to prevent 'useEffect' from retriggering
-   *   every time when 'onHeartbeat' changes.
    */
-  const heartbeatRef = useRef(onHeartbeat)
-
-  useEffect(() => {
-    heartbeatRef.current = onHeartbeat
-  }, [onHeartbeat])
-
   useEffect(() => {
     if (!heartbeatRef.current || !shouldStore) return
 
@@ -119,33 +128,34 @@ export const useGameHandler = ({
   /**
    * Handles session updates and game completion.
    * 
+   * - Executes session finish callback if all cards are matched (game ended).
+   * 
    * - Perform updates if the session has not yet ended.
    * 
    * - Captures browser tab/window closing events and executes
    *   a (possibly) session saving callback.
-   * 
-   * - Executes session finish callback if all cards are matched (game ended).
    */
   useEffect(() => {
-    if (onBeforeUnload) {
-      window.addEventListener('beforeunload', onBeforeUnload)
-    }
-
     const isOver = clientSession.cards.every(card => card.isMatched)
-    if (!isOver) {
-      onIngameUpdate?.()
-      return
+    if (isOver) {
+      finishRef.current()
+      return () => unregisterSession()
     }
 
-    onFinish()
+    if (ingameUpdateRef.current) {
+      ingameUpdateRef.current()
+    }
+
+    if (beforeUnloadRef.current) {
+      window.addEventListener('beforeunload', beforeUnloadRef.current)
+    }
+
     return () => {
-      if (onBeforeUnload) {
-        window.removeEventListener('beforeunload', onBeforeUnload)
+      if (beforeUnloadRef.current) {
+        window.removeEventListener('beforeunload', beforeUnloadRef.current)
       }
-
-      unregisterSession()
     }
-  }, [clientSession, unregisterSession, onIngameUpdate, onBeforeUnload, onFinish])
+  }, [clientSession, unregisterSession])
 
   return { clientSession, handleCardFlip }
 }
