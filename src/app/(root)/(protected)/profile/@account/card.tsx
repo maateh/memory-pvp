@@ -43,8 +43,8 @@ const AccountWidgetCard = ({ user }: AccountWidgetCardProps) => {
               <Image
                 src={user.imageUrl}
                 alt="user avatar"
-                sizes="32px"
-                fill
+                height={32}
+                width={32}
               />
             </div>
           )}

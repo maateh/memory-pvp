@@ -29,7 +29,8 @@ const MemoryCard = ({ card, onClick }: MemoryCardProps) => {
             <Image
               src={card.imageUrl}
               alt="card image"
-              fill
+              height={256}
+              width={256}
             />
           </CardContent>
         </Card>
