@@ -52,8 +52,10 @@ export const useSessionStore = create<SessionStore>((set) => ({
       session = {
         ...session,
         cards,
-        flips: state.session.flips + 1,
-        flippedCards: [...session.flippedCards, clickedCard]
+        flippedCards: [...session.flippedCards, clickedCard],
+        result: {
+          flips: (state.session.result?.flips || 0) + 1,
+        }
       }
 
       return { session }

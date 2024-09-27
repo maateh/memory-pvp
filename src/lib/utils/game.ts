@@ -11,8 +11,7 @@ export function parseSchemaToClientSession(session: GameSessionWithResult): Clie
   return {
     ...session,
     cards: session.cards as MemoryCard[],
-    flippedCards: session.flippedCards as MemoryCard[],
-    flips: session.result?.flips || 0
+    flippedCards: session.flippedCards as MemoryCard[]
   }
 }
 

@@ -10,24 +10,31 @@ declare global {
     isMatched: boolean
   }
 
-  declare type GameSessionWithResult = GameSession & {
-    result: Result | null
-  }
+  declare type ClientGameSession = {
+    sessionId: string
 
-  declare type UnsignedClientGameSession = {
-    tableSize: TableSize
-    startedAt: Date
-    continuedAt?: Date | null
-    timer: number
-    flips: number
-    flippedCards: MemoryCard[]
-    cards: MemoryCard[]
-  }
-
-  declare type ClientGameSession = UnsignedClientGameSession & {
     type: GameType
     mode: GameMode
+    tableSize: TableSize
     status: GameStatus
+
+    timer: number
+    startedAt: Date
+    continuedAt?: Date | null
+
+    flippedCards: MemoryCard[]
+    cards: MemoryCard[]
+    result: {
+      flips: number
+      score?: number | null
+    }
+  }
+
+  declare type UnsignedClientGameSession = Omit<ClientGameSession, 'type' | 'mode' | 'status'>
+
+  /** Prisma schemas */
+  declare type GameSessionWithResult = GameSession & {
+    result: Result
   }
 
   declare type PlayerProfileWithUserAvatar = PlayerProfile & {

@@ -59,7 +59,7 @@ export const tableSizeMap = {
   [TableSize.LARGE]: 32
 }
 
-export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClientGameSession> = {
+export const offlineSessionMetadata: Pick<ClientGameSession, 'type' | 'mode' | 'status'> = {
   type: 'CASUAL',
   mode: 'SINGLE',
   status: 'OFFLINE'

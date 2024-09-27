@@ -25,7 +25,7 @@ const SessionStats = ({ session, withTitle = false }: SessionStatsProps) => {
     {
       Icon: ScanEye,
       label: "Card flips",
-      data: session.flips + ' flips'
+      data: (session.result?.flips || 0) + ' flips'
     }
   ]), [session])
 

@@ -32,7 +32,7 @@ export const useStartSessionMutation = () => {
 
   const startSession = api.session.create.useMutation({
     onSuccess: (session) => {
-      const clientSession = parseSchemaToClientSession({ ...session, result: null })
+      const clientSession = parseSchemaToClientSession(session)
       registerSession(clientSession)
 
       router.replace('/game')

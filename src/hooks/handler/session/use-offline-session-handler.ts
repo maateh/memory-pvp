@@ -1,5 +1,6 @@
-import { useRouter } from "next/navigation"
+import { v4 as uuidv4 } from "uuid"
 
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
@@ -58,12 +59,15 @@ export const useOfflineSessionHandler = () => {
     }
 
     const offlineSession: UnsignedClientGameSession = {
+      sessionId: uuidv4(),
       tableSize: values.tableSize,
       startedAt: new Date(),
       timer: 0,
-      flips: 0,
       flippedCards: [],
-      cards: getMockCards(values.tableSize)
+      cards: getMockCards(values.tableSize),
+      result: {
+        flips: 0
+      }
     }
 
     saveSessionToStorage(offlineSession)
