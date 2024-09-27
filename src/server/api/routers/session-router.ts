@@ -20,7 +20,7 @@ export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
     .query(async ({ ctx }) => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
-        `session:${ctx.activeSession.id}`
+        `session:${ctx.activeSession.sessionId}`
       )
 
       if (!clientSession) {
@@ -68,25 +68,34 @@ export const sessionRouter = createTRPCRouter({
     .input(setupGameSchema)
     .mutation(async ({ ctx, input }) => {
       const { type, mode, tableSize } = input
+      
 
-      const activeSession = await ctx.db.gameSession.findFirst({
+      let activeSession = await ctx.db.gameSession.findFirst({
         where: {
           status: 'RUNNING',
           OR: [
             { ownerId: ctx.playerProfile.id },
             { guestId: ctx.playerProfile.id }
           ]
+        },
+        include: {
+          result: true
         }
       })
 
+      
       if (activeSession) {
+        const clientSession: ClientGameSession | null = await ctx.redis.get(
+          `session:${activeSession.sessionId}`
+        )
+
         throw new TRPCError({
           code: 'CONFLICT',
           cause: {
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
             description: 'You cannot participate in two game sessions at once with the same player.',
-            data: activeSession
+            data: clientSession || parseSchemaToClientSession(activeSession)
           } as TRPCApiError
         })
       }

@@ -7,10 +7,11 @@ import type { TableSize } from "@prisma/client"
 // constants
 import { baseCardUrl, tableSizeMap } from "@/constants/game"
 
-export function parseSchemaToClientSession(session: ActiveGameSession): ClientGameSession {
+export function parseSchemaToClientSession(session: GameSessionWithResult): ClientGameSession {
   return {
     ...session,
     cards: session.cards as MemoryCard[],
+    flippedCards: session.flippedCards as MemoryCard[],
     flips: session.result?.flips || 0
   }
 }

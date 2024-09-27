@@ -1,5 +1,5 @@
 import type { AppRouter } from "@/server/api/_app"
-import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
+import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, Result, TableSize } from "@prisma/client"
 
 declare global {
   declare type MemoryCard = {
@@ -10,7 +10,9 @@ declare global {
     isMatched: boolean
   }
 
-  declare type ActiveGameSession = Awaited<ReturnType<AppRouter['game']['getActive']>>
+  declare type GameSessionWithResult = GameSession & {
+    result: Result | null
+  }
 
   declare type UnsignedClientGameSession = {
     tableSize: TableSize

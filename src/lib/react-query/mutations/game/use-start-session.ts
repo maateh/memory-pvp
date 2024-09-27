@@ -47,22 +47,19 @@ export const useStartSessionMutation = () => {
         setCache({
           forceStart: () => onSubmit(setupForm!, true),
           continuePrevious: () => {
-            const session = err.shape?.cause.data as ActiveGameSession
-            if (!session) {
+            const clientSession = err.shape?.cause.data as ClientGameSession
+            if (!clientSession) {
               toast.warning("Active session not found.", {
                 description: "Sorry, but we couldn't load your previous session data. Please start a new game instead."
               })
               return
             }
 
-            const clientSession = parseSchemaToClientSession(session)
             registerSession(clientSession)
-
             router.replace('/game')
 
-            const { type, mode, tableSize } = session
             toast.info('Game session continued!', {
-              description: `${type} | ${mode} | ${tableSize}`
+              description: `${clientSession.type} | ${clientSession.mode} | ${clientSession.tableSize}`
             })
           }
         })
