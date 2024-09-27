@@ -168,6 +168,8 @@ export const sessionRouter = createTRPCRouter({
   save: protectedGameProcedure
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
+      await ctx.redis.del(`session:${session.sessionId}`)
+
       return await ctx.db.gameSession.update({
         where: {
           sessionId: session.sessionId
