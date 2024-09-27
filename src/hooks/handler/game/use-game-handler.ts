@@ -54,9 +54,9 @@ export const useGameHandler = ({
 
   /** Initialize required states and handlers for the game. */
   const shouldStore = useSessionStore((state) => state.shouldStore)
-  const updateCards = useSessionStore((state) => state.updateCards)
-  const updateFlippedCards = useSessionStore((state) => state.updateFlippedCards)
-  const clearFlippedCards = useSessionStore((state) => state.clearFlippedCards)
+  const handleFlipUpdate = useSessionStore((state) => state.handleFlipUpdate)
+  const handleMatchUpdate = useSessionStore((state) => state.handleMatchUpdate)
+  const handleUnmatchUpdate = useSessionStore((state) => state.handleUnmatchUpdate)
   const unregisterSession = useSessionStore((state) => state.unregister)
 
   /**
@@ -70,39 +70,16 @@ export const useGameHandler = ({
    */
   const handleCardFlip = (clickedCard: MemoryCard) => {
     if (clientSession.flippedCards.length === 2 || clickedCard.isMatched) return
-    
-    let updatedCards = clientSession.cards.map((card) =>
-      card.id === clickedCard.id ? { ...card, isFlipped: true } : card
-    )
-    updateCards(updatedCards)
 
     const flipped = [...clientSession.flippedCards, clickedCard]
-    updateFlippedCards(clickedCard)
+    handleFlipUpdate(clickedCard)
 
     if (flipped.length < 2) return
 
     if (flipped[0].key === flipped[1].key) {
-      setTimeout(() => {
-        updatedCards = updatedCards.map(
-          (card) => card.key === flipped[0].key
-            ? { ...card, isMatched: true }
-            : card
-        )
-
-        updateCards(updatedCards)
-        clearFlippedCards()
-      }, 1000)
+      handleMatchUpdate()
     } else {
-      setTimeout(() => {
-        updatedCards = updatedCards.map((card) =>
-          flipped.some(fc => fc.id === card.id)
-            ? { ...card, isFlipped: false }
-            : card
-        )
-
-        updateCards(updatedCards)
-        clearFlippedCards()
-      }, 1000)
+      handleUnmatchUpdate()
     }
   }
 

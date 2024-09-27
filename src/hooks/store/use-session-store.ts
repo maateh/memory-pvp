@@ -2,12 +2,12 @@ import { create } from "zustand"
 
 type SessionStore = {
   session: ClientGameSession | null
-  shouldStore: boolean | null
+  shouldStore: boolean
   register: (session: ClientGameSession) => void
   unregister: () => void
-  updateFlippedCards: (clickedCard: MemoryCard) => void
-  clearFlippedCards: () => void
-  updateCards: (cards: MemoryCard[]) => void
+  handleFlipUpdate: (clickedCard: MemoryCard) => void
+  handleMatchUpdate: () => void
+  handleUnmatchUpdate: () => void
 }
 
 /**
@@ -22,37 +22,71 @@ export const useSessionStore = create<SessionStore>((set) => ({
   register: (session) => set({ session }),
   unregister: () => set({ session: null }),
 
-  updateFlippedCards: (clickedCard) => {
+  handleFlipUpdate: (clickedCard) => {
     set((state) => {
       if (state.session === null) return state
+      let session = state.session
 
-      const session = {
-        ...state.session,
-        flippedCards: [...state.session.flippedCards, clickedCard],
-        flips: state.session.flips + 1
+      const cards = session.cards.map(
+        (card) => card.id === clickedCard.id
+          ? { ...card, isFlipped: true }
+          : card
+      )
+
+      session = {
+        ...session,
+        cards,
+        flips: state.session.flips + 1,
+        flippedCards: [...session.flippedCards, clickedCard]
       }
 
       return { session }
     })
   },
 
-  clearFlippedCards: () => {
-    set((state) => {
-      if (state.session === null) return state
+  handleMatchUpdate: () => {
+    setTimeout(() => {
+      set((state) => {
+        if (state.session === null) return state
+        let session = state.session
 
-      const session = { ...state.session, flippedCards: [] }
+        const cards = state.session.cards.map(
+          (card) => card.key === session.flippedCards[0].key
+            ? { ...card, isMatched: true }
+            : card
+        )
 
-      return { session }
-    })
+        session = {
+          ...session,
+          cards,
+          flippedCards: []
+        }
+
+        return { session, shouldStore: true }
+      })
+    }, 1000)
   },
 
-  updateCards: (cards) => {
-    set((state) => {
-      if (state.session === null) return state
+  handleUnmatchUpdate: () => {
+    setTimeout(() => {
+      set((state) => {
+        if (state.session === null) return state
+        let session = state.session
 
-      const session = { ...state.session, cards }
-      
-      return { session, shouldStore: true }
-    })
+        const cards = session.cards.map(
+          (card) => session.flippedCards.some(fc => fc.id === card.id)
+            ? { ...card, isFlipped: false }
+            : card
+        )
+
+        session = {
+          ...session,
+          cards,
+          flippedCards: []
+        }
+
+        return { session }
+      })
+    }, 1000)
   }
 }))
