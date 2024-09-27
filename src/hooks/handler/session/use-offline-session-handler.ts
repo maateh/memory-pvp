@@ -4,7 +4,7 @@ import { toast } from "sonner"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { SetupGameFormValues } from "@/components/form/setup-game-form"
+import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // constants

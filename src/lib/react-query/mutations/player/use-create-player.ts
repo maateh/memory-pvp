@@ -7,7 +7,7 @@ import { api } from "@/trpc/client"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { PlayerProfileFormValues } from "@/components/form/player-profile-form"
+import type { PlayerProfileFormValues } from "@/components/player/player-profile-form"
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
