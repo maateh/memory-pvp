@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { redirect } from "next/navigation"
 
 // hooks
@@ -86,33 +86,35 @@ export const useGameHandler = ({
   /**
    * Create a heartbeat listener to keep the game session alive.
    * 
+   * - Heartbeat listener automatically starts when `onHeartbeat` is
+   *   provided and 'shouldStore=[true]'. Also, it cleans up the
+   *   interval when the component unmounts or dependencies change.
+   * 
    * - It's useful in online 'Single' mode to ensure that the
    *   session remains active by sending periodic heartbeats.
    * 
-   * - The `heartbeat` function triggers the `onHeartbeat` callback
-   *   every 5 seconds, but only if `shouldStore` is true.
-   * 
-   * - Automatically starts the heartbeat listener when
-   *   `onHeartbeat` is provided and cleans up the interval
-   *   when the component unmounts or dependencies change.
+   * - Note: The first 'useEffect' is necessary because it keeps
+   *   the 'heartbeatRef' up to date. Using 'heartbeatRef' makes
+   *   it possible to prevent 'useEffect' from retriggering
+   *   every time when 'onHeartbeat' changes.
    */
-  const heartbeat = useCallback(() => {
-    if (onHeartbeat && shouldStore) {
-      onHeartbeat()
-    }
-  }, [shouldStore, onHeartbeat])
+  const heartbeatRef = useRef(onHeartbeat)
 
   useEffect(() => {
-    if (!onHeartbeat) return
+    heartbeatRef.current = onHeartbeat
+  }, [onHeartbeat])
+
+  useEffect(() => {
+    if (!heartbeatRef.current || !shouldStore) return
 
     const heartbeatInterval = setInterval(() => {
-      heartbeat()
+      heartbeatRef.current?.()
     }, 5000)
 
     return () => {
       clearInterval(heartbeatInterval)
     }
-  }, [heartbeat, onHeartbeat])
+  }, [shouldStore])
 
   /**
    * Handles session updates and game completion.
