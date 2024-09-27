@@ -5,9 +5,6 @@ import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
 
-// redis
-import { redis } from "@/lib/redis"
-
 // validations
 import {
   clientSessionSchema,
@@ -15,19 +12,31 @@ import {
   setupGameSchema,
   updateGameStatusSchema
 } from "@/lib/validations/game-schema"
-import { getMockCards } from "@/lib/utils/game"
+
+// utils
+import { getMockCards, parseSchemaToClientSession } from "@/lib/utils/game"
 
 export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
     .query(async ({ ctx }) => {
-      return await ctx.db.gameSession.findUnique({
-        where: {
-          id: ctx.activeSession.id
-        },
-        include: {
-          result: true 
-        }
-      })
+      let clientSession: ClientGameSession | null = await ctx.redis.get(
+        `session:${ctx.activeSession.id}`
+      )
+
+      if (!clientSession) {
+        const session = await ctx.db.gameSession.findUnique({
+          where: {
+            id: ctx.activeSession.id
+          },
+          include: {
+            result: true 
+          }
+        })
+
+        clientSession = parseSchemaToClientSession(session)
+      }
+
+      return clientSession
     }),
   
   getPlayers: protectedGameProcedure
@@ -129,7 +138,11 @@ export const sessionRouter = createTRPCRouter({
   store: protectedGameProcedure
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
-      return await redis.set(`session:${ctx.activeSession.sessionId}`, session, { ex: 300 })
+      return await ctx.redis.set(
+        `session:${ctx.activeSession.sessionId}`,
+        session,
+        { ex: 300 }
+      )
     }),
 
   save: protectedGameProcedure

@@ -12,9 +12,12 @@ import { TRPCApiError } from '@/trpc/error'
 // db
 import { db } from '@/server/db'
 
+// redis
+import { redis } from "@/lib/redis"
+
 export const createTRPCContext = cache(
   async (opts: { req: Request }) => {
-    return { db, ...opts }
+    return { db, redis, ...opts }
   }
 )
 
