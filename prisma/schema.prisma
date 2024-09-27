@@ -40,9 +40,9 @@ model GameSession {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   sessionId String @unique
 
-  timer Int
+  timer        Int
   flippedCards Json
-  cards Json
+  cards        Json
 
   status GameStatus
 
@@ -50,31 +50,33 @@ model GameSession {
   mode      GameMode
   tableSize TableSize
 
-  result      Result? @relation("OwnerResult")
-  guestResult Result? @relation("GuestResult")
-
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String        @db.ObjectId
+
+  result   Result @relation("OwnerResult", fields: [resultId], references: [id], onDelete: Cascade)
+  resultId String @unique @db.ObjectId
 
   guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: Cascade)
   guestId String?        @db.ObjectId
 
+  guestResult   Result? @relation("GuestResult", fields: [guestResultId], references: [id], onDelete: Cascade)
+  guestResultId String? @unique @db.ObjectId
+
   continuedAt DateTime?
   finishedAt  DateTime?
 
-  startedAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Result {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  score Int
-  flips Int
+  flips Int  @default(0)
+  score Int?
 
-  session      GameSession @relation("OwnerResult", fields: [sessionId], references: [id])
-  sessionGuest GameSession @relation("GuestResult", fields: [sessionId], references: [id])
-  sessionId    String      @unique @db.ObjectId
+  session      GameSession? @relation("OwnerResult")
+  sessionGuest GameSession? @relation("GuestResult")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

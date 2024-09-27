@@ -3,7 +3,12 @@ import { v4 as uuidv4 } from "uuid"
 // trpc
 import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
-import { createTRPCRouter, gameProcedure, protectedGameProcedure } from "@/server/api/trpc"
+import {
+  createTRPCRouter,
+  gameProcedure,
+  protectedGameProcedure,
+  protectedProcedure
+} from "@/server/api/trpc"
 
 // validations
 import {
@@ -33,7 +38,7 @@ export const sessionRouter = createTRPCRouter({
           }
         })
 
-        clientSession = parseSchemaToClientSession(session)
+        clientSession = parseSchemaToClientSession(session!)
       }
 
       return clientSession
@@ -139,7 +144,13 @@ export const sessionRouter = createTRPCRouter({
             connect: {
               id: ctx.playerProfile.id
             }
+          },
+          result: {
+            create: {}
           }
+        },
+        include: {
+          result: true
         }
       })
     }),
@@ -157,15 +168,14 @@ export const sessionRouter = createTRPCRouter({
   save: protectedGameProcedure
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
-      return await ctx.db.gameSession.create({
+      return await ctx.db.gameSession.update({
+        where: {
+          sessionId: session.sessionId
+        },
         data: {
           ...session,
-          sessionId: uuidv4(),
           result: {
-            create: {
-              flips: session.flips,
-              score: 0 // TODO: implement scoring system
-            }
+            update: session.result
           },
           owner: {
             connect: { id: ctx.playerProfile.id }
@@ -174,13 +184,15 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
   
-  saveOffline: gameProcedure
+  saveOffline: protectedProcedure
     .input(saveOfflineGameSchema)
-    .mutation(async ({ ctx, input: session }) => {
+    .mutation(async ({ ctx, input }) => {
+      const { playerTag, ...session } = input
+
       const playerProfile = await ctx.db.playerProfile.findFirst({
         where: {
           userId: ctx.user.id,
-          tag: session.playerTag
+          tag: playerTag
         },
         select: {
           id: true
@@ -201,12 +213,8 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session,
-          sessionId: uuidv4(),
           result: {
-            create: {
-              flips: session.flips,
-              score: 0 // TODO: think it over -> make it optional or is it okay this way?
-            }
+            create: session.result
           },
           owner: {
             connect: { id: playerProfile.id }

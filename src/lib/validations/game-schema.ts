@@ -9,7 +9,7 @@ import { tableSizeMap } from "@/constants/game"
 /** Local utils */
 const sessionCardsRefinement = (data: z.infer<typeof clientSessionSchema>, ctx: z.RefinementCtx) => {
   const minFlips = tableSizeMap[data.tableSize]
-  if (data.flips < minFlips) {
+  if ((data.result?.flips || 0) < minFlips) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Card flips must be at least ${minFlips}`,
@@ -27,17 +27,26 @@ export const cardSchema = z.object({
   isMatched: z.coerce.boolean()
 })
 
+export const resultSchema = z.object({
+  flips: z.coerce.number().default(0),
+  score: z.coerce.number().optional().nullable()
+})
+
 export const clientSessionSchema = z.object({
+  sessionId: z.string().uuid(),
+
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
   tableSize: z.nativeEnum(TableSize),
   status: z.nativeEnum(GameStatus),
+
+  timer: z.coerce.number(),
   startedAt: z.coerce.date(),
   continuedAt: z.coerce.date().optional().nullable(),
-  timer: z.coerce.number(),
-  flips: z.coerce.number(),
+  
   flippedCards: z.array(cardSchema),
-  cards: z.array(cardSchema)
+  cards: z.array(cardSchema),
+  result: resultSchema
 })
 
 /** Forms / API validations */
