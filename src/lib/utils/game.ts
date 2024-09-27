@@ -7,6 +7,12 @@ import type { TableSize } from "@prisma/client"
 // constants
 import { baseCardUrl, tableSizeMap } from "@/constants/game"
 
+/**
+ * Parses a server-side `GameSessionWithResult` schema into a client-friendly `ClientGameSession` format.
+ * 
+ * @param {GameSessionWithResult} session - The session data from the server.
+ * @returns {ClientGameSession} - Parsed session with card and flipped card arrays cast to `MemoryCard[]`.
+ */
 export function parseSchemaToClientSession(session: GameSessionWithResult): ClientGameSession {
   return {
     ...session,
@@ -15,6 +21,16 @@ export function parseSchemaToClientSession(session: GameSessionWithResult): Clie
   }
 }
 
+
+/**
+ * Formats a timer value (in milliseconds) into a `HH:MM:SS` or `MM:SS` string.
+ * 
+ * @param {number} timerInMs - The timer value in milliseconds.
+ * @returns {string} - The formatted time string.
+ * 
+ * - Pads hours, minutes, and seconds with leading zeros.
+ * - If hours are present, returns `HH:MM:SS`. Otherwise, returns `MM:SS`.
+ */
 export function formatTimer(timerInMs: number): string {
   const duration = intervalToDuration({
     start: 0,
@@ -31,6 +47,18 @@ export function formatTimer(timerInMs: number): string {
   return `${minutes}:${seconds}`
 }
 
+/**
+ * Generates a shuffled array of memory card pairs based on the given table size.
+ * 
+ * Note: Currently, this is used only for testing purposes.
+ * Received image placeholders might not even exist.
+ * 
+ * @param {TableSize} tableSize - The size of the card table.
+ * @returns {MemoryCard[]} - An array of randomly paired and shuffled memory cards.
+ * 
+ * - Generates unique keys for each card pair, using the 'picsum.photos' API for placeholder images.
+ * - Ensures the card array is shuffled before returning.
+ */
 export function getMockCards(tableSize: TableSize): MemoryCard[] {
   const cardsMap: Record<string, MemoryCard> = {}
 
