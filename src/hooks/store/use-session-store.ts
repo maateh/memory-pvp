@@ -19,7 +19,23 @@ type SessionStore = {
 export const useSessionStore = create<SessionStore>((set) => ({
   session: null,
   shouldStore: false,
-  register: (session) => set({ session }),
+  register: (session) => {
+    /**
+     * Additional check to prevent a possible issue which
+     * may occur if the session store/save happened at
+     * the same time when two cards were flipped.
+     * 
+     * In this case, we have to clear the 'flippedCards'
+     * array because there is no additional event which
+     * would solve this problem (which makes unable to
+     * flip cards at all).
+    */
+    if (session.flippedCards.length === 2) {
+      session.flippedCards = []
+    }
+
+    set({ session })
+  },
   unregister: () => set({ session: null }),
 
   handleFlipUpdate: (clickedCard) => {
