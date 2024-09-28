@@ -56,8 +56,6 @@ export const setupGameSchema = z.object({
   tableSize: z.nativeEnum(TableSize)
 })
 
-export const updateGameStatusSchema = z.enum([GameStatus.ABANDONED, GameStatus.FINISHED])
-
 export const saveOfflineGameSchema = clientSessionSchema.extend({
   playerTag: z.string(),
   type: z.literal(GameType.CASUAL),

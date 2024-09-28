@@ -14,8 +14,7 @@ import {
 import {
   clientSessionSchema,
   saveOfflineGameSchema,
-  setupGameSchema,
-  updateGameStatusSchema
+  setupGameSchema
 } from "@/lib/validations/game-schema"
 
 // utils
@@ -229,9 +228,10 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  updateStatus: protectedGameProcedure
-    .input(updateGameStatusSchema)
-    .mutation(async ({ ctx, input: status }) => {
+  abandon: protectedGameProcedure
+    .mutation(async ({ ctx }) => {
+      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+
       return await ctx.db.gameSession.update({
         where: {
           id: ctx.activeSession.id,
@@ -240,7 +240,7 @@ export const sessionRouter = createTRPCRouter({
           }
         },
         data: {
-          status,
+          status: 'ABANDONED',
           closedAt: new Date()
         }
       })
