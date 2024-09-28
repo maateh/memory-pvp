@@ -13,7 +13,7 @@ import { offlineSessionMetadata } from "@/constants/game"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
-import { getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
+import { clearSessionFromStorage, getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
 
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
@@ -23,6 +23,8 @@ export const useOfflineSessionHandler = () => {
   const router = useRouter()
 
   const registerSession = useSessionStore((state) => state.register)
+  const unregisterSession = useSessionStore((state) => state.unregister)
+
   const setCache = useCacheStore<
     SessionRunningWarningActions,
     CacheStore<SessionRunningWarningActions>['set']
@@ -118,8 +120,18 @@ export const useOfflineSessionHandler = () => {
     router.replace('/game/offline')
   }
 
+  const abandonOfflineSession = () => {
+    clearSessionFromStorage()
+    unregisterSession()
+    
+    toast.info('Your offline session has been abandoned.', {
+      description: 'Abandoned offline sessions are not saved.'
+    })
+  }
+
   return {
     startOfflineSession,
-    continueOfflineSession
+    continueOfflineSession,
+    abandonOfflineSession
   }
 }

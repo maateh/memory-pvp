@@ -72,8 +72,12 @@ export const useStartSessionMutation = () => {
     }
   })
 
-  const abandonSession = api.session.updateStatus.useMutation({
-    onSuccess: () => toast.info('Your previous session has been abandoned.'),
+  const abandonSession = api.session.abandon.useMutation({
+    onSuccess: () => {
+      toast.warning('Your previous session has been abandoned.', {
+        description: 'Session has also been saved, but from now on it cannot continue.'
+      })
+    },
     onError: (err) => {
       handleApiError(err.shape?.cause, 'Failed to abandon session. Please try again.')
     }
@@ -91,13 +95,13 @@ export const useStartSessionMutation = () => {
     }
 
     /**
-     * Form has to be saved because it needs
+     * Form data must be stored because it needs
      * to be accessible from the 'onError' method.
      */
     if (!forceStart) setSetupForm(form)
 
     try {
-      if (forceStart) await abandonSession.mutateAsync('ABANDONED')
+      if (forceStart) await abandonSession.mutateAsync()
       await startSession.mutateAsync(values)
 
       form.reset()
