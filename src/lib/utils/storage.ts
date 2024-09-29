@@ -1,4 +1,5 @@
-import { differenceInSeconds } from "date-fns"
+// utils
+import { calculateSessionTimer } from "@/lib/utils/game"
 
 /** Local storage key for the active offline session. */
 const STORAGE_KEY = "CLIENT_GAME_SESSION"
@@ -29,7 +30,7 @@ export function saveSessionToStorage(session: UnsignedClientGameSession): Unsign
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     ...session,
-    timer: differenceInSeconds(Date.now(), session.continuedAt || session.startedAt) + session.timer
+    timer: calculateSessionTimer(session)
   }))
 }
 

@@ -55,7 +55,10 @@ export const useStartSessionMutation = () => {
               return
             }
 
-            registerSession(clientSession)
+            registerSession({
+              ...clientSession,
+              continuedAt: new Date()
+            })
             router.replace('/game')
 
             toast.info('Game session continued!', {

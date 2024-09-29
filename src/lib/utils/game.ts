@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
-import { intervalToDuration } from "date-fns"
+import { differenceInSeconds, intervalToDuration } from "date-fns"
 
 // types
 import type { TableSize } from "@prisma/client"
@@ -45,6 +45,15 @@ export function formatTimer(timerInMs: number): string {
 
   if (duration.hours) return `${hours}:${minutes}:${seconds}`
   return `${minutes}:${seconds}`
+}
+
+export function calculateSessionTimer({
+  startedAt, continuedAt, timer
+}: Pick<ClientGameSession, 'startedAt' | 'continuedAt' | 'timer'>): number {
+  return differenceInSeconds(
+    Date.now(),
+    continuedAt || startedAt
+  ) + timer
 }
 
 /**

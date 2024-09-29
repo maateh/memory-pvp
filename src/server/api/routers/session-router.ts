@@ -18,7 +18,7 @@ import {
 } from "@/lib/validations/game-schema"
 
 // utils
-import { getMockCards, parseSchemaToClientSession } from "@/lib/utils/game"
+import { calculateSessionTimer, getMockCards, parseSchemaToClientSession } from "@/lib/utils/game"
 
 export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
@@ -159,7 +159,7 @@ export const sessionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: session }) => {
       return await ctx.redis.set(
         `session:${ctx.activeSession.sessionId}`,
-        session,
+        { ...session, timer: calculateSessionTimer(session) },
         { ex: 300 }
       )
     }),
@@ -175,9 +175,8 @@ export const sessionRouter = createTRPCRouter({
         },
         data: {
           ...session,
-          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED'
-            ? new Date()
-            : null,
+          timer: calculateSessionTimer(session),
+          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED' ? new Date() : null,
           result: {
             update: session.result
           },
