@@ -5,7 +5,7 @@ type SessionStore = {
   shouldStore: boolean
   register: (session: ClientGameSession) => void
   unregister: () => void
-  handleFlipUpdate: (clickedCard: MemoryCard) => void
+  handleFlipUpdate: (clickedCard: PrismaJson.MemoryCard) => void
   handleMatchUpdate: () => void
   handleUnmatchUpdate: () => void
 }

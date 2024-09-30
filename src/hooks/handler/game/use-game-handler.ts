@@ -13,7 +13,7 @@ type UseGameHandlerProps = {
 
 type UseGameHandlerReturn = {
   clientSession: ClientGameSession
-  handleCardFlip: (clickedCard: MemoryCard) => void
+  handleCardFlip: (clickedCard: PrismaJson.MemoryCard) => void
 }
 
 /**
@@ -62,13 +62,13 @@ export const useGameHandler = ({
   /**
    * Flips the clicked memory card and handles matching logic.
    * 
-   * @param {MemoryCard} clickedCard - The card clicked by the user.
+   * @param {PrismaJson.MemoryCard} clickedCard - The card clicked by the user.
    * 
    * - Ignores clicks if two cards are already flipped or if the card is matched.
    * - Updates card flip state and checks for a match once two cards are flipped.
    * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
    */
-  const handleCardFlip = (clickedCard: MemoryCard) => {
+  const handleCardFlip = (clickedCard: PrismaJson.MemoryCard) => {
     if (clientSession.flippedCards.length === 2 || clickedCard.isMatched) return
 
     const flipped = [...clientSession.flippedCards, clickedCard]

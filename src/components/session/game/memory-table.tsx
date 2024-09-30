@@ -6,7 +6,7 @@ import MemoryCard from "./memory-card"
 
 type MemoryTableProps = {
   session: ClientGameSession
-  handleCardFlip: (clickedCard: MemoryCard) => void
+  handleCardFlip: (clickedCard: PrismaJson.MemoryCard) => void
 }
 
 const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {

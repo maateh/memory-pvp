@@ -16,11 +16,10 @@ import { baseCardUrl, tableSizeMap } from "@/constants/game"
 export function parseSchemaToClientSession(session: GameSessionWithResult): ClientGameSession {
   return {
     ...session,
-    cards: session.cards as MemoryCard[],
-    flippedCards: session.flippedCards as MemoryCard[]
+    cards: session.cards as PrismaJson.MemoryCard[],
+    flippedCards: session.flippedCards as PrismaJson.MemoryCard[]
   }
 }
-
 
 /**
  * Formats a timer value (in milliseconds) into a `HH:MM:SS` or `MM:SS` string.
@@ -63,13 +62,13 @@ export function calculateSessionTimer({
  * Received image placeholders might not even exist.
  * 
  * @param {TableSize} tableSize - The size of the card table.
- * @returns {MemoryCard[]} - An array of randomly paired and shuffled memory cards.
+ * @returns {PrismaJson.MemoryCard[]} - An array of randomly paired and shuffled memory cards.
  * 
  * - Generates unique keys for each card pair, using the 'picsum.photos' API for placeholder images.
  * - Ensures the card array is shuffled before returning.
  */
-export function getMockCards(tableSize: TableSize): MemoryCard[] {
-  const cardsMap: Record<string, MemoryCard> = {}
+export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
+  const cardsMap: Record<string, PrismaJson.MemoryCard> = {}
 
   for (let i = 0; i < tableSizeMap[tableSize] / 2; i++) {
     /**
@@ -96,7 +95,7 @@ export function getMockCards(tableSize: TableSize): MemoryCard[] {
   const cards = Object.values(cardsMap).reduce((cards, card) => ([
     ...cards,
     ...[card, { ...card, id: uuidv4() }]
-  ]), [] as MemoryCard[])
+  ]), [] as PrismaJson.MemoryCard[])
 
   return cards.sort(() => Math.random() - 0.5)
 }
