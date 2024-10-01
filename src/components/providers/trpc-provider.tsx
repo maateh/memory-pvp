@@ -24,7 +24,7 @@ function getQueryClient() {
 function getUrl() {
   const base = (() => {
     if (typeof window !== 'undefined') return ''
-    if (process.env.NODE_ENV !== 'development') return `https://${process.env.NEXT_PUBLIC_SERVER_URL}`
+    if (process.env.NODE_ENV !== 'development') return process.env.NEXT_PUBLIC_SERVER_URL
     return 'http://localhost:3000'
   })()
   return `${base}/api/trpc`
