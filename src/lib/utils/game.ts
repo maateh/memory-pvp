@@ -8,20 +8,6 @@ import type { TableSize } from "@prisma/client"
 import { baseCardUrl, tableSizeMap } from "@/constants/game"
 
 /**
- * Parses a server-side `GameSessionWithResult` schema into a client-friendly `ClientGameSession` format.
- * 
- * @param {GameSessionWithResult} session - The session data from the server.
- * @returns {ClientGameSession} - Parsed session with card and flipped card arrays cast to `MemoryCard[]`.
- */
-export function parseSchemaToClientSession(session: GameSessionWithResult): ClientGameSession {
-  return {
-    ...session,
-    cards: session.cards as PrismaJson.MemoryCard[],
-    flippedCards: session.flippedCards as PrismaJson.MemoryCard[]
-  }
-}
-
-/**
  * Formats a timer value (in milliseconds) into a `HH:MM:SS` or `MM:SS` string.
  * 
  * @param {number} timerInMs - The timer value in milliseconds.

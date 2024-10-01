@@ -18,7 +18,7 @@ import {
 } from "@/lib/validations/game-schema"
 
 // utils
-import { calculateSessionTimer, getMockCards, parseSchemaToClientSession } from "@/lib/utils/game"
+import { calculateSessionTimer, getMockCards } from "@/lib/utils/game"
 
 export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
@@ -37,7 +37,7 @@ export const sessionRouter = createTRPCRouter({
           }
         })
 
-        clientSession = parseSchemaToClientSession(session!)
+        clientSession = session
       }
 
       return clientSession
@@ -99,7 +99,7 @@ export const sessionRouter = createTRPCRouter({
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
             description: 'You cannot participate in two game sessions at once with the same player.',
-            data: clientSession || parseSchemaToClientSession(activeSession)
+            data: clientSession || activeSession
           } as TRPCApiError
         })
       }

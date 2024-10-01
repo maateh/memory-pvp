@@ -13,7 +13,6 @@ import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/war
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
-import { parseSchemaToClientSession } from "@/lib/utils/game"
 
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
@@ -32,9 +31,7 @@ export const useStartSessionMutation = () => {
 
   const startSession = api.session.create.useMutation({
     onSuccess: (session) => {
-      const clientSession = parseSchemaToClientSession(session)
-      registerSession(clientSession)
-
+      registerSession(session)
       router.replace('/game')
 
       const { type, mode, tableSize } = session
@@ -48,6 +45,7 @@ export const useStartSessionMutation = () => {
           forceStart: () => onSubmit(setupForm!, true),
           continuePrevious: () => {
             const clientSession = err.shape?.cause.data as ClientGameSession
+
             if (!clientSession) {
               toast.warning("Active session not found.", {
                 description: "Sorry, but we couldn't load your previous session data. Please start a new game instead."
