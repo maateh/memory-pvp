@@ -31,13 +31,10 @@ export const sessionRouter = createTRPCRouter({
         const session = await ctx.db.gameSession.findUnique({
           where: {
             id: ctx.activeSession.id
-          },
-          include: {
-            result: true 
           }
         })
 
-        clientSession = session
+        clientSession = session!
       }
 
       return clientSession
@@ -72,18 +69,14 @@ export const sessionRouter = createTRPCRouter({
     .input(setupGameSchema)
     .mutation(async ({ ctx, input }) => {
       const { type, mode, tableSize } = input
-      
 
-      let activeSession = await ctx.db.gameSession.findFirst({
+      const activeSession = await ctx.db.gameSession.findFirst({
         where: {
           status: 'RUNNING',
           OR: [
             { ownerId: ctx.playerProfile.id },
             { guestId: ctx.playerProfile.id }
           ]
-        },
-        include: {
-          result: true
         }
       })
 
@@ -139,17 +132,14 @@ export const sessionRouter = createTRPCRouter({
           timer: 0,
           flippedCards: [],
           cards: getMockCards(tableSize), // TODO: generate cards
+          result: {
+            flips: 0
+          },
           owner: {
             connect: {
               id: ctx.playerProfile.id
             }
-          },
-          result: {
-            create: {}
           }
-        },
-        include: {
-          result: true
         }
       })
     }),
@@ -176,13 +166,7 @@ export const sessionRouter = createTRPCRouter({
         data: {
           ...session,
           timer: calculateSessionTimer(session),
-          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED' ? new Date() : null,
-          result: {
-            update: session.result
-          },
-          owner: {
-            connect: { id: ctx.playerProfile.id }
-          }
+          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED' ? new Date() : null
         }
       })
     }),
@@ -217,9 +201,6 @@ export const sessionRouter = createTRPCRouter({
         data: {
           ...session,
           closedAt: new Date(),
-          result: {
-            create: session.result
-          },
           owner: {
             connect: { id: playerProfile.id }
           }
