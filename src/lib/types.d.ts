@@ -1,33 +1,15 @@
 import type { AppRouter } from "@/server/api/_app"
-import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, Result, TableSize } from "@prisma/client"
+import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
 
 declare global {
-  declare type MemoryCard = {
-    id: string
-    key: string
-    imageUrl: string
-    isFlipped: boolean
-    isMatched: boolean
-  }
-
-  declare type ClientGameSession = {
-    sessionId: string
-
-    type: GameType
-    mode: GameMode
-    tableSize: TableSize
-    status: GameStatus
-
-    timer: number
-    startedAt: Date
+  declare type ClientGameSession = Omit<
+    GameSession,
+    'id' | 'ownerId' | 'guestId' | 'guestResult' | 'continuedAt' | 'closedAt' | 'updatedAt'
+  > & {
+    guestResult?: PrismaJson.Result | null
     continuedAt?: Date | null
-
-    flippedCards: MemoryCard[]
-    cards: MemoryCard[]
-    result: {
-      flips: number
-      score?: number | null
-    }
+    closedAt?: Date | null
+    updatedAt?: Date | null
   }
 
   declare type UnsignedClientGameSession = Omit<ClientGameSession, 'type' | 'mode' | 'status'>
