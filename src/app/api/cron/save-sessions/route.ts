@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const apiKey = req.headers.get('cron-secret')
 
   if (apiKey !== process.env.CRON_SECRET) {
-    return Response.json({ message: 'Invalid API key.' }, { status: 401 })
+    return Response.json({ message: 'Invalid secret.' }, { status: 401 })
   }
 
   console.info(ROUTE_PREFIX, 'Saving stored sessions...')
