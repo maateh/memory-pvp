@@ -62,7 +62,8 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
           <div className="flex items-center gap-x-1.5 text-sm font-extralight small-caps">
             <Star className="size-3.5" />
-            <span>Total score - {player.totalScore} points</span>
+            {/* TODO: GET -> Total score */}
+            <span>Total score - 50 points</span>
           </div>
         </div>
       </div>

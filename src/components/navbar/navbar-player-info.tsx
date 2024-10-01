@@ -25,18 +25,19 @@ const NavbarPlayerInfo = ({ activePlayer }: NavbarPlayerInfoProps) => {
         <div className="flex flex-wrap gap-x-2 gap-y-1">
           <Badge className="py-1 gap-x-1.5 font-normal tracking-wide">
             <Sparkles className="size-4 flex-none" />
-            <span>{activePlayer.totalScore}</span> points
+            {/* TODO: GET -> Total score */}
+            <span>50</span> points
           </Badge>
           
           <Badge className="py-1 gap-x-1.5 font-normal tracking-wide">
             <Timer className="size-4 flex-none" />
-            {/* <span>TODO: save -> player.totalPlaytime</span> */}
+            {/* TODO: GET -> Total playtime */}
             <span>1h 30sec</span>
           </Badge>
 
           <Badge className="py-1 gap-x-1.5 font-normal tracking-wide">
             <Gamepad2 className="size-4 flex-none" />
-            {/* <span>TODO: save -> player.sessions</span> */}
+            {/* TODO: GET -> Amount of played sessions */}
             <span>69 sessions</span>
           </Badge>
         </div>
