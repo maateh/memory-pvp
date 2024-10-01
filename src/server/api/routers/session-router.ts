@@ -20,6 +20,9 @@ import {
 // utils
 import { calculateSessionTimer, getMockCards } from "@/lib/utils/game"
 
+// constants
+import { SESSION_STORE_TTL } from "@/lib/redis"
+
 export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
     .query(async ({ ctx }) => {
@@ -150,7 +153,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.redis.set(
         `session:${ctx.activeSession.sessionId}`,
         { ...session, timer: calculateSessionTimer(session) },
-        { ex: 300 }
+        { ex: SESSION_STORE_TTL }
       )
     }),
 
