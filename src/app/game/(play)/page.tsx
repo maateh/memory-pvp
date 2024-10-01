@@ -49,10 +49,6 @@ const GamePlayPage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
     onHeartbeat: async () => {
       try {
-        // TODO: another API endpoint is required which can be
-        // triggered by cron jobs to save stored sessions from
-        // redis to the mongodb database.
-
         await storeSession.mutateAsync(clientSession)
         useSessionStore.setState({ shouldStore: false })
       } catch (err) {
