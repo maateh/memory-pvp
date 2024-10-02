@@ -1,8 +1,10 @@
 import { create } from "zustand"
 
+export type SessionSyncState = "SYNCHRONIZED" | "OUT_OF_SYNC" | "PENDING"
+
 type SessionStore = {
   session: ClientGameSession | null
-  shouldStore: boolean
+  syncState: SessionSyncState
   register: (session: ClientGameSession) => void
   unregister: () => void
   handleFlipUpdate: (clickedCard: PrismaJson.MemoryCard) => void
@@ -18,7 +20,7 @@ type SessionStore = {
  */
 export const useSessionStore = create<SessionStore>((set) => ({
   session: null,
-  shouldStore: false,
+  syncState: "SYNCHRONIZED",
   register: (session) => {
     /**
      * Additional check to prevent a possible issue which
@@ -80,7 +82,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
           flippedCards: []
         }
 
-        return { session, shouldStore: true }
+        return { session, syncState: 'OUT_OF_SYNC' }
       })
     }, 1000)
   },

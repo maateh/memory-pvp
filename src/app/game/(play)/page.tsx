@@ -22,13 +22,14 @@ const GamePlayPage = () => {
   const router = useRouter()
 
   const storeSession = api.session.store.useMutation({
+    onMutate: () => {
+      useSessionStore.setState({ syncState: "PENDING" })
+    },
     onSuccess: () => {
-      console.log('Success! (session stored)')
-
-      // TODO: A marker inside the SessionHeader would be useful
-      // to indicate the session is synchronized or not.
+      useSessionStore.setState({ syncState: "SYNCHRONIZED" })
     },
     onError: (err) => {
+      useSessionStore.setState({ syncState: "OUT_OF_SYNC" })
       handleApiError(err.shape?.cause, 'Failed to store game session.')
     }
   })
@@ -50,7 +51,6 @@ const GamePlayPage = () => {
     onHeartbeat: async () => {
       try {
         await storeSession.mutateAsync(clientSession)
-        useSessionStore.setState({ shouldStore: false })
       } catch (err) {
         logError(err)
       }

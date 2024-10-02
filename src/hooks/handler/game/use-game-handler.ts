@@ -53,7 +53,7 @@ export const useGameHandler = ({
   if (!clientSession) redirect('/game/setup')
 
   /** Initialize required states and handlers for the game. */
-  const shouldStore = useSessionStore((state) => state.shouldStore)
+  const syncState = useSessionStore((state) => state.syncState)
   const handleFlipUpdate = useSessionStore((state) => state.handleFlipUpdate)
   const handleMatchUpdate = useSessionStore((state) => state.handleMatchUpdate)
   const handleUnmatchUpdate = useSessionStore((state) => state.handleUnmatchUpdate)
@@ -107,14 +107,14 @@ export const useGameHandler = ({
    * Create a heartbeat listener to keep the game session alive.
    * 
    * - Heartbeat listener automatically starts when `onHeartbeat` is
-   *   provided and 'shouldStore=[true]'. Also, it cleans up the
+   *   provided and 'syncState="OUT_OF_SYNC"'. Also, it cleans up the
    *   interval when the component unmounts or dependencies change.
    * 
    * - It's useful in online 'Single' mode to ensure that the
    *   session remains active by sending periodic heartbeats.
    */
   useEffect(() => {
-    if (!heartbeatRef.current || !shouldStore) return
+    if (!heartbeatRef.current || syncState !== 'OUT_OF_SYNC') return
 
     const heartbeatInterval = setInterval(() => {
       heartbeatRef.current?.()
@@ -123,7 +123,7 @@ export const useGameHandler = ({
     return () => {
       clearInterval(heartbeatInterval)
     }
-  }, [shouldStore])
+  }, [syncState])
 
   /**
    * Handles session updates and game completion.
