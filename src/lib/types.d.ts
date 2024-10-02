@@ -15,18 +15,9 @@ declare global {
   declare type UnsignedClientGameSession = Omit<ClientGameSession, 'type' | 'mode' | 'status'>
 
   /** Prisma schemas */
-  declare type GameSessionWithResult = GameSession & {
-    result: Result
-  }
-
   declare type PlayerProfileWithUserAvatar = PlayerProfile & {
     user: {
       imageUrl: string | null
     }
-  }
-
-  declare type GameSessionWithPlayerProfiles = GameSession & {
-    owner: PlayerProfileWithUserAvatar
-    guest: PlayerProfileWithUserAvatar | null
   }
 }
