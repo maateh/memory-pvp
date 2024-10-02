@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils"
 // icons
 import { ScanEye, Sparkles } from "lucide-react"
 
+// shadcn
+import { Skeleton } from "@/components/ui/skeleton"
+
 // components
 import { PlayerWithAvatar } from "@/components/player"
 
@@ -50,4 +53,23 @@ const SessionPlayer = ({ player, flipOrder }: SessionPlayerProps) => {
   )
 }
 
+const SessionPlayerSkeleton = ({ flipOrder }: { flipOrder?: boolean }) => (
+  <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
+    <div className="flex-1 space-y-2">
+      <div className="flex items-center gap-x-2">
+        <Skeleton className="size-6 rounded-full" />
+        <Skeleton className="flex-1 max-w-28 h-5 rounded-full" />
+      </div>
+
+      <Skeleton className="flex-1 max-w-28 h-5" />
+    </div>
+
+    <div className="flex-1 space-y-2">
+      <Skeleton className="max-w-32 h-5 ml-auto" />
+      <Skeleton className="max-w-24 h-5 ml-auto" />
+    </div>
+  </div>
+)
+
 export default SessionPlayer
+export { SessionPlayerSkeleton }

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionPlayer } from "@/components/session"
+import { SessionPlayer, SessionPlayerSkeleton } from "@/components/session"
 
 type SessionFooterProps = {
   session: ClientGameSession
@@ -28,7 +28,7 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
           player={players?.owner}
         />
       ) : (
-        <>TODO: loading skeleton</>
+        <SessionPlayerSkeleton />
       )}
 
       {session.mode !== 'SINGLE' && players?.guest && (
