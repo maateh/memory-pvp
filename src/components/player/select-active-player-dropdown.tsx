@@ -1,7 +1,13 @@
 "use client"
 
-// prisma
+import { forwardRef } from "react"
+
+// types
 import type { PlayerProfile } from "@prisma/client"
+import type {
+  Content as DropdownMenuPrimitiveContent,
+  SubContent as DropdownMenuPrimitiveSubContent
+} from "@radix-ui/react-dropdown-menu"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -53,18 +59,24 @@ const SelectActivePlayerDropdown = ({
 type SelectActivePlayerDropdownContentProps = {
   players: PlayerProfile[]
   asSub?: boolean
-}
+} & React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitiveContent | typeof DropdownMenuPrimitiveSubContent>
 
-const SelectActivePlayerDropdownContent = ({ players, asSub = false }: SelectActivePlayerDropdownContentProps) => {
+const SelectActivePlayerDropdownContent = forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitiveContent | typeof DropdownMenuPrimitiveSubContent>,
+  SelectActivePlayerDropdownContentProps
+>(({ players, asSub = false }, ref) => {
   const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   const DropdownContent = asSub ? DropdownMenuSubContent : DropdownMenuContent
 
   return (
-    <DropdownContent>
-      <DropdownMenuLabel className="flex items-center gap-x-1.5 font-normal">
-        <UserRoundCheck className="size-4" strokeWidth={2.25} />
-        <span>Select a player</span>
+    <DropdownContent ref={ref}>
+      <DropdownMenuLabel className="flex items-center gap-x-4 font-normal">
+        <span className="pt-1 text-base font-heading">
+          Select a player
+        </span>
+
+        <UserRoundCheck className="size-4" />
       </DropdownMenuLabel>
 
       <DropdownMenuSeparator />
@@ -80,7 +92,8 @@ const SelectActivePlayerDropdownContent = ({ players, asSub = false }: SelectAct
       ))}
     </DropdownContent>
   )
-}
+})
+SelectActivePlayerDropdownContent.displayName = "SelectActivePlayerDropdownContent"
 
 export default SelectActivePlayerDropdown
 export { SelectActivePlayerDropdownContent }

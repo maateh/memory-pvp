@@ -1,5 +1,5 @@
 // prisma
-import { PlayerProfile } from "@prisma/client"
+import type { PlayerProfile } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
@@ -10,7 +10,9 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { Logo, MobileToggle } from "@/components/shared"
-import { NavbarActions, NavbarDropdownActions, NavbarPlayerInfo } from "@/components/navbar"
+import NavbarPlayerInfo from "./navbar-player-info"
+import NavbarActions from "./navbar-actions"
+import NavbarActionsDropdown from "./navbar-actions-dropdown"
 
 const Navbar = async () => {
   const user = await signedIn()
@@ -51,7 +53,7 @@ const Navbar = async () => {
           orientation="vertical"
         />
 
-        <NavbarDropdownActions players={players} />
+        <NavbarActionsDropdown players={players} />
       </div>
     </div>
   )
