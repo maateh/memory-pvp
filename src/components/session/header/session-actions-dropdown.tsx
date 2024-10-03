@@ -2,6 +2,9 @@
 
 import { useTheme } from "next-themes"
 
+// constants
+import { gameModePlaceholders, gameTypePlaceholders, tableSizeMap } from "@/constants/game"
+
 // icons
 import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"
 
@@ -13,7 +16,6 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { useAbandonSessionMutation } from "@/lib/react-query/mutations/game"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
-import { tableSizeMap } from "@/constants/game"
 
 type SessionActionsDropdownProps = {
   session: ClientGameSession
@@ -74,25 +76,26 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem className="cursor-default sm:hidden"
-          variant="secondary"
+          variant="muted"
         >
           <Gamepad2 className="size-4" />
-          <span className="capitalize">
-            {session.type.toLowerCase()}
-          </span> | <span className="capitalize">
-            {session.mode.toLowerCase()}
+
+          <span className="text-foreground font-medium small-caps">
+            {gameTypePlaceholders[session.type].label}
+          </span> / <span className="text-foreground/85 small-caps">
+            {gameModePlaceholders[session.mode].label}
           </span>
         </DropdownMenuItem>
 
         <DropdownMenuItem className="cursor-default sm:hidden"
-          variant="accent"
+          variant="muted"
         >
           <Dices className="size-4" />
-          <span className="capitalize">
+
+          <span className="text-foreground font-medium capitalize small-caps">
             {session.tableSize.toLowerCase()}
           </span>
-
-          <span className="text-xs font-medium">
+          <span className="text-xs">
             ({tableSizeMap[session.tableSize]} cards)
           </span>
         </DropdownMenuItem>

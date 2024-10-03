@@ -8,7 +8,7 @@ import type { DefaultValues } from "react-hook-form"
 import { useClerk } from "@clerk/nextjs"
 
 // constants
-import { gameModes, gameTypes, tableSizes } from "@/constants/game"
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // validations
 import { setupGameSchema } from "@/lib/validations/game-schema"
@@ -68,13 +68,12 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
                   defaultValue={field.value}
                   onValueChange={field.onChange}
                 >
-                  {gameTypes.map(({ key, label, Icon }) => (
+                  {Object.values(gameTypePlaceholders).map(({ key, label, Icon }) => (
                     <FormItem className="sm:last-of-type:odd:col-span-2" key={key}>
                       <FormControl>
                         <ButtonGroupItem className="w-full p-2.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
                           size="icon"
                           value={key}
-                          disabled={key === 'COMPETITIVE'}
                         >
                           <Icon className="size-4 sm:size-5 shrink-0" />
                           <p className="text-base sm:text-lg small-caps">
@@ -101,7 +100,7 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
                   defaultValue={field.value}
                   onValueChange={field.onChange}
                 >
-                  {gameModes.map(({ key, label, Icon }) => (
+                  {Object.values(gameModePlaceholders).map(({ key, label, Icon }) => (
                     <FormItem className="sm:last-of-type:odd:col-span-2" key={key}>
                       <FormControl>
                         <ButtonGroupItem className="p-2.5 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
@@ -134,7 +133,7 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
                   defaultValue={field.value}
                   onValueChange={field.onChange}
                 >
-                  {tableSizes.map(({ key, label, Icon }) => (
+                  {Object.values(tableSizePlaceholders).map(({ key, label, Icon }) => (
                     <FormItem className="sm:last-of-type:odd:col-span-2" key={key}>
                       <FormControl>
                         <ButtonGroupItem className="p-2.5 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"

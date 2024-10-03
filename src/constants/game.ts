@@ -1,69 +1,75 @@
 // prisma
-import { GameMode, GameType, TableSize } from "@prisma/client"
+import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // icons
-import { Dice4, Dice5, Dice6, Gamepad2, Swords, UsersRound } from "lucide-react"
+import { Dice4, Dice5, Dice6, Gamepad2, Swords, UsersRound, type LucideIcon } from "lucide-react"
 
-export const gameTypes = [
-  {
-    key: GameType.CASUAL,
-    label: 'Casual',
+type GamePlaceholderMap<K extends GameType | GameMode | TableSize> = Record<K, {
+  key: K
+  label: string
+  Icon: LucideIcon
+}>
+
+export const gameTypePlaceholders: GamePlaceholderMap<GameType> = {
+  CASUAL: {
+    key: "CASUAL",
+    label: "Casual",
     Icon: Gamepad2
   },
-  {
-    key: GameType.COMPETITIVE,
-    label: 'Competitive',
+  COMPETITIVE: {
+    key: "COMPETITIVE",
+    label: "Competitive",
     Icon: Swords
   }
-]
+} as const
 
-export const gameModes = [
-  {
-    key: GameMode.SINGLE,
-    label: 'Single',
+export const gameModePlaceholders: GamePlaceholderMap<GameMode> = {
+  SINGLE: {
+    key: "SINGLE",
+    label: "Single",
     Icon: Gamepad2
   },
-  {
-    key: GameMode.PVP,
-    label: 'PvP',
+  PVP: {
+    key: "PVP",
+    label: "PvP",
     Icon: Swords
   },
-  {
-    key: GameMode.COOP,
-    label: 'Co-Op',
+  COOP: {
+    key: "COOP",
+    label: "Co-Op",
     Icon: UsersRound
   }
-]
+} as const
 
-export const tableSizes = [
-  {
-    key: TableSize.SMALL,
-    label: 'Small (4x4)',
+export const tableSizePlaceholders: GamePlaceholderMap<TableSize> = {
+  SMALL: {
+    key: "SMALL",
+    label: "Small (16 cards)",
     Icon: Dice4
   },
-  {
-    key: TableSize.MEDIUM,
-    label: 'Small (5x5)',
+  MEDIUM: {
+    key: "MEDIUM",
+    label: "Medium (24 cards)",
     Icon: Dice5
   },
-  {
-    key: TableSize.LARGE,
-    label: 'Small (6x6)',
+  LARGE: {
+    key: "LARGE",
+    label: "Large (36 cards)",
     Icon: Dice6
   }
-]
+} as const
 
-export const tableSizeMap = {
-  [TableSize.SMALL]: 16,
-  [TableSize.MEDIUM]: 24,
-  [TableSize.LARGE]: 32
-}
+export const tableSizeMap: Record<TableSize, number> = {
+  SMALL: 16,
+  MEDIUM: 24,
+  LARGE: 32
+} as const
 
 export const offlineSessionMetadata: Pick<ClientGameSession, 'type' | 'mode' | 'status'> = {
   type: 'CASUAL',
   mode: 'SINGLE',
   status: 'OFFLINE'
-}
+} as const
 
 /**
  * Note: These image placeholders is used only for testing purposes.
