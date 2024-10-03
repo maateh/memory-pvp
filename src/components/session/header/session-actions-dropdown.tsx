@@ -43,7 +43,7 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
           variant="ghost"
           size="icon"
         >
-          <Menu className="size-5 sm:size-6" />
+          <Menu className="size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
