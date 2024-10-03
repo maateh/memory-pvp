@@ -1,64 +1,42 @@
 "use client"
 
-// utils
-import { cn } from "@/lib/utils"
-import { formatTimer } from "@/lib/utils/game"
-
-// icons
-import { RefreshCcw, RefreshCcwDot, RefreshCwOff, type LucideIcon } from "lucide-react"
-
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { ThemeToggle } from "@/components/shared"
 import SessionActionsDropdown from "./session-actions-dropdown"
-
-// hooks
-import { useTimer } from "@/hooks/use-timer"
-import { useSessionStore, type SessionSyncState } from "@/hooks/store/use-session-store"
-
-function getSyncIcon(syncState: SessionSyncState): LucideIcon {
-  switch(syncState) {
-    case "SYNCHRONIZED": return RefreshCcw
-    case "OUT_OF_SYNC": return RefreshCwOff
-    case "PENDING": return RefreshCcwDot
-  }
-}
+import SessionBasics from "./session-basics"
+import SessionSyncMarker from "./session-sync-marker"
+import SessionTimer from "./session-timer"
 
 type SessionHeaderProps = {
   session: ClientGameSession
 }
 
 const SessionHeader = ({ session }: SessionHeaderProps) => {
-  const { timer } = useTimer({ initialInMs: session.timer * 1000 })
-
-  const syncState = useSessionStore((state) => state.syncState)
-  const SyncIcon = getSyncIcon(syncState)
-
   return (
-    <div className="w-full min-h-14 mx-auto py-3 px-1.5 flex items-center justify-between bg-primary sm:px-5 sm:rounded-b-2xl sm:max-w-lg md:max-w-xl">
-      <SessionActionsDropdown session={session} />
+    <div className="relative w-full min-h-14 mx-auto py-3 px-1.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">
+      <div className="flex items-center gap-x-1 sm:gap-x-2 absolute sm:static">
+        <SessionActionsDropdown session={session} />
 
-      <div className="relative">
-        <p className="pt-1 text-xl sm:text-2xl font-heading font-bold tracking-wider">{formatTimer(timer)}</p>
+        <Separator className="h-4 sm:h-5 w-1 bg-border/50 rounded-full"
+          orientation="vertical"
+        />
 
-        <div className="flex items-center gap-x-2 absolute -right-8 inset-y-0">
-          <Separator className="h-4 sm:h-[1.125rem] w-0.5 rounded-full" orientation="vertical" />
-
-          <SyncIcon className={cn("size-4 rounded-full", {
-            "text-accent": syncState === 'SYNCHRONIZED',
-            "text-destructive": syncState === 'OUT_OF_SYNC',
-            "text-muted-foreground": syncState === 'PENDING'
-          })}
-            strokeWidth={2.15}
-          />
-        </div>
+        <SessionBasics {...session} />
       </div>
 
-      <ThemeToggle className="hover:bg-primary-foreground/5 hover:text-primary-foreground"
-        variant="ghost"
-      />
+      <div className="mx-auto sm:mr-0 flex items-center justify-center gap-x-2 relative">
+        <div className="flex flex-row-reverse sm:flex-row items-center gap-x-2 absolute sm:static inset-y-1/2 -right-8">
+          <SessionSyncMarker />
+
+          <Separator className="h-4 sm:h-[1.125rem] w-0.5 rounded-full"
+            orientation="vertical"
+          />
+        </div>
+
+        <SessionTimer initialInMs={session.timer * 1000} />
+      </div>
     </div>
   )
 }
