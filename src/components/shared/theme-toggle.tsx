@@ -10,57 +10,49 @@ import { LucideProps, Moon, Sun } from "lucide-react"
 
 // shadcn
 import { Button, ButtonProps } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-type ThemeToggleProps = ButtonProps & {
+type ThemeToggleProps = {
+  expandable?: boolean
   iconProps?: LucideProps
-}
+} & Omit<ButtonProps, 'onClick'>
 
 const ThemeToggle = ({
+  expandable = false,
   iconProps,
   className,
-  variant = "outline",
+  variant = "ghost",
   size = "icon",
   ...props
 }: ThemeToggleProps) => {
-  const { setTheme } = useTheme()
+  const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className={cn("rounded-2xl", className)}
-          variant={variant}
-          size={size}
-        >
-          <Sun {...iconProps}
-            className={cn("size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0",
-              iconProps?.className
-            )}
-          />
+    <Button className={cn("bg-foreground/5 rounded-2xl", { "expandable": expandable }, className)}
+      variant={variant}
+      size={size}
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      {...props}
+    >
+      <Sun {...iconProps}
+        className={cn("size-4 transition-all dark:hidden",
+          iconProps?.className
+        )}
+        strokeWidth={2.8}
+      />
 
-          <Moon {...iconProps}
-            className={cn("absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100",
-              iconProps?.className
-            )}
-          />
+      <Moon {...iconProps}
+        className={cn("size-4 transition-all hidden dark:block",
+          iconProps?.className
+        )}
+        strokeWidth={2.8}
+      />
 
-          <span className="sr-only">
-            Toggle theme
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <div className={cn({ "sr-only": !expandable })}>
+        <p className="ml-1.5 text-xs font-extralight">
+          Switch to <span className="font-medium">{theme === 'light' ? 'Dark' : 'Light'}</span>
+        </p>
+      </div>
+    </Button>
   )
 }
 
