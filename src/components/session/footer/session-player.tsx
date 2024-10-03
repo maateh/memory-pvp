@@ -1,3 +1,6 @@
+// constants
+import { tableSizeMap } from "@/constants/game"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -12,16 +15,11 @@ import { PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
   player: PlayerProfileWithUserAvatar
+  session: ClientGameSession
   flipOrder?: boolean
 }
 
-const SessionPlayer = ({ player, flipOrder }: SessionPlayerProps) => {
-  const sessionScore = 5
-  const overallScore = 100
-
-  const freeFlips = 10
-  const flipCounter = 4
-
+const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
       <div className="space-y-1">
@@ -33,20 +31,29 @@ const SessionPlayer = ({ player, flipOrder }: SessionPlayerProps) => {
         <div className="flex items-center gap-x-1.5">
           <Sparkles className="size-4 flex-none" />
           <p className="text-sm font-light">
-            {overallScore} points
+            {/* TODO: GET -> Player total score */}
+            100 points
           </p>
-          <span className="font-heading font-semibold">(+{freeFlips - flipCounter})</span>
+
+          {/* TODO: create separate component (session-score-counter) */}
+          {session.type === 'COMPETITIVE' && (
+            <span className="font-heading font-semibold">
+              (+{tableSizeMap[session.tableSize] / 2 - session.result.flips})
+            </span>
+          )}
         </div>
       </div>
 
       <div>
         <div className={cn("mb-1 flex flex-wrap items-center gap-x-1.5", { "flex-row-reverse text-end": !flipOrder })}>
           <ScanEye className="size-5 flex-none" strokeWidth={1.5} />
-          <p className="font-light small-caps">Flip counter</p>
+          <p className="font-light small-caps">
+            Flip counter
+          </p>
         </div>
 
         <p className={cn("font-heading font-medium", { "text-end": !flipOrder })}>
-          {flipCounter} flips
+          {session.result.flips} flips
         </p>
       </div>
     </div>

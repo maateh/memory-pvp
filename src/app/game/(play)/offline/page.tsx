@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { saveSessionToStorage } from "@/lib/utils/storage"
 
 // components
-import { SessionHeader } from "@/components/session"
+import { SessionHeader } from "@/components/session/header"
 import { MemoryTable } from "@/components/session/game"
 
 // hooks

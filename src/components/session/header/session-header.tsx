@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { ThemeToggle } from "@/components/shared"
-import { SessionActionsDropdown } from "@/components/session"
+import SessionActionsDropdown from "./session-actions-dropdown"
 
 // hooks
 import { useTimer } from "@/hooks/use-timer"

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionPlayer, SessionPlayerSkeleton } from "@/components/session"
+import SessionPlayer, { SessionPlayerSkeleton } from "./session-player"
 
 type SessionFooterProps = {
   session: ClientGameSession
@@ -26,6 +26,7 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
       {players && !isLoading ? (
         <SessionPlayer
           player={players?.owner}
+          session={session}
         />
       ) : (
         <SessionPlayerSkeleton />
@@ -43,6 +44,7 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
 
           <SessionPlayer
             player={players.guest}
+            session={session}
             flipOrder
           />
         </>

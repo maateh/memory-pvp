@@ -1,5 +1,1 @@
 export { default as SessionStats } from "./session-stats"
-export { default as SessionHeader } from "./session-header"
-export { default as SessionActionsDropdown } from "./session-actions-dropdown"
-export { default as SessionFooter } from "./session-footer"
-export { default as SessionPlayer, SessionPlayerSkeleton } from "./session-player"

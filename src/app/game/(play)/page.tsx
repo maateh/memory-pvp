@@ -11,8 +11,9 @@ import { api } from "@/trpc/client"
 import { handleApiError, logError } from "@/lib/utils"
 
 // components
-import { SessionFooter, SessionHeader } from "@/components/session"
+import { SessionHeader } from "@/components/session/header"
 import { MemoryTable } from "@/components/session/game"
+import { SessionFooter } from "@/components/session/footer"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
