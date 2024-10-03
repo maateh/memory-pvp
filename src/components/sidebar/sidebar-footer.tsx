@@ -13,7 +13,7 @@ const SidebarFooter = () => {
       <Separator className="my-4" />
 
       <div className="flex items-center justify-between">
-        <ThemeToggle expandable />
+        <ThemeToggle expandable="right" />
 
         <SignedIn>
           <UserButton showName />

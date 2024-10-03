@@ -61,7 +61,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
       <ThemeToggle className="p-2 bg-accent/30 absolute top-3 right-3 sm:top-4 sm:right-4"
         variant="ghost"
-        expandable
+        expandable="left"
       />
 
       <div className="w-fit mx-auto text-center">

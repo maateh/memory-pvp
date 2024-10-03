@@ -65,9 +65,14 @@
     @apply hidden;
   }
 
-  .expandable:hover > div,
-  .expandable[data-state="open"] > div {
+  .expandable[data-state="open"] > div,
+  .expandable:hover > div {
     @apply flex items-center justify-center px-1 animate-in slide-in-from-right-1/2 duration-300;
+  }
+
+  .expandable[data-state="open"] > div,
+  .expandable:hover.expandable-left > div {
+    @apply slide-in-from-left-1/2;
   }
 
   /* HEADING DECORATOR */
