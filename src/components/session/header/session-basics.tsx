@@ -1,5 +1,5 @@
 // constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizeMap } from "@/constants/game"
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // icons
 import { Dices, Gamepad2 } from "lucide-react"
@@ -15,11 +15,12 @@ const SessionBasics = ({ type, mode, tableSize }: Pick<ClientGameSession, "type"
       >
         <Gamepad2 className="size-4" strokeWidth={1.75} />
 
-        <p className="pt-0.5 text-sm font-heading capitalize">
+        <p className="space-x-1 pt-0.5 text-sm font-heading">
           <span className="font-medium small-caps">
             {gameTypePlaceholders[type].label}
-          </span> / <span className="text-foreground/85 small-caps">
-            {gameModePlaceholders[mode].label}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            / {gameModePlaceholders[mode].label}
           </span>
         </p>
       </Badge>
@@ -30,11 +31,11 @@ const SessionBasics = ({ type, mode, tableSize }: Pick<ClientGameSession, "type"
         <Dices className="size-4" strokeWidth={1.75} />
 
         <p className="space-x-1 pt-0.5 text-sm font-heading">
-          <span className="font-medium capitalize small-caps">
-            {tableSize.toLowerCase()}
+          <span className="font-medium small-caps">
+            {tableSizePlaceholders[tableSize].label}
           </span>
           <span className="text-xs text-muted-foreground">
-            ({tableSizeMap[tableSize]} cards)
+            / {tableSizePlaceholders[tableSize].size}
           </span>
         </p>
       </Badge>

@@ -23,6 +23,7 @@ import { CirclePlay, Loader2, WifiOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
+import { Separator } from "@/components/ui/separator"
 
 // components
 import { Form } from "@/components/shared"
@@ -45,7 +46,7 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
 
   return (
     <Form<SetupGameFormValues>
-      className="flex-1 flex flex-col justify-end gap-y-8"
+      className="flex-1 flex flex-col justify-end gap-y-7"
       schema={setupGameSchema}
       onSubmit={onSubmit}
       defaultValues={{
@@ -121,28 +122,31 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
             )}
           />
 
+          <Separator className="max-w-16 mx-auto -my-1 bg-border/40" />
+
           <FormField
             name="tableSize"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="text-center space-y-1">
-                <FormLabel className="relative inset-0 text-lg font-heading font-semibold small-caps sm:text-xl">
+              <FormItem className="text-center space-y-0.5">
+                <FormLabel className="relative inset-0 text-base font-heading font-semibold small-caps sm:text-lg">
                   Table Size
                 </FormLabel>
-                <ButtonGroup className="max-w-sm mx-auto grid gap-2 grid-cols-1 sm:grid-cols-2"
+                <ButtonGroup className="max-w-sm mx-auto grid gap-1.5 grid-cols-1 sm:grid-cols-2"
                   defaultValue={field.value}
                   onValueChange={field.onChange}
                 >
-                  {Object.values(tableSizePlaceholders).map(({ key, label, Icon }) => (
+                  {Object.values(tableSizePlaceholders).map(({ key, label, size, Icon }) => (
                     <FormItem className="sm:last-of-type:odd:col-span-2" key={key}>
                       <FormControl>
-                        <ButtonGroupItem className="p-2.5 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
+                        <ButtonGroupItem className="p-2 w-4/5 sm:w-full sm:max-w-44 mx-auto flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
                           size="icon"
                           value={key}
                         >
-                          <Icon className="size-4 sm:size-5 shrink-0" />
-                          <p className="text-base sm:text-lg small-caps">
-                            {label}
+                          <Icon className="size-4 sm:size-[1.125rem] shrink-0" />
+
+                          <p className="text-base small-caps">
+                            {label}<span className="text-xs text-muted-foreground"> / {size}</span>
                           </p>
                         </ButtonGroupItem>
                       </FormControl>

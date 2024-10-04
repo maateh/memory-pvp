@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes"
 
 // constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizeMap } from "@/constants/game"
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // icons
 import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"
@@ -93,10 +93,10 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
           <Dices className="size-4" />
 
           <span className="text-foreground font-medium capitalize small-caps">
-            {session.tableSize.toLowerCase()}
+            {tableSizePlaceholders[session.tableSize].label}
           </span>
           <span className="text-xs">
-            ({tableSizeMap[session.tableSize]} cards)
+            / {tableSizePlaceholders[session.tableSize].size}
           </span>
         </DropdownMenuItem>
 
