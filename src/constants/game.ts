@@ -4,11 +4,11 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 // icons
 import { Dice4, Dice5, Dice6, Gamepad2, Swords, UsersRound, type LucideIcon } from "lucide-react"
 
-type GamePlaceholderMap<K extends GameType | GameMode | TableSize> = Record<K, {
+type GamePlaceholderMap<K extends GameType | GameMode | TableSize, O extends Object = {}> = Record<K, {
   key: K
   label: string
   Icon: LucideIcon
-}>
+} & O>
 
 export const gameTypePlaceholders: GamePlaceholderMap<GameType> = {
   CASUAL: {
@@ -41,20 +41,23 @@ export const gameModePlaceholders: GamePlaceholderMap<GameMode> = {
   }
 } as const
 
-export const tableSizePlaceholders: GamePlaceholderMap<TableSize> = {
+export const tableSizePlaceholders: GamePlaceholderMap<TableSize, { size: string }> = {
   SMALL: {
     key: "SMALL",
-    label: "Small (16 cards)",
+    label: "Small",
+    size: "16 cards",
     Icon: Dice4
   },
   MEDIUM: {
     key: "MEDIUM",
-    label: "Medium (24 cards)",
+    label: "Medium",
+    size: "24 cards",
     Icon: Dice5
   },
   LARGE: {
     key: "LARGE",
-    label: "Large (36 cards)",
+    label: "Large",
+    size: "36 cards",
     Icon: Dice6
   }
 } as const
