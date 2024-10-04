@@ -35,9 +35,9 @@ const SessionSyncMarker = () => {
     <>
       <BadgeInfo className="mb-1 size-5 mx-auto text-secondary" strokeWidth={2.5} />
 
-      <p className="max-w-sm text-sm font-light text-center">
+      <p className="max-w-sm text-center text-base font-heading font-light">
         Indicates that your game session is synchronized or not.
-        <span className="block mt-1 text-xs text-muted-foreground">
+        <span className="block mt-1 text-xs text-muted-foreground font-body">
           This means that if something unexpected happens on your side <i>(e.g. browser crashes or the internet connection is lost)</i>, the current session will be stored at the last synchronized point.
         </span>
       </p>
