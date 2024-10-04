@@ -86,7 +86,7 @@
 
   /* IMAGE WRAPPER */
   .img-wrapper {
-    @apply relative overflow-hidden;
+    @apply relative overflow-hidden flex-none;
   }
   .img-wrapper > img {
     @apply object-cover;

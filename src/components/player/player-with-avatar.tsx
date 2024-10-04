@@ -33,7 +33,7 @@ const PlayerWithAvatar = ({ player, imageUrl, playerBadgeProps, imageSize = 24, 
         />
       ) : (
         <UserRound {...imgFallbackProps}
-          className={cn("size-5 rounded-full", imgFallbackProps?.className)}
+          className={cn("size-5 rounded-full flex-none", imgFallbackProps?.className)}
         />
       )}
 
