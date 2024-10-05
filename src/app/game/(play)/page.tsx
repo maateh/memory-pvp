@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { api } from "@/trpc/client"
 
 // utils
+import { calculateSessionTimer } from "@/lib/utils/game"
 import { handleApiError, logError } from "@/lib/utils"
 
 // components
@@ -35,7 +36,7 @@ const GamePlayPage = () => {
     }
   })
   
-  const saveSession = api.session.save.useMutation({
+  const finishSession = api.session.finish.useMutation({
     onSuccess: ({ sessionId }) => {
       router.replace(`/game/summary/${sessionId}`)
 
@@ -51,22 +52,47 @@ const GamePlayPage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
     onHeartbeat: async () => {
       try {
-        await storeSession.mutateAsync(clientSession)
+        await storeSession.mutateAsync({
+          ...clientSession,
+          // TODO: move this into a helper (parseSessionStats)
+          stats: {
+            ...clientSession.stats,
+            timer: calculateSessionTimer(clientSession)
+          }
+        })
       } catch (err) {
         logError(err)
       }
     },
 
     onBeforeUnload: async () => {
-      const payload = JSON.stringify(clientSession)
+      const payload = JSON.stringify({
+        ...clientSession,
+        // TODO: move this into a helper (parseSessionStats)
+        stats: {
+          ...clientSession.stats,
+          timer: calculateSessionTimer(clientSession)
+        }
+      })
+
       navigator.sendBeacon('/api/session/closed', payload)
     },
     
     onFinish: async () => {
       try {
-        await saveSession.mutateAsync({
+        await finishSession.mutateAsync({
           ...clientSession,
-          status: 'FINISHED'
+          // TODO: move this into a helper (validateCardMatches)
+          cards: clientSession.cards.map((card) => ({
+            ...card,
+            isMatched: true,
+            isFlipped: true
+          })),
+          // TODO: move this into a helper (parseSessionStats)
+          stats: {
+            ...clientSession.stats,
+            timer: calculateSessionTimer(clientSession)
+          }
         })
       } catch (err) {
         logError(err)

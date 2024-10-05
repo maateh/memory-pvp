@@ -2,8 +2,17 @@
 
 import { useTheme } from "next-themes"
 
+import { toast } from "sonner"
+
+// trpc
+import { api } from "@/trpc/client"
+
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+
+// utils
+import { calculateSessionTimer } from "@/lib/utils/game"
+import { handleApiError, logError } from "@/lib/utils"
 
 // icons
 import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"
@@ -14,7 +23,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useAbandonSessionMutation } from "@/lib/react-query/mutations/game"
+import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
 type SessionActionsDropdownProps = {
@@ -24,16 +33,40 @@ type SessionActionsDropdownProps = {
 const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
-  const { abandonSession, handleAbandonSession } = useAbandonSessionMutation()
+  const unregisterSession = useSessionStore((state) => state.unregister)
+
   const { abandonOfflineSession } = useOfflineSessionHandler()
 
-  const handleAbandon = () => {
+  const abandonSession = api.session.abandon.useMutation({
+    onSuccess: () => {
+      unregisterSession()
+
+      toast.info('Your session has been abandoned.', {
+        description: 'Session has also been saved, but from now on it cannot continue.'
+      })
+    },
+    onError: (err) => {
+      handleApiError(err.shape?.cause, 'Failed to abandon and save your session.')
+    }
+  })
+
+  const handleAbandonSession = async () => {
     if (session.status === 'OFFLINE') {
       abandonOfflineSession()
       return
     }
 
-    handleAbandonSession(session)
+    try {
+      await abandonSession.mutateAsync({
+        ...session,
+        stats: {
+          ...session.stats,
+          timer: calculateSessionTimer(session)
+        }
+      })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return (
@@ -104,7 +137,7 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
 
         <DropdownMenuItem
           variant="destructive"
-          onClick={handleAbandon}
+          onClick={handleAbandonSession}
           disabled={abandonSession.isPending}
         >
           <DoorOpen className="size-4" />
