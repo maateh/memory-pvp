@@ -51,14 +51,24 @@ export const useSessionStore = create<SessionStore>((set) => ({
           : card
       )
 
+      const playerTag = session.players.current.tag
+      const prevFlips = session.stats.flips[playerTag]
+
       session = {
         ...session,
         cards,
         flippedCards: [...session.flippedCards, clickedCard],
-        result: {
-          flips: session.flippedCards.length === 1
-            ? (session.result?.flips || 0) + 1
-            : session.result.flips
+        // FIXME: it's disgusting -> must be REFACTORED
+        // Something must be done with stats calculations / parsing
+        // because it sucks everywhere.
+        stats: {
+          ...session.stats,
+          flips: {
+            ...session.stats.flips,
+            [playerTag]: session.flippedCards.length === 1
+              ? prevFlips + 1
+              : prevFlips
+          }
         }
       }
 
