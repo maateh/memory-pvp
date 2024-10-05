@@ -3,27 +3,8 @@ import { z } from "zod"
 // prisma
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
-// constants
-import { tableSizeMap } from "@/constants/game"
-
 // validations
 import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-profile-schema"
-
-/** Local utils */
-function sessionCardsRefinement( // FIXME: make it compatible with 'PVP' & 'COOP' modes
-  session: Pick<z.infer<typeof clientSessionSchema>, 'tableSize' | 'stats'>,
-  ctx: z.RefinementCtx
-) {
-  const minFlips = tableSizeMap[session.tableSize]
-
-  if ((session.stats?.flips[0] || 0) < minFlips) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Card flips must be at least ${minFlips}`,
-      path: ['flips']
-    })
-  }
-}
 
 /** Base schemas */
 const cardSchema = z.object({
@@ -101,4 +82,3 @@ export const saveOfflineGameSchema = clientSessionSchema.extend({
   playerTag: z.string(),
   cards: matchedCardsSchema
 }).omit({ type: true, mode: true, status: true, players: true })
-  .superRefine(sessionCardsRefinement)
