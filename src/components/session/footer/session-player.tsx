@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
-  player: PlayerProfileWithUserAvatar
+  player: SessionPlayerWithUserAvatar
   session: ClientGameSession
   flipOrder?: boolean
 }

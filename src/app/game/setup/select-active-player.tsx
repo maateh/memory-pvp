@@ -18,7 +18,7 @@ import { SelectActivePlayerDropdown } from "@/components/player"
 
 type SelectActivePlayerProps = {
   user: User | null | undefined
-  players: PlayerProfileWithUserAvatar[]
+  players: SessionPlayerWithUserAvatar[]
 }
 
 const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {

@@ -17,8 +17,8 @@ declare global {
     'continuedAt' | 'closedAt' | 'updatedAt'
   > & {
     players: {
-      current: PlayerProfileWithUserAvatar
-      other?: PlayerProfileWithUserAvatar | null
+      current: SessionPlayerWithUserAvatar
+      other?: SessionPlayerWithUserAvatar | null
     }
     continuedAt?: Date | null
     closedAt?: Date | null
@@ -28,7 +28,15 @@ declare global {
   declare type UnsignedClientGameSession = Omit<ClientGameSession, 'type' | 'mode' | 'status'>
 
   /** Prisma schemas */
-  declare type PlayerProfileWithUserAvatar = PlayerProfile & {
+  declare type GameSessionWithOwnerWithPlayersWithAvatar = GameSession & {
+    owner: PlayerProfile
+    players: SessionPlayerWithUserAvatar[]
+  }
+
+  declare type SessionPlayerWithUserAvatar = Omit<
+    PlayerProfile,
+    'id' | 'userId' | 'isActive' | 'sessionIds' | 'createdAt' | 'updatedAt'
+  > & {
     user: {
       imageUrl: string | null
     }
