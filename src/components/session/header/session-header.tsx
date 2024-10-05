@@ -27,7 +27,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
-        <SessionTimer initialInMs={session.timer * 1000} />
+        <SessionTimer initialInMs={session.stats.timer * 1000} />
 
         <Separator className="h-4 sm:h-[1.125rem] w-1 bg-border/50 rounded-full"
           orientation="vertical"
