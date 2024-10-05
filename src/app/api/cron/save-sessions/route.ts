@@ -18,7 +18,7 @@ export async function GET(req: Request) {
   try {
     const sessions = await getSessionsFromRedis()
 
-    const operations = sessions.map((session) =>
+    const operations = sessions.map(({ players: _, ...session }) =>
       db.gameSession.update({
         where: { sessionId: session.sessionId },
         data: {
