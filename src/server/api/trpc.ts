@@ -74,15 +74,15 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   })
 })
 
-export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const playerProfile = await ctx.db.playerProfile.findFirst({
+export const playerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const player = await ctx.db.playerProfile.findFirst({
     where: {
       userId: ctx.user.id,
       isActive: true
     }
   })
 
-  if (!playerProfile) {
+  if (!player) {
     throw new TRPCError({
       code: 'NOT_FOUND',
       cause: new TRPCApiError({
@@ -93,17 +93,17 @@ export const gameProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   }
 
   return next({
-    ctx: { playerProfile }
+    ctx: { player }
   })
 })
 
-export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) => {
+export const protectedSessionProcedure = playerProcedure.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
       players: {
         some: {
-          id: ctx.playerProfile.id
+          id: ctx.player.id
         }
       }
     },

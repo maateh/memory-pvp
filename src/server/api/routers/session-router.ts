@@ -5,8 +5,8 @@ import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import {
   createTRPCRouter,
-  gameProcedure,
-  protectedGameProcedure,
+  playerProcedure,
+  protectedSessionProcedure,
   protectedProcedure
 } from "@/server/api/trpc"
 
@@ -30,7 +30,7 @@ import { getMockCards } from "@/lib/utils/game"
 import { SESSION_STORE_TTL } from "@/lib/redis"
 
 export const sessionRouter = createTRPCRouter({
-  getActive: protectedGameProcedure
+  getActive: protectedSessionProcedure
     .query(async ({ ctx }): Promise<ClientGameSession> => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
         `session:${ctx.activeSession.sessionId}`
@@ -39,14 +39,14 @@ export const sessionRouter = createTRPCRouter({
       if (!clientSession) {
         clientSession = parseSchemaToClientSession(
           ctx.activeSession,
-          ctx.playerProfile.tag
+          ctx.player.tag
         )
       }
 
       return clientSession
     }),
 
-  create: gameProcedure
+  create: playerProcedure
     .input(setupGameSchema)
     .mutation(async ({ ctx, input }): Promise<ClientGameSession> => {
       const activeSession = await ctx.db.gameSession.findFirst({
@@ -54,7 +54,7 @@ export const sessionRouter = createTRPCRouter({
           status: 'RUNNING',
           players: {
             some: {
-              id: ctx.playerProfile.id
+              id: ctx.player.id
             }
           }
         },
@@ -82,7 +82,7 @@ export const sessionRouter = createTRPCRouter({
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
             description: 'You cannot participate in two game sessions at once with the same player.',
-            data: clientSession || parseSchemaToClientSession(activeSession, ctx.playerProfile.tag)
+            data: clientSession || parseSchemaToClientSession(activeSession, ctx.player.tag)
           } as TRPCApiError
         })
       }
@@ -111,18 +111,18 @@ export const sessionRouter = createTRPCRouter({
             timer: 0,
             flips: {
               // TODO: add guest flips (update validation schema)
-              [ctx.playerProfile.tag]: 0
+              [ctx.player.tag]: 0
             }
           },
           owner: {
             connect: {
-              id: ctx.playerProfile.id
+              id: ctx.player.id
             }
           },
           players: {
             connect: [
               // TODO: connect guest (update validation schema)
-              { id: ctx.playerProfile.id }
+              { id: ctx.player.id }
             ]
           }
         },
@@ -138,10 +138,10 @@ export const sessionRouter = createTRPCRouter({
         }
       })
 
-      return parseSchemaToClientSession(session, ctx.playerProfile.tag)
+      return parseSchemaToClientSession(session, ctx.player.tag)
     }),
 
-  store: protectedGameProcedure
+  store: protectedSessionProcedure
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       return await ctx.redis.set(
@@ -151,7 +151,7 @@ export const sessionRouter = createTRPCRouter({
       )
     }),
 
-  save: protectedGameProcedure
+  save: protectedSessionProcedure
     .input(saveSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
@@ -164,7 +164,7 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  finish: protectedGameProcedure
+  finish: protectedSessionProcedure
     .input(finishSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
@@ -192,7 +192,7 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  abandon: protectedGameProcedure
+  abandon: protectedSessionProcedure
     .input(abandonSessionSchema)
     .mutation(async ({ ctx, input: clientSession }) => {
       await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
