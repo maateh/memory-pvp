@@ -10,9 +10,9 @@ declare global {
       isMatched: boolean
     }
 
-    type Result = {
-      flips: number
-      score?: number | null
+    type SessionStats = {
+      timer: number
+      flips: Record<string, number>
     }
   }
 }

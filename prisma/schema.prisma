@@ -35,8 +35,12 @@ model PlayerProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
 
-  sessions      GameSession[] @relation("SessionOwner")
-  guestSessions GameSession[] @relation("SessionGuest")
+  sessions   GameSession[] @relation(fields: [sessionIds], references: [id])
+  sessionIds String[]      @db.ObjectId
+
+  startedSessions GameSession[] @relation("SessionOwner")
+
+  results Result[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,36 +48,50 @@ model PlayerProfile {
 
 model GameSession {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId String @unique
-
-  timer        Int
-  
-  /// [MemoryCard]
-  flippedCards Json[]
-  /// [MemoryCard]
-  cards        Json[]
-
-  status GameStatus
+  sessionId String @unique // TODO: generate slug instead of using UUID
 
   type      GameType
   mode      GameMode
   tableSize TableSize
 
-  /// [Result]
-  result Json
-  /// [Result]
-  guestResult Json?
+  status GameStatus
 
-  owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  /// [SessionStats]
+  stats Json
+
+  /// [MemoryCard]
+  flippedCards Json[]
+  /// [MemoryCard]
+  cards        Json[]
+
+  owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id])
   ownerId String        @db.ObjectId
 
-  guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: Cascade)
-  guestId String?        @db.ObjectId
+  players   PlayerProfile[] @relation(fields: [playerIds], references: [id])
+  playerIds String[]        @db.ObjectId
+
+  results Result[]
 
   continuedAt DateTime?
-  closedAt  DateTime?
+  closedAt    DateTime?
 
   startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Result {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  flips Int
+  score Int?
+
+  player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId String        @db.ObjectId
+
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  sessionId String      @db.ObjectId
+
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
