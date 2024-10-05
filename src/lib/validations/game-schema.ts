@@ -6,10 +6,17 @@ import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 // constants
 import { tableSizeMap } from "@/constants/game"
 
+// validations
+import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-profile-schema"
+
 /** Local utils */
-const sessionCardsRefinement = (data: z.infer<typeof clientSessionSchema>, ctx: z.RefinementCtx) => {
-  const minFlips = tableSizeMap[data.tableSize]
-  if ((data.result?.flips || 0) < minFlips) {
+function sessionCardsRefinement( // FIXME: make it compatible with 'PVP' & 'COOP' modes
+  session: Pick<z.infer<typeof clientSessionSchema>, 'tableSize' | 'stats'>,
+  ctx: z.RefinementCtx
+) {
+  const minFlips = tableSizeMap[session.tableSize]
+
+  if ((session.stats?.flips[0] || 0) < minFlips) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Card flips must be at least ${minFlips}`,
@@ -19,7 +26,7 @@ const sessionCardsRefinement = (data: z.infer<typeof clientSessionSchema>, ctx: 
 }
 
 /** Base schemas */
-export const cardSchema = z.object({
+const cardSchema = z.object({
   id: z.string(),
   key: z.string(),
   imageUrl: z.string().url(),
@@ -27,9 +34,28 @@ export const cardSchema = z.object({
   isMatched: z.coerce.boolean()
 })
 
-export const resultSchema = z.object({
-  flips: z.coerce.number().default(0),
-  score: z.coerce.number().optional().nullable()
+const matchedCardsSchema = z.array(
+  cardSchema.merge(
+    z.object({
+      isFlipped: z.literal(true),
+      isMatched: z.literal(true)
+    })
+  )
+)
+
+const sessionPlayerSchema = z.object({
+  tag: playerTagSchema,
+  color: playerColorSchema,
+  user: z.object({
+    imageUrl: z.string().nullable().optional()
+  })
+})
+
+const statsSchema = z.object({
+  timer: z.coerce.number(),
+  flips: z.record(
+    z.string(), z.coerce.number()
+  )
 })
 
 export const clientSessionSchema = z.object({
@@ -38,15 +64,20 @@ export const clientSessionSchema = z.object({
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
   tableSize: z.nativeEnum(TableSize),
+
   status: z.nativeEnum(GameStatus),
 
-  timer: z.coerce.number(),
-  startedAt: z.coerce.date(),
-  continuedAt: z.coerce.date().optional().nullable(),
-  
+  players: z.object({
+    current: sessionPlayerSchema,
+    other: sessionPlayerSchema.nullable().optional()
+  }),
+  stats: statsSchema,
+
   flippedCards: z.array(cardSchema),
   cards: z.array(cardSchema),
-  result: resultSchema
+
+  startedAt: z.coerce.date(),
+  continuedAt: z.coerce.date().optional().nullable()
 })
 
 /** Forms / API validations */
@@ -56,17 +87,18 @@ export const setupGameSchema = z.object({
   tableSize: z.nativeEnum(TableSize)
 })
 
+export const saveSessionSchema = clientSessionSchema.omit({ players: true })
+
+export const finishSessionSchema = clientSessionSchema.extend({
+  cards: matchedCardsSchema
+}).omit({ status: true, players: true })
+
+export const abandonSessionSchema = clientSessionSchema
+  .omit({ status: true, players: true })
+  .optional()
+
 export const saveOfflineGameSchema = clientSessionSchema.extend({
   playerTag: z.string(),
-  type: z.literal(GameType.CASUAL),
-  mode: z.literal(GameMode.SINGLE),
-  status: z.literal(GameStatus.OFFLINE),
-  cards: z.array(
-    cardSchema.merge(
-      z.object({
-        isFlipped: z.literal(true),
-        isMatched: z.literal(true)
-      })
-    )
-  )
-}).superRefine(sessionCardsRefinement)
+  cards: matchedCardsSchema
+}).omit({ type: true, mode: true, status: true, players: true })
+  .superRefine(sessionCardsRefinement)
