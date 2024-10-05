@@ -30,7 +30,7 @@ type GameSetupPageProps = {
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const user = await signedIn()
 
-  let players: SessionPlayerWithUserAvatar[] = []
+  let players: PlayerProfileWithUserAvatar[] = []
   if (user) {
     players = await db.playerProfile.findMany({
       where: {

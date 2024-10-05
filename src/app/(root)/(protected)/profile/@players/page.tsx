@@ -13,7 +13,7 @@ import { PlayerProfileCard } from '@/components/player/card'
 const PlayersWidget = async () => {
   const user = await signedIn()
 
-  let activePlayer: SessionPlayerWithUserAvatar | null | undefined
+  let activePlayer: PlayerProfileWithUserAvatar | null | undefined
   if (user) {
     activePlayer = await db.playerProfile.findFirst({
       where: {

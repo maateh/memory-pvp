@@ -41,4 +41,10 @@ declare global {
       imageUrl: string | null
     }
   }
+
+  declare type PlayerProfileWithUserAvatar = PlayerProfile & {
+    user: {
+      imageUrl: string | null
+    }
+  }
 }
