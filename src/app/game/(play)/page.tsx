@@ -8,10 +8,9 @@ import { toast } from "sonner"
 import { api } from "@/trpc/client"
 
 // helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+import { calculateSessionTimer, validateCardMatches } from "@/lib/helpers/session"
 
 // utils
-import { calculateSessionTimer } from "@/lib/utils/game"
 import { handleApiError, logError } from "@/lib/utils"
 
 // components

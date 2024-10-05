@@ -1,3 +1,5 @@
+import { differenceInSeconds } from "date-fns"
+
 /**
  * TODO: write documentation
  * 
@@ -16,6 +18,21 @@ export function parseSchemaToClientSession(
       other: session.players.find((player) => player.tag !== currentPlayerTag)
     }
   }
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function calculateSessionTimer({
+  startedAt, continuedAt, stats
+}: Pick<ClientGameSession, 'startedAt' | 'continuedAt' | 'stats'>): number {
+  return differenceInSeconds(
+    Date.now(),
+    continuedAt || startedAt
+  ) + stats.timer
 }
 
 /**

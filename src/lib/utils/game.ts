@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
-import { differenceInSeconds, intervalToDuration } from "date-fns"
+import { intervalToDuration } from "date-fns"
 
 // types
 import type { TableSize } from "@prisma/client"
@@ -32,14 +32,6 @@ export function formatTimer(timerInMs: number): string {
   return `${minutes}:${seconds}`
 }
 
-export function calculateSessionTimer({
-  startedAt, continuedAt, timer
-}: Pick<ClientGameSession, 'startedAt' | 'continuedAt' | 'timer'>): number {
-  return differenceInSeconds(
-    Date.now(),
-    continuedAt || startedAt
-  ) + timer
-}
 
 /**
  * Generates a shuffled array of memory card pairs based on the given table size.

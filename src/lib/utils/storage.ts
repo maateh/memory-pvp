@@ -1,5 +1,5 @@
-// utils
-import { calculateSessionTimer } from "@/lib/utils/game"
+// helpers
+import { calculateSessionTimer } from "@/lib/helpers/session"
 
 /** Local storage key for the active offline session. */
 const STORAGE_KEY = "CLIENT_GAME_SESSION"

@@ -10,8 +10,10 @@ import { api } from "@/trpc/client"
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
+// helpers
+import { calculateSessionTimer } from "@/lib/helpers/session"
+
 // utils
-import { calculateSessionTimer } from "@/lib/utils/game"
 import { handleApiError, logError } from "@/lib/utils"
 
 // icons
