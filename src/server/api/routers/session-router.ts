@@ -12,74 +12,61 @@ import {
 
 // validations
 import {
+  abandonSessionSchema,
   clientSessionSchema,
+  finishSessionSchema,
   saveOfflineGameSchema,
+  saveSessionSchema,
   setupGameSchema
 } from "@/lib/validations/game-schema"
 
+// helpers
+import { parseSchemaToClientSession } from "@/lib/helpers/session"
+
 // utils
-import { calculateSessionTimer, getMockCards } from "@/lib/utils/game"
+import { getMockCards } from "@/lib/utils/game"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
 
 export const sessionRouter = createTRPCRouter({
   getActive: protectedGameProcedure
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx }): Promise<ClientGameSession> => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
         `session:${ctx.activeSession.sessionId}`
       )
 
       if (!clientSession) {
-        const session = await ctx.db.gameSession.findUnique({
-          where: {
-            id: ctx.activeSession.id
-          }
-        })
-
-        clientSession = session!
+        clientSession = parseSchemaToClientSession(
+          ctx.activeSession,
+          ctx.playerProfile.tag
+        )
       }
 
       return clientSession
     }),
-  
-  getPlayers: protectedGameProcedure
-    .query(async ({ ctx }) => {
-      return await ctx.db.gameSession.findUnique({
+
+  create: gameProcedure
+    .input(setupGameSchema)
+    .mutation(async ({ ctx, input }): Promise<ClientGameSession> => {
+      const activeSession = await ctx.db.gameSession.findFirst({
         where: {
-          id: ctx.activeSession.id
-        },
-        select: {
-          owner: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
+          status: 'RUNNING',
+          players: {
+            some: {
+              id: ctx.playerProfile.id
             }
-          },
-          guest: {
+          }
+        },
+        include: {
+          owner: true,
+          players: {
             include: {
               user: {
                 select: { imageUrl: true }
               }
             }
           }
-        }
-      })
-    }),
-
-  create: gameProcedure
-    .input(setupGameSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { type, mode, tableSize } = input
-
-      const activeSession = await ctx.db.gameSession.findFirst({
-        where: {
-          status: 'RUNNING',
-          OR: [
-            { ownerId: ctx.playerProfile.id },
-            { guestId: ctx.playerProfile.id }
-          ]
         }
       })
 
@@ -95,27 +82,14 @@ export const sessionRouter = createTRPCRouter({
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
             description: 'You cannot participate in two game sessions at once with the same player.',
-            data: clientSession || activeSession
+            data: clientSession || parseSchemaToClientSession(activeSession, ctx.playerProfile.tag)
           } as TRPCApiError
         })
       }
 
-      // TODO: implement "Competitive" game
-      // Socket.io is going to be required for this.
-      if (type === 'COMPETITIVE') {
-        throw new TRPCError({
-          code: 'NOT_IMPLEMENTED',
-          cause: new TRPCApiError({
-            key: 'UNKNOWN',
-            message: 'Sorry, but currently you can only play in Casual.',
-            description: 'This feature is still work in progress. Please, try again later.'
-          })
-        })
-      }
-
       // TODO: implement "PVP" & "COOP" game modes
-      // ...but first be ready with the basics.
-      if (mode !== 'SINGLE') {
+      // Note: Socket.io implementation required
+      if (input.mode !== 'SINGLE') {
         throw new TRPCError({
           code: 'NOT_IMPLEMENTED',
           cause: new TRPCApiError({
@@ -126,25 +100,45 @@ export const sessionRouter = createTRPCRouter({
         })
       }
 
-      // TODO: save guest -> in pvp & coop modes
-      return await ctx.db.gameSession.create({
+      const session = await ctx.db.gameSession.create({
         data: {
-          type, mode, tableSize,
+          ...input,
           sessionId: uuidv4(),
           status: 'RUNNING',
-          timer: 0,
           flippedCards: [],
-          cards: getMockCards(tableSize), // TODO: generate cards
-          result: {
-            flips: 0
+          cards: getMockCards(input.tableSize), // TODO: generate cards
+          stats: {
+            timer: 0,
+            flips: {
+              // TODO: add guest flips (update validation schema)
+              [ctx.playerProfile.tag]: 0
+            }
           },
           owner: {
             connect: {
               id: ctx.playerProfile.id
             }
+          },
+          players: {
+            connect: [
+              // TODO: connect guest (update validation schema)
+              { id: ctx.playerProfile.id }
+            ]
+          }
+        },
+        include: {
+          owner: true,
+          players: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
           }
         }
       })
+
+      return parseSchemaToClientSession(session, ctx.playerProfile.tag)
     }),
 
   store: protectedGameProcedure
@@ -152,13 +146,26 @@ export const sessionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: session }) => {
       return await ctx.redis.set(
         `session:${ctx.activeSession.sessionId}`,
-        { ...session, timer: calculateSessionTimer(session) },
+        session,
         { ex: SESSION_STORE_TTL }
       )
     }),
 
   save: protectedGameProcedure
-    .input(clientSessionSchema)
+    .input(saveSessionSchema)
+    .mutation(async ({ ctx, input: session }) => {
+      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+
+      return await ctx.db.gameSession.update({
+        where: {
+          id: ctx.activeSession.id
+        },
+        data: session
+      })
+    }),
+
+  finish: protectedGameProcedure
+    .input(finishSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
 
@@ -168,8 +175,50 @@ export const sessionRouter = createTRPCRouter({
         },
         data: {
           ...session,
-          timer: calculateSessionTimer(session),
-          closedAt: session.status === 'FINISHED' || session.status === 'ABANDONED' ? new Date() : null
+          status: 'FINISHED',
+          closedAt: new Date(),
+          results: {
+            createMany: {
+              data: ctx.activeSession.players.map((player) => ({
+                playerId: player.id,
+                flips: session.stats.flips[player.tag],
+
+                // TODO: calculate results
+                score: 0
+              }))
+            }
+          }
+        }
+      })
+    }),
+
+  abandon: protectedGameProcedure
+    .input(abandonSessionSchema)
+    .mutation(async ({ ctx, input: clientSession }) => {
+      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+
+      const session = clientSession || ctx.activeSession
+
+      return await ctx.db.gameSession.update({
+        where: {
+          id: ctx.activeSession.id
+        },
+        data: {
+          ...session,
+          status: 'ABANDONED',
+          closedAt: new Date(),
+          results: {
+            createMany: {
+              data: ctx.activeSession.players.map((player) => ({
+                playerId: player.id,
+                flips: session.stats.flips[player.tag],
+
+                // TODO: calculate results with maximum score deduction
+                // (in 'PVP' mode only for the player who abandoned the session)
+                score: 0
+              }))
+            }
+          }
         }
       })
     }),
@@ -203,28 +252,13 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session,
+          type: 'CASUAL',
+          mode: 'SINGLE',
+          status: 'OFFLINE',
           closedAt: new Date(),
           owner: {
             connect: { id: playerProfile.id }
           }
-        }
-      })
-    }),
-
-  abandon: protectedGameProcedure
-    .mutation(async ({ ctx }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
-
-      return await ctx.db.gameSession.update({
-        where: {
-          id: ctx.activeSession.id,
-          status: {
-            equals: 'RUNNING'
-          }
-        },
-        data: {
-          status: 'ABANDONED',
-          closedAt: new Date()
         }
       })
     })
