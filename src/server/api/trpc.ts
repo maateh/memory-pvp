@@ -101,14 +101,20 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
-      ownerId: ctx.playerProfile.id
+      players: {
+        some: {
+          id: ctx.playerProfile.id
+        }
+      }
     },
     include: {
-      owner: {
-        select: { userId: true }
-      },
-      guest: {
-        select: { userId: true }
+      owner: true,
+      players: {
+        include: {
+          user: {
+            select: { imageUrl: true }
+          }
+        }
       }
     }
   })
@@ -124,10 +130,8 @@ export const protectedGameProcedure = gameProcedure.use(async ({ ctx, next }) =>
     })
   }
 
-  if (
-    activeSession.owner.userId !== ctx.user.id &&
-    activeSession.guest?.userId !== ctx.user.id
-  ) {
+  const hasAccess = activeSession.players.find((player) => player.userId === ctx.user.id)
+  if (!hasAccess) {
     throw new TRPCError({
       code: 'FORBIDDEN',
       cause: new TRPCApiError({
