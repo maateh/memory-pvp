@@ -11,7 +11,7 @@ import { useClerk } from "@clerk/nextjs"
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // validations
-import { setupGameSchema } from "@/lib/validations/game-schema"
+import { setupGameSchema } from "@/lib/validations/session-schema"
 
 // utils
 import { cn } from "@/lib/utils"

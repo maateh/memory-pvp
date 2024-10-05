@@ -18,7 +18,7 @@ import {
   saveOfflineGameSchema,
   saveSessionSchema,
   setupGameSchema
-} from "@/lib/validations/game-schema"
+} from "@/lib/validations/session-schema"
 
 // helpers
 import { parseSchemaToClientSession } from "@/lib/helpers/session"
