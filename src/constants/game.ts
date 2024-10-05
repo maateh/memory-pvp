@@ -74,6 +74,14 @@ export const offlineSessionMetadata: Pick<ClientGameSession, 'type' | 'mode' | '
   status: 'OFFLINE'
 } as const
 
+export const offlinePlaceholderPlayer: SessionPlayerWithUserAvatar = {
+  color: '#ffffff',
+  tag: '_offline',
+  user: {
+    imageUrl: null
+  }
+}
+
 /**
  * Note: These image placeholders is used only for testing purposes.
  * In the future, there will be an option for users to upload

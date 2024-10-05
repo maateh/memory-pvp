@@ -9,7 +9,7 @@ import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // constants
-import { offlineSessionMetadata } from "@/constants/game"
+import { offlinePlaceholderPlayer, offlineSessionMetadata } from "@/constants/game"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -64,11 +64,16 @@ export const useOfflineSessionHandler = () => {
       sessionId: uuidv4(),
       tableSize: values.tableSize,
       startedAt: new Date(),
-      timer: 0,
       flippedCards: [],
       cards: getMockCards(values.tableSize),
-      result: {
-        flips: 0
+      players: {
+        current: offlinePlaceholderPlayer
+      },
+      stats: {
+        timer: 0,
+        flips: {
+          [offlinePlaceholderPlayer.tag]: 0
+        }
       }
     }
 
