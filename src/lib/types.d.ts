@@ -13,9 +13,13 @@ declare global {
   /** Session types */
   declare type ClientGameSession = Omit<
     GameSession,
-    'id' | 'ownerId' | 'guestId' | 'guestResult' | 'continuedAt' | 'closedAt' | 'updatedAt'
+    'id' | 'ownerId' | 'playerIds' |
+    'continuedAt' | 'closedAt' | 'updatedAt'
   > & {
-    guestResult?: PrismaJson.Result | null
+    players: {
+      current: PlayerProfileWithUserAvatar
+      other?: PlayerProfileWithUserAvatar | null
+    }
     continuedAt?: Date | null
     closedAt?: Date | null
     updatedAt?: Date | null
