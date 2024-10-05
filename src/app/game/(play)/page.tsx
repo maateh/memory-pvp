@@ -7,6 +7,9 @@ import { toast } from "sonner"
 // trpc
 import { api } from "@/trpc/client"
 
+// helpers
+import { validateCardMatches } from "@/lib/helpers/session"
+
 // utils
 import { calculateSessionTimer } from "@/lib/utils/game"
 import { handleApiError, logError } from "@/lib/utils"
@@ -82,12 +85,7 @@ const GamePlayPage = () => {
       try {
         await finishSession.mutateAsync({
           ...clientSession,
-          // TODO: move this into a helper (validateCardMatches)
-          cards: clientSession.cards.map((card) => ({
-            ...card,
-            isMatched: true,
-            isFlipped: true
-          })),
+          cards: validateCardMatches(clientSession.cards),
           // TODO: move this into a helper (parseSessionStats)
           stats: {
             ...clientSession.stats,

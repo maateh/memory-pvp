@@ -5,6 +5,9 @@ import { toast } from "sonner"
 // trpc
 import { api } from "@/trpc/client"
 
+// helpers
+import { validateCardMatches } from "@/lib/helpers/session"
+
 // utils
 import { logError, handleApiError } from "@/lib/utils"
 import { clearSessionFromStorage, getSessionFromStorage } from "@/lib/utils/storage"
@@ -48,14 +51,7 @@ export const useSaveOfflineSessionMutation = () => {
       await saveOfflineSession.mutateAsync({
         ...offlineSession,
         playerTag,
-        type: "CASUAL",
-        mode: "SINGLE",
-        status: "OFFLINE",
-        cards: offlineSession.cards.map((card) => ({
-          ...card,
-          isMatched: true,
-          isFlipped: true
-        }))
+        cards: validateCardMatches(offlineSession.cards)
       })
     } catch (err) {
       logError(err)

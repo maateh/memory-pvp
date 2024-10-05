@@ -17,3 +17,22 @@ export function parseSchemaToClientSession(
     }
   }
 }
+
+/**
+ * TODO: write documentation
+ * 
+ * @param cards 
+ * @returns 
+ */
+type ValidatedMemoryCard = Omit<PrismaJson.MemoryCard, 'isFlipped' | 'isMatched'> & {
+  isFlipped: true
+  isMatched: true
+}
+
+export function validateCardMatches(cards: PrismaJson.MemoryCard[]): ValidatedMemoryCard[] {
+  return cards.map((card) => ({
+    ...card,
+    isMatched: true,
+    isFlipped: true
+  }))
+}
