@@ -194,10 +194,25 @@ export const sessionRouter = createTRPCRouter({
 
   abandon: protectedSessionProcedure
     .input(abandonSessionSchema)
-    .mutation(async ({ ctx, input: clientSession }) => {
+    .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
 
-      const session = clientSession || ctx.activeSession
+      if (!session) {
+        const validation = await abandonSessionSchema.safeParseAsync(ctx.activeSession)
+
+        if (!validation.success) {
+          throw new TRPCError({
+            code: 'PARSE_ERROR',
+            cause: new TRPCApiError({
+              key: 'UNKNOWN',
+              message: 'Something went wrong.',
+              description: 'Session data appears to be corrupted because it failed to be parsed.'
+            })
+          })
+        }
+
+        session = validation.data!
+      }
 
       return await ctx.db.gameSession.update({
         where: {
