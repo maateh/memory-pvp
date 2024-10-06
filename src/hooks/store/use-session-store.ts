@@ -10,6 +10,7 @@ type SessionStore = {
   syncState: SessionSyncState
   register: (session: ClientGameSession) => void
   unregister: () => void
+  updateTimer: (timer: number) => void
   handleFlipUpdate: (clickedCard: PrismaJson.MemoryCard) => void
   handleMatchUpdate: () => void
   handleUnmatchUpdate: () => void
@@ -42,6 +43,16 @@ export const useSessionStore = create<SessionStore>((set) => ({
     set({ session })
   },
   unregister: () => set({ session: null }),
+
+  updateTimer: (timer) => {
+    set(({ session }) => {
+      if (session === null) return { session }
+
+      session.stats.timer = timer
+
+      return { session }
+    })
+  },
 
   handleFlipUpdate: (clickedCard) => {
     set((state) => {

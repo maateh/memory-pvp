@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type TimerType = "INCREASE" | "DECREASE"
 
@@ -7,7 +7,12 @@ type UseTimerProps = {
   initialInMs?: number
   thresholdInMs?: number
   intervalInMs?: number
-  onUpdate?: (timer: number) => void
+  onUpdate?: (timer: UseTimerReturn) => void
+}
+
+type UseTimerReturn = {
+  timer: number
+  timerInMs: number
 }
 
 export const useTimer = ({
@@ -16,22 +21,35 @@ export const useTimer = ({
   thresholdInMs = 1000,
   intervalInMs = 1000,
   onUpdate
-}: UseTimerProps = {}) => {
-  const [timer, setTimer] = useState(initialInMs)
+}: UseTimerProps = {}): UseTimerReturn => {
+  const [timerInMs, setTimerInMs] = useState<number>(initialInMs)
+
+  const updateRef = useRef(onUpdate)
+
+  useEffect(() => {
+    updateRef.current = onUpdate
+  }, [onUpdate])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const threshold = type === 'INCREASE' ? thresholdInMs : -thresholdInMs
-      setTimer((prev) => {
-        const timer = prev + threshold
 
-        if (onUpdate) onUpdate(timer)
-        return timer
+      setTimerInMs((prev) => {
+        const timerInMs = prev + threshold
+        updateRef.current?.({
+          timer: timerInMs / 1000,
+          timerInMs
+        })
+        
+        return timerInMs
       })
     }, intervalInMs)
 
     return () => clearInterval(intervalId)
-  }, [type, thresholdInMs, intervalInMs, onUpdate])
+  }, [type, thresholdInMs, intervalInMs])
 
-  return { timer }
+  return {
+    timer: timerInMs / 1000,
+    timerInMs
+  }
 }

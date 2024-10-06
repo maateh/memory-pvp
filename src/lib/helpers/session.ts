@@ -38,25 +38,6 @@ export function parseSchemaToClientSession(
   }
 }
 
-/**
- * Calculates the total elapsed time for a game session.
- * 
- * - Computes the time passed since the session started or was continued.
- * - Adds the previously accumulated time from the session's stats.
- * 
- * @param {ClientGameSession} session - The game session containing start time, continue time, and timer stats.
- * 
- * @returns {number} - The total elapsed session time in seconds.
- */
-export function calculateSessionTimer({
-  startedAt, continuedAt, stats
-}: Pick<ClientGameSession, 'startedAt' | 'continuedAt' | 'stats'>): number {
-  return differenceInSeconds(
-    Date.now(),
-    continuedAt || startedAt
-  ) + stats.timer
-}
-
 type ValidatedMemoryCard = Omit<PrismaJson.MemoryCard, 'isFlipped' | 'isMatched'> & {
   isFlipped: true
   isMatched: true
@@ -90,10 +71,10 @@ export function validateCardMatches(cards: PrismaJson.MemoryCard[]): ValidatedMe
  * @returns 
  */
 export function updateSessionStats(
-  session: Pick<ClientGameSession, 'players' | 'stats' | 'flippedCards' | 'startedAt' | 'continuedAt'>,
+  session: Pick<ClientGameSession, 'players' | 'stats' | 'flippedCards'>,
   action?: 'flip' | 'match'
 ): PrismaJson.SessionStats {
-  const { players, stats, flippedCards, startedAt, continuedAt } = session
+  const { players, stats, flippedCards } = session
 
   const playerTag = players.current.tag
   const prevFlips = stats.flips[playerTag]
@@ -109,8 +90,5 @@ export function updateSessionStats(
     // stats.matches[playerTag] = ...
   }
 
-  return {
-    ...stats,
-    timer: calculateSessionTimer({ stats, startedAt, continuedAt })
-  }
+  return stats
 }
