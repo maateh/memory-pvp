@@ -32,7 +32,6 @@ export function formatTimer(timerInMs: number): string {
   return `${minutes}:${seconds}`
 }
 
-
 /**
  * Generates a shuffled array of memory card pairs based on the given table size.
  * 
