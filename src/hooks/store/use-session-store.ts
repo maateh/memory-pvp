@@ -1,5 +1,8 @@
 import { create } from "zustand"
 
+// helpers
+import { updateSessionStats } from "@/lib/helpers/session"
+
 export type SessionSyncState = "SYNCHRONIZED" | "OUT_OF_SYNC" | "PENDING"
 
 type SessionStore = {
@@ -51,25 +54,11 @@ export const useSessionStore = create<SessionStore>((set) => ({
           : card
       )
 
-      const playerTag = session.players.current.tag
-      const prevFlips = session.stats.flips[playerTag]
-
       session = {
         ...session,
         cards,
         flippedCards: [...session.flippedCards, clickedCard],
-        // FIXME: it's disgusting -> must be REFACTORED
-        // Something must be done with stats calculations / parsing
-        // because it sucks everywhere.
-        stats: {
-          ...session.stats,
-          flips: {
-            ...session.stats.flips,
-            [playerTag]: session.flippedCards.length === 1
-              ? prevFlips + 1
-              : prevFlips
-          }
-        }
+        stats: updateSessionStats(session, 'flip')
       }
 
       return { session }
@@ -91,7 +80,8 @@ export const useSessionStore = create<SessionStore>((set) => ({
         session = {
           ...session,
           cards,
-          flippedCards: []
+          flippedCards: [],
+          stats: updateSessionStats(session, "match")
         }
 
         return { session, syncState: 'OUT_OF_SYNC' }

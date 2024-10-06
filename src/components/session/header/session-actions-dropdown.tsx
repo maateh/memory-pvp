@@ -10,9 +10,6 @@ import { api } from "@/trpc/client"
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
-// helpers
-import { calculateSessionTimer } from "@/lib/helpers/session"
-
 // utils
 import { handleApiError, logError } from "@/lib/utils"
 
@@ -59,13 +56,7 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
     }
 
     try {
-      await abandonSession.mutateAsync({
-        ...session,
-        stats: {
-          ...session.stats,
-          timer: calculateSessionTimer(session)
-        }
-      })
+      await abandonSession.mutateAsync(session)
     } catch (err) {
       logError(err)
     }

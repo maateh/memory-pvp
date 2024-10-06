@@ -82,3 +82,35 @@ export function validateCardMatches(cards: PrismaJson.MemoryCard[]): ValidatedMe
     isFlipped: true
   }))
 }
+
+/**
+ * TODO: Write doc.
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function updateSessionStats(
+  session: Pick<ClientGameSession, 'players' | 'stats' | 'flippedCards' | 'startedAt' | 'continuedAt'>,
+  action?: 'flip' | 'match'
+): PrismaJson.SessionStats {
+  const { players, stats, flippedCards, startedAt, continuedAt } = session
+
+  const playerTag = players.current.tag
+  const prevFlips = stats.flips[playerTag]
+
+  if (action === 'flip') {
+    stats.flips[playerTag] = flippedCards.length === 1
+      ? prevFlips + 1
+      : prevFlips
+  }
+
+  if (action === 'match') {
+    // TODO: add 'matches' to 'SessionStats' & 'Result' model
+    // stats.matches[playerTag] = ...
+  }
+
+  return {
+    ...stats,
+    timer: calculateSessionTimer({ stats, startedAt, continuedAt })
+  }
+}

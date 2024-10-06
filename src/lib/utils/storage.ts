@@ -28,10 +28,7 @@ export function getSessionFromStorage(): UnsignedClientGameSession | null {
 export function saveSessionToStorage(session: UnsignedClientGameSession): UnsignedClientGameSession | void {
   if (typeof window === 'undefined') return
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    ...session,
-    timer: calculateSessionTimer(session)
-  }))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
 }
 
 /**

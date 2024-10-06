@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { api } from "@/trpc/client"
 
 // helpers
-import { calculateSessionTimer, validateCardMatches } from "@/lib/helpers/session"
+import { validateCardMatches } from "@/lib/helpers/session"
 
 // utils
 import { handleApiError, logError } from "@/lib/utils"
@@ -54,29 +54,14 @@ const GamePlayPage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
     onHeartbeat: async () => {
       try {
-        await storeSession.mutateAsync({
-          ...clientSession,
-          // TODO: move this into a helper (parseSessionStats)
-          stats: {
-            ...clientSession.stats,
-            timer: calculateSessionTimer(clientSession)
-          }
-        })
+        await storeSession.mutateAsync(clientSession)
       } catch (err) {
         logError(err)
       }
     },
 
     onBeforeUnload: async () => {
-      const payload = JSON.stringify({
-        ...clientSession,
-        // TODO: move this into a helper (parseSessionStats)
-        stats: {
-          ...clientSession.stats,
-          timer: calculateSessionTimer(clientSession)
-        }
-      })
-
+      const payload = JSON.stringify(clientSession)
       navigator.sendBeacon('/api/session/closed', payload)
     },
     
@@ -84,12 +69,7 @@ const GamePlayPage = () => {
       try {
         await finishSession.mutateAsync({
           ...clientSession,
-          cards: validateCardMatches(clientSession.cards),
-          // TODO: move this into a helper (parseSessionStats)
-          stats: {
-            ...clientSession.stats,
-            timer: calculateSessionTimer(clientSession)
-          }
+          cards: validateCardMatches(clientSession.cards)
         })
       } catch (err) {
         logError(err)
