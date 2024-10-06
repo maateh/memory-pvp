@@ -68,20 +68,6 @@ export const tableSizeMap: Record<TableSize, number> = {
   LARGE: 32
 } as const
 
-export const offlineSessionMetadata: Pick<ClientGameSession, 'type' | 'mode' | 'status'> = {
-  type: 'CASUAL',
-  mode: 'SINGLE',
-  status: 'OFFLINE'
-} as const
-
-export const offlinePlaceholderPlayer: SessionPlayerWithUserAvatar = {
-  color: '#ffffff',
-  tag: '_offline',
-  user: {
-    imageUrl: null
-  }
-}
-
 /**
  * Note: These image placeholders is used only for testing purposes.
  * In the future, there will be an option for users to upload

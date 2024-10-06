@@ -9,7 +9,7 @@ import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // constants
-import { offlinePlaceholderPlayer, offlineSessionMetadata } from "@/constants/game"
+import { offlinePlaceholderPlayer, offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { toast } from "sonner"
 
 // constants
-import { offlineSessionMetadata } from "@/constants/game"
+import { offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"
