@@ -1,5 +1,11 @@
 import { differenceInSeconds } from "date-fns"
 
+// utils
+import { pickFields } from "@/lib/utils"
+
+// constants
+import { clientSessionKeys, clientSessionPlayerKeys } from "@/constants/session"
+
 /**
  * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
  * organizing player data based on the current player's tag.
@@ -16,11 +22,18 @@ export function parseSchemaToClientSession(
   session: GameSessionWithOwnerWithPlayersWithAvatar,
   currentPlayerTag: string
 ): ClientGameSession {
+  const filteredSession = pickFields(session, clientSessionKeys)
+
+  const players = {
+    current: filteredSession.players.find((player) => player.tag === currentPlayerTag)!,
+    other: filteredSession.players.find((player) => player.tag !== currentPlayerTag)
+  }
+
   return {
-    ...session,
+    ...filteredSession,
     players: {
-      current: session.players.find((player) => player.tag === currentPlayerTag)!,
-      other: session.players.find((player) => player.tag !== currentPlayerTag)
+      current: pickFields(players.current, clientSessionPlayerKeys),
+      other: players.other && pickFields(players.other, clientSessionPlayerKeys)
     }
   }
 }
