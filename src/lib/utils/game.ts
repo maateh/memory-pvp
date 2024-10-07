@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid"
+import { nanoid } from "nanoid"
 import { intervalToDuration } from "date-fns"
 
 // types
@@ -61,7 +61,7 @@ export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
     }
 
     cardsMap[key] = {
-      id: uuidv4(),
+      id: nanoid(10),
       key,
       imageUrl: `${baseCardUrl}/${key}/640/640`,
       isFlipped: false,
@@ -71,7 +71,7 @@ export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
 
   const cards = Object.values(cardsMap).reduce((cards, card) => ([
     ...cards,
-    ...[card, { ...card, id: uuidv4() }]
+    ...[card, { ...card, id: nanoid(10) }]
   ]), [] as PrismaJson.MemoryCard[])
 
   return cards.sort(() => Math.random() - 0.5)
