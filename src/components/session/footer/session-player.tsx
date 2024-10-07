@@ -1,13 +1,14 @@
-// constants
-import { tableSizeMap } from "@/constants/game"
+// helpers
+import { calculateSessionScore, getFreeFlips } from "@/lib/helpers/session"
 
 // utils
 import { cn } from "@/lib/utils"
 
 // icons
-import { ScanEye, Sparkles } from "lucide-react"
+import { CircleFadingArrowUp, Sigma, Trophy } from "lucide-react"
 
 // shadcn
+import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
@@ -20,41 +21,63 @@ type SessionPlayerProps = {
 }
 
 const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
+  const flips = session.stats.flips[player.tag]
+
+  const freeFlips = getFreeFlips(session)
+  const score = calculateSessionScore(session, player.tag)
+
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <PlayerWithAvatar className={cn({ "flex-row-reverse": flipOrder })}
           player={player}
           imageUrl={player.user.imageUrl}
         />
 
-        <div className="flex items-center gap-x-1.5">
-          <Sparkles className="size-4 flex-none" />
-          <p className="text-sm font-light">
-            {/* TODO: GET -> Player total score */}
-            100 points
-          </p>
+        <Badge className="gap-x-1.5"
+          variant="outline"
+        >
+          <Trophy className="size-4 flex-none" />
 
-          {/* TODO: create separate component (session-score-counter) */}
-          {session.type === 'COMPETITIVE' && (
-            <span className="font-heading font-semibold">
-              (+{tableSizeMap[session.tableSize] / 2 - session.result.flips})
-            </span>
-          )}
-        </div>
+          {/* TODO: GET -> Player total score */}
+          <p className="space-x-1 text-sm font-light">
+            <span className="small-caps">Rank</span>
+            <span className="text-xs text-muted-foreground">/ 100 scores</span>
+          </p>
+        </Badge>
       </div>
 
-      <div>
-        <div className={cn("mb-1 flex flex-wrap items-center gap-x-1.5", { "flex-row-reverse text-end": !flipOrder })}>
-          <ScanEye className="size-5 flex-none" strokeWidth={1.5} />
-          <p className="font-light small-caps">
-            Flip counter
-          </p>
-        </div>
+      <div className="space-y-1.5">
+        <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
+          variant="muted"
+        >
+          <Sigma className="size-4 flex-none" />
 
-        <p className={cn("font-heading font-medium", { "text-end": !flipOrder })}>
-          {session.result.flips} flips
-        </p>
+          <p className="space-x-1">
+            <span className="text-sm font-medium small-caps">
+              {flips} flips
+            </span>
+
+            {freeFlips !== null && (
+              <span className="text-xs">
+                / {freeFlips} free
+              </span>
+            )}
+          </p>
+        </Badge>
+
+        {score !== null && (
+          <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
+            variant={score >= 0 ? 'accent' : 'destructive'}
+          >
+            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": score < 0 })} />
+  
+            <p className="space-x-1">
+              <span className="text-sm font-light small-caps">Session</span>
+              <span className="text-xs font-semibold">/ {score} scores</span>
+            </p>
+          </Badge>
+        )}
       </div>
     </div>
   )
