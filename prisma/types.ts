@@ -12,6 +12,7 @@ declare global {
 
     type SessionStats = {
       timer: number
+      matches: Record<string, number>
       flips: Record<string, number>
     }
   }

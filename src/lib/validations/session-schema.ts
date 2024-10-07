@@ -36,6 +36,9 @@ const statsSchema = z.object({
   timer: z.coerce.number(),
   flips: z.record(
     z.string(), z.coerce.number()
+  ),
+  matches: z.record(
+    z.string(), z.coerce.number()
   )
 })
 

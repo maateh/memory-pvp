@@ -73,6 +73,9 @@ export const useOfflineSessionHandler = () => {
         timer: 0,
         flips: {
           [offlinePlaceholderPlayer.tag]: 0
+        },
+        matches: {
+          [offlinePlaceholderPlayer.tag]: 0
         }
       }
     }

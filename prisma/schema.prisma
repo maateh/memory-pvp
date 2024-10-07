@@ -83,6 +83,7 @@ model Result {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   flips Int
+  matches Int
   score Int?
 
   player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)

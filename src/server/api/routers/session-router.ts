@@ -112,6 +112,10 @@ export const sessionRouter = createTRPCRouter({
             flips: {
               // TODO: add guest flips (update validation schema)
               [ctx.player.tag]: 0
+            },
+            matches: {
+              // TODO: add guest matches (update validation schema)
+              [ctx.player.tag]: 0
             }
           },
           owner: {
@@ -182,6 +186,7 @@ export const sessionRouter = createTRPCRouter({
               data: ctx.activeSession.players.map((player) => ({
                 playerId: player.id,
                 flips: session.stats.flips[player.tag],
+                matches: session.stats.matches[player.tag],
 
                 // TODO: calculate results
                 score: 0
@@ -227,6 +232,7 @@ export const sessionRouter = createTRPCRouter({
               data: ctx.activeSession.players.map((player) => ({
                 playerId: player.id,
                 flips: session.stats.flips[player.tag],
+                matches: session.stats.matches[player.tag],
 
                 // TODO: calculate results with maximum score deduction
                 // (in 'PVP' mode only for the player who abandoned the session)

@@ -86,17 +86,17 @@ export function updateSessionStats(
   const { players, stats, flippedCards } = session
 
   const playerTag = players.current.tag
-  const prevFlips = stats.flips[playerTag]
-
+  
   if (action === 'flip') {
+    const prevFlips = stats.flips[playerTag]
+
     stats.flips[playerTag] = flippedCards.length === 1
       ? prevFlips + 1
       : prevFlips
   }
 
   if (action === 'match') {
-    // TODO: add 'matches' to 'SessionStats' & 'Result' model
-    // stats.matches[playerTag] = ...
+    ++stats.matches[playerTag]
   }
 
   return stats
