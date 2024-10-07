@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
-
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
@@ -9,7 +7,7 @@ import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // constants
-import { offlinePlaceholderPlayer, offlineSessionMetadata } from "@/constants/session"
+import { offlinePlayer, offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -61,21 +59,20 @@ export const useOfflineSessionHandler = () => {
     }
 
     const offlineSession: UnsignedClientGameSession = {
-      sessionId: uuidv4(),
       tableSize: values.tableSize,
       startedAt: new Date(),
       flippedCards: [],
       cards: getMockCards(values.tableSize),
       players: {
-        current: offlinePlaceholderPlayer
+        current: offlinePlayer
       },
       stats: {
         timer: 0,
         flips: {
-          [offlinePlaceholderPlayer.tag]: 0
+          [offlinePlayer.tag]: 0
         },
         matches: {
-          [offlinePlaceholderPlayer.tag]: 0
+          [offlinePlayer.tag]: 0
         }
       }
     }

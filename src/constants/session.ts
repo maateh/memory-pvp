@@ -10,13 +10,22 @@ export const clientSessionPlayerKeys: (keyof SessionPlayerWithUserAvatar)[] = [
   'tag', 'color', 'user'
 ] as const
 
-export const offlineSessionMetadata: Pick<ClientGameSession, 'type' | 'mode' | 'status'> = {
+/** Offline session */
+export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
+  'tableSize',
+  'players', 'stats',
+  'flippedCards', 'cards',
+  'startedAt', 'continuedAt'
+] as const
+
+export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClientGameSession> = {
+  sessionId: '_',
   type: 'CASUAL',
   mode: 'SINGLE',
   status: 'OFFLINE'
 } as const
 
-export const offlinePlaceholderPlayer: SessionPlayerWithUserAvatar = {
+export const offlinePlayer: SessionPlayerWithUserAvatar = {
   color: '#ffffff',
   tag: '_offline',
   user: {

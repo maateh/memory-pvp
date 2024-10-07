@@ -25,7 +25,11 @@ declare global {
     updatedAt?: Date | null
   }
 
-  declare type UnsignedClientGameSession = Omit<ClientGameSession, 'type' | 'mode' | 'status'>
+  declare type UnsignedClientGameSession = Omit<
+    ClientGameSession,
+    'sessionId' | 'type' | 'mode' | 'status' |
+    'closedAt' | 'updatedAt'
+  >
 
   /** Prisma schemas */
   declare type GameSessionWithOwnerWithPlayersWithAvatar = GameSession & {

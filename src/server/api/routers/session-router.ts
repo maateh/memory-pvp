@@ -273,6 +273,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session,
+          sessionId: uuidv4(),
           type: 'CASUAL',
           mode: 'SINGLE',
           status: 'OFFLINE',

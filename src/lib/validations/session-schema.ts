@@ -84,4 +84,4 @@ export const abandonSessionSchema = clientSessionSchema
 export const saveOfflineGameSchema = clientSessionSchema.extend({
   playerTag: z.string(),
   cards: matchedCardsSchema
-}).omit({ type: true, mode: true, status: true, players: true })
+}).omit({ sessionId: true, type: true, mode: true, status: true, players: true })

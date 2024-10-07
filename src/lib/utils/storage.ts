@@ -1,3 +1,9 @@
+// constants
+import { offlineSessionKeys } from "@/constants/session"
+
+// utils
+import { pickFields } from "@/lib/utils"
+
 /** Local storage key for the active offline session. */
 const STORAGE_KEY = "CLIENT_GAME_SESSION"
 
@@ -25,7 +31,8 @@ export function getSessionFromStorage(): UnsignedClientGameSession | null {
 export function saveSessionToStorage(session: UnsignedClientGameSession): UnsignedClientGameSession | void {
   if (typeof window === 'undefined') return
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+  const offlineSession = pickFields(session, offlineSessionKeys)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(offlineSession))
 }
 
 /**
