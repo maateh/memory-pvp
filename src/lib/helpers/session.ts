@@ -22,7 +22,8 @@ import { freeFlipsMultiplier, tableSizeMap } from "@/constants/game"
  * @returns {string} - The generated slug in the format `xx-yyy_xxxxxxxx`.
  */
 export function generateSlug(
-  session: Pick<ClientGameSession, 'type' | 'mode'>
+  session: Pick<ClientGameSession, 'type' | 'mode'>,
+  isOffline: boolean = false
 ): string {
   const { type, mode } = session
 
@@ -30,7 +31,11 @@ export function generateSlug(
    * Creates a prefix by slicing then merging the first
    * characters of session 'type' and 'mode'.
    */
-  const prefix = `${type.slice(0, 2).toLowerCase()}-${mode.slice(0, 3).toLowerCase()}`
+  let prefix = `${type.slice(0, 2).toLowerCase()}-${mode.slice(0, 3).toLowerCase()}`
+
+  if (isOffline) {
+    prefix = 'off'
+  }
 
   /** Prevents generating `_` symbol by nanoid. */
   const id = nanoid(8).replace(/_/g, '-')

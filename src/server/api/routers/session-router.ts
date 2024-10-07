@@ -286,7 +286,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session, stats,
-          slug: generateSlug({ type: 'CASUAL', mode: 'SINGLE' }),
+          slug: generateSlug({ type: 'CASUAL', mode: 'SINGLE' }, true),
           type: 'CASUAL',
           mode: 'SINGLE',
           status: 'OFFLINE',
