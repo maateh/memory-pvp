@@ -47,7 +47,7 @@ export const useOfflineSessionHandler = () => {
         continuePrevious: () => continueOfflineSession(form)
       })
 
-      router.replace('/game/setup/warning?sessionId=offline')
+      router.replace('/game/setup/warning?slug=offline')
       return
     }
 

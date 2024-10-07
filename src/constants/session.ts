@@ -1,5 +1,5 @@
 export const clientSessionKeys: (keyof ClientGameSession)[] = [
-  'sessionId',
+  'slug',
   'type', 'mode', 'tableSize', 'status',
   'players', 'stats',
   'flippedCards', 'cards',
@@ -19,7 +19,7 @@ export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
 ] as const
 
 export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClientGameSession> = {
-  sessionId: '_',
+  slug: '_',
   type: 'CASUAL',
   mode: 'SINGLE',
   status: 'OFFLINE'

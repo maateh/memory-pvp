@@ -27,7 +27,7 @@ declare global {
 
   declare type UnsignedClientGameSession = Omit<
     ClientGameSession,
-    'sessionId' | 'type' | 'mode' | 'status' |
+    'slug' | 'type' | 'mode' | 'status' |
     'closedAt' | 'updatedAt'
   >
 

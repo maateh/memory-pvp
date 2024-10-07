@@ -8,7 +8,7 @@ import { SessionStats } from "@/components/session"
 
 type GameSessionSummaryProps = {
   params: {
-    sessionId: string
+    slug: string
   }
 }
 

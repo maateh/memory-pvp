@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
-
 // trpc
 import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
@@ -21,7 +19,7 @@ import {
 } from "@/lib/validations/session-schema"
 
 // helpers
-import { parseSchemaToClientSession } from "@/lib/helpers/session"
+import { generateSlug, parseSchemaToClientSession } from "@/lib/helpers/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -34,7 +32,7 @@ export const sessionRouter = createTRPCRouter({
   getActive: protectedSessionProcedure
     .query(async ({ ctx }): Promise<ClientGameSession> => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
-        `session:${ctx.activeSession.sessionId}`
+        `session:${ctx.activeSession.slug}`
       )
 
       if (!clientSession) {
@@ -74,7 +72,7 @@ export const sessionRouter = createTRPCRouter({
       
       if (activeSession) {
         const clientSession: ClientGameSession | null = await ctx.redis.get(
-          `session:${activeSession.sessionId}`
+          `session:${activeSession.slug}`
         )
 
         throw new TRPCError({
@@ -104,7 +102,7 @@ export const sessionRouter = createTRPCRouter({
       const session = await ctx.db.gameSession.create({
         data: {
           ...input,
-          sessionId: uuidv4(),
+          slug: generateSlug({ type: input.type, mode: input.mode }),
           status: 'RUNNING',
           flippedCards: [],
           cards: getMockCards(input.tableSize), // TODO: generate cards
@@ -150,7 +148,7 @@ export const sessionRouter = createTRPCRouter({
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       return await ctx.redis.set(
-        `session:${ctx.activeSession.sessionId}`,
+        `session:${ctx.activeSession.slug}`,
         session,
         { ex: SESSION_STORE_TTL }
       )
@@ -159,7 +157,7 @@ export const sessionRouter = createTRPCRouter({
   save: protectedSessionProcedure
     .input(saveSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
       return await ctx.db.gameSession.update({
         where: {
@@ -172,7 +170,7 @@ export const sessionRouter = createTRPCRouter({
   finish: protectedSessionProcedure
     .input(finishSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
       return await ctx.db.gameSession.update({
         where: {
@@ -201,7 +199,7 @@ export const sessionRouter = createTRPCRouter({
   abandon: protectedSessionProcedure
     .input(abandonSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.sessionId}`)
+      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
       if (!session) {
         const validation = await abandonSessionSchema.safeParseAsync(ctx.activeSession)
@@ -288,7 +286,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.create({
         data: {
           ...session, stats,
-          sessionId: uuidv4(),
+          slug: generateSlug({ type: 'CASUAL', mode: 'SINGLE' }),
           type: 'CASUAL',
           mode: 'SINGLE',
           status: 'OFFLINE',

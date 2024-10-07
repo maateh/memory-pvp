@@ -43,7 +43,7 @@ const statsSchema = z.object({
 })
 
 export const clientSessionSchema = z.object({
-  sessionId: z.string().uuid(),
+  slug: z.string(),
 
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
@@ -84,4 +84,4 @@ export const abandonSessionSchema = clientSessionSchema
 export const saveOfflineGameSchema = clientSessionSchema.extend({
   playerTag: z.string(),
   cards: matchedCardsSchema
-}).omit({ sessionId: true, type: true, mode: true, status: true, players: true })
+}).omit({ slug: true, type: true, mode: true, status: true, players: true })

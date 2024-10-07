@@ -8,12 +8,12 @@ const SessionRunningWarningModal = dynamic(() => import("./session-warning-modal
 
 type SessionRunningWarningPageProps = {
   searchParams?: {
-    sessionId?: string
+    slug?: string
   }
 }
 
 const SessionRunningWarningPage = async ({ searchParams }: SessionRunningWarningPageProps) => { 
-  const isOffline = searchParams?.sessionId === 'offline'
+  const isOffline = searchParams?.slug === 'offline'
 
   try {
     let clientSession: ClientGameSession | null = null

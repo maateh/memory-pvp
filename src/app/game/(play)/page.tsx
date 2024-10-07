@@ -39,8 +39,8 @@ const GamePlayPage = () => {
   })
   
   const finishSession = api.session.finish.useMutation({
-    onSuccess: ({ sessionId }) => {
-      router.replace(`/game/summary/${sessionId}`)
+    onSuccess: ({ slug }) => {
+      router.replace(`/game/summary/${slug}`)
 
       toast.success('You finished your game session!', {
         description: 'Session data has been successfully saved.'

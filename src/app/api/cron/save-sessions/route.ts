@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
     const operations = sessions.map(({ players: _, ...session }) =>
       db.gameSession.update({
-        where: { sessionId: session.sessionId },
+        where: { slug: session.slug },
         data: {
           ...session,
           updatedAt: new Date()
