@@ -28,6 +28,7 @@ import { getMockCards } from "@/lib/utils/game"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
+import { offlinePlayer } from "@/constants/session"
 
 export const sessionRouter = createTRPCRouter({
   getActive: protectedSessionProcedure
@@ -270,9 +271,23 @@ export const sessionRouter = createTRPCRouter({
         })
       }
 
+      /**
+       * Replace the default 'offlinePlayer.tag' placeholder constant
+       * which is used by default in offline session stats.
+       */
+      const stats: PrismaJson.SessionStats = {
+        ...session.stats,
+        flips: {
+          [playerTag]: session.stats.flips[offlinePlayer.tag]
+        },
+        matches: {
+          [playerTag]: session.stats.matches[offlinePlayer.tag]
+        }
+      }
+
       return await ctx.db.gameSession.create({
         data: {
-          ...session,
+          ...session, stats,
           sessionId: uuidv4(),
           type: 'CASUAL',
           mode: 'SINGLE',
