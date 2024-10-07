@@ -47,8 +47,8 @@ model PlayerProfile {
 }
 
 model GameSession {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId String @unique // TODO: generate slug instead of using UUID
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  slug String @unique
 
   type      GameType
   mode      GameMode
@@ -82,9 +82,9 @@ model GameSession {
 model Result {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  flips Int
+  flips   Int
   matches Int
-  score Int?
+  score   Int?
 
   player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId String        @db.ObjectId
