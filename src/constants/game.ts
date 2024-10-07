@@ -69,6 +69,12 @@ export const tableSizeMap: Record<TableSize, number> = {
 } as const
 
 /**
+ * Multiplier to calculate the amount of the "free flips"
+ * in 'Competitive - Single or Co-Op' sessions.
+ */
+export const freeFlipsMultiplier = 0.75
+
+/**
  * Note: These image placeholders is used only for testing purposes.
  * In the future, there will be an option for users to upload
  * their custom image sets for memory card placeholders.

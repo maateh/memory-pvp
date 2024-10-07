@@ -1,10 +1,9 @@
-import { differenceInSeconds } from "date-fns"
-
 // utils
 import { pickFields } from "@/lib/utils"
 
 // constants
 import { clientSessionKeys, clientSessionPlayerKeys } from "@/constants/session"
+import { freeFlipsMultiplier, tableSizeMap } from "@/constants/game"
 
 /**
  * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
@@ -91,4 +90,62 @@ export function updateSessionStats(
   }
 
   return stats
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param session 
+ * @returns 
+ */
+export function getFreeFlips(
+  session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize'>
+): number | null {
+  const { type, mode, tableSize } = session
+
+  if (type === 'CASUAL') return null
+
+  if (mode === 'SINGLE') {
+    return tableSizeMap[tableSize] * freeFlipsMultiplier
+  }
+
+  if (mode === 'COOP') {
+    // TODO: this calculation is temporary
+    return tableSizeMap[tableSize] * freeFlipsMultiplier
+  }
+
+  return null
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param session 
+ * @param playerTag 
+ * @returns 
+ */
+export function calculateSessionScore(
+  session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
+  playerTag: string
+): number | null {
+  const { type, mode, tableSize, stats } = session
+
+  if (type === 'CASUAL') return null
+
+  if (mode === 'SINGLE') {
+    const freeFlips = getFreeFlips({ type, mode, tableSize })!
+    const flips = stats.flips[playerTag]
+
+    if (freeFlips >= flips) return freeFlips
+    return freeFlips * 2 - flips
+  }
+
+  if (mode === 'PVP') {
+    // TODO: implement
+  }
+
+  if (mode === 'COOP') {
+    // TODO: implement
+  }
+  return null
 }
