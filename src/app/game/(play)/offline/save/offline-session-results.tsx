@@ -15,7 +15,7 @@ import { SessionStats } from "@/components/session"
 
 const OfflineSessionResults = () => {
   const session = getSessionFromStorage()
-  const isOver = session?.cards.every((card) => card.isFlipped && card.isMatched)
+  const isOver = session?.cards.every((card) => !!card.matchedBy)
 
   if (!session || !isOver) {
     toast.warning("Offline session not found.", {

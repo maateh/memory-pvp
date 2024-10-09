@@ -75,29 +75,27 @@ export function parseSchemaToClientSession(
   }
 }
 
-type ValidatedMemoryCard = Omit<PrismaJson.MemoryCard, 'isFlipped' | 'isMatched'> & {
-  isFlipped: true
-  isMatched: true
+type ValidatedMemoryCard = Omit<PrismaJson.MemoryCard, 'matchedBy'> & {
+  matchedBy: string
 }
 
 /**
  * Validates all memory cards by marking them as flipped and matched.
  * 
- * - This function takes an array of `MemoryCard` objects and transforms each card by setting both 
- *   `isFlipped` and `isMatched` to `true`.
+ * - This function takes an array of `MemoryCard` objects and
+ *   transforms each card by updating `matchedBy` to required.
  * 
  * - Useful for scenarios where all cards in the game need to be programmatically validated as matched 
  *   (e.g., game completion or debugging).
  * 
  * @param {PrismaJson.MemoryCard[]} cards - Array of memory card objects to be validated.
  * 
- * @returns {ValidatedMemoryCard[]} - A new array of cards where all cards are flipped and matched.
+ * @returns {ValidatedMemoryCard[]} - A new array of cards where all cards are surely matched.
  */
 export function validateCardMatches(cards: PrismaJson.MemoryCard[]): ValidatedMemoryCard[] {
   return cards.map((card) => ({
     ...card,
-    isMatched: true,
-    isFlipped: true
+    matchedBy: card.matchedBy!
   }))
 }
 
@@ -118,17 +116,17 @@ export function validateCardMatches(cards: PrismaJson.MemoryCard[]): ValidatedMe
  * @returns {PrismaJson.SessionStats} - The updated session statistics.
  */
 export function updateSessionStats(
-  session: Pick<ClientGameSession, 'players' | 'stats' | 'flippedCards'>,
+  session: Pick<ClientGameSession, 'players' | 'stats' | 'flipped'>,
   action?: 'flip' | 'match'
 ): PrismaJson.SessionStats {
-  const { players, stats, flippedCards } = session
+  const { players, stats, flipped } = session
 
   const playerTag = players.current.tag
   
   if (action === 'flip') {
     const prevFlips = stats.flips[playerTag]
 
-    stats.flips[playerTag] = flippedCards.length === 1
+    stats.flips[playerTag] = flipped.length === 1
       ? prevFlips + 1
       : prevFlips
   }

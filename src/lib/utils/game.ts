@@ -64,8 +64,8 @@ export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
       id: nanoid(10),
       key,
       imageUrl: `${baseCardUrl}/${key}/640/640`,
-      isFlipped: false,
-      isMatched: false
+      flippedBy: null,
+      matchedBy: null
     }
   }
 

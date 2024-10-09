@@ -2,7 +2,7 @@ export const clientSessionKeys: (keyof ClientGameSession)[] = [
   'slug',
   'type', 'mode', 'tableSize', 'status',
   'players', 'stats',
-  'flippedCards', 'cards',
+  'flipped', 'cards',
   'startedAt', 'continuedAt', 'closedAt', 'updatedAt'
 ] as const
 
@@ -14,7 +14,7 @@ export const clientSessionPlayerKeys: (keyof SessionPlayerWithUserAvatar)[] = [
 export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
   'tableSize',
   'players', 'stats',
-  'flippedCards', 'cards',
+  'flipped', 'cards',
   'startedAt', 'continuedAt'
 ] as const
 

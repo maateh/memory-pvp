@@ -104,7 +104,7 @@ export const sessionRouter = createTRPCRouter({
           ...input,
           slug: generateSlug({ type: input.type, mode: input.mode }),
           status: 'RUNNING',
-          flippedCards: [],
+          flipped: [],
           cards: getMockCards(input.tableSize), // TODO: generate cards
           stats: {
             timer: 0,

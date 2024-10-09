@@ -61,7 +61,7 @@ export const useOfflineSessionHandler = () => {
     const offlineSession: UnsignedClientGameSession = {
       tableSize: values.tableSize,
       startedAt: new Date(),
-      flippedCards: [],
+      flipped: [],
       cards: getMockCards(values.tableSize),
       players: {
         current: offlinePlayer

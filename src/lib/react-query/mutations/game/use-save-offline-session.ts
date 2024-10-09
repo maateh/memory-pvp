@@ -39,7 +39,7 @@ export const useSaveOfflineSessionMutation = () => {
       return
     }
 
-    const isOver = offlineSession.cards.every((card) => card.isMatched && card.isFlipped)
+    const isOver = offlineSession.cards.every((card) => !!card.matchedBy)
     if (!isOver) {
       toast.warning("Offline session cannot be saved.", {
         description: "It looks like you haven't completely finished your offline session yet. Please, finish it first or you can start a new game anytime if you want."

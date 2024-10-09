@@ -60,9 +60,9 @@ model GameSession {
   stats Json
 
   /// [MemoryCard]
-  flippedCards Json[]
-  /// [MemoryCard]
   cards        Json[]
+  /// [MemoryCardIdentifier]
+  flipped Json[]
 
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id])
   ownerId String        @db.ObjectId

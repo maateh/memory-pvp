@@ -7,19 +7,21 @@ import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-profile-schema"
 
 /** Base schemas */
-const cardSchema = z.object({
+const cardIdentifierSchema = z.object({
   id: z.string(),
-  key: z.string(),
+  key: z.string()
+})
+
+const cardSchema = cardIdentifierSchema.extend({
   imageUrl: z.string().url(),
-  isFlipped: z.coerce.boolean(),
-  isMatched: z.coerce.boolean()
+  flippedBy: z.string().nullable(),
+  matchedBy: z.string().nullable()
 })
 
 const matchedCardsSchema = z.array(
   cardSchema.merge(
     z.object({
-      isFlipped: z.literal(true),
-      isMatched: z.literal(true)
+      matchedBy: z.string()
     })
   )
 )
@@ -57,8 +59,8 @@ export const clientSessionSchema = z.object({
   }),
   stats: statsSchema,
 
-  flippedCards: z.array(cardSchema),
   cards: z.array(cardSchema),
+  flipped: z.array(cardIdentifierSchema),
 
   startedAt: z.coerce.date(),
   continuedAt: z.coerce.date().optional().nullable()

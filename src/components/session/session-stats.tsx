@@ -20,7 +20,7 @@ const SessionStats = ({ session, withTitle = false }: SessionStatsProps) => {
     {
       Icon: Spade,
       label: "Matched cards",
-      data: session.cards.filter((card) => card.isMatched).length + ' matches'
+      data: session.cards.filter((card) => card.matchedBy === session.players.current.tag).length + ' matches'
     },
     {
       Icon: ScanEye,

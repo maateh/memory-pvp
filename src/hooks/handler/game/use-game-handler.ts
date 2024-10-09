@@ -69,9 +69,16 @@ export const useGameHandler = ({
    * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
    */
   const handleCardFlip = (clickedCard: PrismaJson.MemoryCard) => {
-    if (clientSession.flippedCards.length === 2 || clickedCard.isMatched) return
+    const flippable = clientSession.flipped.length < 2
+      && clickedCard.flippedBy === null
+      && clickedCard.matchedBy === null
 
-    const flipped = [...clientSession.flippedCards, clickedCard]
+    if (!flippable) return
+
+    const flipped: PrismaJson.MemoryCardIdentifier[] = [
+      ...clientSession.flipped,
+      { id: clickedCard.id, key: clickedCard.key }
+    ]
     handleFlipUpdate(clickedCard)
 
     if (flipped.length < 2) return
@@ -136,7 +143,7 @@ export const useGameHandler = ({
    *   a (possibly) session saving callback.
    */
   useEffect(() => {
-    const isOver = clientSession.cards.every(card => card.isMatched)
+    const isOver = clientSession.cards.every((card) => card.matchedBy !== null)
     if (isOver) {
       finishRef.current()
       return () => unregisterSession()
