@@ -126,9 +126,7 @@ export function updateSessionStats(
   if (action === 'flip') {
     const prevFlips = stats.flips[playerTag]
 
-    stats.flips[playerTag] = flipped.length === 1
-      ? prevFlips + 1
-      : prevFlips
+    stats.flips[playerTag] = flipped.length === 1 ? prevFlips + 1 : prevFlips
   }
 
   if (action === 'match') {
@@ -171,22 +169,25 @@ export function getFreeFlips(
 /**
  * Calculates the score for a specific player in a game session based on the session's type, mode, and stats.
  * 
- * NOTE: These calculations are likely not final and might be changed in the future.
+ * **Note!**: These calculations are likely not final and might be changed in the future.
+ * **Note**: If the session type is 'CASUAL', scoring is not applicable, so the function returns `null`.
  * 
- * - If the session type is 'CASUAL', scoring is not applicable, so the function returns `null`.
- * - In 'SINGLE' mode, the score is calculated by comparing the player's number of flips with the allowed free flips.
- *   - If the player has fewer or equal flips than the free flips, the score is equal to the free flips.
+ * - **SINGLE mode**: The score is calculated by comparing the player's flips with the allowed free flips:
+ *   - If the player has fewer or equal flips than the free flips, the score equals the free flips.
  *   - If the player exceeds the free flips, the score is reduced by the difference between double the free flips and the player's flips.
- * - Modes like 'PVP' and 'COOP' are not yet implemented and return `null`.
+ *   - If the player abandons the session (`action === 'abandon'`), the score is set to the negative value of the free flips.
+ * - **PVP and COOP modes**: Not yet implemented, and currently return `null`.
  * 
  * @param {Object} session - The game session containing type, mode, table size, and stats.
  * @param {string} playerTag - The tag of the player whose score is being calculated.
+ * @param {string} [action='finish'] - Specifies whether the player finished or abandoned the session. Defaults to 'finish'.
  * 
- * @returns {number | null} - The player's calculated score or `null` if scoring is not applicable.
+ * @returns {number | null} - The player's calculated score, or `null` if scoring is not applicable.
  */
 export function calculateSessionScore(
   session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
-  playerTag: string
+  playerTag: string,
+  action: 'finish' | 'abandon' = 'finish'
 ): number | null {
   const { type, mode, tableSize, stats } = session
 
@@ -194,10 +195,17 @@ export function calculateSessionScore(
 
   if (mode === 'SINGLE') {
     const freeFlips = getFreeFlips({ type, mode, tableSize })!
-    const flips = stats.flips[playerTag]
 
-    if (freeFlips >= flips) return freeFlips
-    return freeFlips * 2 - flips
+    if (action === 'abandon') {
+      return -freeFlips
+    }
+
+    const flips = stats.flips[playerTag]
+    const score = freeFlips >= flips
+      ? freeFlips
+      : freeFlips * 2 - flips
+
+    return score
   }
 
   if (mode === 'PVP') {

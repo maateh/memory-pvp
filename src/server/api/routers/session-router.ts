@@ -19,7 +19,7 @@ import {
 } from "@/lib/validations/session-schema"
 
 // helpers
-import { generateSlug, parseSchemaToClientSession } from "@/lib/helpers/session"
+import { calculateSessionScore, generateSlug, parseSchemaToClientSession } from "@/lib/helpers/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -186,9 +186,7 @@ export const sessionRouter = createTRPCRouter({
                 playerId: player.id,
                 flips: session.stats.flips[player.tag],
                 matches: session.stats.matches[player.tag],
-
-                // TODO: calculate results
-                score: 0
+                score: calculateSessionScore(session, ctx.player.tag)
               }))
             }
           }
@@ -233,9 +231,8 @@ export const sessionRouter = createTRPCRouter({
                 flips: session.stats.flips[player.tag],
                 matches: session.stats.matches[player.tag],
 
-                // TODO: calculate results with maximum score deduction
-                // (in 'PVP' mode only for the player who abandoned the session)
-                score: 0
+                // TODO: in 'PVP' mode, only deducts for the player who abandoned the session
+                score: calculateSessionScore(session, ctx.player.tag, 'abandon')
               }))
             }
           }
@@ -270,7 +267,7 @@ export const sessionRouter = createTRPCRouter({
       }
 
       /**
-       * Replace the default 'offlinePlayer.tag' placeholder constant
+       * Replaces the default 'offlinePlayer.tag' placeholder constant
        * which is used by default in offline session stats.
        */
       const stats: PrismaJson.SessionStats = {
