@@ -13,19 +13,23 @@ type MemoryCardProps = {
 
 const MemoryCard = ({ card, onClick }: MemoryCardProps) => {
   return (
-    <div className="w-full max-w-40 mx-auto aspect-square cursor-pointer [perspective:1000px] transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95"
+    <div className={cn("rounded-xl w-full max-w-40 mx-auto aspect-square cursor-pointer [perspective:1000px] transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-border/40", {
+      "shadow-lg shadow-secondary/65 hover:shadow-secondary/75": card.flippedBy,
+      "shadow-lg shadow-border/60 hover:shadow-border/70": card.matchedBy
+    })}
       onClick={onClick}
     >
       <div className={cn("relative size-full transition-transform duration-600 [transform-style:preserve-3d]", {
-        "[transform:rotateY(180deg)]": card.isFlipped
+        "[transform:rotateY(180deg)]": card.flippedBy || card.matchedBy
       })}>
-        <Card className="size-full absolute [backface-visibility:hidden]">
-          <CardContent className="p-0 size-full flex items-center justify-center bg-primary text-primary-foreground text-4xl font-bold">
+        <Card className="rounded-xl size-full absolute [backface-visibility:hidden]">
+          <CardContent className="rounded-xl p-0 size-full flex items-center justify-center bg-primary text-primary-foreground text-4xl font-bold">
             ?
           </CardContent>
         </Card>
-        <Card className="size-full absolute [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <CardContent className="p-0 size-full img-wrapper">
+
+        <Card className="rounded-xl size-full absolute [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <CardContent className="rounded-xl p-0 size-full img-wrapper">
             <Image
               src={card.imageUrl}
               alt="card image"
