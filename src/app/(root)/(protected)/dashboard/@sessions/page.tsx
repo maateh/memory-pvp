@@ -2,32 +2,13 @@
 import { gameSessionsWidgetInfo } from "@/components/widgets/constants"
 
 // icons
-import { ChevronRightCircle, SquareSigma } from "lucide-react"
-
-// shadcn
-import { Badge } from "@/components/ui/badge"
+import { SquareSigma } from "lucide-react"
 
 // components
 import { WidgetCard } from "@/components/widgets"
+import SessionBreadcrumbFilter from "./session-breadcrumb-filter"
 
 const SessionsWidgetCard = () => {
-  // TODO: show played sessions per categories
-  // A "breadcrumb"-like filter mechanism
-
-  // CASUAL sessions (+ offline played)
-  // - [SINGLE] sessions (+ offline played)
-  //    - [...TABLE_SIZES] sessions (+ offline played)
-  // - [COOP] sessions
-  //    - [...TABLE_SIZES] sessions (+ offline played)
-
-  // COMPETITIVE sessions
-  // - [SINGLE] sessions
-  //    - [...TABLE_SIZES] sessions
-  // - [COOP] sessions
-  //    - [...TABLE_SIZES] sessions
-  // - [PVP] sessions
-  //    - [...TABLE_SIZES] sessions
-
   return (
     <WidgetCard
       widgetLink="/dashboard/sessions"
@@ -37,17 +18,7 @@ const SessionsWidgetCard = () => {
         Summary of your sessions
       </h4>
 
-      <div className="flex items-center gap-x-1.5">
-        <Badge>
-          Casual
-        </Badge>
-
-        <Badge>
-          Competitive
-        </Badge>
-
-        <ChevronRightCircle className="size-4 text-foreground/65" />
-      </div>
+      <SessionBreadcrumbFilter />
 
       <div className="mt-5 pt-2.5 flex gap-x-2 border-t border-border/70">
         <SquareSigma className="size-4 sm:size-5" />
