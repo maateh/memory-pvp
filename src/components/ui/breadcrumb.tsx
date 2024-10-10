@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
+import { Button, type ButtonProps } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
 
@@ -104,6 +105,37 @@ const BreadcrumbEllipsis = ({
 )
 BreadcrumbEllipsis.displayName = "BreadcrumbElipssis"
 
+const BreadcrumbItemGroup = ({
+  className,
+  ...props
+}: React.ComponentProps<"li">) => (
+  <BreadcrumbItem className={cn("flex gap-x-1", className)}
+    {...props}
+  />
+)
+BreadcrumbItemGroup.displayName = "BreadcrumbItemGroup"
+
+type BreadcrumbButtonProps = {
+  selected: boolean
+} & ButtonProps
+
+const BreadcrumbButton = ({
+  selected = false,
+  className,
+  size = "sm",
+  ...props
+}: BreadcrumbButtonProps) => (
+  <Button className={cn(
+    "h-fit py-1 px-2.5 text-xs font-normal rounded-full",
+    { "bg-secondary/40 hover:bg-secondary/50": selected },
+    className
+  )}
+    size={size}
+    {...props}
+  />
+)
+BreadcrumbButton.displayName = "BreadcrumbButton"
+
 export {
   Breadcrumb,
   BreadcrumbList,
@@ -112,4 +144,6 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
+  BreadcrumbItemGroup,
+  BreadcrumbButton
 }
