@@ -2,6 +2,7 @@ import dynamic from "next/dynamic"
 
 // trpc
 import { api } from "@/trpc/server"
+import { logError } from "@/lib/utils"
 
 // components
 const SessionRunningWarningModal = dynamic(() => import("./session-warning-modal"), { ssr: false })
@@ -28,7 +29,7 @@ const SessionRunningWarningPage = async ({ searchParams }: SessionRunningWarning
       />
     )
   } catch (err) {
-    return
+    logError(err)
   }
 }
 
