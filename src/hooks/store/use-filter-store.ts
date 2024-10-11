@@ -16,7 +16,7 @@ export type FilterStore<T extends FilterFields<T, keyof T>> = {
   clear: () => void
 }
 
-export const useFilterStoreImpl = create<FilterStore<Filter<unknown>>>((set) => ({
+const useFilterStoreImpl = create<FilterStore<Filter<unknown>>>((set) => ({
   filter: {},
   set: (filter) => set({ filter }),
   clear: () => set({ filter: {} })
