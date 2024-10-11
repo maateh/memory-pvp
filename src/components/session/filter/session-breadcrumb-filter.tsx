@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
-
-// prisma
-import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
+// types
+import type { GameMode, GameType, TableSize } from "@prisma/client"
+import type { SessionFilterFields, SessionFilterOptions } from "./types"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -15,13 +14,8 @@ import { ChevronRightCircle } from "lucide-react"
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 
-type SessionFilterFields = Pick<GameSession, 'type' | 'mode' | 'tableSize'>
-
-type SessionFilter = Partial<SessionFilterFields>
-
-type SessionFilterOptions = {
-  [key in keyof SessionFilterFields]: GameSession[key][]
-}
+// hooks
+import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
 const options: SessionFilterOptions = {
   type: ["CASUAL", "COMPETITIVE"],
@@ -30,33 +24,47 @@ const options: SessionFilterOptions = {
 }
 
 const SessionBreadcrumbFilter = () => {
-  const [filter, setFilter] = useState<SessionFilter>({})
+  const filter = useFilterStore<SessionFilterFields, 'filter'>((state) => state.filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilter((prev) => {
-      if (prev.type === type) {
-        return {}
+    setFilterStore<SessionFilterFields>(({ filter }) => {
+      if (!filter) return { filter }
+
+      if (filter.type === type) {
+        filter = {}
+      } else {
+        filter = { ...filter, type }
       }
 
-      return { ...prev, type }
+      return { filter }
     })
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilter((prev) => {
-      if (prev.mode === mode) {
-        return { type: prev.type, mode: undefined }
+    setFilterStore<SessionFilterFields>(({ filter }) => {
+      if (!filter) return { filter }
+
+      if (filter.mode === mode) {
+        filter = { type: filter.type, mode: undefined }
+      } else {
+        filter = { ...filter, mode }
       }
 
-      return { ...prev, mode }
+      return { filter }
     })
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilter((prev) => ({
-      ...prev,
-      tableSize: prev.tableSize === tableSize ? undefined : tableSize
-    }))
+    setFilterStore<SessionFilterFields>(({ filter }) => {
+      if (!filter) return { filter }
+
+      filter = {
+        ...filter,
+        tableSize: filter.tableSize ? undefined : tableSize
+      }
+
+      return { filter }
+    })
   }
 
   return (
