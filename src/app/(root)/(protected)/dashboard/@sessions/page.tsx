@@ -6,7 +6,7 @@ import { SquareSigma } from "lucide-react"
 
 // components
 import { WidgetCard } from "@/components/widgets"
-import SessionBreadcrumbFilter from "./session-breadcrumb-filter"
+import { SessionBreadcrumbFilter } from "@/components/session/filter"
 
 const SessionsWidgetCard = () => {
   return (
