@@ -1,14 +1,17 @@
+// trpc
+import { api } from "@/trpc/server"
+
 // constants
 import { gameSessionsWidgetInfo } from "@/components/widgets/constants"
-
-// icons
-import { SquareSigma } from "lucide-react"
 
 // components
 import { WidgetCard } from "@/components/widgets"
 import { SessionBreadcrumbFilter } from "@/components/session/filter"
+import SessionCounter from "./session-counter"
 
-const SessionsWidgetCard = () => {
+const SessionsWidgetCard = async () => {
+  const amount = await api.session.count()
+
   return (
     <WidgetCard
       widgetLink="/dashboard/sessions"
@@ -20,12 +23,7 @@ const SessionsWidgetCard = () => {
 
       <SessionBreadcrumbFilter />
 
-      <div className="mt-5 pt-2.5 flex gap-x-2 border-t border-border/70">
-        <SquareSigma className="size-4 sm:size-5" />
-        <p className="font-heading small-caps">
-          Total sessions: <span className="font-medium">420</span>
-        </p>
-      </div>
+      <SessionCounter initialData={amount} />
     </WidgetCard>
   )
 }
