@@ -15,11 +15,12 @@ import {
   finishSessionSchema,
   saveOfflineGameSchema,
   saveSessionSchema,
+  sessionFilterSchema,
   setupGameSchema
 } from "@/lib/validations/session-schema"
 
 // helpers
-import { calculateSessionScore, generateSlug, parseSchemaToClientSession } from "@/lib/helpers/session"
+import { calculateSessionScore, generateSlug, parseSchemaToClientSession, parseSessionFilter } from "@/lib/helpers/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -29,6 +30,26 @@ import { SESSION_STORE_TTL } from "@/lib/redis"
 import { offlinePlayer } from "@/constants/session"
 
 export const sessionRouter = createTRPCRouter({
+  get: protectedProcedure
+    .input(sessionFilterSchema)
+    .query(async ({ ctx, input }) => {
+      const filter = parseSessionFilter(ctx.user.id, input)
+
+      const sessions = await ctx.db.gameSession.findMany({
+        where: filter
+      })
+
+      return sessions.map(({ id: _, ...session }) => session)
+    }),
+
+  count: protectedProcedure
+    .input(sessionFilterSchema)
+    .query(async ({ ctx, input }) => {
+      const filter = parseSessionFilter(ctx.user.id, input)
+
+      return await ctx.db.gameSession.count({ where: filter })
+    }),
+
   getActive: protectedSessionProcedure
     .query(async ({ ctx }): Promise<ClientGameSession> => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
