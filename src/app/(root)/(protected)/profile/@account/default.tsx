@@ -1,5 +1,5 @@
-const AccountWidgetDefault = () => {
-  return 'AccountWidgetDefault'
-}
+import { redirect } from "next/navigation"
 
-export default AccountWidgetDefault
+const AccountWidgetRedirectDefault = () => redirect('/profile')
+
+export default AccountWidgetRedirectDefault

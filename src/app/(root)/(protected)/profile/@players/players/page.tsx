@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
-const PlayersWidgetPage = () => redirect('/profile')
+const PlayersWidgetRedirectPage = () => redirect('/profile')
 
-export default PlayersWidgetPage
+export default PlayersWidgetRedirectPage
