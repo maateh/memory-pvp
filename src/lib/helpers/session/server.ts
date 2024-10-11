@@ -5,6 +5,11 @@ import { pickFields } from "@/lib/utils"
 
 // constants
 import { clientSessionKeys, clientSessionPlayerKeys } from "@/constants/session"
+import { sessionFilterSchema } from "@/lib/validations/session-schema"
+
+// types
+import type { z } from "zod"
+import type { Prisma } from "@prisma/client"
 
 /**
  * Generates a unique slug for a game session based on its type and mode.
@@ -71,5 +76,39 @@ export function parseSchemaToClientSession(
       current: pickFields(players.current, clientSessionPlayerKeys),
       other: players.other && pickFields(players.other, clientSessionPlayerKeys)
     }
+  }
+}
+
+/**
+ * Parses the provided session filter input to create a `Prisma.GameSessionWhereInput` object, 
+ * which can be used to query game sessions using Prisma.
+ * 
+ * - Filters sessions by the owner's user ID and optionally by players and stats.
+ * - If `players` are provided in the input, it checks whether any of the players in the session 
+ *   have a matching tag from the input.
+ * - Filters session stats if provided in the input.
+ * 
+ * @param {string} userId - The ID of the session owner to filter by.
+ * @param {Object} filterInput - The filter input that includes optional player and stats filters.
+ * 
+ * @returns {Prisma.GameSessionWhereInput} - A Prisma query input for filtering game sessions.
+ */
+export function parseSessionFilter(
+  userId: string,
+  filterInput: z.infer<typeof sessionFilterSchema>
+): Prisma.GameSessionWhereInput {
+  const { players, stats, ...filter } = filterInput
+
+  return {
+    owner: { userId },
+    players: players ? {
+      some: {
+        tag: {
+          in: Object.values(players).map((player) => player!.tag)
+        }
+      }
+    } : undefined,
+    stats: stats as Prisma.JsonFilter<"GameSession"> | undefined,
+    ...filter
   }
 }

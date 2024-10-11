@@ -67,6 +67,13 @@ export const clientSessionSchema = z.object({
 })
 
 /** Forms / API validations */
+export const sessionFilterSchema = clientSessionSchema
+  .partial()
+  .omit({
+    cards: true,
+    flipped: true
+  }).optional().default({})
+
 export const setupGameSchema = z.object({
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
