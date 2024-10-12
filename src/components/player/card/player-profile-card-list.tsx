@@ -5,7 +5,7 @@ import { PlayerProfile } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 // components
-import { Warning } from "@/components/shared"
+import { CardItem, Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileCardListProps = {
@@ -23,9 +23,9 @@ const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
     <ScrollArea className="max-h-60 pr-3">
       <ul className="flex flex-col gap-y-1">
         {players?.map((player) => (
-          <li key={player.id}>
+          <CardItem key={player.id}>
             <PlayerProfileCard player={player} />
-          </li>
+          </CardItem>
         ))}
       </ul>
     </ScrollArea>

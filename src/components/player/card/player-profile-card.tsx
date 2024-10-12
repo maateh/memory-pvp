@@ -32,7 +32,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   const [color, setColor] = useState(player.color)
 
   return (
-    <div className="py-2.5 px-3 flex justify-between items-center rounded-lg hover:bg-transparent/5 dark:hover:bg-transparent/20">
+    <>
       <div className="flex gap-x-3 items-center">
         <div className={cn("p-1.5 flex items-center justify-center rounded-xl", {
           "bg-transparent/5 dark:bg-transparent/20 border border-border/25": editing
@@ -78,7 +78,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         setEditing={setEditing}
         setColor={setColor}
       />
-    </div>
+    </>
   )
 }
 
