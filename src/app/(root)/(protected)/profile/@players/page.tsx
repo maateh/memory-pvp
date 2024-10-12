@@ -6,7 +6,7 @@ import { signedIn } from '@/server/actions/signed-in'
 import { playerProfilesWidgetInfo } from '@/components/widgets/constants'
 
 // components
-import { WidgetCard } from '@/components/widgets'
+import { WidgetCard, WidgetSubheader } from '@/components/widgets'
 import { Warning } from '@/components/shared'
 import { PlayerProfileCard } from '@/components/player/card'
 
@@ -33,9 +33,9 @@ const PlayersWidget = async () => {
       widgetLink="/profile/players"
       {...playerProfilesWidgetInfo}
     >
-      <h4 className="mt-2 mb-4 w-fit border-t border-t-accent text-lg font-heading font-semibold small-caps">
+      <WidgetSubheader className="mt-2 mb-3.5">
         Active player profile
-      </h4>
+      </WidgetSubheader>
 
       {activePlayer ? (
         <PlayerProfileCard player={activePlayer} />

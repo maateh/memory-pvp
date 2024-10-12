@@ -15,7 +15,7 @@ import { manageAccountWidgetInfo } from "@/components/widgets/constants"
 import { Mail, SquareUser } from "lucide-react"
 
 // components
-import { WidgetCard } from "@/components/widgets"
+import { WidgetCard, WidgetSubheader } from "@/components/widgets"
 import UserInfoItem from "./user-info-item"
 
 type AccountWidgetCardProps = {
@@ -30,9 +30,9 @@ const AccountWidgetCard = ({ user }: AccountWidgetCardProps) => {
       widgetAction={openUserProfile}
       {...manageAccountWidgetInfo}
     >
-      <h4 className="mt-2 mb-5 w-fit border-t border-t-accent text-lg font-heading font-semibold small-caps">
+      <WidgetSubheader className="mt-2 mb-5">
         Account details
-      </h4>
+      </WidgetSubheader>
 
       <div className="space-y-6">
         <UserInfoItem

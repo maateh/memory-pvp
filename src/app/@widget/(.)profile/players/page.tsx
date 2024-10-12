@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { playerProfilesWidgetInfo } from "@/components/widgets/constants"
 
 // components
-import { WidgetModal } from "@/components/widgets"
+import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 import { PlayerProfileForm } from "@/components/player"
 import { PlayerProfileCardList } from '@/components/player/card'
 
@@ -31,18 +31,18 @@ const PlayersWidgetModal = async () => {
   return (
     <WidgetModal isOpen {...playerProfilesWidgetInfo}>
       <div className="space-y-8">
-        <h4 className="text-lg font-heading font-bold small-caps">
+        <WidgetSubheader>
           Create a new player profile
-        </h4>
+        </WidgetSubheader>
 
         <PlayerProfileForm />
       </div>
 
       <Separator className="w-11/12 my-2.5 mx-auto bg-border/60" />
 
-      <h4 className="text-lg font-heading font-bold small-caps">
+      <WidgetSubheader>
         Manage your current profiles
-      </h4>
+      </WidgetSubheader>
 
       <PlayerProfileCardList players={players} />
     </WidgetModal>

@@ -11,8 +11,11 @@ import { Edit, Expand } from "lucide-react"
 
 // shadcn
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+
+// components
+import { WidgetHeader } from "@/components/widgets"
 
 type WidgetCardProps = ({
   widgetAction: () => void
@@ -37,17 +40,7 @@ const WidgetCard = ({
     <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>
       <CardHeader>
         <div className="flex items-center justify-between gap-5">
-          <div className="flex-1 flex gap-x-4">
-            {icon && (
-              <div className="size-6 sm:size-7 shrink-0">
-                {icon}
-              </div>
-            )}
-
-            <CardTitle className="text-2xl sm:text-3xl font-heading heading-decorator">
-              {title}
-            </CardTitle>
-          </div>
+          <WidgetHeader icon={icon} title={title} type="card" />
 
           {widgetAction ? (
             <Button className="expandable bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"
