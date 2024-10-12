@@ -60,7 +60,7 @@ const SessionBreadcrumbFilter = () => {
 
       filter = {
         ...filter,
-        tableSize: filter.tableSize ? undefined : tableSize
+        tableSize: filter.tableSize === tableSize ? undefined : tableSize
       }
 
       return { filter }
