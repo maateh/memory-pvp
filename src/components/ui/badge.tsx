@@ -1,6 +1,8 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
+import type { LucideIcon, LucideProps } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
@@ -32,4 +34,22 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
-export { Badge, badgeVariants }
+interface BadgeWithIconProps extends BadgeProps {
+  Icon: LucideIcon
+  iconProps?: LucideProps
+}
+
+function BadgeWithIcon({ Icon, iconProps, className, children, ...props }: BadgeWithIconProps) {
+  return (
+    <Badge className={cn("gap-x-2", className)} {...props}>
+      <Icon {...iconProps}
+        className={cn("size-4", iconProps?.className)}
+        strokeWidth={iconProps?.strokeWidth || 1.75}
+      />
+
+      {children}
+    </Badge>
+  )
+}
+
+export { Badge, BadgeWithIcon, badgeVariants }
