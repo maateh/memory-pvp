@@ -1,6 +1,6 @@
 // types
 import type { LucideIcon } from "lucide-react"
-import type { BadgeProps } from "@/components/ui/badge"
+import type { BadgeWithIconProps } from "@/components/ui/badge"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -9,18 +9,17 @@ import { cn } from "@/lib/utils"
 import { BadgeWithIcon } from "@/components/ui/badge"
 
 type SessionInfoBadgeProps = {
-  Icon: LucideIcon
   label: string
   subLabel: string
-} & BadgeProps
+} & BadgeWithIconProps
 
 const SessionInfoBadge = ({
-  Icon, label, subLabel,
+  label, subLabel,
   className, variant = "accent", ...props
 }: SessionInfoBadgeProps) => {
   return (
     <BadgeWithIcon className={cn("bg-secondary/20 hover:bg-secondary/30 text-foreground", className)}
-      Icon={Icon}
+      variant={variant}
       {...props}
     >
       <p className="space-x-1 pt-0.5 text-sm font-heading">

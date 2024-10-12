@@ -4,8 +4,8 @@
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { SessionBasics } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
-import SessionBasics from "./session-basics"
 import SessionSyncMarker from "./session-sync-marker"
 import SessionTimer from "./session-timer"
 
@@ -23,7 +23,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
           orientation="vertical"
         />
 
-        <SessionBasics {...session} />
+        <SessionBasics session={session} />
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">

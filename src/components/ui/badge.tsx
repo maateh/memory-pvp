@@ -34,7 +34,7 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
-interface BadgeWithIconProps extends BadgeProps {
+export interface BadgeWithIconProps extends BadgeProps {
   Icon: LucideIcon
   iconProps?: LucideProps
 }
