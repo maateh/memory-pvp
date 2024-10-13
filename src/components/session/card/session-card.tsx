@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils"
 // icons
 import { ExternalLink, Hash } from "lucide-react"
 
+// shadcn
+import { Skeleton } from "@/components/ui/skeleton"
+
 // components
 import { SessionBasics } from "@/components/session"
 
@@ -50,4 +53,26 @@ const SessionCard = ({ session }: SessionCardProps) => {
   )
 }
 
+const SessionCardSkeleton = () => {
+  return (
+    <div className="w-full flex justify-between items-center">
+      <div className="flex items-center gap-x-3">
+        <Skeleton className="size-3.5 rounded-full border border-border bg-muted-foreground/80" />
+
+        <div className="flex flex-col gap-y-2">
+          <Skeleton className="w-32 h-5 bg-muted/80" />
+
+          <div className="flex gap-x-3">
+            <Skeleton className="w-24 h-5 bg-accent/35" />
+            <Skeleton className="w-24 h-5 bg-accent/35" />
+          </div>
+        </div>
+      </div>
+
+      <ExternalLink className="size-4 sm:size-5 text-muted-foreground animate-pulse transition group-hover:text-foreground/90" />
+    </div>
+  )
+}
+
 export default SessionCard
+export { SessionCardSkeleton }
