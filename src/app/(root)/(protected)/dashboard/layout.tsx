@@ -1,3 +1,6 @@
+// components
+import { PageHeading } from "@/components/shared"
+
 type DashboardLayoutProps = {
   sessions: React.ReactNode
 }
@@ -9,9 +12,13 @@ const DashboardLayout = ({ sessions }: DashboardLayoutProps) => {
   // - friends
 
   return (
-    <div className="page-wrapper widget-container">
-      {sessions}
-    </div>
+    <>
+      <PageHeading heading="Dashboard" />
+
+      <div className="page-wrapper widget-container">
+        {sessions}
+      </div>
+    </>
   )
 }
 
