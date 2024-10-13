@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
-
 // trpc
 import { api } from "@/trpc/client"
 
@@ -14,23 +12,10 @@ import { Loader2, SquareSigma } from "lucide-react"
 // hooks
 import { useFilterStore } from "@/hooks/store/use-filter-store"
 
-type SessionCounterProps = {
-  initialData: number
-}
-
-const SessionCounter = ({ initialData }: SessionCounterProps) => {
-  const apiUtils = api.useUtils()
-
+const SessionCounter = () => {
   const filter = useFilterStore<SessionFilterFields, 'filter'>((state) => state.filter)
 
-  const { data: amount, isFetching } = api.session.count.useQuery(filter, {
-    initialData,
-    refetchOnMount: false
-  })
-
-  useEffect(() => {
-    apiUtils.session.count.invalidate()
-  }, [filter, apiUtils.session.count])
+  const { data: amount, isFetching } = api.session.count.useQuery(filter)
 
   return (
     <div className="mt-5 pt-2.5 flex gap-x-2 border-t border-border/70">
