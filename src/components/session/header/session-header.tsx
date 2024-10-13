@@ -23,7 +23,9 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
           orientation="vertical"
         />
 
-        <SessionBasics session={session} />
+        <SessionBasics className="max-sm:hidden"
+          session={session}
+        />
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">

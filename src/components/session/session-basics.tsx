@@ -5,6 +5,9 @@ import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } fro
 import type { LucideProps } from "lucide-react"
 import type { BadgeProps } from "@/components/ui/badge"
 
+// utils
+import { cn } from "@/lib/utils"
+
 // icons
 import { Dices, Gamepad2 } from "lucide-react"
 
@@ -15,13 +18,14 @@ type SessionBasicsProps = {
   session: Pick<ClientGameSession, "type" | "mode" | "tableSize">
   iconProps?: LucideProps
   badgeProps?: BadgeProps
+  className?: string
 }
 
-const SessionBasics = ({ session, iconProps, badgeProps }: SessionBasicsProps) => {
+const SessionBasics = ({ session, iconProps, badgeProps, className }: SessionBasicsProps) => {
   const { type, mode, tableSize } = session
 
   return (
-    <div className="hidden sm:flex flex-wrap items-center gap-x-3 gap-y-1">
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
       <SessionInfoBadge {...badgeProps}
         Icon={Gamepad2}
         iconProps={iconProps}
