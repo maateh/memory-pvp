@@ -1,6 +1,6 @@
 const DashboardPage = () => {
   return (
-    <div className="m-4 mb-8 xl:mx-4">
+    <div>
       {/* TODO: dashboard header */}
     </div>
   )

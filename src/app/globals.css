@@ -60,6 +60,17 @@
 }
 
 @layer utilities {
+  /* LAYOUT WRAPPERS */
+  .root-wrapper {
+    @apply py-5 px-2 sm:px-6;
+  }
+  .page-wrapper {
+    @apply mb-8 mt-4 mx-2 lg:mx-4;
+  }
+  .widget-container {
+    @apply grid gap-x-12 gap-y-16 xl:grid-cols-2;
+  }
+
   /* EXPANDABLE (BUTTON) */
   .expandable > div {
     @apply hidden;

@@ -10,10 +10,10 @@ const DashboardLayout = ({ sessions, children }: DashboardLayoutProps) => {
   // - friends
 
   return (
-    <div className="m-4 mb-8 xl:mx-4">
+    <div className="page-wrapper">
       {children}
 
-      <div className="grid gap-x-12 gap-y-16 xl:grid-cols-2">
+      <div className="widget-container">
         {sessions}
       </div>
     </div>

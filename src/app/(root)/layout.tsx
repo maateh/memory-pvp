@@ -17,7 +17,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
           </div>
         </SignedIn>
 
-        <div className="px-8 py-5">
+        <div className="root-wrapper">
           {children}
         </div>
       </div>
