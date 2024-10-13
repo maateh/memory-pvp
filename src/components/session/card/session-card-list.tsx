@@ -10,7 +10,7 @@ import { api } from "@/trpc/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 // components
-import { CardItem } from "@/components/shared"
+import { CardItem, Warning } from "@/components/shared"
 import { SessionCard, SessionCardSkeleton } from "@/components/session/card"
 
 // hooks
@@ -33,9 +33,16 @@ const SessionCardList = () => {
     )
   }
 
-  // TODO: create UI
   if (sessions.length === 0) {
-    return <>no data</>
+    const message = filter
+      ? "Couldn't find game session with the specified filter."
+      : "You have no game session history yet."
+
+    return (
+      <CardItem className="py-3.5 justify-center">
+        <Warning message={message} />
+      </CardItem>
+    )
   }
 
   return (
