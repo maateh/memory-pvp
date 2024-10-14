@@ -51,7 +51,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         <div className={cn("p-1.5 flex items-center justify-center rounded-xl", {
           "bg-transparent/5 dark:bg-transparent/20 border border-border/25": editing
         })}>
-          <ColorPicker className="size-4 border"
+          <ColorPicker className="size-4 border disabled:opacity-100"
             value={updatedPlayer.color}
             onChange={(color) => setUpdatedPlayer((prev) => ({ ...prev, color }))}
             disabled={!editing}

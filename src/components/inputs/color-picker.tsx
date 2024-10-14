@@ -24,7 +24,7 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className={cn("size-8 rounded-lg border-2 border-border disabled:opacity-100", className)}
+        <Button className={cn("size-8 rounded-lg border-2 border-border", className)}
           size="icon"
           style={{ backgroundColor: value }}
           ref={ref}

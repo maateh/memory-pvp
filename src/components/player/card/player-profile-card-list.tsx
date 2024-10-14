@@ -21,7 +21,7 @@ const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
 
   return (
     <ScrollArea className="max-h-60 pr-3">
-      <ul className="space-y-3">
+      <ul className="space-y-2">
         {players.map((player) => (
           <CardItem key={player.id}>
             <PlayerProfileCard player={player} />
