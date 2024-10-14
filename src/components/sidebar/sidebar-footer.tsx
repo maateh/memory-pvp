@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic"
+
 // clerk
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
@@ -5,7 +7,8 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SignInButton, ThemeToggle } from "@/components/shared"
+import { SignInButton } from "@/components/shared"
+const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), { ssr: false })
 
 const SidebarFooter = () => {
   return (

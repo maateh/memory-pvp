@@ -1,4 +1,5 @@
 import Link from "next/link"
+import dynamic from "next/dynamic"
 
 // prisma
 import { GameMode, GameType, TableSize } from "@prisma/client"
@@ -15,9 +16,9 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { ThemeToggle } from "@/components/shared"
 import SelectActivePlayer from "./select-active-player"
 import SetupGameForm from "./setup-game-form"
+const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), { ssr: false })
 
 type GameSetupPageProps = {
   searchParams: {
