@@ -9,11 +9,11 @@ import { CardItem, Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileCardListProps = {
-  players: PlayerProfile[] | undefined
+  players: PlayerProfile[]
 }
 
 const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
-  if (!players || !players.length) {
+  if (!players.length) {
     return (
       <Warning message="Currently, you don't have any player profiles." />
     )
