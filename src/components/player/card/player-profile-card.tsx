@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 // prisma
 import { PlayerProfile } from "@prisma/client"
@@ -9,27 +9,41 @@ import { PlayerProfile } from "@prisma/client"
 import { cn } from "@/lib/utils"
 
 // icons
-import { Star } from "lucide-react"
+import { CheckCircle2, Loader2, Star, XCircle } from "lucide-react"
 
 // shadcn
+import { ButtonTooltip } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 // components
 import { ColorPicker } from "@/components/inputs"
 import { PlayerVerifiedBadge } from "@/components/player"
+import PlayerActionsDropdown from "./player-actions-dropdown"
 
 // hooks
-import PlayerActionButtons from "./player-action-buttons"
+import { useDeletePlayerMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerProfileCardProps = {
   player: PlayerProfile
 }
 
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState<boolean>(false)
 
-  const [playerTag, setPlayerTag] = useState(player.tag)
-  const [color, setColor] = useState(player.color)
+  const [updatedPlayer, setUpdatedPlayer] = useState<Pick<PlayerProfile, 'tag' | 'color'>>({
+    tag: player.tag,
+    color: player.color
+  })
+
+  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation()
+  const { deletePlayer } = useDeletePlayerMutation()
+
+  const handleToggleEditing = () => {
+    setEditing((editing) => {
+      if (editing) setUpdatedPlayer(player)
+      return !editing
+    })
+  }
 
   return (
     <>
@@ -38,8 +52,8 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           "bg-transparent/5 dark:bg-transparent/20 border border-border/25": editing
         })}>
           <ColorPicker className="size-4 border"
-            value={color}
-            onChange={setColor}
+            value={updatedPlayer.color}
+            onChange={(color) => setUpdatedPlayer((prev) => ({ ...prev, color }))}
             disabled={!editing}
           />
         </div>
@@ -48,11 +62,11 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           <div className="flex items-center gap-x-2">
             {editing ? (
               <Input className="h-fit py-0.5 mb-0.5 border-input/40"
-                value={playerTag}
-                onChange={(e) => setPlayerTag(e.target.value)}
+                value={updatedPlayer.tag}
+                onChange={(e) => setUpdatedPlayer((prev) => ({ ...prev, tag: e.target.value }))}
               />
             ) : (
-              <p className="font-light">
+              <p className="font-heading font-semibold">
                 {player.tag}
               </p>
             )}
@@ -68,16 +82,43 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         </div>
       </div>
 
-      <PlayerActionButtons
-        player={player}
-        updatedPlayer={{
-          tag: playerTag,
-          color: color
-        }}
-        editing={editing}
-        setEditing={setEditing}
-        setColor={setColor}
-      />
+      <div className="flex items-center gap-x-2.5">
+        <div className={cn("flex gap-x-1", { "hidden": !editing })}>
+          <ButtonTooltip className="p-1"
+            tooltip="Save changes"
+            variant="ghost"
+            size="icon"
+            onClick={() => handleUpdatePlayer({
+              player,
+              updatedPlayer,
+              resetEditing: () => setEditing(false)
+            })}
+            disabled={updatePlayer.isPending || deletePlayer.isPending}
+          >
+            {updatePlayer.isPending ? (
+              <Loader2 className="size-[1.125rem] text-accent animate-spin flex-none" />
+            ) : (
+              <CheckCircle2 className="size-[1.125rem] text-accent flex-none" />
+            )}
+          </ButtonTooltip>
+
+          <ButtonTooltip className="p-1"
+            tooltip="Cancel"
+            variant="ghost"
+            size="icon"
+            onClick={handleToggleEditing}
+            disabled={updatePlayer.isPending || deletePlayer.isPending}
+          >
+            <XCircle className="size-[1.125rem] text-destructive flex-none" />
+          </ButtonTooltip>
+        </div>
+
+        <PlayerActionsDropdown
+          player={player}
+          editing={editing}
+          toggleEditing={handleToggleEditing}
+        />
+      </div>
     </>
   )
 }

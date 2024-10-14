@@ -31,7 +31,10 @@ const PlayerDeleteWarning = ({ player, ...props }: PlayerDeleteWarningProps) => 
         </WarningCancelButton>
 
         <WarningActionButton
-          onClick={() => handleDeletePlayer(player)}
+          onClick={() => handleDeletePlayer({
+            player,
+            closeDialog: () => props.onOpenChange
+          })}
           disabled={deletePlayer.isPending}
         >
           Delete

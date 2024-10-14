@@ -11,16 +11,13 @@ import { api } from "@/trpc/client"
 // utils
 import { logError, handleApiError } from "@/lib/utils"
 
-type UseUpdatePlayerProps = {
-  setEditing: (editing: boolean) => void
-}
-
-type HandleUpdatePlayerProps = {
+type HandleUpdatePlayerParams = {
   player: PlayerProfile
   updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
+  resetEditing: () => void
 }
 
-export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) => {
+export const useUpdatePlayerMutation = () => {
   const router = useRouter()
 
   const updatePlayer = api.playerProfile.update.useMutation({
@@ -29,7 +26,6 @@ export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) =>
         description: `You've updated this player profile: ${tag}`
       })
 
-      setEditing(false)
       router.refresh()
     },
     onError: (err) => {
@@ -37,11 +33,11 @@ export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) =>
     }
   })
 
-  const handleUpdatePlayer = async ({ player, updatedPlayer }: HandleUpdatePlayerProps) => {
+  const handleUpdatePlayer = async ({ player, updatedPlayer, resetEditing }: HandleUpdatePlayerParams) => {
     const { tag, color } = updatedPlayer
 
     if (tag === player.tag && color === player.color) {
-      setEditing(false)
+      resetEditing()
       return
     }
 
@@ -51,6 +47,8 @@ export const useUpdatePlayerMutation = ({ setEditing }: UseUpdatePlayerProps) =>
         playerTag: tag,
         color
       })
+
+      resetEditing()
     } catch (err) {
       logError(err)
     }

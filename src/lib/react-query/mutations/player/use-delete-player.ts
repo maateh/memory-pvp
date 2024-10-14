@@ -11,6 +11,11 @@ import { api } from "@/trpc/client"
 // utils
 import { logError, handleApiError } from "@/lib/utils"
 
+type HandleDeletePlayerParams = {
+  player: PlayerProfile
+  closeDialog: () => void
+}
+
 export const useDeletePlayerMutation = () => {
   const router = useRouter()
 
@@ -27,7 +32,7 @@ export const useDeletePlayerMutation = () => {
     }
   })
 
-  const handleDeletePlayer = async (player: PlayerProfile) => {
+  const handleDeletePlayer = async ({player, closeDialog }: HandleDeletePlayerParams) => {
     if (player.isActive) {
       toast.warning(`${player.tag} cannot be deleted!`, {
         description: "You can't delete an active player profile."
@@ -37,6 +42,7 @@ export const useDeletePlayerMutation = () => {
 
     try {
       await deletePlayer.mutateAsync({ playerId: player.id })
+      closeDialog()
     } catch (err) {
       logError(err)
     }
