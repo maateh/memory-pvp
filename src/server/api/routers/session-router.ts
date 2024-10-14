@@ -32,14 +32,29 @@ import { offlinePlayer } from "@/constants/session"
 export const sessionRouter = createTRPCRouter({
   get: protectedProcedure
     .input(sessionFilterSchema)
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }): Promise<ClientGameSession[]> => {
       const filter = parseSessionFilter(ctx.user.id, input)
 
       const sessions = await ctx.db.gameSession.findMany({
-        where: filter
+        where: filter,
+        include: {
+          owner: true,
+          players: {
+            include: {
+              user: {
+                select: { imageUrl: true }
+              }
+            }
+          }
+        }
       })
 
-      return sessions.map(({ id: _, ...session }) => session)
+      const clientSessions = sessions.map((session) => {
+        const playerTag = session.owner.tag
+        return parseSchemaToClientSession(session, playerTag)
+      })
+
+      return clientSessions
     }),
 
   count: protectedProcedure

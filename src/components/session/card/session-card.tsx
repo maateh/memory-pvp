@@ -2,9 +2,6 @@ import { formatDistance } from "date-fns"
 
 import Link from "next/link"
 
-// prisma
-import type { GameSession } from "@prisma/client"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -18,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { SessionBasics } from "@/components/session"
 
 type SessionCardProps = {
-  session: Omit<GameSession, 'id'>
+  session: ClientGameSession
 }
 
 const SessionCard = ({ session }: SessionCardProps) => {
