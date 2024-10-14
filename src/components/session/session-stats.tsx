@@ -1,9 +1,20 @@
+"use client"
+
 import { formatDistance } from "date-fns"
 
 import { useMemo } from "react"
 
+// constants
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+
+// utils
+import { formatTimer } from "@/lib/utils/game"
+
 // icons
-import { CalendarClock, ChevronRightCircle, ScanEye, Spade } from "lucide-react"
+import { CalendarClock, Dices, Gamepad2, ScanEye, Spade, Timer } from "lucide-react"
+
+// components
+import { StatisticItem, StatisticList } from "@/components/shared/statistics"
 
 type SessionStatsProps = {
   session: ClientGameSession
@@ -11,48 +22,57 @@ type SessionStatsProps = {
 }
 
 const SessionStats = ({ session, withTitle = false }: SessionStatsProps) => {
+  const playerTag = session.players.current.tag
+
   const stats = useMemo(() => ([
+    {
+      Icon: Gamepad2,
+      label: gameTypePlaceholders[session.type].label,
+      data: gameModePlaceholders[session.mode].label
+    },
+    {
+      Icon: Dices,
+      label: tableSizePlaceholders[session.tableSize].label,
+      data: tableSizePlaceholders[session.tableSize].size
+    },
     {
       Icon: CalendarClock,
       label: "Session started",
       data: formatDistance(session.startedAt, Date.now(), { addSuffix: true })
     },
     {
+      Icon: Timer,
+      label: "Timer",
+      data: formatTimer(session.stats.timer * 1000)
+    },
+    {
       Icon: Spade,
       label: "Matched cards",
-      data: session.cards.filter((card) => card.matchedBy === session.players.current.tag).length + ' matches'
+      data: session.stats.matches[playerTag] + ' matches'
     },
     {
       Icon: ScanEye,
       label: "Card flips",
-      data: session.stats.flips[session.players.current.tag] + ' flips'
+      data: session.stats.flips[playerTag] + ' flips'
     }
   ]), [session])
 
   return (
     <>
       {withTitle && (
-        <h3 className="mb-3 text-secondary text-xl text-center font-heading font-medium underline underline-offset-8 decoration-1 sm:text-3xl">
+        <h3 className="mb-3 text-foreground/85 text-2xl text-center font-heading font-medium underline underline-offset-8 decoration-1 sm:text-3xl">
           Session Statistics
         </h3>
       )}
 
-      <ul className="flex flex-col gap-y-2.5">
-        {stats.map(({ Icon, data, label }) => (
-          <li className="flex-1 flex justify-center items-center gap-x-2"
-            key={label}
-          >
-            <Icon className="size-4 sm:size-5 shrink-0" strokeWidth={1.75} />
-            <p className="text-sm sm:text-base font-light small-caps">
-              {label}
-            </p>
-            <ChevronRightCircle className="size-3 sm:size-3.5 shrink-0" strokeWidth={1.75} />
-            <p className="text-sm sm:text-base font-heading">
-              {data}
-            </p>
-          </li>
+      <StatisticList className="px-2 max-w-4xl">
+        {stats.map((stat) => (
+          <StatisticItem className="min-w-40 max-w-60 sm:min-w-60"
+            statistic={stat}
+            key={stat.label}
+          />
         ))}
-      </ul>
+      </StatisticList>
     </>
   )
 }
