@@ -16,7 +16,7 @@ export const useSelectAsActiveMutation = () => {
 
   const selectAsActive = api.playerProfile.selectAsActive.useMutation({
     onSuccess: async (player) => {
-      toast.success('Player selected!', {
+      toast.success('Active player selected!', {
         description: `You've selected ${player.tag} as your active player profile.`
       })
 

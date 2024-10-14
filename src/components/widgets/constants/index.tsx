@@ -6,8 +6,8 @@ import { Gamepad2, History, UserCircle } from "lucide-react"
 
 // DASHBOARD
 export const gameSessionsWidgetInfo: WidgetInfo = {
-  title: 'Previous game sessions',
-  description: 'Browse through your previous game sessions.',
+  title: "Game sessions",
+  description: "Browse through your previous game sessions.",
   icon: <History />
 }
 
