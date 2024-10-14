@@ -7,7 +7,7 @@ export const clientSessionKeys: (keyof ClientGameSession)[] = [
 ] as const
 
 export const clientSessionPlayerKeys: (keyof SessionPlayerWithUserAvatar)[] = [
-  'tag', 'color', 'user'
+  'tag', 'isActive', 'color', 'user'
 ] as const
 
 /** Offline session */
@@ -28,6 +28,7 @@ export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClien
 export const offlinePlayer: SessionPlayerWithUserAvatar = {
   color: '#ffffff',
   tag: '_offline',
+  isActive: false,
   user: {
     imageUrl: null
   }

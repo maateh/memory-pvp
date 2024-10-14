@@ -39,7 +39,7 @@ declare global {
 
   declare type SessionPlayerWithUserAvatar = Omit<
     PlayerProfile,
-    'id' | 'userId' | 'isActive' | 'sessionIds' | 'createdAt' | 'updatedAt'
+    'id' | 'userId' | 'sessionIds' | 'createdAt' | 'updatedAt'
   > & {
     user: {
       imageUrl: string | null
