@@ -7,7 +7,7 @@ import { playerProfilesWidgetInfo } from '@/components/widgets/constants'
 
 // components
 import { WidgetCard, WidgetSubheader } from '@/components/widgets'
-import { Warning } from '@/components/shared'
+import { CardItem, Warning } from '@/components/shared'
 import { PlayerProfileCard } from '@/components/player/card'
 
 const PlayersWidget = async () => {
@@ -38,7 +38,9 @@ const PlayersWidget = async () => {
       </WidgetSubheader>
 
       {activePlayer ? (
-        <PlayerProfileCard player={activePlayer} />
+        <CardItem>
+          <PlayerProfileCard player={activePlayer} />
+        </CardItem>
       ) : (
         <Warning message="Currently, you don't have any player profile." />
       )}
