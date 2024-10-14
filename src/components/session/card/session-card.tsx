@@ -2,9 +2,6 @@ import { formatDistance } from "date-fns"
 
 import Link from "next/link"
 
-// utils
-import { cn } from "@/lib/utils"
-
 // icons
 import { CalendarCheck, CalendarClock, ExternalLink, Hash } from "lucide-react"
 
@@ -12,7 +9,8 @@ import { CalendarCheck, CalendarClock, ExternalLink, Hash } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { SessionBasics } from "@/components/session"
+import { PlayerBadge } from "@/components/player"
+import { SessionBasics, SessionStatusBadge } from "@/components/session"
 
 type SessionCardProps = {
   session: ClientGameSession
@@ -25,22 +23,24 @@ const SessionCard = ({ session }: SessionCardProps) => {
   return (
     <div className="w-full flex justify-between items-center">
       <div className="flex items-center gap-x-3">
-        <div className={cn("size-3.5 rounded-full border border-border flex-none", {
-          "bg-yellow-500 dark:bg-yellow-200": session.status === 'RUNNING',
-          "bg-secondary": session.status === 'FINISHED',
-          "bg-destructive": session.status === 'ABANDONED',
-        })} />
+        <SessionStatusBadge status={session.status} />
 
         <div className="flex flex-col gap-y-2">
-          <div className="w-fit px-2.5 flex items-center gap-x-1.5 bg-muted/75 rounded-xl">
-            <Hash className="size-3" strokeWidth={4} />
+          <div className="flex items-center gap-x-2">
+            <div className="w-fit px-2 flex items-center gap-x-1.5 bg-muted/75 rounded-lg">
+              <Hash className="size-3" strokeWidth={4} />
 
-            <p className="font-heading font-light">
-              {session.slug}
-            </p>
+              <p className="font-heading font-light">
+                {session.slug}
+              </p>
+            </div>
+
+            <PlayerBadge className="py-0.5 px-2 text-xs"
+              player={session.players.current}
+            />
           </div>
 
-          <SessionBasics
+          <SessionBasics className="gap-x-2"
             badgeProps={{ className: "py-0 px-2" }}
             iconProps={{ className: "size-3.5" }}
             session={session}
@@ -72,9 +72,12 @@ const SessionCardSkeleton = () => {
         <Skeleton className="size-3.5 rounded-full border border-border bg-muted-foreground/80" />
 
         <div className="flex flex-col gap-y-2">
-          <Skeleton className="w-32 h-5 bg-muted/80" />
+          <div className="flex gap-x-2">
+            <Skeleton className="w-32 h-5 bg-muted/80" />
+            <Skeleton className="w-20 h-4 bg-muted/80" />
+          </div>
 
-          <div className="flex gap-x-3">
+          <div className="flex gap-x-2">
             <Skeleton className="w-24 h-5 bg-accent/35" />
             <Skeleton className="w-24 h-5 bg-accent/35" />
           </div>
