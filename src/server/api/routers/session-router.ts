@@ -323,6 +323,11 @@ export const sessionRouter = createTRPCRouter({
           type: 'CASUAL',
           mode: 'SINGLE',
           status: 'OFFLINE',
+          players: {
+            connect: {
+              id: playerProfile.id
+            },
+          },
           closedAt: new Date(),
           owner: {
             connect: { id: playerProfile.id }
