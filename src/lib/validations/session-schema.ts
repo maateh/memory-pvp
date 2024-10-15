@@ -4,7 +4,7 @@ import { z } from "zod"
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
 // validations
-import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-schema"
+import { clientPlayerSchema } from "@/lib/validations/player-schema"
 
 /** Base schemas */
 const cardIdentifierSchema = z.object({
@@ -26,15 +26,7 @@ const matchedCardsSchema = z.array(
   )
 )
 
-const sessionPlayerSchema = z.object({
-  tag: playerTagSchema,
-  color: playerColorSchema,
-  user: z.object({
-    imageUrl: z.string().nullable().optional()
-  })
-})
-
-const statsSchema = z.object({
+const sessionStatsSchema = z.object({
   timer: z.coerce.number(),
   flips: z.record(
     z.string(), z.coerce.number()
@@ -54,10 +46,10 @@ export const clientSessionSchema = z.object({
   status: z.nativeEnum(GameStatus),
 
   players: z.object({
-    current: sessionPlayerSchema,
-    other: sessionPlayerSchema.nullable().optional()
+    current: clientPlayerSchema,
+    other: clientPlayerSchema.nullable().optional()
   }),
-  stats: statsSchema,
+  stats: sessionStatsSchema,
 
   cards: z.array(cardSchema),
   flipped: z.array(cardIdentifierSchema),
