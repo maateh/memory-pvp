@@ -11,7 +11,7 @@ type SignedInProps = {
 } & React.PropsWithChildren
 
 const SignedIn = async ({ redirect = false, children }: SignedInProps) => {
-  const user = await signedIn({ redirect })
+  const user = await signedIn({ redirectToSignIn: redirect })
   if (!user) return
 
   return (

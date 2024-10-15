@@ -1,5 +1,7 @@
+"use server"
+
 // prisma
-import { User } from "@prisma/client"
+import type { User } from "@prisma/client"
 
 // clerk
 import { auth } from "@clerk/nextjs/server"
@@ -7,17 +9,20 @@ import { auth } from "@clerk/nextjs/server"
 // server
 import { db } from "@/server/db"
 
-export async function signedIn({ redirect = false }: { redirect?: boolean } = {}): Promise<User | null> {
+type SignedInParams = {
+  redirectToSignIn?: boolean
+}
+
+export async function signedIn({ redirectToSignIn = false }: SignedInParams = {}): Promise<User | null> {
   const { userId: clerkId } = auth()
 
-  if (!clerkId) {
-    return redirect ? auth().redirectToSignIn() : null
+  let user: User | null = null
+  if (clerkId) {
+    user = await db.user.findUnique({ where: { clerkId } })
   }
 
-  const user = await db.user.findUnique({ where: { clerkId } })
-
-  if (!user) {
-    return redirect ? auth().redirectToSignIn() : null
+  if (!user && redirectToSignIn) {
+    return auth().redirectToSignIn()
   }
 
   return user

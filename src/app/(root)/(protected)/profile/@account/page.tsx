@@ -5,7 +5,7 @@ import { signedIn } from '@/server/actions/signed-in'
 import AccountWidgetCard from "./card"
 
 const AccountWidget = async () => {
-  const user = await signedIn({ redirect: true })
+  const user = await signedIn({ redirectToSignIn: true })
   if (!user) return null
 
   return <AccountWidgetCard user={user} />
