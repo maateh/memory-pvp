@@ -55,7 +55,7 @@ const SessionStats = ({ session, withTitle = false }: SessionStatsProps) => {
       label: "Card flips",
       data: session.stats.flips[playerTag] + ' flips'
     }
-  ]), [session])
+  ]), [session, playerTag])
 
   return (
     <>
