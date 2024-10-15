@@ -32,7 +32,7 @@ import { getMockCards } from "@/lib/utils/game"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
-import { offlinePlayerMetadata } from "@/constants/session"
+import { offlinePlayerMetadata } from "@/constants/player"
 
 export const sessionRouter = createTRPCRouter({
   get: protectedProcedure

@@ -1,15 +1,18 @@
 import { nanoid } from "nanoid"
 
+// types
+import type { z } from "zod"
+import type { Prisma } from "@prisma/client"
+
+// helpers
+import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
+
 // utils
 import { pickFields } from "@/lib/utils"
 
 // constants
-import { clientSessionKeys, clientSessionPlayerKeys } from "@/constants/session"
+import { clientSessionKeys } from "@/constants/session"
 import { sessionFilterSchema } from "@/lib/validations/session-schema"
-
-// types
-import type { z } from "zod"
-import type { Prisma } from "@prisma/client"
 
 /**
  * Generates a unique slug for a game session based on its type and mode.
@@ -55,12 +58,12 @@ export function generateSlug(
  *   - `current`: The player object whose tag matches the `currentPlayerTag`.
  *   - `other`: The other player in the session.
  * 
- * @param {GameSessionWithOwnerWithPlayersWithAvatar} session - The full session data including players and avatars.
+ * @param {GameSessionPlayersWithAvatar} session - The full session data including players and avatars.
  * @param {string} currentPlayerTag - The tag of the current player to identify them in the session.
  * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
-  session: GameSessionWithOwnerWithPlayersWithAvatar,
+  session: GameSessionPlayersWithAvatar,
   currentPlayerTag: string
 ): ClientGameSession {
   const filteredSession = pickFields(session, clientSessionKeys)
@@ -73,8 +76,8 @@ export function parseSchemaToClientSession(
   return {
     ...filteredSession,
     players: {
-      current: pickFields(players.current, clientSessionPlayerKeys),
-      other: players.other && pickFields(players.other, clientSessionPlayerKeys)
+      current: parseSchemaToClientPlayer(players.current),
+      other: players.other ? parseSchemaToClientPlayer(players.other) : null
     }
   }
 }
