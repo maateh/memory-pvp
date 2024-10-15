@@ -41,6 +41,8 @@ model PlayerProfile {
   startedSessions GameSession[] @relation("SessionOwner")
 
   results Result[]
+  /// [PlayerStats]
+  stats Json @default("{ \"score\": 0, \"timer\": 0, \"flips\": 0, \"matches\": 0, \"sessions\": 0 }")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
