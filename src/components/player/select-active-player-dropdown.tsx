@@ -3,7 +3,6 @@
 import { forwardRef } from "react"
 
 // types
-import type { PlayerProfile } from "@prisma/client"
 import type {
   Content as DropdownMenuPrimitiveContent,
   SubContent as DropdownMenuPrimitiveSubContent
@@ -26,7 +25,7 @@ import { PlayerBadge } from "@/components/player"
 import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type SelectActivePlayerDropdownProps = {
-  players: PlayerProfile[]
+  players: ClientPlayer[]
 } & ButtonProps
 
 const SelectActivePlayerDropdown = ({
@@ -57,7 +56,7 @@ const SelectActivePlayerDropdown = ({
 }
 
 type SelectActivePlayerDropdownContentProps = {
-  players: PlayerProfile[]
+  players: ClientPlayer[]
   asSub?: boolean
 } & React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitiveContent | typeof DropdownMenuPrimitiveSubContent>
 
@@ -85,7 +84,7 @@ const SelectActivePlayerDropdownContent = forwardRef<
         <DropdownMenuItem className="focus:bg-transparent/5 dark:focus:bg-transparent/35"
           onClick={() => handleSelectAsActive(player)}
           disabled={selectAsActive.isPending}
-          key={player.id}
+          key={player.tag}
         >
           <PlayerBadge className="flex-1" player={player} />
         </DropdownMenuItem>

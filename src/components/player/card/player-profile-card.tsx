@@ -2,9 +2,6 @@
 
 import { useState } from "react"
 
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // lib
 import { cn } from "@/lib/utils"
 
@@ -24,13 +21,13 @@ import PlayerActionsDropdown from "./player-actions-dropdown"
 import { useDeletePlayerMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerProfileCardProps = {
-  player: PlayerProfile
+  player: ClientPlayer
 }
 
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   const [editing, setEditing] = useState<boolean>(false)
 
-  const [updatedPlayer, setUpdatedPlayer] = useState<Pick<PlayerProfile, 'tag' | 'color'>>({
+  const [updatedPlayer, setUpdatedPlayer] = useState<Pick<ClientPlayer, 'tag' | 'color'>>({
     tag: player.tag,
     color: player.color
   })

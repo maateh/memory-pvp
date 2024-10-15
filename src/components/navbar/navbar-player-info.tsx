@@ -1,6 +1,3 @@
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // icons
 import { ChevronRightCircle, Gamepad2, Sparkles, Timer } from "lucide-react"
 
@@ -11,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { PlayerBadge } from "@/components/player"
 
 type NavbarPlayerInfoProps = {
-  activePlayer: PlayerProfile
+  activePlayer: ClientPlayer
 }
 
 const NavbarPlayerInfo = ({ activePlayer }: NavbarPlayerInfoProps) => {

@@ -2,9 +2,6 @@
 
 import { useState } from "react"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -27,7 +24,7 @@ import {
 } from "@/lib/react-query/mutations/player"
 
 type PlayerActionsDropdownProps = {
-  player: PlayerProfile
+  player: ClientPlayer
   editing: boolean
   toggleEditing: () => void
 }

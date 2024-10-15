@@ -1,8 +1,5 @@
 import Image from "next/image"
 
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -13,7 +10,7 @@ import { LucideProps, UserRound } from "lucide-react"
 import { PlayerBadge, PlayerBadgeProps } from "@/components/player"
 
 type PlayerWithAvatarProps = {
-  player: Pick<PlayerProfile, 'tag' | 'color'>
+  player: Pick<ClientPlayer, 'tag' | 'color'>
   imageUrl?: string | null
   imageSize?: number
   playerBadgeProps?: Omit<PlayerBadgeProps, 'player'>

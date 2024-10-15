@@ -2,9 +2,6 @@
 
 import { useRouter } from "next/navigation"
 
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // clerk
 import { SignedIn, SignOutButton } from "@clerk/nextjs"
 
@@ -33,7 +30,7 @@ import { Separator } from "@/components/ui/separator"
 import { SelectActivePlayerDropdownContent } from "@/components/player"
 
 type NavbarActionsDropdownProps = {
-  players: PlayerProfile[]
+  players: ClientPlayer[]
 }
 
 const NavbarActionsDropdown = ({ players }: NavbarActionsDropdownProps) => {

@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // trpc
 import { api } from "@/trpc/client"
 
@@ -12,7 +9,7 @@ import { api } from "@/trpc/client"
 import { logError, handleApiError } from "@/lib/utils"
 
 type HandleDeletePlayerParams = {
-  player: PlayerProfile
+  player: ClientPlayer
   closeDialog: () => void
 }
 
@@ -32,7 +29,7 @@ export const useDeletePlayerMutation = () => {
     }
   })
 
-  const handleDeletePlayer = async ({player, closeDialog }: HandleDeletePlayerParams) => {
+  const handleDeletePlayer = async ({ player, closeDialog }: HandleDeletePlayerParams) => {
     if (player.isActive) {
       toast.warning(`${player.tag} cannot be deleted!`, {
         description: "You can't delete an active player profile."
@@ -41,7 +38,7 @@ export const useDeletePlayerMutation = () => {
     }
 
     try {
-      await deletePlayer.mutateAsync({ playerId: player.id })
+      await deletePlayer.mutateAsync({ playerId: player.id }) // FIXME: missing id
       closeDialog()
     } catch (err) {
       logError(err)

@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // trpc
 import { api } from "@/trpc/client"
 
@@ -27,11 +24,11 @@ export const useSelectAsActiveMutation = () => {
     }
   })
 
-  const handleSelectAsActive = async (player: PlayerProfile) => {
+  const handleSelectAsActive = async (player: ClientPlayer) => {
     if (player.isActive) return
 
     try {
-      await selectAsActive.mutateAsync({ playerId: player.id })
+      await selectAsActive.mutateAsync({ playerId: player.id }) // FIXME: missing id
     } catch (err) {
       logError(err)
     }

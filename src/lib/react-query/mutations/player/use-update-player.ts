@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // trpc
 import { api } from "@/trpc/client"
 
@@ -12,8 +9,8 @@ import { api } from "@/trpc/client"
 import { logError, handleApiError } from "@/lib/utils"
 
 type HandleUpdatePlayerParams = {
-  player: PlayerProfile
-  updatedPlayer: Pick<PlayerProfile, 'tag' | 'color'>
+  player: ClientPlayer
+  updatedPlayer: Pick<ClientPlayer, 'tag' | 'color'>
   resetEditing: () => void
 }
 
@@ -43,7 +40,7 @@ export const useUpdatePlayerMutation = () => {
 
     try {
       await updatePlayer.mutateAsync({
-        playerId: player.id,
+        playerId: player.id, // FIXME: missing id
         playerTag: tag,
         color
       })

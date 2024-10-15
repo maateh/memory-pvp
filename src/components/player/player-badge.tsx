@@ -1,9 +1,6 @@
 // utils
 import { cn } from "@/lib/utils"
 
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // shadcn
 import { Badge, BadgeProps } from "@/components/ui/badge"
 
@@ -11,7 +8,7 @@ import { Badge, BadgeProps } from "@/components/ui/badge"
 import { PlayerVerifiedBadge } from "@/components/player"
 
 export type PlayerBadgeProps = {
-  player: Pick<PlayerProfile, 'tag' | 'color' | 'isActive'>
+  player: Pick<ClientPlayer, 'tag' | 'color' | 'isActive'>
   hideVerified?: boolean
   flagProps?: React.HTMLAttributes<HTMLDivElement>
 } & BadgeProps

@@ -3,7 +3,6 @@
 import { useMemo } from "react"
 
 // types
-import type { PlayerProfile } from "@prisma/client"
 import type { DialogProps } from "@radix-ui/react-dialog"
 import type { Statistic } from "@/components/shared/statistics"
 
@@ -27,7 +26,7 @@ import {
 import { useDeletePlayerMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerDeleteWarningProps = {
-  player: PlayerProfile
+  player: ClientPlayer
 } & DialogProps
 
 const PlayerDeleteWarning = ({ player, ...props }: PlayerDeleteWarningProps) => {

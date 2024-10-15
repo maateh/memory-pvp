@@ -1,6 +1,3 @@
-// prisma
-import { PlayerProfile } from "@prisma/client"
-
 // shadcn
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -9,7 +6,7 @@ import { CardItem, Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileCardListProps = {
-  players: PlayerProfile[]
+  players: ClientPlayer[]
 }
 
 const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
@@ -23,7 +20,7 @@ const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
     <ScrollArea className="max-h-60 pr-3">
       <ul className="space-y-2">
         {players.map((player) => (
-          <CardItem key={player.id}>
+          <CardItem key={player.tag}>
             <PlayerProfileCard player={player} />
           </CardItem>
         ))}

@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
-  player: SessionPlayerWithUserAvatar
+  player: ClientPlayer
   session: ClientGameSession
   flipOrder?: boolean
 }
@@ -31,7 +31,7 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
       <div className="space-y-1.5">
         <PlayerWithAvatar className={cn({ "flex-row-reverse": flipOrder })}
           player={player}
-          imageUrl={player.user.imageUrl}
+          imageUrl={player.imageUrl}
         />
 
         <Badge className="gap-x-1.5"

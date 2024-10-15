@@ -17,8 +17,8 @@ import { PlayerWithAvatar } from "@/components/player"
 import { SelectActivePlayerDropdown } from "@/components/player"
 
 type SelectActivePlayerProps = {
-  user: User | null | undefined
-  players: PlayerProfileWithUserAvatar[]
+  user: User | null
+  players: ClientPlayer[]
 }
 
 const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
@@ -49,7 +49,7 @@ const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
         <div className="flex items-center gap-x-2">
           <PlayerWithAvatar className="mt-2 mx-auto"
             playerBadgeProps={{ className: "sm:text-base" }}
-            imageUrl={activePlayer.user.imageUrl}
+            imageUrl={activePlayer.imageUrl}
             imageSize={32}
             player={activePlayer}
           />

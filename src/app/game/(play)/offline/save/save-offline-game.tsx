@@ -3,9 +3,6 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // icons
 import { BadgeInfo, Save, UserCog2 } from "lucide-react"
 
@@ -22,7 +19,7 @@ import { PlayerProfileForm } from "@/components/player"
 import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/game"
 
 type SaveOfflineGameProps = {
-  players: PlayerProfile[]
+  players: ClientPlayer[]
 }
 
 const SaveOfflineGame = ({ players }: SaveOfflineGameProps) => {
