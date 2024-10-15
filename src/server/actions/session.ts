@@ -10,6 +10,17 @@ import { signedIn } from "@/server/actions/signed-in"
 // helpers
 import { parseSchemaToClientSession } from "@/lib/helpers/session"
 
+/**
+ * Retrieves a game session based on a unique filter (either `id`, `slug`, or both) and returns it in a client-friendly format.
+ * 
+ * - Authenticates the user using the `signedIn` function. If no user is signed in, returns `null`.
+ * - Looks for a game session that matches the provided filter, including session details, owner, and player information.
+ * - Ensures the authenticated user has access to the session by checking if they are one of the players.
+ * - Transforms the session data into a client-friendly format using `parseSchemaToClientSession`.
+ * 
+ * @param {Object} filter - Filter to find the game session by `id`, `slug`, or both.
+ * @returns {Promise<ClientGameSession | null>} - The client-friendly game session or `null` if not found or unauthorized.
+ */
 export async function getClientSession(
   filter: Pick<GameSession, 'id'> | Pick<GameSession, 'slug'> | Pick<GameSession, 'id' | 'slug'>
 ): Promise<ClientGameSession | null> {
