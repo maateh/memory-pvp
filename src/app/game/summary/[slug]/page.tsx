@@ -1,9 +1,10 @@
 // server
-import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/signed-in"
+import { getClientSession } from "@/server/actions/session"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
+
+// components
 import { SessionStats } from "@/components/session"
 
 type GameSessionSummaryProps = {
@@ -13,9 +14,12 @@ type GameSessionSummaryProps = {
 }
 
 const GameSessionSummary = async ({ params }: GameSessionSummaryProps) => {
-  // TODO: fetch session
-  const session = null
-  if (!session) return
+  const clientSession = await getClientSession({ slug: params.slug })
+
+  if (!clientSession) {
+    // TODO: show session not found or access denied layout
+    return null
+  }
 
   return (
     <main className="flex-1 px-2.5 sm:px-4">
@@ -27,7 +31,7 @@ const GameSessionSummary = async ({ params }: GameSessionSummaryProps) => {
         <Separator className="w-5/6 mx-auto my-3 border-foreground/50" />
       </header>
 
-      <SessionStats session={session} />
+      <SessionStats session={clientSession} />
     </main>
   )
 }
