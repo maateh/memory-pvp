@@ -9,7 +9,7 @@ import { api } from "@/trpc/client"
 import { logError, handleApiError } from "@/lib/utils"
 
 type HandleUpdatePlayerParams = {
-  player: ClientPlayer
+  player: Pick<ClientPlayer, 'tag' | 'color'>
   updatedPlayer: Pick<ClientPlayer, 'tag' | 'color'>
   resetEditing: () => void
 }
@@ -40,9 +40,8 @@ export const useUpdatePlayerMutation = () => {
 
     try {
       await updatePlayer.mutateAsync({
-        playerId: player.id, // FIXME: missing id
-        playerTag: tag,
-        color
+        previousTag: player.tag,
+        tag, color
       })
 
       resetEditing()

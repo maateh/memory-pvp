@@ -24,11 +24,11 @@ export const useSelectAsActiveMutation = () => {
     }
   })
 
-  const handleSelectAsActive = async (player: ClientPlayer) => {
+  const handleSelectAsActive = async (player: Pick<ClientPlayer, 'tag' | 'isActive'>) => {
     if (player.isActive) return
 
     try {
-      await selectAsActive.mutateAsync({ playerId: player.id }) // FIXME: missing id
+      await selectAsActive.mutateAsync(player.tag)
     } catch (err) {
       logError(err)
     }

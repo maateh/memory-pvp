@@ -6,7 +6,11 @@ import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
-import { playerProfileCreateSchema, playerProfileUpdateSchema } from "@/lib/validations/player-profile-schema"
+import {
+  playerProfileCreateSchema,
+  playerProfileUpdateSchema,
+  playerTagSchema
+} from "@/lib/validations/player-profile-schema"
 
 export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
@@ -51,14 +55,14 @@ export const playerProfileRouter = createTRPCRouter({
   update: protectedProcedure
     .input(playerProfileUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      const { playerId, playerTag, color } = input
+      const { previousTag, tag, color } = input
 
       const player = await ctx.db.playerProfile.findUnique({
         where: {
-          tag: playerTag,
+          tag: tag,
           AND: {
-            id: {
-              not: playerId
+            tag: {
+              not: previousTag
             }
           }
         }
@@ -78,23 +82,18 @@ export const playerProfileRouter = createTRPCRouter({
       return await ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
-          id: playerId
+          tag: previousTag
         },
-        data: {
-          tag: playerTag,
-          color
-        }
+        data: { tag, color }
       })
     }),
 
   delete: protectedProcedure
-    .input(z.object({ playerId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { playerId } = input
-
+    .input(playerTagSchema)
+    .mutation(async ({ ctx, input: tag }) => {
       const player = await ctx.db.playerProfile.findUnique({
         where: {
-          id: playerId,
+          tag,
           isActive: true
         }
       })
@@ -114,7 +113,7 @@ export const playerProfileRouter = createTRPCRouter({
       return await ctx.db.playerProfile.delete({
         where: {
           userId: ctx.user.id,
-          id: playerId,
+          tag,
           isActive: {
             not: true
           }
@@ -123,10 +122,8 @@ export const playerProfileRouter = createTRPCRouter({
     }),
 
   selectAsActive: protectedProcedure
-    .input(z.object({ playerId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const { playerId } = input
-
+    .input(playerTagSchema)
+    .mutation(async ({ ctx, input: tag }) => {
       await ctx.db.playerProfile.updateMany({
         where: {
           userId: ctx.user.id,
@@ -140,7 +137,7 @@ export const playerProfileRouter = createTRPCRouter({
       return await ctx.db.playerProfile.update({
         where: {
           userId: ctx.user.id,
-          id: playerId
+          tag
         },
         data: {
           isActive: true

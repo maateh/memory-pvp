@@ -16,7 +16,7 @@ export const playerProfileCreateSchema = z.object({
 })
 
 export const playerProfileUpdateSchema = z.object({
-  playerId: z.string(),
-  playerTag: playerTagSchema.optional(),
+  previousTag: playerTagSchema,
+  tag: playerTagSchema.optional(),
   color: playerColorSchema.optional()
 })

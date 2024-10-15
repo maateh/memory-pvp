@@ -9,7 +9,7 @@ import { api } from "@/trpc/client"
 import { logError, handleApiError } from "@/lib/utils"
 
 type HandleDeletePlayerParams = {
-  player: ClientPlayer
+  player: Pick<ClientPlayer, 'tag' | 'isActive'>
   closeDialog: () => void
 }
 
@@ -38,7 +38,7 @@ export const useDeletePlayerMutation = () => {
     }
 
     try {
-      await deletePlayer.mutateAsync({ playerId: player.id }) // FIXME: missing id
+      await deletePlayer.mutateAsync(player.tag)
       closeDialog()
     } catch (err) {
       logError(err)
