@@ -4,7 +4,7 @@ import { TRPCApiError } from "@/trpc/error"
 import {
   createTRPCRouter,
   playerProcedure,
-  protectedSessionProcedure,
+  activeSessionProcedure,
   protectedProcedure
 } from "@/server/api/trpc"
 
@@ -20,7 +20,12 @@ import {
 } from "@/lib/validations/session-schema"
 
 // helpers
-import { calculateSessionScore, generateSlug, parseSchemaToClientSession, parseSessionFilter } from "@/lib/helpers/session"
+import {
+  calculateSessionScore,
+  generateSlug,
+  parseSchemaToClientSession,
+  parseSessionFilter
+} from "@/lib/helpers/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -65,7 +70,7 @@ export const sessionRouter = createTRPCRouter({
       return await ctx.db.gameSession.count({ where: filter })
     }),
 
-  getActive: protectedSessionProcedure
+  getActive: activeSessionProcedure
     .query(async ({ ctx }): Promise<ClientGameSession> => {
       let clientSession: ClientGameSession | null = await ctx.redis.get(
         `session:${ctx.activeSession.slug}`
@@ -180,7 +185,7 @@ export const sessionRouter = createTRPCRouter({
       return parseSchemaToClientSession(session, ctx.player.tag)
     }),
 
-  store: protectedSessionProcedure
+  store: activeSessionProcedure
     .input(clientSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       return await ctx.redis.set(
@@ -190,7 +195,7 @@ export const sessionRouter = createTRPCRouter({
       )
     }),
 
-  save: protectedSessionProcedure
+  save: activeSessionProcedure
     .input(saveSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.slug}`)
@@ -203,7 +208,7 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  finish: protectedSessionProcedure
+  finish: activeSessionProcedure
     .input(finishSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.slug}`)
@@ -230,7 +235,7 @@ export const sessionRouter = createTRPCRouter({
       })
     }),
 
-  abandon: protectedSessionProcedure
+  abandon: activeSessionProcedure
     .input(abandonSessionSchema)
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.slug}`)

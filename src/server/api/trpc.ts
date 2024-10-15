@@ -97,7 +97,7 @@ export const playerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   })
 })
 
-export const protectedSessionProcedure = playerProcedure.use(async ({ ctx, next }) => {
+export const activeSessionProcedure = playerProcedure.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
@@ -130,7 +130,7 @@ export const protectedSessionProcedure = playerProcedure.use(async ({ ctx, next 
     })
   }
 
-  const hasAccess = activeSession.players.find((player) => player.userId === ctx.user.id)
+  const hasAccess = activeSession.players.some((player) => player.userId === ctx.user.id)
   if (!hasAccess) {
     throw new TRPCError({
       code: 'FORBIDDEN',
