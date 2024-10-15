@@ -31,7 +31,7 @@ const PlayerProfileForm = () => {
       schema={createPlayerSchema}
       onSubmit={onSubmit}
       defaultValues={{
-        playerTag: '',
+        tag: '',
         color: '#92aa92'
       }}
     >
@@ -39,7 +39,7 @@ const PlayerProfileForm = () => {
         <>
           <FormField
             control={form.control}
-            name="playerTag"
+            name="tag"
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>

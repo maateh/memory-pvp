@@ -29,7 +29,7 @@ export const clientPlayerSchema = z.object({
 
 /** Forms / API validations */
 export const createPlayerSchema = z.object({
-  playerTag: playerTagSchema,
+  tag: playerTagSchema,
   color: playerColorSchema
 })
 

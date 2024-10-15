@@ -14,12 +14,10 @@ export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createPlayerSchema)
     .mutation(async ({ ctx, input }) => {
-      const { playerTag, color } = input
+      const { tag, color } = input
 
       const player = await ctx.db.playerProfile.findUnique({
-        where: {
-          tag: playerTag
-        }
+        where: { tag }
       })
 
       if (player) {
@@ -43,9 +41,8 @@ export const playerProfileRouter = createTRPCRouter({
       return await ctx.db.playerProfile.create({
         data: {
           userId: ctx.user.id,
-          tag: playerTag,
-          color,
-          isActive: !isActive
+          isActive: !isActive,
+          tag, color
         }
       })
     }),
