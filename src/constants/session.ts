@@ -25,7 +25,7 @@ export const offlineSessionMetadata: Omit<ClientGameSession, keyof UnsignedClien
   status: 'OFFLINE'
 } as const
 
-export const offlinePlayer: SessionPlayerWithUserAvatar = {
+export const offlinePlayerMetadata: SessionPlayerWithUserAvatar = {
   color: '#ffffff',
   tag: '_offline',
   isActive: false,

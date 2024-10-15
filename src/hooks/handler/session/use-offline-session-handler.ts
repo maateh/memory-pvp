@@ -7,7 +7,7 @@ import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
 
 // constants
-import { offlinePlayer, offlineSessionMetadata } from "@/constants/session"
+import { offlinePlayerMetadata, offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -64,15 +64,15 @@ export const useOfflineSessionHandler = () => {
       flipped: [],
       cards: getMockCards(values.tableSize),
       players: {
-        current: offlinePlayer
+        current: offlinePlayerMetadata
       },
       stats: {
         timer: 0,
         flips: {
-          [offlinePlayer.tag]: 0
+          [offlinePlayerMetadata.tag]: 0
         },
         matches: {
-          [offlinePlayer.tag]: 0
+          [offlinePlayerMetadata.tag]: 0
         }
       }
     }

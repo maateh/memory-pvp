@@ -32,7 +32,7 @@ import { getMockCards } from "@/lib/utils/game"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
-import { offlinePlayer } from "@/constants/session"
+import { offlinePlayerMetadata } from "@/constants/session"
 
 export const sessionRouter = createTRPCRouter({
   get: protectedProcedure
@@ -314,10 +314,10 @@ export const sessionRouter = createTRPCRouter({
       const stats: PrismaJson.SessionStats = {
         ...session.stats,
         flips: {
-          [playerTag]: session.stats.flips[offlinePlayer.tag]
+          [playerTag]: session.stats.flips[offlinePlayerMetadata.tag]
         },
         matches: {
-          [playerTag]: session.stats.matches[offlinePlayer.tag]
+          [playerTag]: session.stats.matches[offlinePlayerMetadata.tag]
         }
       }
 
