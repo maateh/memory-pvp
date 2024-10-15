@@ -1,11 +1,8 @@
 import dynamic from "next/dynamic"
 
-// prisma
-import type { PlayerProfile } from "@prisma/client"
-
 // server
-import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
+import { getPlayers } from "@/server/actions/player"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -17,15 +14,7 @@ const OfflineSessionResults = dynamic(() => import('./offline-session-results'),
 
 const GameOfflineSavePage = async () => {
   const user = await signedIn()
-
-  let players: PlayerProfile[] = []
-  if (user) {
-    players = await db.playerProfile.findMany({
-      where: {
-        userId: user.id
-      }
-    })
-  }
+  const players = await getPlayers()
 
   return (
     <main className="flex-1 px-2.5 sm:px-4">

@@ -2,11 +2,11 @@ import Link from "next/link"
 import dynamic from "next/dynamic"
 
 // prisma
-import { GameMode, GameType, TableSize } from "@prisma/client"
+import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
-import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
+import { getPlayersWithAvatar } from "@/server/actions/player"
 
 // icons
 import { Home } from "lucide-react"
@@ -30,20 +30,7 @@ type GameSetupPageProps = {
 
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const user = await signedIn()
-
-  let players: PlayerProfileWithUserAvatar[] = []
-  if (user) {
-    players = await db.playerProfile.findMany({
-      where: {
-        userId: user.id
-      },
-      include: {
-        user: {
-          select: { imageUrl: true }
-        }
-      }
-    })
-  }
+  const players = await getPlayersWithAvatar()
 
   return (
     <div className="relative flex-1 pt-16 pb-8 px-4 flex flex-col gap-y-3">
