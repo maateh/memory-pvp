@@ -1,5 +1,3 @@
-import { z } from "zod"
-
 // trpc
 import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
@@ -7,14 +5,14 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // lib
 import {
-  playerProfileCreateSchema,
-  playerProfileUpdateSchema,
+  createPlayerSchema,
+  updatePlayerSchema,
   playerTagSchema
-} from "@/lib/validations/player-profile-schema"
+} from "@/lib/validations/player-schema"
 
 export const playerProfileRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(playerProfileCreateSchema)
+    .input(createPlayerSchema)
     .mutation(async ({ ctx, input }) => {
       const { playerTag, color } = input
 
@@ -53,7 +51,7 @@ export const playerProfileRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(playerProfileUpdateSchema)
+    .input(updatePlayerSchema)
     .mutation(async ({ ctx, input }) => {
       const { previousTag, tag, color } = input
 

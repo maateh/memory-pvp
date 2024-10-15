@@ -4,7 +4,7 @@ import { z } from "zod"
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
 // validations
-import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-profile-schema"
+import { playerColorSchema, playerTagSchema } from "@/lib/validations/player-schema"
 
 /** Base schemas */
 const cardIdentifierSchema = z.object({

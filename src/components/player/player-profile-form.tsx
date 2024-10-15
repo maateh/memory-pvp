@@ -3,7 +3,7 @@
 import { z } from "zod"
 
 // lib
-import { playerProfileCreateSchema } from "@/lib/validations/player-profile-schema"
+import { createPlayerSchema } from "@/lib/validations/player-schema"
 
 // icons
 import { Check, Loader2 } from "lucide-react"
@@ -20,7 +20,7 @@ import { ColorPicker } from "@/components/inputs"
 // hooks
 import { useCreatePlayerMutation } from "@/lib/react-query/mutations/player"
 
-export type PlayerProfileFormValues = z.infer<typeof playerProfileCreateSchema>
+export type PlayerProfileFormValues = z.infer<typeof createPlayerSchema>
 
 const PlayerProfileForm = () => {
   const { createPlayer, onSubmit } = useCreatePlayerMutation()
@@ -28,7 +28,7 @@ const PlayerProfileForm = () => {
   return (
     <Form<PlayerProfileFormValues>
       className="flex items-center gap-x-4"
-      schema={playerProfileCreateSchema}
+      schema={createPlayerSchema}
       onSubmit={onSubmit}
       defaultValues={{
         playerTag: '',

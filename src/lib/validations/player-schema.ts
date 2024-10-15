@@ -10,12 +10,12 @@ export const playerColorSchema = z.string()
   .regex(/^#/, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
 
 /** Forms / API validations */
-export const playerProfileCreateSchema = z.object({
+export const createPlayerSchema = z.object({
   playerTag: playerTagSchema,
   color: playerColorSchema
 })
 
-export const playerProfileUpdateSchema = z.object({
+export const updatePlayerSchema = z.object({
   previousTag: playerTagSchema,
   tag: playerTagSchema.optional(),
   color: playerColorSchema.optional()
