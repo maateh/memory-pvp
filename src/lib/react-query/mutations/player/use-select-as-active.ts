@@ -11,7 +11,7 @@ import { logError, handleApiError } from "@/lib/utils"
 export const useSelectAsActiveMutation = () => {
   const router = useRouter()
 
-  const selectAsActive = api.playerProfile.selectAsActive.useMutation({
+  const selectAsActive = api.player.selectAsActive.useMutation({
     onSuccess: async (player) => {
       toast.success('Active player selected!', {
         description: `You've selected ${player.tag} as your active player profile.`

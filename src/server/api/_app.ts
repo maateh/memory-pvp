@@ -1,11 +1,11 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc"
 
 // routers
-import { playerProfileRouter } from "./routers/player-profile-router"
+import { playerProfileRouter } from "./routers/player-router"
 import { sessionRouter } from "./routers/session-router"
 
 export const appRouter = createTRPCRouter({
-  playerProfile: playerProfileRouter,
+  player: playerProfileRouter,
   session: sessionRouter
 })
 

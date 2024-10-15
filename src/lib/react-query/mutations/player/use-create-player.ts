@@ -15,7 +15,7 @@ import { logError, handleApiError } from "@/lib/utils"
 export const useCreatePlayerMutation = () => {
   const router = useRouter()
 
-  const createPlayer = api.playerProfile.create.useMutation({
+  const createPlayer = api.player.create.useMutation({
     onSuccess: async ({ tag }) => {
       toast.success('Player created!', {
         description: `You've created a new player profile: ${tag}`

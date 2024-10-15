@@ -16,7 +16,7 @@ type HandleDeletePlayerParams = {
 export const useDeletePlayerMutation = () => {
   const router = useRouter()
 
-  const deletePlayer = api.playerProfile.delete.useMutation({
+  const deletePlayer = api.player.delete.useMutation({
     onSuccess: async ({ tag }) => {
       toast.warning('Player deleted!', {
         description: `You've deleted this player profile: ${tag}`

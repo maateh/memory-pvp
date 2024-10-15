@@ -17,7 +17,7 @@ type HandleUpdatePlayerParams = {
 export const useUpdatePlayerMutation = () => {
   const router = useRouter()
 
-  const updatePlayer = api.playerProfile.update.useMutation({
+  const updatePlayer = api.player.update.useMutation({
     onSuccess: async ({ tag }) => {
       toast.success('Player updated!', {
         description: `You've updated this player profile: ${tag}`
