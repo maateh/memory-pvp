@@ -1,6 +1,6 @@
 /** Schema parser keys */
 export const clientPlayerKeys: (keyof ClientPlayer)[] = [
-  'tag', 'isActive', 'color', 'imageUrl',
+  'tag', 'isActive', 'color', 'imageUrl', 'stats',
   'createdAt', 'updatedAt'
 ] as const
 
