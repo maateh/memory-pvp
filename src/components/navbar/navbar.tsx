@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { Logo, MobileToggle } from "@/components/shared"
-import NavbarPlayerInfo from "./navbar-player-info"
+import NavbarPlayerStats from "./navbar-player-stats"
 import NavbarActions from "./navbar-actions"
 import NavbarActionsDropdown from "./navbar-actions-dropdown"
 
@@ -29,7 +29,7 @@ const Navbar = async () => {
       </div>
 
       <div className="flex-1 flex items-center justify-between gap-x-4">
-        {activePlayer && <NavbarPlayerInfo activePlayer={activePlayer} />}
+        {activePlayer && <NavbarPlayerStats activePlayer={activePlayer} />}
 
         <NavbarActions hasActivePlayer={!!activePlayer} />
       </div>

@@ -6,6 +6,9 @@ import { useMemo } from "react"
 import type { DialogProps } from "@radix-ui/react-dialog"
 import type { Statistic } from "@/components/shared/statistics"
 
+// utils
+import { formatTimer } from "@/lib/utils/game"
+
 // icons
 import { Hash, Star, Timer } from "lucide-react"
 
@@ -41,12 +44,12 @@ const PlayerDeleteWarning = ({ player, ...props }: PlayerDeleteWarningProps) => 
     {
       Icon: Star,
       label: "Total Score",
-      data: "50 points" // TODO: GET -> Total score
+      data: `${player.stats.score} points`
     },
     {
       Icon: Timer,
       label: "Playtime",
-      data: "1h 30sec" // TODO: GET -> Total playtime
+      data: formatTimer(player.stats.timer * 1000)
     }
   ]), [player])
 

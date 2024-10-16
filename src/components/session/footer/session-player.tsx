@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { PlayerWithAvatar } from "@/components/player"
+import { PlayerStatBadge, PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
   player: ClientPlayer
@@ -34,27 +34,26 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
           imageUrl={player.imageUrl}
         />
 
-        <Badge className="gap-x-1.5"
-          variant="outline"
+        <PlayerStatBadge className="font-medium"
+          variant={player.stats.score < 0 ? 'destructive' : 'accent'}
+          Icon={Trophy}
+          iconProps={{ className: "size-3.5" }}
         >
-          <Trophy className="size-4 flex-none" />
-
-          {/* TODO: GET -> Player total score */}
-          <p className="space-x-1 text-sm font-light">
-            <span className="small-caps">Rank</span>
-            <span className="text-xs text-muted-foreground">/ 100 scores</span>
-          </p>
-        </Badge>
+          <span className="small-caps tracking-wider">Rank / </span>
+          <span className="text-xs font-semibold dark:font-medium">
+            {player.stats.score} scores
+          </span>
+        </PlayerStatBadge>
       </div>
 
       <div className="space-y-1.5">
         <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
-          variant="muted"
+          variant="outline"
         >
           <Sigma className="size-4 flex-none" />
 
           <p className="space-x-1">
-            <span className="text-sm font-medium small-caps">
+            <span className="text-sm small-caps">
               {flips} flips
             </span>
 
