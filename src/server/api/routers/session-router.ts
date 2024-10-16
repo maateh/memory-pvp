@@ -26,6 +26,7 @@ import {
   parseSchemaToClientSession,
   parseSessionFilter
 } from "@/lib/helpers/session"
+import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
 
 // utils
 import { getMockCards } from "@/lib/utils/game"
@@ -213,6 +214,14 @@ export const sessionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: session }) => {
       await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
+      /** Updates the statistics of session players */
+      await ctx.db.$transaction(
+        getBulkUpdatePlayerStatsOperations(
+          ctx.activeSession.players,
+          session
+        )
+      )
+
       return await ctx.db.gameSession.update({
         where: {
           id: ctx.activeSession.id
@@ -256,6 +265,15 @@ export const sessionRouter = createTRPCRouter({
 
         session = validation.data!
       }
+
+      /** Updates the statistics of session players */
+      await ctx.db.$transaction(
+        getBulkUpdatePlayerStatsOperations(
+          ctx.activeSession.players,
+          session,
+          'abandon'
+        )
+      )
 
       return await ctx.db.gameSession.update({
         where: {
