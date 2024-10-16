@@ -33,6 +33,10 @@ const GamePlayPage = () => {
       useSessionStore.setState({ syncState: "SYNCHRONIZED" })
     },
     onError: (err) => {
+      if (err.shape?.cause.key === 'SESSION_NOT_FOUND' && finishSession.isPending) {
+        return
+      }
+
       useSessionStore.setState({ syncState: "OUT_OF_SYNC" })
       handleApiError(err.shape?.cause, 'Failed to store game session.')
     }
