@@ -13,7 +13,7 @@ type PlayerStatBadgeProps = {
   iconProps?: LucideProps
 } & Omit<BadgeProps, 'children'>
   & ({
-    stat: string
+    stat: string | number
     children?: never
   } | {
     stat?: never

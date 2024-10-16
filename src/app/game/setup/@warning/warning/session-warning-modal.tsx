@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
@@ -9,10 +10,10 @@ import { offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"
+import { getSessionStatsMap } from "@/lib/utils/stats"
 
 // components
-import { SessionStats } from "@/components/session"
-import { WarningActionButton, WarningCancelButton, WarningModal, WarningModalFooter } from "@/components/shared"
+import { StatisticItem, StatisticList, WarningActionButton, WarningCancelButton, WarningModal, WarningModalFooter } from "@/components/shared"
 
 // hooks
 import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
@@ -40,6 +41,8 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
     const offlineSession = getSessionFromStorage()
     session = { ...offlineSession!, ...offlineSessionMetadata }
   }
+
+  const stats = useMemo(() => getSessionStatsMap(session!), [session])
 
   const handleStartNew = () => {
     if (!setupGameCache) {
@@ -78,7 +81,16 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
       onOpenChange={() => router.replace('/game/setup')}
       open
     >
-      <SessionStats session={session!} />
+      <StatisticList className="mx-auto">
+        {Object.values(stats).map((stat) => (
+          <StatisticItem className="min-w-36 max-w-44 px-3 py-1.5 text-sm sm:text-sm"
+            iconProps={{ className: "size-4 sm:size-5" }}
+            dataProps={{ className: "text-xs" }}
+            statistic={stat}
+            key={stat.key}
+          />
+        ))}
+      </StatisticList>
 
       <WarningModalFooter>
         <WarningCancelButton onClick={handleStartNew}>

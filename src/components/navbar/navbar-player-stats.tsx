@@ -1,8 +1,8 @@
 // utils
-import { formatTimer } from "@/lib/utils/game"
+import { getPlayerStatsMap } from "@/lib/utils/stats"
 
 // icons
-import { ChevronRightCircle, Gamepad2, LucideIcon, Sparkles, Timer } from "lucide-react"
+import { ChevronRightCircle } from "lucide-react"
 
 // components
 import { PlayerBadge, PlayerStatBadge } from "@/components/player"
@@ -12,7 +12,7 @@ type NavbarPlayerStatsProps = {
 }
 
 const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
-  const stats = getPlayerStatsMap(activePlayer.stats)
+  const stats = getPlayerStatsMap(activePlayer, ['score', 'sessions', 'timer'])
 
   return (
     <div className="h-full flex items-center gap-x-2">
@@ -31,37 +31,6 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
       </div>
     </div>
   )
-}
-
-/** Local utils */
-type PlayerStatsMap = {
-  [K in keyof Partial<ClientPlayer['stats']>]: {
-    key: K
-    Icon: LucideIcon
-    data: string
-  }
-}
-
-function getPlayerStatsMap(stats: Pick<ClientPlayer['stats'], 'score' | 'timer' | 'sessions'>): PlayerStatsMap {
-  const { score, timer, sessions } = stats
-
-  return {
-    score: {
-      key: 'score',
-      Icon: Sparkles,
-      data: `${score} points`
-    },
-    timer: {
-      key: 'timer',
-      Icon: Timer,
-      data: `${formatTimer(timer * 1000)} playtime`
-    },
-    sessions: {
-      key: 'sessions',
-      Icon: Gamepad2,
-      data: `${sessions} sessions`
-    }
-  }
 }
 
 export default NavbarPlayerStats
