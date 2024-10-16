@@ -33,11 +33,16 @@ type RenderableStatsMap<K extends string> = {
 type SessionStatsKeys = 'typeMode' | 'tableSize' | 'timer' | 'matches' | 'flips' | 'startedAt'
 
 /**
- * TODO: write doc
+ * Generates a map of game session statistics, each stat paired with an icon, label, and formatted data for rendering.
  * 
- * @param session 
- * @param keys 
- * @returns 
+ * - The stats include session type, mode, table size, timer, matched cards, flips, and the session start time.
+ * - Each entry consists of a label, icon, and formatted value, making it easy to display in a UI.
+ * - If the `keys` argument is provided, only the corresponding session stats will be included in the result.
+ * 
+ * @param {ClientGameSession} session - The session whose statistics are being processed.
+ * @param {SessionStatsKeys[]} [keys] - Optional list of specific stat keys to include in the result.
+ * 
+ * @returns {RenderableStatsMap<SessionStatsKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
 export function getSessionStatsMap(
   session: ClientGameSession,
@@ -92,11 +97,16 @@ export function getSessionStatsMap(
 type PlayerStatsKeys = 'tag' | keyof ClientPlayer['stats']
 
 /**
- * TODO: write doc
+ * Generates a map of player statistics, each stat paired with an icon, label, and formatted data for rendering.
  * 
- * @param player 
- * @param keys 
- * @returns 
+ * - The stats include player tag, score, playtime, card flips, matches, and the number of sessions played.
+ * - Each entry consists of a label, icon, and formatted value, making it easy to display in a UI.
+ * - If the `keys` argument is provided, only the corresponding stats will be included in the result.
+ * 
+ * @param {ClientPlayer} player - The player whose statistics are being processed.
+ * @param {PlayerStatsKeys[]} [keys] - Optional list of specific stat keys to include in the result.
+ * 
+ * @returns {RenderableStatsMap<PlayerStatsKeys>} - A map of stats ready to be rendered with optional filtering by the provided keys.
  */
 export function getPlayerStatsMap(
   player: ClientPlayer,
