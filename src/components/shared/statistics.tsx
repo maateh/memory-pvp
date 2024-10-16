@@ -1,17 +1,12 @@
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
+import type { RenderableStatistic } from "@/lib/utils/stats"
 
 // utils
 import { cn } from "@/lib/utils"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
-
-type Statistic = {
-  Icon: LucideIcon
-  label: string
-  data: string | number
-}
 
 const StatisticList = ({ className, ...props }: React.ComponentProps<"ul">) => (
   <ul className={cn("w-full flex flex-wrap justify-center gap-x-6 gap-y-3.5", className)}
@@ -20,7 +15,7 @@ const StatisticList = ({ className, ...props }: React.ComponentProps<"ul">) => (
 )
 
 type StatisticItemProps = {
-  statistic: Statistic
+  statistic: RenderableStatistic
   iconProps?: LucideProps
   labelProps?: React.ComponentProps<"p">
   dataProps?: React.ComponentProps<"div">
@@ -58,7 +53,6 @@ const StatisticItem = ({ statistic, iconProps, labelProps, dataProps, className,
 }
 
 export {
-  type Statistic,
   StatisticList,
   StatisticItem
 }
