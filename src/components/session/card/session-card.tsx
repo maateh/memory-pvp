@@ -57,7 +57,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
           </span>
         </div>
 
-        <Link href={`/game/summary/${session.slug}`}>
+        <Link href={`/game/summary/${session.slug}`} target="_blank">
           <ExternalLink className="size-4 sm:size-5 text-muted-foreground transition group-hover:text-foreground/90" />
         </Link>
       </div>
