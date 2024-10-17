@@ -11,7 +11,7 @@ type MemoryTableProps = {
 
 const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {
   return (
-    <div className="flex-1 w-full p-4 flex justify-center items-center">
+    <main className="flex-1 w-full p-4 flex justify-center items-center">
       <div className={cn("grid gap-4 w-full grid-cols-3", {
         "max-w-3xl md:grid-cols-4": session.tableSize === 'SMALL',
         "max-w-5xl sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6": session.tableSize === 'MEDIUM',
@@ -26,7 +26,7 @@ const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {
           />
         ))}
       </div>
-    </div>
+    </main>
   )
 }
 

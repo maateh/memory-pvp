@@ -14,9 +14,7 @@ import { validateCardMatches } from "@/lib/helpers/session"
 import { handleApiError, logError } from "@/lib/utils"
 
 // components
-import { SessionHeader } from "@/components/session/header"
-import { MemoryTable } from "@/components/session/game"
-import { SessionFooter } from "@/components/session/footer"
+import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
