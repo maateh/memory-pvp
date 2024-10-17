@@ -3,8 +3,8 @@ import { toast } from "sonner"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
-import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
+import type { SetupGameFormValues } from "@/app/game/(base)/setup/setup-game-form"
+import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
 
 // constants
 import { offlineSessionMetadata } from "@/constants/session"

@@ -14,7 +14,7 @@ import { MemoryTable } from "@/components/session/game"
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 
-const GamePlayOfflinePage = () => {
+const InGameOfflinePage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
     onIngameUpdate: () => saveSessionToStorage(clientSession),
     onFinish: () => {
@@ -41,4 +41,4 @@ const GamePlayOfflinePage = () => {
   )
 }
 
-export default GamePlayOfflinePage
+export default InGameOfflinePage

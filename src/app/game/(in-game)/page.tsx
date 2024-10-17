@@ -22,7 +22,7 @@ import { SessionFooter } from "@/components/session/footer"
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 import { useSessionStore } from "@/hooks/store/use-session-store"
 
-const GamePlayPage = () => {
+const InGamePage = () => {
   const router = useRouter()
 
   const storeSession = api.session.store.useMutation({
@@ -95,4 +95,4 @@ const GamePlayPage = () => {
   )
 }
 
-export default GamePlayPage
+export default InGamePage
