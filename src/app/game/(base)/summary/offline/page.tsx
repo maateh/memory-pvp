@@ -23,12 +23,6 @@ const OfflineSessionSummaryPage = async () => {
 
   return (
     <>
-      <p className="-mt-3 max-w-lg mx-auto text-center font-heading text-base sm:text-xl">
-        Your <span className="text-accent font-medium">offline game is over</span>, thanks for playing!
-      </p>
-      
-      <Separator className="w-3/5 mx-auto mt-4 mb-6 bg-border/5" />
-
       <OfflineSessionResults />
 
       <Separator className="w-2/5 mx-auto mt-6 mb-8 bg-border/10" />
