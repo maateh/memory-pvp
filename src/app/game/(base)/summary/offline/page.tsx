@@ -9,30 +9,24 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { SignInButton, Warning } from "@/components/shared"
-import SaveOfflineGame from "./save-offline-game"
+import SaveOfflineSession from "./save-offline-session"
 const OfflineSessionResults = dynamic(() => import('./offline-session-results'), { ssr: false })
 
-const GameOfflineSavePage = async () => {
+const OfflineSessionSummaryPage = async () => {
   const user = await signedIn()
   const players = await getPlayers()
 
   return (
-    <main className="flex-1 px-2.5 sm:px-4">
-      <header className="mt-24 mb-12">
-        <h1 className="w-fit pt-1.5 mx-auto text-center text-3xl font-heading font-bold small-caps heading-decorator sm:text-5xl">
-          Save Offline Session
-        </h1>
-
-        <Separator className="w-5/6 mx-auto my-3" />
-
-        <p className="max-w-lg mx-auto text-center font-heading text-base sm:text-lg">
-          Your game is over, thanks for playing!
-        </p>
-      </header>
+    <>
+      <p className="-mt-3 max-w-lg mx-auto text-center font-heading text-base sm:text-xl">
+        Your <span className="text-accent font-medium">offline game</span> is over, thanks for playing!
+      </p>
+      
+      <Separator className="w-3/5 mx-auto mt-4 mb-6 bg-border/5" />
 
       <OfflineSessionResults />
 
-      <Separator className="w-1/5 mx-auto mt-4 mb-10 bg-foreground/5" />
+      <Separator className="w-1/5 mx-auto mt-6 mb-8 bg-border/10" />
 
       {!user ? (
         <div className="flex flex-col items-center gap-y-4">
@@ -48,10 +42,10 @@ const GameOfflineSavePage = async () => {
           />
         </div>
       ) : (
-        <SaveOfflineGame players={players} />
+        <SaveOfflineSession players={players} />
       )}
-    </main>
+    </>
   )
 }
 
-export default GameOfflineSavePage
+export default OfflineSessionSummaryPage

@@ -25,7 +25,7 @@ const InGameOfflinePage = () => {
         id: '_' /** Note: prevent re-render by adding a custom id. */
       })
 
-      redirect('/game/offline/save')
+      redirect('/game/summary/offline')
     }
   })
 

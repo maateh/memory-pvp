@@ -18,11 +18,11 @@ import { PlayerProfileForm } from "@/components/player"
 // hooks
 import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/game"
 
-type SaveOfflineGameProps = {
+type SaveOfflineSessionProps = {
   players: ClientPlayer[]
 }
 
-const SaveOfflineGame = ({ players }: SaveOfflineGameProps) => {
+const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   const router = useRouter()
   const [playerTag, setPlayerTag] = useState('')
 
@@ -45,7 +45,7 @@ const SaveOfflineGame = ({ players }: SaveOfflineGameProps) => {
         </h2>
       </div>
 
-      <p className="max-w-md mt-1.5 mx-auto text-sm text-center font-light font-heading sm:text-base">
+      <p className="max-w-md mt-1.5 mx-auto text-sm text-center font-heading dark:font-light sm:text-base">
         Please, select a player profile first where you would like to save the results of your offline session.
       </p>
 
@@ -98,4 +98,4 @@ const SaveOfflineGame = ({ players }: SaveOfflineGameProps) => {
   )
 }
 
-export default SaveOfflineGame
+export default SaveOfflineSession
