@@ -9,8 +9,13 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { SignInButton, Warning } from "@/components/shared"
+import { SessionStatisticsSkeleton } from "@/components/session/summary"
 import SaveOfflineSession from "./save-offline-session"
-const OfflineSessionResults = dynamic(() => import('./offline-session-results'), { ssr: false })
+
+const OfflineSessionResults = dynamic(() => import('./offline-session-results'), {
+  ssr: false,
+  loading: SessionStatisticsSkeleton
+})
 
 const OfflineSessionSummaryPage = async () => {
   const user = await signedIn()

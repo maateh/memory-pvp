@@ -8,7 +8,7 @@ import { getSessionStatsMap } from "@/lib/utils/stats"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { StatisticItem, StatisticList } from "@/components/shared"
+import { SessionStatistics } from "@/components/session/summary"
 
 type SessionSummaryPageProps = {
   params: {
@@ -27,16 +27,9 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
   const stats = getSessionStatsMap(clientSession)
 
   return (
-    <>
-      <StatisticList className="px-2 max-w-4xl">
-        {Object.values(stats).map((stat) => (
-          <StatisticItem className="min-w-40 max-w-60 sm:min-w-60"
-            statistic={stat}
-            key={stat.key}
-          />
-        ))}
-      </StatisticList>
-    </>
+    <SessionStatistics
+      stats={stats}
+    />
   )
 }
 

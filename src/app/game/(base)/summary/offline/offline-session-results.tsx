@@ -12,11 +12,8 @@ import { offlineSessionMetadata } from "@/constants/session"
 import { getSessionFromStorage } from "@/lib/utils/storage"
 import { getSessionStatsMap } from "@/lib/utils/stats"
 
-// shadcn
-import { Separator } from "@/components/ui/separator"
-
 // components
-import { StatisticItem, StatisticList } from "@/components/shared"
+import { SessionStatistics } from "@/components/session/summary"
 
 const OfflineSessionResults = () => {
   const session = getSessionFromStorage()
@@ -36,22 +33,9 @@ const OfflineSessionResults = () => {
   }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt']), [session])
 
   return (
-    <>
-      <h3 className="text-foreground/90 text-2xl text-center font-heading font-medium sm:text-3xl">
-        Statistics
-      </h3>
-
-      <Separator className="w-1/3 h-1 mx-auto mt-0.5 mb-2.5 bg-accent/25 rounded-full" />
-
-      <StatisticList className="px-2 max-w-4xl">
-        {Object.values(stats).map((stat) => (
-          <StatisticItem className="min-w-40 max-w-60 sm:min-w-60"
-            statistic={stat}
-            key={stat.key}
-          />
-        ))}
-      </StatisticList>
-    </>
+    <SessionStatistics
+      stats={stats}
+    />
   )
 }
 
