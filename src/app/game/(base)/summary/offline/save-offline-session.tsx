@@ -49,7 +49,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
         Please, select a player profile first where you would like to save the results of your offline session.
       </p>
 
-      <Separator className="w-4/5 mx-auto mt-3.5 mb-5 bg-border/40" />
+      <Separator className="w-1/5 mx-auto mt-3.5 mb-5 bg-border/15" />
 
       {players.length === 0 ? (
         <div className="pt-6">
@@ -83,7 +83,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
         </ButtonGroup>
       )}
 
-      <Separator className="w-4/5 mx-auto my-5 bg-border/40" />
+      <Separator className="w-1/5 mx-auto my-5 bg-border/15" />
 
       <Button className="mx-auto flex gap-x-2"
         variant="secondary"
