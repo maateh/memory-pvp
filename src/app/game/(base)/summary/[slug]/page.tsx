@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic"
+
 // server
 import { getClientSession } from "@/server/actions/session"
 
@@ -8,7 +10,12 @@ import { getSessionStatsMap } from "@/lib/utils/stats"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionStatistics } from "@/components/session/summary"
+import { SessionStatistics, SessionStatisticsSkeleton } from "@/components/session/summary"
+
+const SessionNotFound = dynamic(() => import('./session-not-found'), {
+  ssr: false,
+  loading: SessionStatisticsSkeleton
+})
 
 type SessionSummaryPageProps = {
   params: {
@@ -20,16 +27,22 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
   const clientSession = await getClientSession({ slug: params.slug })
 
   if (!clientSession) {
-    // TODO: show session not found or access denied layout
-    return null
+    return <SessionNotFound />
   }
 
   const stats = getSessionStatsMap(clientSession)
 
+  // TODO: implement UI
+  // - show player stats
+  // - option to go back `/game/setup`
   return (
-    <SessionStatistics
-      stats={stats}
-    />
+    <>
+     <SessionStatistics
+        stats={stats}
+      />
+
+      <Separator className="w-2/5 mx-auto mt-6 mb-8 bg-border/10" />
+    </>
   )
 }
 
