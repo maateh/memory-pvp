@@ -8,8 +8,8 @@ import { api } from "@/trpc/client"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { SetupGameFormValues } from "@/app/game/setup/setup-game-form"
-import type { SessionRunningWarningActions } from "@/app/game/setup/@warning/warning/session-warning-modal"
+import type { SetupGameFormValues } from "@/app/game/(base)/setup/setup-game-form"
+import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
@@ -88,7 +88,7 @@ export const useStartSessionMutation = () => {
     const values = form.getValues()
 
     // TODO: implement
-    if (values.type === 'COMPETITIVE' || values.mode !== 'SINGLE') {
+    if (values.mode !== 'SINGLE') {
       toast.warning('Work in progress', {
         description: "Sorry, but the configuration contains values that are not implemented yet. Please come back later, or select another game type or mode to play."
       })
