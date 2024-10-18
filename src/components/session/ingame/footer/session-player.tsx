@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { PlayerStatBadge, PlayerWithAvatar } from "@/components/player"
+import { StatisticBadge } from "@/components/shared"
+import { PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
   player: ClientPlayer
@@ -34,7 +35,7 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
           imageUrl={player.imageUrl}
         />
 
-        <PlayerStatBadge className="font-medium"
+        <StatisticBadge className="font-medium"
           variant={player.stats.score < 0 ? 'destructive' : 'accent'}
           Icon={Trophy}
           iconProps={{ className: "size-3.5" }}
@@ -43,7 +44,7 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
           <span className="text-xs font-semibold dark:font-medium">
             {player.stats.score} scores
           </span>
-        </PlayerStatBadge>
+        </StatisticBadge>
       </div>
 
       <div className="space-y-1.5">

@@ -5,7 +5,8 @@ import { getPlayerStatsMap } from "@/lib/utils/stats"
 import { ChevronRightCircle } from "lucide-react"
 
 // components
-import { PlayerBadge, PlayerStatBadge } from "@/components/player"
+import { StatisticBadge } from "@/components/shared"
+import { PlayerBadge } from "@/components/player"
 
 type NavbarPlayerStatsProps = {
   activePlayer: ClientPlayer
@@ -24,7 +25,7 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
         <ul className="flex flex-wrap gap-x-2 gap-y-1">
           {Object.values(stats).map(({ key, data, Icon }) => (
             <li key={key}>
-              <PlayerStatBadge Icon={Icon} stat={data} />
+              <StatisticBadge Icon={Icon} stat={data} />
             </li>
           ))}
         </ul>

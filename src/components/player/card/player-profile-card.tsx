@@ -14,7 +14,8 @@ import { Input } from "@/components/ui/input"
 
 // components
 import { ColorPicker } from "@/components/inputs"
-import { PlayerStatBadge, PlayerVerifiedBadge } from "@/components/player"
+import { StatisticBadge } from "@/components/shared"
+import { PlayerVerifiedBadge } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"
 
 // hooks
@@ -71,11 +72,11 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             {player.isActive && <PlayerVerifiedBadge />}
           </div>
 
-          <PlayerStatBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
+          <StatisticBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
             Icon={Star}
           >
             Total score | <span className="font-semibold dark:font-medium">{player.stats.score} points</span>
-          </PlayerStatBadge>
+          </StatisticBadge>
         </div>
       </div>
 

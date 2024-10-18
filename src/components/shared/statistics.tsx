@@ -1,11 +1,13 @@
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
 import type { RenderableStatistic } from "@/lib/utils/stats"
+import type { BadgeProps } from "@/components/ui/badge"
 
 // utils
 import { cn } from "@/lib/utils"
 
 // shadcn
+import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
 const StatisticList = ({ className, ...props }: React.ComponentProps<"ul">) => (
@@ -52,7 +54,35 @@ const StatisticItem = ({ statistic, iconProps, labelProps, dataProps, className,
   )
 }
 
+type StatisticBadgeProps = {
+  Icon: LucideIcon
+  iconProps?: LucideProps
+} & Omit<BadgeProps, 'children'>
+  & ({
+    stat: string | number
+    children?: never
+  } | {
+    stat?: never
+    children: React.ReactNode
+  })
+
+const StatisticBadge = ({ Icon, iconProps, className, stat, children, ...props }: StatisticBadgeProps) => {
+  return (
+    <Badge className={cn("py-1 gap-x-1.5 font-normal tracking-wide", className)}
+      {...props}
+    >
+      <Icon {...iconProps}
+        className={cn("size-4 flex-none", iconProps?.className)}
+        strokeWidth={iconProps?.strokeWidth || 1.75}
+      />
+
+      {children || <span>{stat}</span>}
+    </Badge>
+  )
+}
+
 export {
   StatisticList,
-  StatisticItem
+  StatisticItem,
+  StatisticBadge
 }
