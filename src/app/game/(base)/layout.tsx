@@ -1,8 +1,11 @@
 import Link from "next/link"
 import dynamic from "next/dynamic"
 
+// server
+import { signedIn } from "@/server/actions/signed-in"
+
 // icons
-import { Home } from "lucide-react"
+import { Home, LayoutDashboard } from "lucide-react"
 
 // shadcn
 import { buttonVariants } from "@/components/ui/button"
@@ -14,19 +17,23 @@ type BaseGameLayoutProps = {
   children: React.ReactNode
 }
 
-const BaseGameLayout = ({ children }: BaseGameLayoutProps) => {
+const BaseGameLayout = async ({ children }: BaseGameLayoutProps) => {
+  const user = await signedIn()
+
+  const NavigationIcon = user ? LayoutDashboard : Home
+
   return (
     <div className="relative flex-1 pt-16 pb-8 px-4 flex flex-col">
       <Link className={buttonVariants({
-        className: "bg-destructive/85 rounded-2xl expandable absolute top-3 left-3 sm:top-4 sm:left-4",
-        variant: "destructive",
+        className: "bg-accent/30 font-normal dark:font-light tracking-wide expandable absolute top-3 left-3 sm:top-4 sm:left-4",
+        variant: "ghost",
         size: "icon"
       })}
         href="/"
       >
-        <Home className="size-4 sm:size-5 shrink-0" />
+        <NavigationIcon className="size-4 sm:size-5 shrink-0" />
         <div className="ml-1 sm:ml-1.5">
-          Homepage
+          {user ? 'Dashboard' : 'Homepage'}
         </div>
       </Link>
 
