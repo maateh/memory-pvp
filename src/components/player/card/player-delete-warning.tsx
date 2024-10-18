@@ -41,9 +41,9 @@ const PlayerDeleteWarning = ({ player, ...props }: PlayerDeleteWarningProps) => 
     >
       <StatisticList className="max-w-md mx-auto">
         {Object.values(stats).map((stat) => (
-          <StatisticItem className="min-w-32 max-w-40 px-3 py-1.5 text-sm sm:text-sm"
-            iconProps={{ className: "size-4 sm:size-5" }}
-            dataProps={{ className: "text-xs" }}
+          <StatisticItem className="min-w-32 max-w-40"
+            variant="destructive"
+            size="sm"
             statistic={stat}
             key={stat.key}
           />
@@ -53,7 +53,9 @@ const PlayerDeleteWarning = ({ player, ...props }: PlayerDeleteWarningProps) => 
       <Separator className="w-1/5 mx-auto bg-border/15" />
 
       <WarningModalFooter>
-        <WarningCancelButton onClick={() => props.onOpenChange && props.onOpenChange(false)}>
+        <WarningCancelButton className="text-destructive/85 border-destructive/40 hover:text-destructive/90 hover:bg-destructive/15 dark:hover:bg-destructive/10"
+          onClick={() => props.onOpenChange && props.onOpenChange(false)}
+        >
           Cancel
         </WarningCancelButton>
 

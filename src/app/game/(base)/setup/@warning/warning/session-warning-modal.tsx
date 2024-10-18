@@ -83,9 +83,9 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
     >
       <StatisticList className="mx-auto">
         {Object.values(stats).map((stat) => (
-          <StatisticItem className="min-w-36 max-w-44 px-3 py-1.5 text-sm sm:text-sm"
-            iconProps={{ className: "size-4 sm:size-5" }}
-            dataProps={{ className: "text-xs" }}
+          <StatisticItem className="min-w-36 max-w-44"
+            variant="destructive"
+            size="sm"
             statistic={stat}
             key={stat.key}
           />
@@ -93,14 +93,13 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
       </StatisticList>
 
       <WarningModalFooter>
-        <WarningCancelButton onClick={handleStartNew}>
+        <WarningCancelButton className="text-destructive/85 border-destructive/40 hover:text-destructive/90 hover:bg-destructive/15 dark:hover:bg-destructive/10"
+          onClick={handleStartNew}
+        >
           Start new game
         </WarningCancelButton>
 
-        <WarningActionButton
-          variant="secondary"
-          onClick={handleContinue}
-        >
+        <WarningActionButton onClick={handleContinue}>
           Continue previous
         </WarningActionButton>
       </WarningModalFooter>

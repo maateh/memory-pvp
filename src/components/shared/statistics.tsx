@@ -1,3 +1,5 @@
+import { cva, VariantProps } from "class-variance-authority"
+
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
 import type { RenderableStatistic } from "@/lib/utils/stats"
@@ -16,20 +18,43 @@ const StatisticList = ({ className, ...props }: React.ComponentProps<"ul">) => (
   />
 )
 
+const statVariants = cva(
+  "group flex-1 flex justify-between items-center gap-x-3 border border-border/35 rounded-xl transition",
+  {
+    variants: {
+      variant: {
+        default: "bg-secondary/10 hover:bg-secondary/20 dark:hover:bg-secondary/15",
+        destructive: "bg-destructive/10 hover:bg-destructive/20 dark:hover:bg-destructive/15"
+      },
+      size: {
+        default: "px-4 py-2 text-base sm:text-lg",
+        sm: "px-3 py-1.5 text-sm sm:text-sm"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
+  }
+)
+
 type StatisticItemProps = {
-  statistic: RenderableStatistic
+  statistic: RenderableStatistic | (Omit<RenderableStatistic, 'data'> & { data: React.ReactNode })
   iconProps?: LucideProps
   labelProps?: React.ComponentProps<"p">
   dataProps?: React.ComponentProps<"div">
 } & React.ComponentProps<"li">
+  & VariantProps<typeof statVariants>
 
-const StatisticItem = ({ statistic, iconProps, labelProps, dataProps, className, ...props }: StatisticItemProps) => {
+const StatisticItem = ({
+  statistic,
+  iconProps, labelProps, dataProps,
+  className, variant, size, ...props
+}: StatisticItemProps) => {
   const { data, label, Icon } = statistic
 
   return (
-    <li className={cn("group flex-1 px-4 py-2 flex justify-between items-center gap-x-3 bg-secondary/10 border border-border/35 rounded-xl transition hover:bg-secondary/20 dark:hover:bg-secondary/15 sm:text-lg", className)}
-      {...props}
-    >
+    <li className={cn(statVariants({ variant, size }), className)} {...props}>
       <div className="text-muted-foreground">
         <p {...labelProps}
           className={cn("font-heading", labelProps?.className)}
@@ -38,17 +63,21 @@ const StatisticItem = ({ statistic, iconProps, labelProps, dataProps, className,
         </p>
 
         <div {...dataProps}
-          className={cn("flex items-center gap-x-2 text-sm text-foreground/80 font-medium", dataProps?.className)}
+          className={cn("flex items-center gap-x-2 text-sm text-foreground/80 font-medium", {
+            "text-xs": size === 'sm'
+          }, dataProps?.className)}
         >
-          <Separator className="h-4 w-1.5 bg-accent rounded-full"
+          <Separator className={cn("h-4 w-1.5 bg-accent rounded-full", { "bg-destructive": variant === 'destructive' })}
             orientation="vertical"
           />
-          <p>{data}</p>
+          {typeof data === 'object' ? data : <p>{data}</p>}
         </div>
       </div>
 
       <Icon {...iconProps}
-        className={cn("size-6 sm:size-7 flex-none text-muted-foreground/65 transition group-hover:text-muted-foreground/80 dark:group-hover:text-muted-foreground/75", iconProps?.className)}
+        className={cn("size-6 sm:size-7 flex-none text-muted-foreground/65 transition group-hover:text-muted-foreground/80 dark:group-hover:text-muted-foreground/75", {
+          "size-4 sm:size-5": size === 'sm'
+        }, iconProps?.className)}
       />
     </li>
   )
