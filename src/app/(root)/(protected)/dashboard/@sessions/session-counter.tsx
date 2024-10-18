@@ -4,7 +4,7 @@
 import { api } from "@/trpc/client"
 
 // types
-import type { SessionFilterFields } from "@/components/session/filter/types"
+import type { SessionSettingsFilter } from "@/components/session/filter/session-settings-filter"
 
 // icons
 import { Loader2, SquareSigma } from "lucide-react"
@@ -13,7 +13,7 @@ import { Loader2, SquareSigma } from "lucide-react"
 import { useFilterStore } from "@/hooks/store/use-filter-store"
 
 const SessionCounter = () => {
-  const filter = useFilterStore<SessionFilterFields, 'filter'>((state) => state.filter)
+  const filter = useFilterStore<SessionSettingsFilter, 'filter'>((state) => state.filter)
 
   const { data: amount, isFetching } = api.session.count.useQuery(filter)
 

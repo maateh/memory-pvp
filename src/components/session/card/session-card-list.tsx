@@ -1,7 +1,8 @@
 "use client"
 
 // types
-import type { SessionFilterFields } from "@/components/session/filter/types"
+import type { SessionSettingsFilter } from "@/components/session/filter/session-settings-filter"
+import type { SessionStatusFilter } from "@/components/session/filter/session-status-filter"
 
 // trpc
 import { api } from "@/trpc/client"
@@ -16,8 +17,10 @@ import { SessionCard, SessionCardSkeleton } from "@/components/session/card"
 // hooks
 import { useFilterStore } from "@/hooks/store/use-filter-store"
 
+type SessionFilter = SessionSettingsFilter & SessionStatusFilter
+
 const SessionCardList = () => {
-  const filter = useFilterStore<SessionFilterFields, 'filter'>((state) => state.filter)
+  const filter = useFilterStore<SessionFilter, 'filter'>((state) => state.filter)
 
   const { data: sessions, isFetching } = api.session.get.useQuery(filter)
 

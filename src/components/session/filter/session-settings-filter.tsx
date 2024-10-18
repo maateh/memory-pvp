@@ -1,8 +1,8 @@
 "use client"
 
 // types
-import type { GameMode, GameType, TableSize } from "@prisma/client"
-import type { SessionFilterFields, SessionFilterOptions } from "./types"
+import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
+import type { FilterFields, FilterKeys, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -17,17 +17,19 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-const options: SessionFilterOptions = {
+export type SessionSettingsFilter = FilterFields<GameSession, FilterKeys<GameSession, 'type' | 'mode' | 'tableSize'>>
+
+const options: FilterOptions<SessionSettingsFilter> = {
   type: ["CASUAL", "COMPETITIVE"],
   mode: ["SINGLE", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
-const SessionBreadcrumbFilter = () => {
-  const filter = useFilterStore<SessionFilterFields, 'filter'>((state) => state.filter)
+const SessionSettingsFilter = () => {
+  const filter = useFilterStore<SessionSettingsFilter, 'filter'>((state) => state.filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilterStore<SessionFilterFields>(({ filter }) => {
+    setFilterStore<SessionSettingsFilter>(({ filter }) => {
       if (!filter) return { filter }
 
       if (filter.type === type) {
@@ -41,11 +43,11 @@ const SessionBreadcrumbFilter = () => {
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilterStore<SessionFilterFields>(({ filter }) => {
+    setFilterStore<SessionSettingsFilter>(({ filter }) => {
       if (!filter) return { filter }
 
       if (filter.mode === mode) {
-        filter = { type: filter.type, mode: undefined }
+        filter = { ...filter, mode: undefined, tableSize: undefined }
       } else {
         filter = { ...filter, mode }
       }
@@ -55,7 +57,7 @@ const SessionBreadcrumbFilter = () => {
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<SessionFilterFields>(({ filter }) => {
+    setFilterStore<SessionSettingsFilter>(({ filter }) => {
       if (!filter) return { filter }
 
       filter = {
@@ -132,4 +134,4 @@ const SessionBreadcrumbSeparator = ({ showNext = false }: { showNext?: boolean }
   )
 }
 
-export default SessionBreadcrumbFilter
+export default SessionSettingsFilter
