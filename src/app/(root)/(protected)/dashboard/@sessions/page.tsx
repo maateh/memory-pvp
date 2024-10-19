@@ -1,3 +1,6 @@
+// server
+import { getPlayer } from "@/server/actions/player"
+
 // constants
 import { gameSessionsWidgetInfo } from "@/components/widgets/constants"
 
@@ -9,7 +12,9 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import { WidgetCard, WidgetSubheader } from "@/components/widgets"
 import SessionCounter from "./session-counter"
 
-const SessionsWidgetCard = () => {
+const SessionsWidgetCard = async () => {
+  const player = await getPlayer({ isActive: true })
+
   return (
     <WidgetCard
       widgetLink="/dashboard/sessions"
@@ -27,7 +32,7 @@ const SessionsWidgetCard = () => {
         <SessionSettingsFilter />
       </div>
 
-      <SessionCounter />
+      <SessionCounter playerTag={player?.tag} />
     </WidgetCard>
   )
 }
