@@ -9,7 +9,7 @@ import { SignedIn, SignOutButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 
 // icons
-import { ChevronDown, Gamepad2, LogOut, Plus, UserCircle, UserCircle2, UserCog } from "lucide-react"
+import { ChevronDown, Gamepad2, LogOut, Plus, UserCheck2, UserCircle } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,10 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SelectActivePlayerDropdownContent } from "@/components/player"
+import { SelectPlayerDropdownContent } from "@/components/inputs"
+
+// hooks
+import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type NavbarActionsDropdownProps = {
   players: ClientPlayer[]
@@ -35,6 +38,8 @@ type NavbarActionsDropdownProps = {
 
 const NavbarActionsDropdown = ({ players }: NavbarActionsDropdownProps) => {
   const router = useRouter()
+
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
     <DropdownMenu>
@@ -83,19 +88,22 @@ const NavbarActionsDropdown = ({ players }: NavbarActionsDropdownProps) => {
           <span>New player</span>
         </DropdownMenuItem>
 
-        {players.length > 1 && (
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <div className="flex items-center gap-x-2">
-                <UserCog className="size-4" />
-                <span>Switch player</span>
-              </div>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <SelectActivePlayerDropdownContent players={players} asSub />
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-        )}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className={cn({ "hidden": players.length < 1 })}>
+            <div className="flex items-center gap-x-2">
+              <UserCheck2 className="size-4" />
+              <span>Switch player</span>
+            </div>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <SelectPlayerDropdownContent
+              players={players}
+              handleSelectPlayer={handleSelectAsActive}
+              isPending={selectAsActive.isPending}
+              asSub
+            />
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
 
         <DropdownMenuSeparator />
 
