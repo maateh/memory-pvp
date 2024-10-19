@@ -35,7 +35,8 @@ const SessionCard = ({ session }: SessionCardProps) => {
               </p>
             </div>
 
-            <PlayerBadge className="py-0.5 px-2 text-xs"
+            <PlayerBadge
+              size="sm"
               player={session.players.current}
             />
           </div>

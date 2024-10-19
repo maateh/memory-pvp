@@ -32,7 +32,6 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
       <div className="space-y-1.5">
         <PlayerWithAvatar className={cn({ "flex-row-reverse": flipOrder })}
           player={player}
-          imageUrl={player.imageUrl}
         />
 
         <StatisticBadge className="font-medium"

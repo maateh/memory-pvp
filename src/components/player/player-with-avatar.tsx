@@ -3,44 +3,29 @@ import Image from "next/image"
 // utils
 import { cn } from "@/lib/utils"
 
-// icons
-import { LucideProps, UserRound } from "lucide-react"
-
 // components
-import { PlayerBadge, PlayerBadgeProps } from "@/components/player"
+import { PlayerBadge } from "@/components/player"
 
 type PlayerWithAvatarProps = {
-  player: Pick<ClientPlayer, 'tag' | 'color'>
-  imageUrl?: string | null
+  player: Pick<ClientPlayer, 'tag' | 'color' | 'isActive' | 'imageUrl'>
+  playerBadgeProps?: Omit<React.ComponentProps<typeof PlayerBadge>, 'player'>
   imageSize?: number
-  playerBadgeProps?: Omit<PlayerBadgeProps, 'player'>
-  imgFallbackProps?: LucideProps
   className?: string
 }
 
-const PlayerWithAvatar = ({ player, imageUrl, playerBadgeProps, imageSize = 24, imgFallbackProps, className }: PlayerWithAvatarProps) => {
+const PlayerWithAvatar = ({ player, playerBadgeProps, imageSize = 24, className }: PlayerWithAvatarProps) => {
+  const imageUrl = player.imageUrl || '/profile.svg' // FIXME: add profile placeholder svg
+
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
-      {imageUrl ? (
-        <Image className="border border-border/50 rounded-full img-wrapper"
-          src={imageUrl}
-          alt={`${player.tag}'s avatar`}
-          width={imageSize}
-          height={imageSize}
-        />
-      ) : (
-        <UserRound {...imgFallbackProps}
-          className={cn("size-5 rounded-full flex-none", imgFallbackProps?.className)}
-        />
-      )}
-
-      <PlayerBadge {...playerBadgeProps} className={cn("w-fit", playerBadgeProps?.className)}
-        player={{
-          tag: player.tag,
-          color: player.color,
-          isActive: false
-        }}
+      <Image className="border border-border/50 rounded-full img-wrapper"
+        src={imageUrl}
+        alt={`${player.tag}'s avatar`}
+        width={imageSize}
+        height={imageSize}
       />
+
+      <PlayerBadge player={player} {...playerBadgeProps} />
     </div>
   )
 }

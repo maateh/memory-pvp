@@ -6,12 +6,12 @@ import type { LucideIcon, LucideProps } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors shadow-sm focus:shadow-md dark:shadow-md dark:focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground/90",
-        outline: "border-border/50 text-foreground/90 hover:bg-transparent/5 hover:text-foreground",
+        outline: "border-border/30 text-foreground/90 hover:border-border/40 hover:bg-transparent/5 dark:hover:bg-transparent/15 hover:text-foreground",
         secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:text-secondary-foreground/90",
         accent: "border-transparent bg-accent text-accent-foreground hover:bg-accent/90",
         destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:text-destructive-foreground/90",

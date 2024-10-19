@@ -13,8 +13,7 @@ import { Button } from "@/components/ui/button"
 
 // components
 import { SignInButton, Warning } from "@/components/shared"
-import { PlayerWithAvatar } from "@/components/player"
-import { SelectActivePlayerDropdown } from "@/components/player"
+import { PlayerWithAvatar, SelectActivePlayerDropdown } from "@/components/player"
 
 type SelectActivePlayerProps = {
   user: User | null
@@ -48,10 +47,8 @@ const SelectActivePlayer = ({ user, players }: SelectActivePlayerProps) => {
       ) : (
         <div className="flex items-center gap-x-2">
           <PlayerWithAvatar className="mt-2 mx-auto"
-            playerBadgeProps={{ className: "sm:text-base" }}
-            imageUrl={activePlayer.imageUrl}
-            imageSize={32}
             player={activePlayer}
+            imageSize={28}
           />
 
           <SelectActivePlayerDropdown className="mt-2 mx-auto"

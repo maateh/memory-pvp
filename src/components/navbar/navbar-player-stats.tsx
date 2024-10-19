@@ -17,7 +17,7 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
 
   return (
     <div className="h-full flex items-center gap-x-2">
-      <PlayerBadge player={activePlayer} />
+      <PlayerBadge player={activePlayer} showVerifiedTooltip />
 
       <div className="hidden items-center gap-x-2 lg:flex">
         <ChevronRightCircle className="flex-none size-4 text-foreground/80" />
