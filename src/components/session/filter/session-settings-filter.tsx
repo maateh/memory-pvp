@@ -17,19 +17,19 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-export type SessionSettingsFilter = FilterFields<GameSession, 'type' | 'mode' | 'tableSize'>
+type SettingsFilter = FilterFields<GameSession, 'type' | 'mode' | 'tableSize'>
 
-const options: FilterOptions<SessionSettingsFilter> = {
+const options: FilterOptions<SettingsFilter> = {
   type: ["CASUAL", "COMPETITIVE"],
   mode: ["SINGLE", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
 const SessionSettingsFilter = () => {
-  const filter = useFilterStore<SessionSettingsFilter>((state) => state.session.filter)
+  const filter = useFilterStore<SettingsFilter>((state) => state.session.filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilterStore<SessionSettingsFilter>(({ session }) => {
+    setFilterStore<SettingsFilter>(({ session }) => {
       const filter = session.filter
 
       if (filter.type === type) {
@@ -43,7 +43,7 @@ const SessionSettingsFilter = () => {
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilterStore<SessionSettingsFilter>(({ session }) => {
+    setFilterStore<SettingsFilter>(({ session }) => {
       const filter = session.filter
 
       if (filter.mode === mode) {
@@ -57,7 +57,7 @@ const SessionSettingsFilter = () => {
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<SessionSettingsFilter>(({ session }) => {
+    setFilterStore<SettingsFilter>(({ session }) => {
       const filter = session.filter
 
       session.filter = {
@@ -135,3 +135,4 @@ const SessionBreadcrumbSeparator = ({ showNext = false }: { showNext?: boolean }
 }
 
 export default SessionSettingsFilter
+export type { SettingsFilter as SessionSettingsFilter }

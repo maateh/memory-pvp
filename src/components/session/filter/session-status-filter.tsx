@@ -13,17 +13,17 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-export type SessionStatusFilter = FilterFields<GameSession, 'status'>
+type StatusFilter = FilterFields<GameSession, 'status'>
 
-const options: FilterOptions<SessionStatusFilter> = {
+const options: FilterOptions<StatusFilter> = {
   status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
 }
 
 const SessionStatusFilter = () => {
-  const filter = useFilterStore<SessionStatusFilter>(({ session }) => session.filter)
+  const filter = useFilterStore<StatusFilter>(({ session }) => session.filter)
 
   const handleSelectStatus = (status: GameStatus) => {
-    setFilterStore<SessionStatusFilter>(({ session }) => {
+    setFilterStore<StatusFilter>(({ session }) => {
       const filter = session.filter
 
       session.filter = {
@@ -57,3 +57,4 @@ const SessionStatusFilter = () => {
 }
 
 export default SessionStatusFilter
+export type { StatusFilter as SessionStatusFilter }

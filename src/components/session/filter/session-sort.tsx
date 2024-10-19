@@ -16,13 +16,13 @@ import { ButtonTooltip } from "@/components/ui/button"
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-export type SessionSort = SortFields<GameSession, 'startedAt'>
+type SortFilter = SortFields<GameSession, 'startedAt'>
 
 const SessionSort = () => {
-  const sort = useFilterStore<SessionSort>(({ session }) => session.sort)
+  const sort = useFilterStore<SortFilter>(({ session }) => session.sort)
 
   const handleToggleSort = () => {
-    setFilterStore<SessionSort>(({ session }) => {
+    setFilterStore<SortFilter>(({ session }) => {
       const sort = session.sort
 
       session.sort = {
@@ -66,3 +66,4 @@ const SessionSort = () => {
 }
 
 export default SessionSort
+export type { SortFilter as SessionSort }
