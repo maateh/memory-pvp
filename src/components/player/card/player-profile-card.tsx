@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 // components
 import { ColorPicker } from "@/components/inputs"
 import { StatisticBadge } from "@/components/shared"
-import { PlayerVerifiedBadge } from "@/components/player"
+import { PlayerVerified } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"
 
 // hooks
@@ -69,7 +69,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               </p>
             )}
 
-            {player.isActive && <PlayerVerifiedBadge />}
+            {player.isActive && <PlayerVerified />}
           </div>
 
           <StatisticBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
