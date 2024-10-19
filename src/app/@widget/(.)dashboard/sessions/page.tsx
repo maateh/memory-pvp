@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { SessionCardList } from "@/components/session/card"
-import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
+import { SessionSettingsFilter, SessionSort, SessionStatusFilter } from "@/components/session/filter"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
 const SessionsWidgetModal = () => {
@@ -19,7 +19,7 @@ const SessionsWidgetModal = () => {
       <div className="space-y-2 sm:space-y-1">
         <div className="flex justify-between items-center gap-x-6">
           <SessionStatusFilter />
-          {/* TODO: sort by */}
+          <SessionSort />
         </div>
 
         <Separator className="w-1/5 mx-auto bg-border/10" />
