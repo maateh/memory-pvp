@@ -13,7 +13,7 @@ import { Loader2, SquareSigma } from "lucide-react"
 import { useFilterStore } from "@/hooks/store/use-filter-store"
 
 const SessionCounter = () => {
-  const filter = useFilterStore<SessionSettingsFilter, 'filter'>((state) => state.filter)
+  const filter = useFilterStore<SessionSettingsFilter>(({ session }) => session.filter)
 
   const { data: amount, isFetching } = api.session.count.useQuery(filter)
 
