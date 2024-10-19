@@ -1,32 +1,47 @@
 import { create } from "zustand"
 
-export type FilterKeys<T, K extends keyof T> = K
+/** Filter map */
+export type FilterMapKeys = "session"
 
-export type FilterFields<T, K extends keyof T> = Pick<T, FilterKeys<T, K>>
+/** Filter types */
+export type FilterFields<T, K extends keyof T> = Pick<T, K>
 
 export type FilterOptions<T extends FilterFields<T, keyof T>> = {
   [key in keyof T]: T[key][]
 }
 
-type Filter<T extends FilterFields<T, keyof T> | unknown> = Partial<T>
+type Filter<T extends FilterFields<T, keyof T>> = Partial<T>
 
-export type FilterStore<T extends FilterFields<T, keyof T>> = {
-  filter: Filter<T>
-  set: (filter: Filter<T>) => void
-  clear: () => void
+/** Sort types */
+export type SortFields<T, K extends keyof T> = Pick<{
+  [key in K]: 'asc' | 'desc'
+}, K>
+
+type Sort<T extends SortFields<T, keyof T>> = Partial<T>
+
+/** Store types */
+type FilterStore<T extends FilterFields<T, keyof T>> = {
+  [key in FilterMapKeys]: {
+    filter: Filter<T>
+    sort: Sort<T>
+  }
 }
 
-const useFilterStoreImpl = create<FilterStore<Filter<unknown>>>((set) => ({
-  filter: {},
-  set: (filter) => set({ filter }),
-  clear: () => set({ filter: {} })
+/** Filter store (generic) implementation */
+const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
+  session: {
+    filter: {},
+    sort: {
+      startedAt: 'desc'
+    }
+  }
 }))
 
-export const useFilterStore = <T extends FilterFields<T, keyof T>, K extends keyof FilterStore<T>>(
-  selector: (state: FilterStore<T>) => FilterStore<T>[K]
+export const useFilterStore = <T extends FilterFields<T, keyof T>>(
+  selector: (state: FilterStore<T>) => FilterStore<T>[FilterMapKeys]['filter' |'sort']
 ) => useFilterStoreImpl(selector)
 
 export const setFilterStore = useFilterStoreImpl.setState as <T extends FilterFields<T, keyof T>>(
-  partial: (state: Partial<FilterStore<Partial<T>>>) => Partial<FilterStore<Partial<T>>>,
+  partial: (state: FilterStore<T>) => Partial<FilterStore<T>>,
   replace?: boolean
 ) => void

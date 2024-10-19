@@ -2,7 +2,7 @@
 
 // types
 import type { GameSession, GameStatus } from "@prisma/client"
-import type { FilterFields, FilterKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterFields, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -13,26 +13,25 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-export type SessionStatusFilter = FilterFields<GameSession, FilterKeys<GameSession, 'status'>>
+export type SessionStatusFilter = FilterFields<GameSession, 'status'>
 
 const options: FilterOptions<SessionStatusFilter> = {
   status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
 }
 
 const SessionStatusFilter = () => {
-  const filter = useFilterStore<SessionStatusFilter, 'filter'>((state) => state.filter)
+  const filter = useFilterStore<SessionStatusFilter>(({ session }) => session.filter)
 
   const handleSelectStatus = (status: GameStatus) => {
-    setFilterStore<SessionStatusFilter>(({ filter }) => {
-      if (!filter) return { filter }
+    setFilterStore<SessionStatusFilter>(({ session }) => {
+      const filter = session.filter
 
-      if (filter.status === status) {
-        filter = { ...filter, status: undefined }
-      } else {
-        filter = { ...filter, status }
+      session.filter = {
+        ...filter,
+        status: filter.status !== status ? status : undefined
       }
 
-      return { filter }
+      return { session }
     })
   }
 

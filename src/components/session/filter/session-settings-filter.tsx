@@ -2,7 +2,7 @@
 
 // types
 import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
-import type { FilterFields, FilterKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterFields, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-export type SessionSettingsFilter = FilterFields<GameSession, FilterKeys<GameSession, 'type' | 'mode' | 'tableSize'>>
+export type SessionSettingsFilter = FilterFields<GameSession, 'type' | 'mode' | 'tableSize'>
 
 const options: FilterOptions<SessionSettingsFilter> = {
   type: ["CASUAL", "COMPETITIVE"],
@@ -26,46 +26,46 @@ const options: FilterOptions<SessionSettingsFilter> = {
 }
 
 const SessionSettingsFilter = () => {
-  const filter = useFilterStore<SessionSettingsFilter, 'filter'>((state) => state.filter)
+  const filter = useFilterStore<SessionSettingsFilter>((state) => state.session.filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilterStore<SessionSettingsFilter>(({ filter }) => {
-      if (!filter) return { filter }
+    setFilterStore<SessionSettingsFilter>(({ session }) => {
+      const filter = session.filter
 
       if (filter.type === type) {
-        filter = {}
+        session.filter = { ...filter, type: undefined }
       } else {
-        filter = { ...filter, type }
+        session.filter = { ...filter, type }
       }
 
-      return { filter }
+      return { session }
     })
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilterStore<SessionSettingsFilter>(({ filter }) => {
-      if (!filter) return { filter }
+    setFilterStore<SessionSettingsFilter>(({ session }) => {
+      const filter = session.filter
 
       if (filter.mode === mode) {
-        filter = { ...filter, mode: undefined, tableSize: undefined }
+        session.filter = { ...filter, mode: undefined, tableSize: undefined }
       } else {
-        filter = { ...filter, mode }
+        session.filter = { ...filter, mode }
       }
 
-      return { filter }
+      return { session }
     })
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<SessionSettingsFilter>(({ filter }) => {
-      if (!filter) return { filter }
+    setFilterStore<SessionSettingsFilter>(({ session }) => {
+      const filter = session.filter
 
-      filter = {
+      session.filter = {
         ...filter,
-        tableSize: filter.tableSize === tableSize ? undefined : tableSize
+        tableSize: filter.tableSize !== tableSize ? tableSize : undefined
       }
 
-      return { filter }
+      return { session }
     })
   }
 
