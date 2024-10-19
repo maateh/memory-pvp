@@ -14,7 +14,7 @@ type PlayerWithAvatarProps = {
 }
 
 const PlayerWithAvatar = ({ player, playerBadgeProps, imageSize = 24, className }: PlayerWithAvatarProps) => {
-  const imageUrl = player.imageUrl || '/profile.svg' // FIXME: add profile placeholder svg
+  const imageUrl = player.imageUrl || '/user-round.svg'
 
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
