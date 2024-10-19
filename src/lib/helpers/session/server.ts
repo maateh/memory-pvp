@@ -100,17 +100,17 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const { players, stats, ...filter } = filterInput
+  const { playerTag, stats, ...filter } = filterInput
 
   return {
     owner: { userId },
-    players: players ? {
+    players: {
       some: {
         tag: {
-          in: Object.values(players).map((player) => player!.tag)
+          equals: playerTag
         }
       }
-    } : undefined,
+    },
     stats: stats as Prisma.JsonFilter<"GameSession"> | undefined,
     ...filter
   }

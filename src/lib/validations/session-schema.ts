@@ -4,7 +4,7 @@ import { z } from "zod"
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
 // validations
-import { clientPlayerSchema } from "@/lib/validations/player-schema"
+import { clientPlayerSchema, playerTagSchema } from "@/lib/validations/player-schema"
 
 /** Base schemas */
 const cardIdentifierSchema = z.object({
@@ -60,10 +60,12 @@ export const clientSessionSchema = z.object({
 
 /** Forms / API validations */
 export const sessionFilterSchema = clientSessionSchema
+  .extend({ playerTag: playerTagSchema })
   .partial()
   .omit({
     cards: true,
-    flipped: true
+    flipped: true,
+    players: true
   }).optional().default({})
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
