@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 // trpc
 import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
@@ -16,6 +18,7 @@ import {
   saveOfflineGameSchema,
   saveSessionSchema,
   sessionFilterSchema,
+  sessionSortSchema,
   setupGameSchema
 } from "@/lib/validations/session-schema"
 
@@ -37,12 +40,18 @@ import { offlinePlayerMetadata } from "@/constants/player"
 
 export const sessionRouter = createTRPCRouter({
   get: protectedProcedure
-    .input(sessionFilterSchema)
+    .input(
+      z.object({
+        filter: sessionFilterSchema,
+        sort: sessionSortSchema
+      })
+    )
     .query(async ({ ctx, input }): Promise<ClientGameSession[]> => {
-      const filter = parseSessionFilter(ctx.user.id, input)
+      const filter = parseSessionFilter(ctx.user.id, input.filter)
 
       const sessions = await ctx.db.gameSession.findMany({
         where: filter,
+        orderBy: input.sort,
         include: {
           owner: true,
           players: {

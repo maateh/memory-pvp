@@ -66,6 +66,16 @@ export const sessionFilterSchema = clientSessionSchema
     flipped: true
   }).optional().default({})
 
+const sortKeys = z.enum(['asc', 'desc']).optional()
+export const sessionSortSchema = z.object({
+  type: sortKeys,
+  mode: sortKeys,
+  tableSize: sortKeys,
+  status: sortKeys,
+  startedAt: sortKeys,
+  continuedAt: sortKeys
+}).optional().default({})
+
 export const setupGameSchema = z.object({
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
