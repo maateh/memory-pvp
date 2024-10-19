@@ -3,7 +3,7 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
 import { signedIn } from "@/server/actions/signed-in"
-import { getPlayersWithAvatar } from "@/server/actions/player"
+import { getPlayers } from "@/server/actions/player"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -22,7 +22,7 @@ type BaseGameSetupPageProps = {
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
-  const players = await getPlayersWithAvatar()
+  const players = await getPlayers(true)
 
   return (
     <>

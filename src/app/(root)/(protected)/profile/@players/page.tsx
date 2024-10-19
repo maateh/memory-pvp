@@ -1,5 +1,5 @@
 // server
-import { getPlayerWithAvatar } from "@/server/actions/player"
+import { getPlayer } from "@/server/actions/player"
 
 // constants
 import { playerProfilesWidgetInfo } from "@/components/widgets/constants"
@@ -10,7 +10,7 @@ import { CardItem, Warning } from "@/components/shared"
 import { PlayerProfileCard } from "@/components/player/card"
 
 const PlayersWidget = async () => {
-  const activePlayer = await getPlayerWithAvatar({ isActive: true })
+  const activePlayer = await getPlayer({ isActive: true }, true)
 
   return (
     <WidgetCard
