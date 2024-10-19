@@ -9,7 +9,7 @@ import { getPlayersWithAvatar } from "@/server/actions/player"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import SelectActivePlayer from "./select-active-player"
+import ActivePlayer from "./active-player"
 import SetupGameForm from "./setup-game-form"
 
 type BaseGameSetupPageProps = {
@@ -35,7 +35,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
           ...but first, <span className="text-accent">configure</span> your game session.
         </p>
 
-        <SelectActivePlayer
+        <ActivePlayer
           user={user}
           players={players}
         />
