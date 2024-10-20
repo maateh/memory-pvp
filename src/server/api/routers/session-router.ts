@@ -44,7 +44,7 @@ export const sessionRouter = createTRPCRouter({
       z.object({
         filter: sessionFilterSchema,
         sort: sessionSortSchema
-      })
+      }).optional().default({})
     )
     .query(async ({ ctx, input }): Promise<ClientGameSession[]> => {
       const filter = parseSessionFilter(ctx.user.id, input.filter)
