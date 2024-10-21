@@ -16,8 +16,7 @@ const PlayerStatisticsWidgetCard = async () => {
       <WidgetSubheader className="mt-2 mb-0.5">
         Session Settings
       </WidgetSubheader>
-      {/* FIXME: add custom filter prefix */}
-      <SessionSettingsFilter />
+      <SessionSettingsFilter filterKey="statistics" />
 
       <WidgetSubheader className="mt-8 mb-3">
         {player ? <span className="text-accent">{player.tag}&apos;s</span> : 'Player'} statistics

@@ -18,13 +18,13 @@ const SessionHistoryWidgetModal = () => {
 
       <div className="space-y-2 sm:space-y-1">
         <div className="flex justify-between items-center gap-x-6">
-          <SessionStatusFilter />
-          <SessionSort />
+          <SessionStatusFilter filterKey="history" />
+          <SessionSort filterKey="history" />
         </div>
 
         <Separator className="w-1/5 mx-auto bg-border/10" />
 
-        <SessionSettingsFilter />
+        <SessionSettingsFilter filterKey="history" />
       </div>
 
       <Separator className="w-4/5 mx-auto bg-border/15" />

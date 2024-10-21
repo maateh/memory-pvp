@@ -2,7 +2,7 @@
 
 // types
 import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
-import type { FilterFields, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterFields, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -25,47 +25,51 @@ const options: FilterOptions<SettingsFilter> = {
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
-const SessionSettingsFilter = () => {
-  const filter = useFilterStore<SettingsFilter>((state) => state.history.filter)
+type SessionSettingsFilterProps = {
+  filterKey: FilterMapKeys
+}
+
+const SessionSettingsFilter = ({ filterKey }: SessionSettingsFilterProps) => {
+  const filter = useFilterStore<SettingsFilter>((state) => state[filterKey].filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilterStore<SettingsFilter>(({ history }) => {
-      const filter = history.filter
+    setFilterStore<SettingsFilter>((state) => {
+      const filter = state[filterKey].filter
 
       if (filter.type === type) {
-        history.filter = { ...filter, type: undefined }
+        state[filterKey].filter = { ...filter, type: undefined }
       } else {
-        history.filter = { ...filter, type }
+        state[filterKey].filter = { ...filter, type }
       }
 
-      return { history }
+      return { [filterKey]: state[filterKey] }
     })
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilterStore<SettingsFilter>(({ history }) => {
-      const filter = history.filter
+    setFilterStore<SettingsFilter>((state) => {
+      const filter = state[filterKey].filter
 
       if (filter.mode === mode) {
-        history.filter = { ...filter, mode: undefined, tableSize: undefined }
+        state[filterKey].filter = { ...filter, mode: undefined, tableSize: undefined }
       } else {
-        history.filter = { ...filter, mode }
+        state[filterKey].filter = { ...filter, mode }
       }
 
-      return { history }
+      return { [filterKey]: state[filterKey] }
     })
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<SettingsFilter>(({ history }) => {
-      const filter = history.filter
+    setFilterStore<SettingsFilter>((state) => {
+      const filter = state[filterKey].filter
 
-      history.filter = {
+      state[filterKey].filter = {
         ...filter,
         tableSize: filter.tableSize !== tableSize ? tableSize : undefined
       }
 
-      return { history }
+      return { [filterKey]: state[filterKey] }
     })
   }
 

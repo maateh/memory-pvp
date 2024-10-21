@@ -2,7 +2,7 @@
 
 // types
 import type { GameSession } from "@prisma/client"
-import type { SortFields } from "@/hooks/store/use-filter-store"
+import type { FilterMapKeys, SortFields } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -18,19 +18,23 @@ import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
 type SortFilter = SortFields<GameSession, 'startedAt'>
 
-const SessionSort = () => {
-  const sort = useFilterStore<SortFilter>(({ history }) => history.sort)
+type SessionSortProps = {
+  filterKey: FilterMapKeys
+}
+
+const SessionSort = ({ filterKey }: SessionSortProps) => {
+  const sort = useFilterStore<SortFilter>((state) => state[filterKey].sort)
 
   const handleToggleSort = () => {
-    setFilterStore<SortFilter>(({ history }) => {
-      const sort = history.sort
+    setFilterStore<SortFilter>((state) => {
+      const sort = state[filterKey].sort
 
-      history.sort = {
+      state[filterKey].sort = {
         ...sort,
         startedAt: sort.startedAt === 'asc' ? 'desc' : 'asc'
       }
 
-      return { history }
+      return { [filterKey]: state[filterKey] }
     })
   }
 

@@ -26,7 +26,7 @@ type SessionCounterProps = {
 }
 
 const SessionCounter = ({ playerTag }: SessionCounterProps) => {
-  const filter = useFilterStore<SessionFilter>(({ session }) => session.filter)
+  const filter = useFilterStore<SessionFilter>((state) => state.history.filter)
 
   const { data: amount, isFetching } = api.session.count.useQuery({ ...filter, playerTag })
 

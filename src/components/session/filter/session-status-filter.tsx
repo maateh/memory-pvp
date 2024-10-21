@@ -2,7 +2,7 @@
 
 // types
 import type { GameSession, GameStatus } from "@prisma/client"
-import type { FilterFields, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterFields, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -19,19 +19,23 @@ const options: FilterOptions<StatusFilter> = {
   status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
 }
 
-const SessionStatusFilter = () => {
-  const filter = useFilterStore<StatusFilter>(({ history }) => history.filter)
+type SessionStatusFilterProps = {
+  filterKey: FilterMapKeys
+}
+
+const SessionStatusFilter = ({ filterKey }: SessionStatusFilterProps) => {
+  const filter = useFilterStore<StatusFilter>((state) => state[filterKey].filter)
 
   const handleSelectStatus = (status: GameStatus) => {
-    setFilterStore<StatusFilter>(({ history }) => {
-      const filter = history.filter
+    setFilterStore<StatusFilter>((state) => {
+      const filter = state[filterKey].filter
 
-      history.filter = {
+      state[filterKey].filter = {
         ...filter,
         status: filter.status !== status ? status : undefined
       }
 
-      return { history }
+      return { [filterKey]: state[filterKey] }
     })
   }
 

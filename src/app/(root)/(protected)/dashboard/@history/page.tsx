@@ -25,11 +25,11 @@ const SessionHistoryWidgetCard = async () => {
       </WidgetSubheader>
 
       <div className="space-y-1.5 sm:space-y-1">
-        <SessionStatusFilter />
+        <SessionStatusFilter filterKey="history" />
 
         <Separator className="w-1/5 mx-auto bg-border/10" />
 
-        <SessionSettingsFilter />
+        <SessionSettingsFilter filterKey="history" />
       </div>
 
       <SessionCounter playerTag={player?.tag} />

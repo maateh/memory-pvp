@@ -12,8 +12,7 @@ const WaitingRoomsWidgetModal = () => {
         Room Settings
       </WidgetSubheader>
 
-      {/* FIXME: add custom filter prefix */}
-      <SessionSettingsFilter />
+      <SessionSettingsFilter filterKey="rooms" />
     </WidgetModal>
   )
 }
