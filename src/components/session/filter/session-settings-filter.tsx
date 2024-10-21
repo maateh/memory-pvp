@@ -26,46 +26,46 @@ const options: FilterOptions<SettingsFilter> = {
 }
 
 const SessionSettingsFilter = () => {
-  const filter = useFilterStore<SettingsFilter>((state) => state.session.filter)
+  const filter = useFilterStore<SettingsFilter>((state) => state.history.filter)
 
   const handleSelectType = (type: GameType) => {
-    setFilterStore<SettingsFilter>(({ session }) => {
-      const filter = session.filter
+    setFilterStore<SettingsFilter>(({ history }) => {
+      const filter = history.filter
 
       if (filter.type === type) {
-        session.filter = { ...filter, type: undefined }
+        history.filter = { ...filter, type: undefined }
       } else {
-        session.filter = { ...filter, type }
+        history.filter = { ...filter, type }
       }
 
-      return { session }
+      return { history }
     })
   }
 
   const handleSelectMode = (mode: GameMode) => {
-    setFilterStore<SettingsFilter>(({ session }) => {
-      const filter = session.filter
+    setFilterStore<SettingsFilter>(({ history }) => {
+      const filter = history.filter
 
       if (filter.mode === mode) {
-        session.filter = { ...filter, mode: undefined, tableSize: undefined }
+        history.filter = { ...filter, mode: undefined, tableSize: undefined }
       } else {
-        session.filter = { ...filter, mode }
+        history.filter = { ...filter, mode }
       }
 
-      return { session }
+      return { history }
     })
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<SettingsFilter>(({ session }) => {
-      const filter = session.filter
+    setFilterStore<SettingsFilter>(({ history }) => {
+      const filter = history.filter
 
-      session.filter = {
+      history.filter = {
         ...filter,
         tableSize: filter.tableSize !== tableSize ? tableSize : undefined
       }
 
-      return { session }
+      return { history }
     })
   }
 

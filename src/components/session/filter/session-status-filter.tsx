@@ -20,18 +20,18 @@ const options: FilterOptions<StatusFilter> = {
 }
 
 const SessionStatusFilter = () => {
-  const filter = useFilterStore<StatusFilter>(({ session }) => session.filter)
+  const filter = useFilterStore<StatusFilter>(({ history }) => history.filter)
 
   const handleSelectStatus = (status: GameStatus) => {
-    setFilterStore<StatusFilter>(({ session }) => {
-      const filter = session.filter
+    setFilterStore<StatusFilter>(({ history }) => {
+      const filter = history.filter
 
-      session.filter = {
+      history.filter = {
         ...filter,
         status: filter.status !== status ? status : undefined
       }
 
-      return { session }
+      return { history }
     })
   }
 

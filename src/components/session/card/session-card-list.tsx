@@ -21,8 +21,8 @@ import { useFilterStore } from "@/hooks/store/use-filter-store"
 type SessionFilter = SessionSettingsFilter & SessionStatusFilter
 
 const SessionCardList = () => {
-  const filter = useFilterStore<SessionFilter>(({ session }) => session.filter)
-  const sort = useFilterStore<SessionSort>(({ session }) => session.sort)
+  const filter = useFilterStore<SessionFilter>(({ history }) => history.filter)
+  const sort = useFilterStore<SessionSort>(({ history }) => history.sort)
 
   const { data: sessions, isFetching } = api.session.get.useQuery({ filter, sort })
 

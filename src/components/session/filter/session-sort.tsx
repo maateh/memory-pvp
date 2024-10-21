@@ -19,18 +19,18 @@ import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 type SortFilter = SortFields<GameSession, 'startedAt'>
 
 const SessionSort = () => {
-  const sort = useFilterStore<SortFilter>(({ session }) => session.sort)
+  const sort = useFilterStore<SortFilter>(({ history }) => history.sort)
 
   const handleToggleSort = () => {
-    setFilterStore<SortFilter>(({ session }) => {
-      const sort = session.sort
+    setFilterStore<SortFilter>(({ history }) => {
+      const sort = history.sort
 
-      session.sort = {
+      history.sort = {
         ...sort,
         startedAt: sort.startedAt === 'asc' ? 'desc' : 'asc'
       }
 
-      return { session }
+      return { history }
     })
   }
 

@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 /** Filter map */
-export type FilterMapKeys = "session"
+export type FilterMapKeys = "history"
 
 /** Filter types */
 export type FilterFields<T, K extends keyof T> = Pick<T, K>
@@ -29,7 +29,7 @@ type FilterStore<T extends FilterFields<T, keyof T>> = {
 
 /** Filter store (generic) implementation */
 const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
-  session: {
+  history: {
     filter: {},
     sort: {
       startedAt: 'desc'
