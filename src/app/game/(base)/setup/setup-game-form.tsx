@@ -1,5 +1,7 @@
 "use client"
 
+import { toast } from "sonner"
+
 // types
 import type { z } from "zod"
 import type { DefaultValues, UseFormReturn } from "react-hook-form"
@@ -53,6 +55,9 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
     }
 
     // TODO: implement multiplayer
+    toast.warning('Work in progress', {
+      description: "Sorry, but multiplayer game sessions are not implemented yet."
+    })
   }
 
   return (
