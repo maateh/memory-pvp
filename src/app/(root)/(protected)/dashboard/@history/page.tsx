@@ -2,7 +2,7 @@
 import { getPlayer } from "@/server/actions/player"
 
 // constants
-import { gameSessionsWidgetInfo } from "@/components/widgets/constants"
+import { sessionHistoryWidgetInfo } from "@/components/widgets/constants"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -12,13 +12,13 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import { WidgetCard, WidgetSubheader } from "@/components/widgets"
 import SessionCounter from "./session-counter"
 
-const SessionsWidgetCard = async () => {
+const SessionHistoryWidgetCard = async () => {
   const player = await getPlayer({ isActive: true })
 
   return (
     <WidgetCard
-      widgetLink="/dashboard/sessions"
-      {...gameSessionsWidgetInfo}
+      widgetLink="/dashboard/history"
+      {...sessionHistoryWidgetInfo}
     >
       <WidgetSubheader className="mt-2 mb-3">
         Summary of your sessions
@@ -37,4 +37,4 @@ const SessionsWidgetCard = async () => {
   )
 }
 
-export default SessionsWidgetCard
+export default SessionHistoryWidgetCard

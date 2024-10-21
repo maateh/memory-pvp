@@ -5,8 +5,8 @@ import type { WidgetInfo } from "@/components/widgets/types"
 import { Gamepad2, History, UserCircle } from "lucide-react"
 
 // DASHBOARD
-export const gameSessionsWidgetInfo: WidgetInfo = {
-  title: "Game sessions",
+export const sessionHistoryWidgetInfo: WidgetInfo = {
+  title: "Session History",
   description: "Browse through your previous game sessions.",
   icon: <History />
 }

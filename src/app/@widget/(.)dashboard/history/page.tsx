@@ -1,5 +1,5 @@
 // constants
-import { gameSessionsWidgetInfo } from "@/components/widgets/constants" 
+import { sessionHistoryWidgetInfo } from "@/components/widgets/constants" 
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -9,9 +9,9 @@ import { SessionCardList } from "@/components/session/card"
 import { SessionSettingsFilter, SessionSort, SessionStatusFilter } from "@/components/session/filter"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
-const SessionsWidgetModal = () => {
+const SessionHistoryWidgetModal = () => {
   return (
-    <WidgetModal isOpen {...gameSessionsWidgetInfo}>
+    <WidgetModal isOpen {...sessionHistoryWidgetInfo}>
       <WidgetSubheader className="-mb-2">
         Filter sessions by
       </WidgetSubheader>
@@ -34,4 +34,4 @@ const SessionsWidgetModal = () => {
   )
 }
 
-export default SessionsWidgetModal
+export default SessionHistoryWidgetModal

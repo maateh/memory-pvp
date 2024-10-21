@@ -72,7 +72,7 @@ const NavbarActionsDropdown = ({ players }: NavbarActionsDropdownProps) => {
           "lg:hidden": players.length === 0
         })}
           variant="secondary"
-          onClick={() => router.push('/dashboard/sessions', { scroll: false })}
+          onClick={() => router.push('/dashboard/history', { scroll: false })}
         >
           <Gamepad2 className="size-4" />
           <span>Game sessions</span>

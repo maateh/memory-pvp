@@ -2,21 +2,20 @@
 import { PageHeading } from "@/components/shared"
 
 type DashboardLayoutProps = {
-  sessions: React.ReactNode
+  history: React.ReactNode
 }
 
-const DashboardLayout = ({ sessions }: DashboardLayoutProps) => {
+const DashboardLayout = ({ history }: DashboardLayoutProps) => {
   // TODO: dashboard WIDGETS
   // - player statistics
-  // - previous game sessions
-  // - friends
+  // - active multiplayer sessions
 
   return (
     <>
       <PageHeading heading="Dashboard" />
 
       <div className="page-wrapper widget-container">
-        {sessions}
+        {history}
       </div>
     </>
   )
