@@ -1,8 +1,8 @@
 "use client"
 
-import { z } from "zod"
-
-import type { DefaultValues } from "react-hook-form"
+// types
+import type { z } from "zod"
+import type { DefaultValues, UseFormReturn } from "react-hook-form"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -17,7 +17,7 @@ import { setupGameSchema } from "@/lib/validations/session-schema"
 import { cn } from "@/lib/utils"
 
 // icons
-import { CirclePlay, Loader2, WifiOff } from "lucide-react"
+import { CircleFadingPlus, CirclePlay, Loader2, WifiOff } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -29,10 +29,10 @@ import { Separator } from "@/components/ui/separator"
 import { Form } from "@/components/shared"
 
 // hooks
-import { useStartSessionMutation } from "@/lib/react-query/mutations/game"
+import { useStartSingleSessionMutation } from "@/lib/react-query/mutations/session"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 
-export type SetupGameFormValues = z.infer<typeof setupGameSchema>
+type SetupGameFormValues = z.infer<typeof setupGameSchema>
 
 type SetupGameFormProps = {
   defaultValues?: DefaultValues<SetupGameFormValues>
@@ -41,8 +41,19 @@ type SetupGameFormProps = {
 const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
   const { user: clerkUser } = useClerk()
 
-  const { startSession, onSubmit } = useStartSessionMutation()
+  const { startSession, handleStartSingleSession } = useStartSingleSessionMutation()
   const { startOfflineSession } = useOfflineSessionHandler()
+
+  const onSubmit = (form: UseFormReturn<SetupGameFormValues>) => {
+    const { mode } = form.getValues()
+
+    if (mode === 'SINGLE') {
+      handleStartSingleSession(form)
+      return
+    }
+
+    // TODO: implement multiplayer
+  }
 
   return (
     <Form<SetupGameFormValues>
@@ -107,7 +118,6 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
                         <ButtonGroupItem className="p-2.5 w-full flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 border-2 border-background/85 bg-background/25 rounded-2xl"
                           size="icon"
                           value={key}
-                          disabled={key !== 'SINGLE'}
                         >
                           <Icon className="size-4 sm:size-5 shrink-0" />
                           <p className="text-base sm:text-lg small-caps">
@@ -158,8 +168,9 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
           />
 
           <div className="mt-auto flex flex-col items-center gap-y-4">
-            <Button className="py-6 px-4 gap-x-2 text-base sm:text-lg"
-              variant="secondary"
+            <SubmitButton
+              values={form.getValues()}
+              isPending={startSession.isPending}
               disabled={!clerkUser || startSession.isPending}
             >
               {startSession.isPending ? (
@@ -168,15 +179,13 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
                 <CirclePlay className="size-5 sm:size-6 shrink-0" />
               )}
               Start new game
-            </Button>
+            </SubmitButton>
 
-            <Button className={cn("gap-x-2 bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm sm:text-base", {
-              "opacity-40 pointer-events-none": startSession.isPending
-            })}
+            <Button className="gap-x-2 bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm sm:text-base"
               size="sm"
               type="button"
               onClick={form.handleSubmit(() => startOfflineSession(form))}
-              disabled={startSession.isPending}
+              disabled={startSession.isPending || form.getValues().type === 'COMPETITIVE' || form.getValues().mode !== 'SINGLE'}
             >
               <WifiOff className="size-4 sm:size-5 shrink-0" />
               Start offline
@@ -188,4 +197,31 @@ const SetupGameForm = ({ defaultValues }: SetupGameFormProps) => {
   )
 }
 
+type SubmitButtonProps = {
+  values: SetupGameFormValues
+  isPending: boolean
+} & React.ComponentProps<typeof Button>
+
+const SubmitButton = ({ values, isPending, className, variant = "secondary", ...props }: SubmitButtonProps) => {
+  const Icon = values.mode === 'SINGLE' ? CirclePlay : CircleFadingPlus
+
+  return (
+    <Button className={cn("py-6 px-4 gap-x-2 text-base sm:text-lg")}
+      variant="secondary"
+      {...props}
+    >
+      {isPending ? (
+        <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
+      ) : (
+        <Icon className="size-5 sm:size-6 shrink-0" />
+      )}
+
+      <span>
+        {values.mode === 'SINGLE' ? 'Start new game' : 'Create waiting room...'}
+      </span>
+    </Button>
+  )
+}
+
 export default SetupGameForm
+export type { SetupGameFormValues }

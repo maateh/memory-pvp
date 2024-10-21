@@ -16,7 +16,7 @@ import { PlayerBadge } from "@/components/player"
 import { PlayerProfileForm } from "@/components/player"
 
 // hooks
-import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/game"
+import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/session"
 
 type SaveOfflineSessionProps = {
   players: ClientPlayer[]

@@ -10,24 +10,26 @@ import { api } from "@/trpc/client"
 import type { UseFormReturn } from "react-hook-form"
 import type { SetupGameFormValues } from "@/app/game/(base)/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
+import type { CacheStore } from "@/hooks/store/use-cache-store"
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
 
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
-import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
+import { useCacheStore } from "@/hooks/store/use-cache-store"
 
-export const useStartSessionMutation = () => {
+export const useStartSingleSessionMutation = () => {
   const router = useRouter()
 
   const [setupForm, setSetupForm] = useState<UseFormReturn<SetupGameFormValues>>()
+
+  const registerSession = useSessionStore((state) => state.register)
+
   const setCache = useCacheStore<
     SessionRunningWarningActions,
     CacheStore<SessionRunningWarningActions>['set']
   >((state) => state.set)
-
-  const registerSession = useSessionStore((state) => state.register)
 
   const startSession = api.session.create.useMutation({
     onSuccess: (session) => {
@@ -42,7 +44,7 @@ export const useStartSessionMutation = () => {
     onError: (err) => {
       if (err.shape?.cause.key === 'ACTIVE_SESSION') {
         setCache({
-          forceStart: () => onSubmit(setupForm!, true),
+          forceStart: () => handleStartSingleSession(setupForm!, true),
           continuePrevious: () => {
             const clientSession = err.shape?.cause.data as ClientGameSession
 
@@ -84,16 +86,8 @@ export const useStartSessionMutation = () => {
     }
   })
 
-  const onSubmit = async (form: UseFormReturn<SetupGameFormValues>, forceStart: boolean = false) => {
+  const handleStartSingleSession = async (form: UseFormReturn<SetupGameFormValues>, forceStart: boolean = false) => {
     const values = form.getValues()
-
-    // TODO: implement
-    if (values.mode !== 'SINGLE') {
-      toast.warning('Work in progress', {
-        description: "Sorry, but the configuration contains values that are not implemented yet. Please come back later, or select another game type or mode to play."
-      })
-      return
-    }
 
     /**
      * Form data must be stored because it needs
@@ -111,5 +105,5 @@ export const useStartSessionMutation = () => {
     }
   }
 
-  return { startSession, onSubmit }
+  return { startSession, handleStartSingleSession }
 }
