@@ -12,10 +12,7 @@ const PlayerStatisticsWidgetCard = async () => {
   const player = await getPlayer({ isActive: true })
 
   return (
-    <WidgetCard // TODO: disable widget link
-      widgetLink="/dashboard"
-      {...playerStatisticsWidgetInfo}
-    >
+    <WidgetCard {...playerStatisticsWidgetInfo}>
       <WidgetSubheader className="mt-2 mb-0.5">
         Session Settings
       </WidgetSubheader>

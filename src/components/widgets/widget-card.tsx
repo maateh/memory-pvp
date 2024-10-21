@@ -18,10 +18,10 @@ import { Separator } from "@/components/ui/separator"
 import { WidgetHeader } from "@/components/widgets"
 
 type WidgetCardProps = ({
-  widgetAction: () => void
+  widgetAction?: () => void
   widgetLink?: never
 } | {
-  widgetLink: string
+  widgetLink?: string
   widgetAction?: never
 }) & { className?: string }
   & WidgetInfo
@@ -42,7 +42,7 @@ const WidgetCard = ({
         <div className="flex items-center justify-between gap-5">
           <WidgetHeader icon={icon} title={title} type="card" />
 
-          {widgetAction ? (
+          {widgetAction && (
             <Button className="expandable bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"
               variant="ghost"
               size="icon"
@@ -57,7 +57,9 @@ const WidgetCard = ({
                 strokeWidth={2.25}
               />
             </Button>
-          ) : (
+          )}
+
+          {widgetLink && (
             <Link className={cn(buttonVariants({
               className: "expandable bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground",
               variant: "ghost",
