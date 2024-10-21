@@ -2,19 +2,19 @@
 import { PageHeading } from "@/components/shared"
 
 type DashboardLayoutProps = {
+  statistics: React.ReactNode
+  rooms: React.ReactNode
   history: React.ReactNode
 }
 
-const DashboardLayout = ({ history }: DashboardLayoutProps) => {
-  // TODO: dashboard WIDGETS
-  // - player statistics
-  // - active multiplayer sessions
-
+const DashboardLayout = ({ statistics, rooms, history }: DashboardLayoutProps) => {
   return (
     <>
       <PageHeading heading="Dashboard" />
 
       <div className="page-wrapper widget-container">
+        {statistics}
+        {rooms}
         {history}
       </div>
     </>

@@ -2,9 +2,21 @@
 import type { WidgetInfo } from "@/components/widgets/types"
 
 // icons
-import { Gamepad2, History, UserCircle } from "lucide-react"
+import { ChartArea, Gamepad2, History, Swords, UserCircle } from "lucide-react"
 
 // DASHBOARD
+export const playerStatisticsWidgetInfo: WidgetInfo = {
+  title: "Player Statistics",
+  description: "A brief summary about the statistics of your active player profile.",
+  icon: <ChartArea />
+}
+
+export const waitingRoomsWidgetInfo: WidgetInfo = {
+  title: "Waiting Rooms (WIP)",
+  description: "Online multiplayer sessions where other players are currently waiting for their opponents or teammates.",
+  icon: <Swords />
+}
+
 export const sessionHistoryWidgetInfo: WidgetInfo = {
   title: "Session History",
   description: "Browse through your previous game sessions.",
