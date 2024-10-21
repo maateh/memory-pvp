@@ -32,7 +32,7 @@ export const useStartSessionMutation = () => {
   const startSession = api.session.create.useMutation({
     onSuccess: (session) => {
       registerSession(session)
-      router.replace('/game')
+      router.replace('/game/single')
 
       const { type, mode, tableSize } = session
       toast.success('Game started!', {
@@ -57,7 +57,7 @@ export const useStartSessionMutation = () => {
               ...clientSession,
               continuedAt: new Date()
             })
-            router.replace('/game')
+            router.replace('/game/single')
 
             toast.info('Game session continued!', {
               description: `${clientSession.type} | ${clientSession.mode} | ${clientSession.tableSize}`

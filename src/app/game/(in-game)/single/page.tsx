@@ -20,7 +20,7 @@ import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 import { useSessionStore } from "@/hooks/store/use-session-store"
 
-const InGamePage = () => {
+const InGameSinglePage = () => {
   const router = useRouter()
 
   const storeSession = api.session.store.useMutation({
@@ -61,12 +61,10 @@ const InGamePage = () => {
         logError(err)
       }
     },
-
     onBeforeUnload: async () => {
       const payload = JSON.stringify(clientSession)
       navigator.sendBeacon('/api/session/closed', payload)
     },
-    
     onFinish: async () => {
       try {
         await finishSession.mutateAsync({
@@ -93,4 +91,4 @@ const InGamePage = () => {
   )
 }
 
-export default InGamePage
+export default InGameSinglePage
