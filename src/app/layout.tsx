@@ -6,6 +6,11 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider, TRPCProvider } from "@/components/providers"
 import { Toaster } from "@/components/ui/sonner"
 
+// uploadthing
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
+import { extractRouterConfig } from "uploadthing/server"
+import { uploadRouter } from "@/app/api/uploadthing/core"
+
 // styles
 import { dark } from "@clerk/themes"
 import "@/app/globals.css"
@@ -43,6 +48,8 @@ const BaseLayout = ({ widget, children }: BaseLayoutProps) => {
     >
       <html lang="en" suppressHydrationWarning>
         <body className={cn("min-h-screen bg-background font-body antialiased", josefin.variable, geologica.variable)}>
+          <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
+
           <TRPCProvider>
             <ThemeProvider
               attribute="class"
