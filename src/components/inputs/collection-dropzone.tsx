@@ -18,6 +18,9 @@ import { ImagePlus, ImageUp } from "lucide-react"
 // shadcn
 import { Button } from "@/components/ui/button"
 
+// copmponents
+import { CollectionPreviewList } from "@/components/collection/preview"
+
 // hooks
 import { useUploadThing } from "@/hooks/use-upload-thing"
 
@@ -25,11 +28,16 @@ type CollectionDropzoneProps = {
   files: File[]
   setFiles: (files: File[]) => void
   endpoint: keyof UploadRouter
+  hidePreview?: boolean
   hideUploadButton?: boolean
   className?: string
 }
 
-const CollectionDropzone = ({ files, setFiles, endpoint, hideUploadButton = false, className }: CollectionDropzoneProps) => {
+const CollectionDropzone = ({
+  files, setFiles, endpoint,
+  hidePreview = false, hideUploadButton = false,
+  className
+}: CollectionDropzoneProps) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles(acceptedFiles)
   }, [setFiles])
@@ -75,13 +83,15 @@ const CollectionDropzone = ({ files, setFiles, endpoint, hideUploadButton = fals
         )}
 
         {minFileCount && (
-          <p className="">
+          <p>
             Selected <span className="font-bold">{files.length}</span> out of <span className="font-bold">{minFileCount}</span> images
           </p>
         )}
       </div>
 
-      {/* TODO: (optional) show `CollectionPreview` */}
+      <CollectionPreviewList className={cn({ "mt-4": files.length > 0, "hidden": hidePreview })}
+        files={files}
+      />
 
       <Button className={cn("mt-4 gap-x-2", { "hidden": hideUploadButton })}
         variant="secondary"
