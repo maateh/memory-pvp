@@ -9,7 +9,7 @@ type ProfileLayoutProps = {
 const ProfileLayout = ({ account, players }: ProfileLayoutProps) => {
   return (
     <>
-      <PageHeading heading="Profile" />
+      <PageHeading title="Profile" />
 
       <div className="page-wrapper widget-container">
         {account}

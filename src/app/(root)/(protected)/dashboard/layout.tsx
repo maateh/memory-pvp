@@ -10,7 +10,7 @@ type DashboardLayoutProps = {
 const DashboardLayout = ({ statistics, rooms, history }: DashboardLayoutProps) => {
   return (
     <>
-      <PageHeading heading="Dashboard" />
+      <PageHeading title="Dashboard" />
 
       <div className="page-wrapper widget-container">
         {statistics}

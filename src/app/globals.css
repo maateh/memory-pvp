@@ -71,14 +71,17 @@
     @apply grid gap-x-12 gap-y-16 xl:grid-cols-2;
   }
 
-  /* PAGE HEADING */
-  .page-header {
-    @apply bg-primary/50 shadow-lg w-fit rounded-r-3xl pt-4 sm:pt-5 pb-1 sm:pb-2 pl-8 sm:pl-12 pr-12 sm:pr-16 -mx-2 -mt-2.5 sm:-mx-6;
-  }
-  .page-heading {
-    @apply text-2xl sm:text-3xl font-heading font-bold tracking-wide drop-shadow-md heading-decorator;
+  /* HEADING DECORATOR */
+  .heading-decorator {
+    @apply relative w-fit;
   }
 
+  .heading-decorator::before {
+    @apply absolute w-2/3 h-[0.2rem] -top-[0.5rem] sm:-top-[0.65rem] bg-accent rounded-full content-[''];
+  }
+  .heading-decorator.subheading::before {
+    @apply absolute w-4/5 h-[0.085rem] -top-[0.35rem] bg-secondary rounded-full content-[''];
+  }
 
   /* EXPANDABLE (BUTTON) */
   .expandable > div {
@@ -93,18 +96,6 @@
   .expandable[data-state="open"] > div,
   .expandable:hover.expandable-left > div {
     @apply slide-in-from-left-1/2;
-  }
-
-  /* HEADING DECORATOR */
-  .heading-decorator {
-    @apply relative w-fit;
-  }
-
-  .heading-decorator::before {
-    @apply absolute w-2/3 h-[0.2rem] -top-[0.5rem] sm:-top-[0.65rem] bg-accent rounded-full content-[''];
-  }
-  .heading-decorator.subheading::before {
-    @apply absolute w-4/5 h-[0.085rem] -top-[0.35rem] bg-secondary rounded-full content-[''];
   }
 
   /* IMAGE WRAPPER */
