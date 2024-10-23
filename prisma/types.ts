@@ -2,23 +2,25 @@ export {}
 
 declare global {
   namespace PrismaJson {
-    type MemoryCardIdentifier = {
+    // Memory card
+    type SessionMemoryCardMetadata = {
       id: string
       key: string
     }
 
-    type MemoryCard = MemoryCardIdentifier & {
-      imageUrl: string
+    type SessionMemoryCard = {
       flippedBy: string | null
       matchedBy: string | null
     }
 
+    // Session
     type SessionStats = {
       timer: number
       matches: Record<string, number>
       flips: Record<string, number>
     }
 
+    // Player
     type PlayerStats = {
       score: number
       timer: number

@@ -21,6 +21,7 @@ model User {
   imageUrl String?
 
   playerProfiles PlayerProfile[]
+  collections CardCollection[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,10 +62,13 @@ model GameSession {
   /// [SessionStats]
   stats Json
 
-  /// [MemoryCard]
+  /// [SessionMemoryCard]
   cards        Json[]
-  /// [MemoryCardIdentifier]
+  /// [SessionMemoryCardMetadata]
   flipped Json[]
+
+  collection CardCollection @relation(fields: [collectionId], references: [id])
+  collectionId String @db.ObjectId
 
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id])
   ownerId String        @db.ObjectId
@@ -98,21 +102,31 @@ model Result {
   updatedAt DateTime @updatedAt
 }
 
-// NOTE: It's a question how the cards will be stored exactly.
-// Images will potentially be handled by a cdn, but the cards
-// must have a custom ID - and in the future, it would be a good
-// feature also, if users could upload their custom image sets
-// to create custom memory cards.
-// I just leave this as a note because for now cards
-// will be random generated for every session
-// and saved in JSON.
+model MemoryCard {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-// model MemoryCard {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
+  imageUrl String
 
-//   key String @unique
-//   imageUrl String @unique
-// }
+  collection CardCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String @db.ObjectId
+}
+
+model CardCollection {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+  description String
+  tableSize TableSize
+
+  cards MemoryCard[]
+  sessions GameSession[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 // ENUMS
 enum GameStatus {
