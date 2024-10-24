@@ -16,7 +16,7 @@ const PlayersWidgetModal = async () => {
   const players = await getPlayers()
 
   return (
-    <WidgetModal isOpen {...playerProfilesWidgetInfo}>
+    <WidgetModal {...playerProfilesWidgetInfo}>
       <div className="space-y-8">
         <WidgetSubheader>
           Create a new player profile

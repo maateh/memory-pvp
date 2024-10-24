@@ -1,10 +1,10 @@
 import Link from "next/link"
 
+// types
+import type { WidgetProps } from "@/components/widgets/types"
+
 // utils
 import { cn } from "@/lib/utils"
-
-// types
-import type { WidgetInfo } from "@/components/widgets/types"
 
 // icons
 import { Edit, Expand } from "lucide-react"
@@ -17,30 +17,23 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { WidgetHeader } from "@/components/widgets"
 
-type WidgetCardProps = ({
-  widgetAction?: () => void
-  widgetLink?: never
-} | {
-  widgetLink?: string
-  widgetAction?: never
-}) & { className?: string }
-  & WidgetInfo
-  & React.PropsWithChildren
+type WidgetCardProps = WidgetProps & React.ComponentProps<typeof Card>
 
 const WidgetCard = ({
-  title,
-  description,
-  icon,
-  widgetAction,
-  widgetLink,
-  className,
-  children
+  widgetKey, title, description, iconProps, widgetAction, widgetLink,
+  className, children, ...props
 }: WidgetCardProps) => {
   return (
-    <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}>
+    <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}
+      {...props}
+    >
       <CardHeader>
         <div className="flex items-center justify-between gap-5">
-          <WidgetHeader icon={icon} title={title} type="card" />
+          <WidgetHeader
+            type="card"
+            widgetKey={widgetKey}
+            title={title}
+          />
 
           {widgetAction && (
             <Button className="expandable bg-accent/10 hover:bg-accent/15 dark:hover:bg-accent/15 hover:text-foreground"

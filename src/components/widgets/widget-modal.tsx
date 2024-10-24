@@ -2,32 +2,39 @@
 
 import { useRouter } from "next/navigation"
 
+// types
+import type { WidgetProps } from "@/components/widgets/types"
+
 // utils
 import { cn } from "@/lib/utils"
 
-// types
-import type { WidgetInfo } from "@/components/widgets/types"
-
 // shadcn
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { WidgetHeader } from "@/components/widgets"
 
 type WidgetModalProps = {
-  isOpen: boolean
-} & WidgetInfo
-  & React.PropsWithChildren
+  children: React.ReactNode
+} & WidgetProps & Omit<React.ComponentProps<typeof Dialog>, 'onOpenChange'>
 
-const WidgetModal = ({ title, description, icon, isOpen, children }: WidgetModalProps) => {
+const WidgetModal = ({
+  widgetKey, title, description, iconProps,
+  open = true,
+  children, ...props
+}: WidgetModalProps) => {
   const router = useRouter()
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => router.back()}>
+    <Dialog open={open} onOpenChange={() => router.back()} {...props}>
       <DialogContent>
         <DialogHeader>
-          <WidgetHeader icon={icon} title={title} type="dialog" />
+          <WidgetHeader
+            type="dialog"
+            widgetKey={widgetKey}
+            title={title}
+          />
 
           <DialogDescription className={cn("font-extralight text-base", { 'sr-only': !description })}>
             {description || `${title} widget`}

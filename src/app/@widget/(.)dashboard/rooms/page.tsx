@@ -7,7 +7,7 @@ import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
 const WaitingRoomsWidgetModal = () => {
   return (
-    <WidgetModal isOpen {...waitingRoomsWidgetInfo}>
+    <WidgetModal {...waitingRoomsWidgetInfo}>
       <WidgetSubheader className="mt-2 mb-3">
         Room Settings
       </WidgetSubheader>

@@ -11,7 +11,7 @@ import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
 const SessionHistoryWidgetModal = () => {
   return (
-    <WidgetModal isOpen {...sessionHistoryWidgetInfo}>
+    <WidgetModal {...sessionHistoryWidgetInfo}>
       <WidgetSubheader className="-mb-2">
         Filter sessions by
       </WidgetSubheader>
