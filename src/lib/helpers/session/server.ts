@@ -6,6 +6,7 @@ import type { Prisma } from "@prisma/client"
 
 // helpers
 import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
+import { pairSessionCardsWithCollection, parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
 // utils
 import { pickFields } from "@/lib/utils"
@@ -58,12 +59,12 @@ export function generateSlug(
  *   - `current`: The player object whose tag matches the `currentPlayerTag`.
  *   - `other`: The other player in the session.
  * 
- * @param {GameSessionPlayersWithAvatar} session - The full session data including players and avatars.
+ * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
  * @param {string} currentPlayerTag - The tag of the current player to identify them in the session.
  * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
-  session: GameSessionPlayersWithAvatar,
+  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
   currentPlayerTag: string
 ): ClientGameSession {
   const filteredSession = pickFields(session, clientSessionKeys)
@@ -75,6 +76,8 @@ export function parseSchemaToClientSession(
 
   return {
     ...filteredSession,
+    collection: parseSchemaToClientCollection(filteredSession.collection),
+    cards: pairSessionCardsWithCollection(filteredSession.cards, filteredSession.collection.cards),
     players: {
       current: parseSchemaToClientPlayer(players.current),
       other: players.other ? parseSchemaToClientPlayer(players.other) : null
