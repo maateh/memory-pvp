@@ -12,7 +12,10 @@ import { pairSessionCardsWithCollection, parseSchemaToClientCollection } from "@
 import { pickFields } from "@/lib/utils"
 
 // constants
+import { tableSizeMap } from "@/constants/game"
 import { clientSessionKeys } from "@/constants/session"
+
+// schema
 import { sessionFilterSchema } from "@/lib/validations/session-schema"
 
 /**
@@ -49,6 +52,33 @@ export function generateSlug(
   const id = nanoid(8).replace(/_/g, '-')
 
   return `${prefix}_${id}`
+}
+
+export function generateSessionCards(
+  collection: CardCollectionWithCards
+): PrismaJson.SessionCard[] {
+  const randomCards = collection.cards
+    .sort(() => Math.random() - 0.5)
+    .slice(0, tableSizeMap[collection.tableSize] / 2)
+
+  const sessionCards = randomCards.reduce((cards, card, index) => {
+    const firstKey = index * 2
+    const secondKey = index * 2 + 1
+
+    const cardWithoutKey = {
+      id: card.id,
+      flippedBy: null,
+      matchedBy: null
+    }
+
+    return [
+      ...cards,
+      { key: firstKey, ...cardWithoutKey },
+      { key: secondKey, ...cardWithoutKey }
+    ]
+  }, [] as PrismaJson.SessionCard[])
+
+  return sessionCards.sort(() => Math.random() - 0.5)
 }
 
 /**

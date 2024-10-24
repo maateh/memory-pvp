@@ -84,7 +84,12 @@ export function calculateSessionScore(
 }
 
 /** Server exports */
-export { generateSlug, parseSchemaToClientSession, parseSessionFilter } from "./server"
+export {
+  generateSlug,
+  generateSessionCards,
+  parseSchemaToClientSession,
+  parseSessionFilter
+} from "./server"
 
 /** Client exports */
 export { validateCardMatches, updateSessionStats } from "./client"

@@ -1,5 +1,8 @@
+// server
+import { db } from "@/server/db"
+
 // types
-import type { MemoryCard } from "@prisma/client"
+import type { MemoryCard, TableSize } from "@prisma/client"
 
 // constants
 import { clientCardCollectionKeys } from "@/constants/collection"
@@ -40,4 +43,26 @@ export function pairSessionCardsWithCollection(
   }))
 
   return cards
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param tableSize 
+ * @returns 
+ */
+export async function getRandomCollection(
+  tableSize: TableSize
+): Promise<CardCollectionWithCards | null> {
+  const count = await db.cardCollection.count()
+  const randomSkip = Math.floor(Math.random() * count)
+
+  // TODO: (!) hasn't been tested yet
+  return await db.cardCollection.findFirst({
+    where: { tableSize },
+    include: {
+      cards: true
+    },
+    skip: randomSkip
+  })
 }

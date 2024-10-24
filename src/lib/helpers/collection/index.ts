@@ -1,5 +1,6 @@
 /** Server exports */
 export {
   parseSchemaToClientCollection,
-  pairSessionCardsWithCollection
+  pairSessionCardsWithCollection,
+  getRandomCollection
 } from "./server"
