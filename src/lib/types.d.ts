@@ -11,10 +11,7 @@ declare global {
   }
 
   /** Collection types */
-  declare type ClientCardCollection = Omit<
-    CardCollection,
-    'id' | 'userId'
-  > & {
+  declare type ClientCardCollection = Omit<CardCollection, 'userId'> & {
     user: User
     cards: MemoryCard[]
   }
@@ -62,9 +59,12 @@ declare global {
     players: PlayerProfileWithUserAvatar[]
   }
 
-  declare type CardCollectionWithCardsWithUser = CardCollection & {
-    user: User
+  declare type CardCollectionWithCards = CardCollection & {
     cards: MemoryCard[]
+  }
+
+  declare type CardCollectionWithCardsWithUser = CardCollectionWithCards & {
+    user: User
   }
 
   declare type PlayerProfileWithUserAvatar = PlayerProfile & {
