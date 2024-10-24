@@ -62,9 +62,9 @@ model GameSession {
   /// [SessionStats]
   stats Json
 
-  /// [SessionMemoryCard]
+  /// [SessionCard]
   cards        Json[]
-  /// [SessionMemoryCardMetadata]
+  /// [SessionCardMetadata]
   flipped Json[]
 
   collection CardCollection @relation(fields: [collectionId], references: [id])

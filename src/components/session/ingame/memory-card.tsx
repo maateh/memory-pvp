@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 
 type MemoryCardProps = {
-  card: Pick<PrismaJson.MemoryCard, 'flippedBy' | 'matchedBy' | 'imageUrl'>
+  card: Pick<ClientSessionCard, 'flippedBy' | 'matchedBy' | 'imageUrl'>
   onClick: () => void
 }
 

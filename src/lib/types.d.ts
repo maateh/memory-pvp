@@ -1,5 +1,5 @@
 import type { AppRouter } from "@/server/api/_app"
-import type { GameMode, GameSession, GameStatus, GameType, PlayerProfile, TableSize } from "@prisma/client"
+import type { CardCollection, GameMode, GameSession, GameStatus, GameType, MemoryCard, PlayerProfile, TableSize, User } from "@prisma/client"
 
 declare global {
   /** Theme types */
@@ -10,16 +10,29 @@ declare global {
     setTheme: (theme: Theme) => void
   }
 
+  /** Collection types */
+  declare type ClientCardCollection = Omit<
+    CardCollection,
+    'id' | 'userId'
+  > & {
+    user: User
+    cards: MemoryCard[]
+  }
+
   /** Session types */
   declare type ClientGameSession = Omit<
     GameSession,
-    'id' | 'ownerId' | 'playerIds' |
+    'id' | 'ownerId' | 'playerIds' | 'collectionId' | 'cards' |
     'continuedAt' | 'closedAt' | 'updatedAt'
   > & {
     players: {
       current: ClientPlayer
       other?: ClientPlayer | null
     }
+
+    collection: ClientCardCollection
+    cards: ClientSessionCard[]
+
     continuedAt?: Date | null
     closedAt?: Date | null
     updatedAt?: Date | null
@@ -31,6 +44,10 @@ declare global {
     'closedAt' | 'updatedAt'
   >
 
+  declare type ClientSessionCard = PrismaJson.SessionCard & {
+    imageUrl: string
+  }
+
   /** Player types */
   declare type ClientPlayer = Omit<
     PlayerProfile,
@@ -40,8 +57,14 @@ declare global {
   }
 
   /** Prisma schemas */
-  declare type GameSessionPlayersWithAvatar = GameSession & {
+  declare type GameSessionWithPlayersWithAvatarWithCollectionWithCards = GameSession & {
+    collection: CardCollectionWithCardsWithUser
     players: PlayerProfileWithUserAvatar[]
+  }
+
+  declare type CardCollectionWithCardsWithUser = CardCollection & {
+    user: User
+    cards: MemoryCard[]
   }
 
   declare type PlayerProfileWithUserAvatar = PlayerProfile & {

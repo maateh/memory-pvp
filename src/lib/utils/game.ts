@@ -39,13 +39,13 @@ export function formatTimer(timerInMs: number): string {
  * Received image placeholders might not even exist.
  * 
  * @param {TableSize} tableSize - The size of the card table.
- * @returns {PrismaJson.MemoryCard[]} - An array of randomly paired and shuffled memory cards.
+ * @returns {ClientSessionCard[]} - An array of randomly paired and shuffled memory cards.
  * 
  * - Generates unique keys for each card pair, using the 'picsum.photos' API for placeholder images.
  * - Ensures the card array is shuffled before returning.
  */
-export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
-  const cardsMap: Record<string, PrismaJson.MemoryCard> = {}
+export function getMockCards(tableSize: TableSize): ClientSessionCard[] {
+  const cardsMap: Record<string, ClientSessionCard> = {}
 
   for (let i = 0; i < tableSizeMap[tableSize] / 2; i++) {
     /**
@@ -72,7 +72,7 @@ export function getMockCards(tableSize: TableSize): PrismaJson.MemoryCard[] {
   const cards = Object.values(cardsMap).reduce((cards, card) => ([
     ...cards,
     ...[card, { ...card, id: nanoid(10) }]
-  ]), [] as PrismaJson.MemoryCard[])
+  ]), [] as ClientSessionCard[])
 
   return cards.sort(() => Math.random() - 0.5)
 }

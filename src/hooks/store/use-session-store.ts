@@ -11,7 +11,7 @@ type SessionStore = {
   register: (session: ClientGameSession) => void
   unregister: () => void
   updateTimer: (timer: number) => void
-  handleFlipUpdate: (clickedCard: PrismaJson.MemoryCard) => void
+  handleFlipUpdate: (clickedCard: ClientSessionCard) => void
   handleMatchUpdate: () => void
   handleUnmatchUpdate: () => void
 }
