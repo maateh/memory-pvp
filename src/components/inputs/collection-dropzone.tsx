@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 
 // types
 import type { UploadRouter } from "@/app/api/uploadthing/core"
@@ -10,7 +10,7 @@ import { generateClientDropzoneAccept, generatePermittedFileTypes } from "upload
 import { useDropzone } from "@uploadthing/react"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn, generateFileUrls } from "@/lib/utils"
 
 // icons
 import { ImagePlus, ImageUp } from "lucide-react"
@@ -19,7 +19,7 @@ import { ImagePlus, ImageUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // copmponents
-import { CollectionPreviewList } from "@/components/collection/preview"
+import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
 
 // hooks
 import { useUploadThing } from "@/hooks/use-upload-thing"
@@ -38,9 +38,16 @@ const CollectionDropzone = ({
   hidePreview = false, hideUploadButton = false,
   className
 }: CollectionDropzoneProps) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const [fileUrls, setFileUrls] = useState<string[]>([])
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (!hidePreview) {
+      const urls = await generateFileUrls(acceptedFiles)
+      setFileUrls(urls)
+    }
+
     setFiles(acceptedFiles)
-  }, [setFiles])
+  }, [setFiles, hidePreview])
 
   const { startUpload, routeConfig, isUploading } = useUploadThing(endpoint, {
     onClientUploadComplete: () => {
@@ -65,7 +72,7 @@ const CollectionDropzone = ({
   const minFileCount = routeConfig?.image?.minFileCount
 
   return (
-    <div className={cn("px-4 py-8 flex flex-col items-center justify-center text-center rounded-2xl border border-input/50 border-dashed", className)}
+    <div className={cn("px-4 py-8 flex flex-col items-center justify-center text-center rounded-2xl border border-input/50 border-dashed cursor-pointer", className)}
       {...getRootProps()}
     >
       <ImageUp className="size-6 mx-auto text-accent sm:size-8" />
@@ -89,9 +96,14 @@ const CollectionDropzone = ({
         )}
       </div>
 
-      <CollectionPreviewList className={cn({ "mt-4": files.length > 0, "hidden": hidePreview })}
-        files={files}
-      />
+      <CollectionPreviewDenseList className={cn({ "mt-4": files.length > 0, "hidden": hidePreview })}>
+        {fileUrls.map((url) => (
+          <CollectionPreviewDenseItem
+            imageUrl={url}
+            key={url}
+          />
+        ))}
+      </CollectionPreviewDenseList>
 
       <Button className={cn("mt-4 gap-x-2", { "hidden": hideUploadButton })}
         variant="secondary"

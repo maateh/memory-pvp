@@ -30,6 +30,35 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
 }
 
 /**
+ * TODO: write doc
+ * 
+ * @param files 
+ * @returns 
+ */
+export function generateFileUrls(files: File[]): Promise<string[]> {
+  const generateUrl = (file: File) => new Promise<string>((resolve, reject) => {
+    const fileReader = new FileReader()
+    
+    fileReader.onload = (e) => {
+      const fileUrl = e.target?.result as string
+      if (fileUrl) {
+        resolve(fileUrl)
+      } else {
+        reject(new Error("Failed to generate file URL"))
+      }
+    }
+
+    fileReader.onerror = (err) => {
+      reject(err)
+    }
+
+    fileReader.readAsDataURL(file)
+  })
+
+  return Promise.all(files.map((file) => generateUrl(file)))
+}
+
+/**
  * Handles API errors by displaying an appropriate toast notification.
  * 
  * @param {TRPCApiError | undefined} err - The error object from the API, if available.
