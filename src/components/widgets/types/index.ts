@@ -1,7 +1,7 @@
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
 
-export type WidgetKey = "statistics" | "rooms" | "history" | "account" | "players"
+export type WidgetKey = "statistics" | "rooms" | "history" | "collectionUpload" | "collectionManage" | "account" | "players"
 
 export type WidgetIconMap = {
   [key in WidgetKey]: LucideIcon

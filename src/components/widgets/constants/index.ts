@@ -33,6 +33,19 @@ export const sessionHistoryWidgetInfo: WidgetInfo<'history'> = {
   description: "Browse through your previous game sessions."
 }
 
+// COLLECTIONS
+export const collectionUploadWidgetInfo: WidgetInfo<'collectionUpload'> = {
+  widgetKey: "collectionUpload",
+  title: "Upload Collection",
+  description: "Upload your own card collection."
+}
+
+export const collectionManageWidgetInfo: WidgetInfo<'collectionManage'> = {
+  widgetKey: "collectionManage",
+  title: "Your Collections",
+  description: "Manage your card collections."
+}
+
 // PROFILE
 export const manageAccountWidgetInfo: WidgetInfo<'account'> = {
   widgetKey: "account",
