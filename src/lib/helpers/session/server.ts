@@ -116,6 +116,30 @@ export function parseSchemaToClientSession(
 }
 
 /**
+ * TODO: write doc
+ * 
+ * @returns 
+ */
+export function getSessionSchemaIncludeFields() {
+  return {
+    owner: true,
+    collection: {
+      include: {
+        user: true,
+        cards: true
+      }
+    },
+    players: {
+      include: {
+        user: {
+          select: { imageUrl: true }
+        }
+      }
+    }
+  } satisfies Prisma.GameSessionInclude
+}
+
+/**
  * Parses the provided session filter input to create a `Prisma.GameSessionWhereInput` object, 
  * which can be used to query game sessions using Prisma.
  * 

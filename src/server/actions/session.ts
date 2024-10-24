@@ -8,7 +8,7 @@ import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
 
 // helpers
-import { parseSchemaToClientSession } from "@/lib/helpers/session"
+import { getSessionSchemaIncludeFields, parseSchemaToClientSession } from "@/lib/helpers/session"
 
 /**
  * Retrieves a game session based on a unique filter (either `id`, `slug`, or both) and returns it in a client-friendly format.
@@ -29,22 +29,7 @@ export async function getClientSession(
 
   const session = await db.gameSession.findUnique({
     where: filter,
-    include: {
-      owner: {
-        include: {
-          user: {
-            select: { imageUrl: true }
-          }
-        }
-      },
-      players: {
-        include: {
-          user: {
-            select: { imageUrl: true }
-          }
-        }
-      }
-    }
+    include: getSessionSchemaIncludeFields()
   })
 
   if (!session) return null

@@ -88,6 +88,7 @@ export {
   generateSlug,
   generateSessionCards,
   parseSchemaToClientSession,
+  getSessionSchemaIncludeFields,
   parseSessionFilter
 } from "./server"
 

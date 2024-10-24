@@ -27,6 +27,7 @@ import {
   calculateSessionScore,
   generateSessionCards,
   generateSlug,
+  getSessionSchemaIncludeFields,
   parseSchemaToClientSession,
   parseSessionFilter
 } from "@/lib/helpers/session"
@@ -51,16 +52,7 @@ export const sessionRouter = createTRPCRouter({
       const sessions = await ctx.db.gameSession.findMany({
         where: filter,
         orderBy: input.sort,
-        include: {
-          owner: true,
-          players: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
-            }
-          }
-        }
+        include: getSessionSchemaIncludeFields()
       })
 
       const clientSessions = sessions.map((session) => {
@@ -107,16 +99,7 @@ export const sessionRouter = createTRPCRouter({
             }
           }
         },
-        include: {
-          owner: true,
-          players: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
-            }
-          }
-        }
+        include: getSessionSchemaIncludeFields()
       })
 
       
@@ -211,22 +194,7 @@ export const sessionRouter = createTRPCRouter({
             ]
           }
         },
-        include: {
-          owner: true,
-          collection: {
-            include: {
-              user: true,
-              cards: true
-            }
-          },
-          players: {
-            include: {
-              user: {
-                select: { imageUrl: true }
-              }
-            }
-          }
-        }
+        include: getSessionSchemaIncludeFields()
       })
 
       return parseSchemaToClientSession(session, ctx.player.tag)
@@ -385,6 +353,7 @@ export const sessionRouter = createTRPCRouter({
         }
       }
 
+      // FIXME: collection?
       return await ctx.db.gameSession.create({
         data: {
           ...session, stats,

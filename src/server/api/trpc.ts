@@ -15,6 +15,9 @@ import { db } from '@/server/db'
 // redis
 import { redis } from "@/lib/redis"
 
+// helpers
+import { getSessionSchemaIncludeFields } from '@/lib/helpers/session'
+
 export const createTRPCContext = cache(
   async (opts: { req: Request }) => {
     return { db, redis, ...opts }
@@ -107,16 +110,7 @@ export const activeSessionProcedure = playerProcedure.use(async ({ ctx, next }) 
         }
       }
     },
-    include: {
-      owner: true,
-      players: {
-        include: {
-          user: {
-            select: { imageUrl: true }
-          }
-        }
-      }
-    }
+    include: getSessionSchemaIncludeFields()
   })
 
   if (!activeSession) {
