@@ -4,7 +4,7 @@ declare global {
   namespace PrismaJson {
     type SessionCardMetadata = {
       id: string
-      key: string
+      key: number
     }
 
     type SessionCard = SessionCardMetadata & {

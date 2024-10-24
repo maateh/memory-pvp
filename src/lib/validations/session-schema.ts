@@ -7,19 +7,18 @@ import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 import { clientPlayerSchema, playerTagSchema } from "@/lib/validations/player-schema"
 
 /** Base schemas */
-const cardIdentifierSchema = z.object({
+const sessionCardMetadataSchema = z.object({
   id: z.string(),
-  key: z.string()
+  key: z.coerce.number()
 })
 
-const cardSchema = cardIdentifierSchema.extend({
-  imageUrl: z.string().url(),
+const sessionCardSchema = sessionCardMetadataSchema.extend({
   flippedBy: z.string().nullable(),
   matchedBy: z.string().nullable()
 })
 
 const matchedCardsSchema = z.array(
-  cardSchema.merge(
+  sessionCardSchema.merge(
     z.object({
       matchedBy: z.string()
     })
@@ -51,8 +50,8 @@ export const clientSessionSchema = z.object({
   }),
   stats: sessionStatsSchema,
 
-  cards: z.array(cardSchema),
-  flipped: z.array(cardIdentifierSchema),
+  cards: z.array(sessionCardSchema),
+  flipped: z.array(sessionCardMetadataSchema),
 
   startedAt: z.coerce.date(),
   continuedAt: z.coerce.date().optional().nullable()
@@ -81,7 +80,8 @@ export const sessionSortSchema = z.object({
 export const setupGameSchema = z.object({
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
-  tableSize: z.nativeEnum(TableSize)
+  tableSize: z.nativeEnum(TableSize),
+  collectionId: z.string().optional()
 })
 
 export const saveSessionSchema = clientSessionSchema.omit({ players: true })
