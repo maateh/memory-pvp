@@ -25,14 +25,13 @@ import {
 // helpers
 import {
   calculateSessionScore,
+  generateSessionCards,
   generateSlug,
   parseSchemaToClientSession,
   parseSessionFilter
 } from "@/lib/helpers/session"
 import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
-
-// utils
-import { getMockCards } from "@/lib/utils/game"
+import { getRandomCollection } from "@/lib/helpers/collection"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
@@ -150,13 +149,40 @@ export const sessionRouter = createTRPCRouter({
         })
       }
 
+      let collection: CardCollectionWithCards | null = null
+      if (input.collectionId) {
+        collection = await ctx.db.cardCollection.findUnique({
+          where: {
+            id: input.collectionId
+          },
+          include: {
+            cards: true
+          },
+        })
+      } else {
+        collection = await getRandomCollection(input.tableSize)
+      }
+
+      if (!collection) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: new TRPCApiError({
+            key: 'COLLECTION_NOT_FOUND',
+            message: 'Sorry, but we cannot find card collection for your session.',
+            description: 'Please, try select another card collection or try again later.'
+          })
+        })
+      }
+
       const session = await ctx.db.gameSession.create({
         data: {
-          ...input,
+          type: input.type,
+          mode: input.mode,
+          tableSize: input.tableSize,
           slug: generateSlug({ type: input.type, mode: input.mode }),
           status: 'RUNNING',
           flipped: [],
-          cards: getMockCards(input.tableSize), // TODO: generate cards
+          cards: generateSessionCards(collection),
           stats: {
             timer: 0,
             flips: {
@@ -166,6 +192,11 @@ export const sessionRouter = createTRPCRouter({
             matches: {
               // TODO: add guest matches (update validation schema)
               [ctx.player.tag]: 0
+            }
+          },
+          collection: {
+            connect: {
+              id: collection.id
             }
           },
           owner: {
@@ -182,6 +213,12 @@ export const sessionRouter = createTRPCRouter({
         },
         include: {
           owner: true,
+          collection: {
+            include: {
+              user: true,
+              cards: true
+            }
+          },
           players: {
             include: {
               user: {
