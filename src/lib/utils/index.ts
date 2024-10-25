@@ -2,7 +2,10 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 import { toast } from "sonner"
-import { TRPCApiError } from "@/trpc/error"
+
+// types
+import type { UploadThingError } from "uploadthing/server"
+import type { TRPCApiError } from "@/trpc/error"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -68,12 +71,19 @@ export function generateFileUrls(files: File[]): Promise<string[]> {
  * - If no specific error is provided, it displays a generic error message with the fallback description.
  */
 export function handleApiError(
-  err: TRPCApiError | undefined,
+  err: TRPCApiError | UploadThingError<any> | undefined,
   fallbackDescription?: string
 ) {
   if (err?.name === 'TRPCApiError') {
     toast.error(err.message, {
       description: err.description
+    })
+    return
+  }
+
+  if (err?.name === 'UploadThingError') {
+    toast.error(err.message, {
+      description: fallbackDescription
     })
     return
   }

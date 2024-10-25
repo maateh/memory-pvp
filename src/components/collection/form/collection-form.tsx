@@ -7,7 +7,7 @@ import type { z } from "zod"
 import { collectionSizeEndpointMap } from "@/constants/collection"
 
 // utils
-import { logError } from "@/lib/utils"
+import { handleApiError, logError } from "@/lib/utils"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -51,12 +51,13 @@ const CollectionForm = () => {
       await handleCreateCollection({ ...form.getValues(), utImages })
     },
     onUploadError: (err) => {
-      // TODO: show toast
-      console.error("error occurred while uploading")
-    },
-    onUploadBegin: (fileName) => {
-      // TODO: show toast?
-      console.info("upload has begun for: ", fileName)
+      let description = "Failed to create card collection. Please try again later."
+
+      if (err.code === "FILE_LIMIT_EXCEEDED") {
+        description = "Sorry, but due to limitations, only one card collection can be uploaded per account."
+      }
+
+      handleApiError(err, description)
     }
   })
 

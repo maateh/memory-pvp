@@ -21,7 +21,8 @@ async function collectionLimitMiddleware({ input }: { input: z.infer<typeof crea
   const user = await signedIn()
   if (!user) {
     throw new UploadThingError({
-      code: "FORBIDDEN"
+      code: "FORBIDDEN",
+      message: 'You are not signed in to your account.'
     })
   }
 
@@ -33,12 +34,8 @@ async function collectionLimitMiddleware({ input }: { input: z.infer<typeof crea
 
   if (collections >= 1) {
     throw new UploadThingError({
-      code: 'FORBIDDEN',
-      // cause: new TRPCApiError({ // TODO: refactor `TRPCApiError` to `ApiError`
-      //   key: 'COLLECTION_LIMIT_REACHED',
-      //   message: "Collection limit reached.",
-      //   description: "Sorry, but due to limitations, only one card collection can be uploaded per account."
-      // })
+      code: "FILE_LIMIT_EXCEEDED",
+      message: "Collection limit reached."
     })
   }
 
