@@ -2,7 +2,7 @@
 import type { CardCollection } from "@prisma/client"
 
 // components
-import { CollectionPreviewDenseList, CollectionPreviewItem } from "@/components/collection"
+import { CollectionPreviewDenseList } from "@/components/collection"
 import { WidgetCard, WidgetSubheader } from "@/components/widgets"
 
 type CollectionWidgetCardProps = {
@@ -15,6 +15,7 @@ const CollectionWidgetCard = ({ collection, className }: CollectionWidgetCardPro
 
   return (
     <WidgetCard className={className}
+      widgetKey="_"
       title={name}
       description={description}
     >

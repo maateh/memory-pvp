@@ -5,6 +5,7 @@ import type { WidgetIconMap, WidgetInfo, WidgetKey, WidgetProps } from "@/compon
 import { ChartArea, Gamepad2, History, Images, ImageUp, Swords, UserCircle } from "lucide-react"
 
 export const widgetIconMap: WidgetIconMap = {
+  _: undefined,
   statistics: ChartArea,
   rooms: Swords,
   history: History,

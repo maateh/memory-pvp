@@ -16,12 +16,14 @@ const CollectionsManageWidgetCard = () => {
       href="/collections/manage"
       {...collectionManageWidgetInfo}
     >
-      <Button className="mb-2 p-2"
-        variant="ghost"
-        size="icon"
-      >
-        <Icon className="size-6 mx-auto text-accent sm:size-8" />
-      </Button>
+      {Icon && (
+        <Button className="mb-2 p-2"
+          variant="ghost"
+          size="icon"
+        >
+          <Icon className="size-6 mx-auto text-accent sm:size-8" />
+        </Button>
+      )}
 
       <p className="font-heading font-medium dark:font-light">
         Manage your <span className="text-accent font-semibold dark:font-medium">card collections</span>

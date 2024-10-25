@@ -28,14 +28,16 @@ const WidgetEmptyCardLink = ({
     >
       {children || (
         <>
-          <Button className="mb-2 p-2"
-            variant="ghost"
-            size="icon"
-          >
-            <Icon {...iconProps}
-              className={cn("size-6 mx-auto text-accent sm:size-8", iconProps?.className)}
-            />
-          </Button>
+          {Icon && (
+            <Button className="mb-2 p-2"
+              variant="ghost"
+              size="icon"
+            >
+              <Icon {...iconProps}
+                className={cn("size-6 mx-auto text-accent sm:size-8", iconProps?.className)}
+              />
+            </Button>
+          )}
 
           <p className="font-heading font-medium dark:font-light">
             {description}
