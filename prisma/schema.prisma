@@ -104,6 +104,7 @@ model Result {
 
 model MemoryCard {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  utKey String @unique
 
   imageUrl String
 
