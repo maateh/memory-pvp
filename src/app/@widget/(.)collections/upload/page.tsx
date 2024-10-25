@@ -2,7 +2,7 @@
 import { collectionUploadWidgetInfo } from "@/components/widgets/constants" 
 
 // components
-import { CollectionForm } from "@/components/collection"
+import { CollectionForm } from "@/components/collection/form"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
 const CollectionsUploadWidgetModal = () => {
