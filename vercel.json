@@ -8,5 +8,10 @@
       "path": "/api/cron/save-sessions",
       "schedule": "0 12 */1 * *"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }
