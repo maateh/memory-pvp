@@ -84,10 +84,15 @@ export function calculateSessionScore(
 }
 
 /**
- * TODO: write doc
+ * Generates an array of shuffled session cards from a given card collection for use in a game session.
  * 
- * @param collection 
- * @returns 
+ * - Selects a random subset of cards from the provided collection, based on half the collection's `tableSize` to ensure matched pairs.
+ * - Duplicates each card, assigning unique keys to create pairs, and initializes `flippedBy` and `matchedBy` as `null`.
+ * - Returns a shuffled array of session cards for randomized placement on the game board.
+ * 
+ * @param {CardCollectionWithCards} collection - The card collection used to generate session cards, containing a list of memory cards.
+ * 
+ * @returns {PrismaJson.SessionCard[]} - Array of session cards, each duplicated and shuffled for game use.
  */
 export function generateSessionCards(
   collection: CardCollectionWithCards

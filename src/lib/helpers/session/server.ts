@@ -88,9 +88,14 @@ export function parseSchemaToClientSession(
 }
 
 /**
- * TODO: write doc
+ * Provides the fields to include when querying game sessions, optimized for converting the results into a `ClientGameSession` type instance.
  * 
- * @returns 
+ * - Includes the session's `owner`, along with the associated `collection`, which contains detailed `user` and `cards` information.
+ * - Also includes `players` data, with each player's `user` image URL for enhanced client-side rendering.
+ * 
+ * This setup ensures that all necessary related data is loaded for transforming a session query into a `ClientGameSession` format.
+ * 
+ * @returns {Prisma.GameSessionInclude} - An object defining the fields to include in session queries.
  */
 export function getSessionSchemaIncludeFields() {
   return {
