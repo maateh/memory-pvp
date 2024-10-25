@@ -4,7 +4,7 @@
 import type { z } from "zod"
 
 // constants
-import { collectionSizeEndpointMap } from "@/constants/collection"
+import { collectionMaxSizeMap, collectionMinSizeMap, collectionSizeEndpointMap } from "@/constants/collection"
 
 // utils
 import { handleApiError, logError } from "@/lib/utils"
@@ -38,6 +38,7 @@ const CollectionForm = () => {
   })
 
   const tableSize = form.watch('tableSize')
+  const images = form.watch('images')
 
   const { createCollection, handleCreateCollection } = useCreateCollectionMutation()
 
@@ -80,7 +81,12 @@ const CollectionForm = () => {
           form={form}
           routeConfig={routeConfig}
           isPending={isUploading || createCollection.isPending}
-          disabled={isUploading || createCollection.isPending}
+          disabled={
+            isUploading || 
+            createCollection.isPending || 
+            images.length < collectionMinSizeMap[tableSize] ||
+            images.length > collectionMaxSizeMap[tableSize]
+          }
         />
       </form>
     </Form>

@@ -119,7 +119,7 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
       <Button className="flex gap-x-2 rounded-2xl max-sm:mx-auto sm:ml-auto sm:text-base"
         variant="secondary"
         type="submit"
-        disabled={disabled} // TODO: check selected files
+        disabled={disabled}
       >
         {isPending ? (
           <Loader2 className="size-4 sm:size-5 shrink-0 animate-spin" />
