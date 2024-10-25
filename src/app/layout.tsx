@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 // uploadthing
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
 import { extractRouterConfig } from "uploadthing/server"
-import { uploadRouter } from "@/app/api/uploadthing/core"
+import { uploadRouter } from "@/server/uploadthing/core"
 
 // styles
 import { dark } from "@clerk/themes"

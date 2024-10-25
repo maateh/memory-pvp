@@ -1,5 +1,5 @@
 // uploadthing
-import type { UploadRouter } from "@/app/api/uploadthing/core"
+import type { UploadRouter } from "@/server/uploadthing/core"
 import {
   generateUploadButton,
   generateUploadDropzone,

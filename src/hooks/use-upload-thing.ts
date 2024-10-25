@@ -1,5 +1,5 @@
 // types
-import type { UploadRouter } from "@/app/api/uploadthing/core"
+import type { UploadRouter } from "@/server/uploadthing/core"
 
 // uploadthing
 import { generateReactHelpers } from "@uploadthing/react"
