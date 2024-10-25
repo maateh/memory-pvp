@@ -64,6 +64,8 @@ export const useOfflineSessionHandler = () => {
       startedAt: new Date(),
       flipped: [],
       cards: getMockCards(values.tableSize),
+      // FIXME: add collection selector to setup game form
+      collectionId: '',
       players: {
         current: offlinePlayerMetadata
       },

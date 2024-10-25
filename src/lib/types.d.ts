@@ -24,7 +24,7 @@ declare global {
   /** Session types */
   declare type ClientGameSession = Omit<
     GameSession,
-    'id' | 'ownerId' | 'playerIds' | 'collectionId' | 'cards' |
+    'id' | 'ownerId' | 'playerIds' | 'cards' |
     'continuedAt' | 'closedAt' | 'updatedAt'
   > & {
     players: {
@@ -32,7 +32,6 @@ declare global {
       other?: ClientPlayer | null
     }
 
-    collection: ClientCardCollection
     cards: ClientSessionCard[]
 
     continuedAt?: Date | null

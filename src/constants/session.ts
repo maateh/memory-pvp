@@ -1,6 +1,6 @@
 /** Schema parser keys */
 export const clientSessionKeys: (keyof ClientGameSession)[] = [
-  'slug', 'collection',
+  'slug', 'collectionId',
   'type', 'mode', 'tableSize', 'status',
   'players', 'stats',
   'flipped', 'cards',

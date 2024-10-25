@@ -37,6 +37,7 @@ const sessionStatsSchema = z.object({
 
 export const clientSessionSchema = z.object({
   slug: z.string(),
+  collectionId: z.string(),
 
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),

@@ -79,8 +79,7 @@ export function parseSchemaToClientSession(
 
   return {
     ...filteredSession,
-    collection: parseSchemaToClientCollection(filteredSession.collection),
-    cards: pairSessionCardsWithCollection(filteredSession.cards, filteredSession.collection.cards),
+    cards: pairSessionCardsWithCollection(session.cards, session.collection.cards),
     players: {
       current: parseSchemaToClientPlayer(players.current),
       other: players.other ? parseSchemaToClientPlayer(players.other) : null

@@ -316,7 +316,7 @@ export const sessionRouter = createTRPCRouter({
   saveOffline: protectedProcedure
     .input(saveOfflineGameSchema)
     .mutation(async ({ ctx, input }) => {
-      const { playerTag, ...session } = input
+      const { playerTag, collectionId, ...session } = input
 
       const playerProfile = await ctx.db.playerProfile.findFirst({
         where: {
@@ -353,7 +353,6 @@ export const sessionRouter = createTRPCRouter({
         }
       }
 
-      // FIXME: collection?
       return await ctx.db.gameSession.create({
         data: {
           ...session, stats,
@@ -361,13 +360,14 @@ export const sessionRouter = createTRPCRouter({
           type: 'CASUAL',
           mode: 'SINGLE',
           status: 'OFFLINE',
-          players: {
-            connect: {
-              id: playerProfile.id
-            },
-          },
           closedAt: new Date(),
+          collection: {
+            connect: { id: collectionId }
+          },
           owner: {
+            connect: { id: playerProfile.id }
+          },
+          players: {
             connect: { id: playerProfile.id }
           }
         }
