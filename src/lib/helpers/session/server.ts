@@ -54,33 +54,6 @@ export function generateSlug(
   return `${prefix}_${id}`
 }
 
-export function generateSessionCards(
-  collection: CardCollectionWithCards
-): PrismaJson.SessionCard[] {
-  const randomCards = collection.cards
-    .sort(() => Math.random() - 0.5)
-    .slice(0, tableSizeMap[collection.tableSize] / 2)
-
-  const sessionCards = randomCards.reduce((cards, card, index) => {
-    const firstKey = index * 2
-    const secondKey = index * 2 + 1
-
-    const cardWithoutKey = {
-      id: card.id,
-      flippedBy: null,
-      matchedBy: null
-    }
-
-    return [
-      ...cards,
-      { key: firstKey, ...cardWithoutKey },
-      { key: secondKey, ...cardWithoutKey }
-    ]
-  }, [] as PrismaJson.SessionCard[])
-
-  return sessionCards.sort(() => Math.random() - 0.5)
-}
-
 /**
  * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
  * organizing player data based on the current player's tag.
