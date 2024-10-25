@@ -1,6 +1,12 @@
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+
 // types
 import type { z } from "zod"
 import type { createCollectionSchema } from "@/lib/validations/collection-schema"
+
+// constants
+import { tableSizePlaceholders } from "@/constants/game"
 
 // trpc
 import { api } from "@/trpc/client"
@@ -8,10 +14,23 @@ import { api } from "@/trpc/client"
 // utils
 import { handleApiError, logError } from "@/lib/utils"
 
-export const useCreateCollectionMutation = () => {
+type UseCreateCollectionMutationParams = {
+  onAfterSuccess?: () => void
+}
+
+export const useCreateCollectionMutation = ({ onAfterSuccess }: UseCreateCollectionMutationParams) => {
+  const router = useRouter()
+
   const createCollection = api.collection.create.useMutation({
-    onSuccess: () => {
-      // TODO: show toast
+    onSuccess: ({ tableSize }) => {
+      const placeholder = tableSizePlaceholders[tableSize]
+
+      toast.success('Card collection created!', {
+        description: `You've created a new card collection for this table size: ${placeholder.label} (${placeholder.size})`
+      })
+
+      onAfterSuccess?.()
+      router.back()
     },
     onError: (err) => {
       handleApiError(err.shape?.cause, 'Failed to create card collection. Please try again later.')

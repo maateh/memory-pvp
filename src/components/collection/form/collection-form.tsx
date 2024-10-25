@@ -1,5 +1,7 @@
 "use client"
 
+import { toast } from "sonner"
+
 // types
 import type { z } from "zod"
 
@@ -40,10 +42,16 @@ const CollectionForm = () => {
   const tableSize = form.watch('tableSize')
   const images = form.watch('images')
 
-  const { createCollection, handleCreateCollection } = useCreateCollectionMutation()
+  const { createCollection, handleCreateCollection } = useCreateCollectionMutation({
+    onAfterSuccess: form.reset
+  })
 
   const { startUpload, routeConfig, isUploading } = useUploadThing(collectionSizeEndpointMap[tableSize], {
     onClientUploadComplete: async (files) => {
+      toast.info("Card images uploaded!", {
+        description: "Now we're going to start creating your card collection..."
+      })
+
       const utImages = files.map(({ key, url }) => ({
         utKey: key,
         imageUrl: url
