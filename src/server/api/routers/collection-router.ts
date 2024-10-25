@@ -1,8 +1,13 @@
 // trpc
+import { TRPCError } from "@trpc/server"
+import { TRPCApiError } from "@/trpc/error"
 import {
   createTRPCRouter,
   protectedProcedure
 } from "@/server/api/trpc"
+
+// uploadthing
+import { utapi } from "@/server/uploadthing"
 
 // helpers
 import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
@@ -16,28 +21,42 @@ export const collectionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { name, description, tableSize, utImages } = input
 
-      const collection = await ctx.db.cardCollection.create({
-        data: {
-          name,
-          description,
-          tableSize,
-          cards: {
-            createMany: {
-              data: utImages
+      try {
+        const collection = await ctx.db.cardCollection.create({
+          data: {
+            name,
+            description,
+            tableSize,
+            cards: {
+              createMany: {
+                data: utImages
+              }
+            },
+            user: {
+              connect: {
+                id: ctx.user.id
+              }
             }
           },
-          user: {
-            connect: {
-              id: ctx.user.id
-            }
+          include: {
+            cards: true,
+            user: true
           }
-        },
-        include: {
-          cards: true,
-          user: true
-        }
-      })
+        })
 
-      return parseSchemaToClientCollection(collection)
+        return parseSchemaToClientCollection(collection)
+      } catch (_err) {
+        const fileKeys = utImages.map(({ utKey }) => utKey)
+        await utapi.deleteFiles(fileKeys)
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          cause: new TRPCApiError({
+            key: 'UNKNOWN',
+            message: "Failed to create card collection.",
+            description: "Something unexpected happened and we cannot create your card collection. Please try again later."
+          })
+        })
+      }
     })
 })
