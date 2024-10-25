@@ -10,10 +10,15 @@ declare global {
     setTheme: (theme: Theme) => void
   }
 
+  /** User types */
+  declare type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
+
   /** Collection types */
+  declare type ClientMemoryCard = Omit<MemoryCard, 'utKey' | 'collectionId'>
+
   declare type ClientCardCollection = Omit<CardCollection, 'userId'> & {
-    user: User
-    cards: MemoryCard[]
+    user: ClientUser
+    cards: ClientMemoryCard[]
   }
 
   /** Session types */

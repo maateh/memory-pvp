@@ -5,7 +5,8 @@ import { db } from "@/server/db"
 import type { MemoryCard, TableSize } from "@prisma/client"
 
 // constants
-import { clientCardCollectionKeys } from "@/constants/collection"
+import { clientCardCollectionKeys, clientMemoryCardKeys } from "@/constants/collection"
+import { clientUserKeys } from "@/constants/user"
 
 // utils
 import { pickFields } from "@/lib/utils"
@@ -19,7 +20,16 @@ import { pickFields } from "@/lib/utils"
 export function parseSchemaToClientCollection(
   collection: CardCollectionWithCardsWithUser
 ): ClientCardCollection {
-  return pickFields(collection, clientCardCollectionKeys)
+  const filteredCollection = pickFields(collection, clientCardCollectionKeys)
+
+  const user = pickFields(filteredCollection.user, clientUserKeys)
+  const cards = filteredCollection.cards.map((card) => pickFields(card, clientMemoryCardKeys))
+
+  return {
+    ...filteredCollection,
+    user,
+    cards
+  }
 }
 
 /**
