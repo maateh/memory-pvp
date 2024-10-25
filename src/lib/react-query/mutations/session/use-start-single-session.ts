@@ -1,6 +1,4 @@
-import { useState } from "react"
 import { useRouter } from "next/navigation"
-
 import { toast } from "sonner"
 
 // trpc
@@ -19,10 +17,12 @@ import { logError, handleApiError } from "@/lib/utils"
 import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 
-export const useStartSingleSessionMutation = () => {
-  const router = useRouter()
+type UseStartSingleSessionMutationParams = {
+  form: UseFormReturn<SetupGameFormValues>
+}
 
-  const [setupForm, setSetupForm] = useState<UseFormReturn<SetupGameFormValues>>()
+export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMutationParams) => {
+  const router = useRouter()
 
   const registerSession = useSessionStore((state) => state.register)
 
@@ -44,7 +44,7 @@ export const useStartSingleSessionMutation = () => {
     onError: (err) => {
       if (err.shape?.cause.key === 'ACTIVE_SESSION') {
         setCache({
-          forceStart: () => handleStartSingleSession(setupForm!, true),
+          forceStart: () => handleStartSingleSession(form.getValues(), true),
           continuePrevious: () => {
             const clientSession = err.shape?.cause.data as ClientGameSession
 
@@ -86,15 +86,7 @@ export const useStartSingleSessionMutation = () => {
     }
   })
 
-  const handleStartSingleSession = async (form: UseFormReturn<SetupGameFormValues>, forceStart: boolean = false) => {
-    const values = form.getValues()
-
-    /**
-     * Form data must be stored because it needs
-     * to be accessible from the 'onError' method.
-     */
-    if (!forceStart) setSetupForm(form)
-
+  const handleStartSingleSession = async (values: SetupGameFormValues, forceStart: boolean = false) => {
     try {
       if (forceStart) await abandonSession.mutateAsync()
       await startSession.mutateAsync(values)

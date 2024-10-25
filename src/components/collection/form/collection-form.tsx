@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { createCollectionClientSchema } from "@/lib/validations/collection-schema"
 
 // shadcn
-import { Form } from "@/components/ui/form"
+import { Form } from "@/components/shared"
 
 // components
 import CollectionFormFields from "./collection-form-fields"
@@ -81,22 +81,22 @@ const CollectionForm = () => {
   }
 
   return (
-    <Form {...form}>
-      <form className="mt-5 flex flex-col gap-y-5"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <CollectionFormFields
-          form={form}
-          routeConfig={routeConfig}
-          isPending={isUploading || createCollection.isPending}
-          disabled={
-            isUploading || 
-            createCollection.isPending || 
-            images.length < collectionMinSizeMap[tableSize] ||
-            images.length > collectionMaxSizeMap[tableSize]
-          }
-        />
-      </form>
+    <Form<CollectionFormValues>
+      className="mt-5"
+      form={form}
+      onSubmit={onSubmit}
+    >
+      <CollectionFormFields
+        form={form}
+        routeConfig={routeConfig}
+        isPending={isUploading || createCollection.isPending}
+        disabled={
+          isUploading || 
+          createCollection.isPending || 
+          images.length < collectionMinSizeMap[tableSize] ||
+          images.length > collectionMaxSizeMap[tableSize]
+        }
+      />
     </Form>
   )
 }

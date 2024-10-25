@@ -1,18 +1,20 @@
 import { useRouter } from "next/navigation"
-
 import { toast } from "sonner"
+
+// types
+import type { PlayerProfileFormValues } from "@/components/player/player-profile-form"
 
 // trpc
 import { api } from "@/trpc/client"
 
-// types
-import type { UseFormReturn } from "react-hook-form"
-import type { PlayerProfileFormValues } from "@/components/player/player-profile-form"
-
 // utils
 import { logError, handleApiError } from "@/lib/utils"
 
-export const useCreatePlayerMutation = () => {
+type UseCreatePlayerMutationParams = {
+  onAfterSuccess?: () => void
+}
+
+export const useCreatePlayerMutation = ({ onAfterSuccess }: UseCreatePlayerMutationParams) => {
   const router = useRouter()
 
   const createPlayer = api.player.create.useMutation({
@@ -21,6 +23,7 @@ export const useCreatePlayerMutation = () => {
         description: `You've created a new player profile: ${tag}`
       })
 
+      onAfterSuccess?.()
       router.refresh()
     },
     onError: (err) => {
@@ -28,12 +31,9 @@ export const useCreatePlayerMutation = () => {
     }
   })
 
-  const onSubmit = async (form: UseFormReturn<PlayerProfileFormValues>) => {
-    const values = form.getValues()
-
+  const onSubmit = async (values: PlayerProfileFormValues) => {
     try {
       await createPlayer.mutateAsync(values)
-      form.reset()
     } catch (err) {
       logError(err)
     }
