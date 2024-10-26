@@ -16,7 +16,7 @@ import { clearSessionFromStorage, getSessionFromStorage, saveSessionToStorage } 
 
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
-import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
+import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useOfflineSessionHandler = () => {
   const router = useRouter()
@@ -24,10 +24,7 @@ export const useOfflineSessionHandler = () => {
   const registerSession = useSessionStore((state) => state.register)
   const unregisterSession = useSessionStore((state) => state.unregister)
 
-  const setCache = useCacheStore<
-    SessionRunningWarningActions,
-    CacheStore<SessionRunningWarningActions>['set']
-  >((state) => state.set)
+  const setCache = useCacheStore<SessionRunningWarningActions, 'set'>((state) => state.set)
 
   /**
    * Starts an offline game session based on form values.

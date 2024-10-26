@@ -8,7 +8,6 @@ import { api } from "@/trpc/client"
 import type { UseFormReturn } from "react-hook-form"
 import type { SetupGameFormValues } from "@/app/game/(base)/setup/setup-game-form"
 import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
-import type { CacheStore } from "@/hooks/store/use-cache-store"
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
@@ -25,11 +24,7 @@ export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMut
   const router = useRouter()
 
   const registerSession = useSessionStore((state) => state.register)
-
-  const setCache = useCacheStore<
-    SessionRunningWarningActions,
-    CacheStore<SessionRunningWarningActions>['set']
-  >((state) => state.set)
+  const setCache = useCacheStore<SessionRunningWarningActions, 'set'>((state) => state.set)
 
   const startSession = api.session.create.useMutation({
     onSuccess: (session) => {

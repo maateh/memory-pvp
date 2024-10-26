@@ -13,12 +13,15 @@ import { getSessionFromStorage } from "@/lib/utils/storage"
 import { getSessionStatsMap } from "@/lib/utils/stats"
 
 // components
-import { StatisticItem, StatisticList, WarningActionButton, WarningCancelButton, WarningModal, WarningModalFooter } from "@/components/shared"
+import {
+  StatisticItem, StatisticList,
+  WarningActionButton, WarningCancelButton, WarningModal, WarningModalFooter
+} from "@/components/shared"
 
 // hooks
-import { useCacheStore, type CacheStore } from "@/hooks/store/use-cache-store"
+import { useCacheStore } from "@/hooks/store/use-cache-store"
 
-export type SessionRunningWarningActions = {
+type SessionRunningWarningActions = {
   forceStart: () => void
   continuePrevious: () => void
 }
@@ -31,11 +34,8 @@ type SessionRunningWarningModalProps = {
 const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarningModalProps) => {
   const router = useRouter()
 
-  const clearCache = useCacheStore((state) => state.clear)
-  const setupGameCache = useCacheStore<
-    SessionRunningWarningActions,
-    CacheStore<SessionRunningWarningActions>['data']
-  >((state) => state.data)
+  const actionsCache = useCacheStore<SessionRunningWarningActions, 'cache'>((state) => state.cache)
+  const clearCache = useCacheStore<SessionRunningWarningActions, 'clear'>((state) => state.clear)
 
   if (isOffline) {
     const offlineSession = getSessionFromStorage()
@@ -45,7 +45,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
   const stats = useMemo(() => getSessionStatsMap(session!), [session])
 
   const handleStartNew = () => {
-    if (!setupGameCache) {
+    if (!actionsCache) {
       toast.warning("Missing data to start new game session.", {
         description: "Sorry, but we couldn't find the necessary data to start a new game session. Please fill out the form again."
       })
@@ -53,12 +53,12 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
       return
     }
 
-    setupGameCache.forceStart()
+    actionsCache.forceStart()
     clearCache()
   }
 
   const handleContinue = () => {
-    if (!setupGameCache) {
+    if (!actionsCache) {
       toast.warning("Missing data to continue game session.", {
         description: "Sorry, but we couldn't find the necessary data to continue your game session. Please fill out the form again."
       })
@@ -66,7 +66,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
       return
     }
 
-    setupGameCache.continuePrevious()
+    actionsCache.continuePrevious()
     clearCache()
   }
 
@@ -108,3 +108,4 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
 }
 
 export default SessionRunningWarningModal
+export type { SessionRunningWarningActions }
