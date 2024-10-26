@@ -83,7 +83,7 @@ export const useGameHandler = ({
 
     if (flipped.length < 2) return
 
-    if (flipped[0].key === flipped[1].key) {
+    if (flipped[0].id === flipped[1].id) {
       handleMatchUpdate()
     } else {
       handleUnmatchUpdate()

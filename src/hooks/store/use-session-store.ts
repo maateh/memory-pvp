@@ -55,14 +55,12 @@ export const useSessionStore = create<SessionStore>((set) => ({
   },
 
   handleFlipUpdate: (clickedCard) => {
-    set((state) => {
-      if (state.session === null) return state
+    set(({ session }) => {
+      if (session === null) return { session }
 
-      let session = state.session
       const playerTag = session.players.current.tag
-
       const cards = session.cards.map(
-        (card) => card.id === clickedCard.id
+        (card) => card.key === clickedCard.key
           ? { ...card, flippedBy: playerTag }
           : card
       )
@@ -80,16 +78,14 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
   handleMatchUpdate: () => {
     setTimeout(() => {
-      set((state) => {
-        if (state.session === null) return state
+      set(({ session }) => {
+        if (session === null) return { session }
 
-        let session = state.session
         const playerTag = session.players.current.tag
+        const cards = session.cards.map((card) => {
+          const prevFlippedCardId = session?.flipped[0].id
 
-        const cards = state.session.cards.map((card) => {
-          const prevFlippedCardKey = session.flipped[0].key
-
-          return card.key === prevFlippedCardKey
+          return card.id === prevFlippedCardId
             ? { ...card, flippedBy: null, matchedBy: playerTag }
             : card
         })
@@ -108,12 +104,11 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
   handleUnmatchUpdate: () => {
     setTimeout(() => {
-      set((state) => {
-        if (state.session === null) return state
-        let session = state.session
+      set(({ session }) => {
+        if (session === null) return { session }
 
         const cards = session.cards.map((card) => {
-          const isFlipped = session.flipped.some((fc) => fc.id === card.id)
+          const isFlipped = session?.flipped.some((fc) => fc.key === card.key)
 
           return isFlipped
             ? { ...card, flippedBy: null }

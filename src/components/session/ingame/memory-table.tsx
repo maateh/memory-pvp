@@ -22,7 +22,7 @@ const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {
           <MemoryCard
             card={card}
             onClick={() => handleCardFlip(card)}
-            key={card.id}
+            key={card.key}
           />
         ))}
       </div>
