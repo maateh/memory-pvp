@@ -78,12 +78,11 @@ export const sessionSortSchema = z.object({
   continuedAt: sortKeys
 }).optional().default({})
 
-export const setupGameSchema = z.object({
-  type: z.nativeEnum(GameType),
-  mode: z.nativeEnum(GameMode),
-  tableSize: z.nativeEnum(TableSize),
-  collectionId: z.string().optional()
-})
+export const createSessionSchema = clientSessionSchema.pick({
+  type: true,
+  mode: true,
+  tableSize: true
+}).extend({ collectionId: z.string().optional() })
 
 export const saveSessionSchema = clientSessionSchema.omit({ players: true })
 

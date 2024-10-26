@@ -14,12 +14,12 @@ import {
 import {
   abandonSessionSchema,
   clientSessionSchema,
+  createSessionSchema,
   finishSessionSchema,
   saveOfflineGameSchema,
   saveSessionSchema,
   sessionFilterSchema,
-  sessionSortSchema,
-  setupGameSchema
+  sessionSortSchema
 } from "@/lib/validations/session-schema"
 
 // helpers
@@ -88,7 +88,7 @@ export const sessionRouter = createTRPCRouter({
     }),
 
   create: playerProcedure
-    .input(setupGameSchema)
+    .input(createSessionSchema)
     .mutation(async ({ ctx, input }): Promise<ClientGameSession> => {
       const activeSession = await ctx.db.gameSession.findFirst({
         where: {

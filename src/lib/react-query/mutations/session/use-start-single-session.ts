@@ -6,7 +6,7 @@ import { api } from "@/trpc/client"
 
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { SetupGameFormValues } from "@/app/game/(base)/setup/setup-game-form"
+import type { SessionFormValues } from "@/components/session/form/session-form"
 import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
 
 // utils
@@ -17,7 +17,7 @@ import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 type UseStartSingleSessionMutationParams = {
-  form: UseFormReturn<SetupGameFormValues>
+  form: UseFormReturn<SessionFormValues>
 }
 
 export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMutationParams) => {
@@ -81,7 +81,7 @@ export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMut
     }
   })
 
-  const handleStartSingleSession = async (values: SetupGameFormValues, forceStart: boolean = false) => {
+  const handleStartSingleSession = async (values: SessionFormValues, forceStart: boolean = false) => {
     try {
       if (forceStart) await abandonSession.mutateAsync()
       await startSession.mutateAsync(values)

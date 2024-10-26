@@ -9,8 +9,8 @@ import { getPlayers } from "@/server/actions/player"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { SessionForm } from "@/components/session/form"
 import ActivePlayer from "./active-player"
-import SetupGameForm from "./setup-game-form"
 
 type BaseGameSetupPageProps = {
   searchParams: {
@@ -44,7 +44,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
       <Separator className="w-2/5 bg-border/60 mx-auto my-5 sm:w-1/5 lg:w-1/6" />
 
       <main className="flex-1 flex flex-col">
-        <SetupGameForm defaultValues={searchParams} />
+        <SessionForm defaultValues={searchParams} />
       </main>
     </>
   )
