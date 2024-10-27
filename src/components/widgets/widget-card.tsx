@@ -24,10 +24,10 @@ const WidgetCard = ({
   className, children, ...props
 }: WidgetCardProps) => {
   return (
-    <Card className={cn("bg-primary/10 dark:bg-primary/20 border-0 rounded-2xl shadow-lg hover:shadow-xl dark:shadow-xl dark:drop-shadow-xl hover:dark:shadow-2xl transition-shadow", className)}
+    <Card className={cn("bg-primary/10 dark:bg-primary/20", className)}
       {...props}
     >
-      <CardHeader>
+      <CardHeader className="mt-4">
         <div className="flex items-center justify-between gap-5">
           <WidgetHeader
             type="card"
