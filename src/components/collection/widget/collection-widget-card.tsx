@@ -42,7 +42,7 @@ const CollectionWidgetCard = ({ collection, className, ...props }: CollectionWid
               </CardDescription>
 
               <CollectionPreviewDenseList className="pt-2 justify-start group-data-[state=open]:hidden">
-                {[...collection.cards,...collection.cards].map((card) => (
+                {collection.cards.map((card) => (
                   <CollectionPreviewDenseItem className="-ml-2 first:-ml-2"
                     imageUrl={card.imageUrl}
                     imageSize={24}
@@ -56,7 +56,7 @@ const CollectionWidgetCard = ({ collection, className, ...props }: CollectionWid
           <AccordionContent className="p-0">
             <CardContent className="px-1.5 pt-4 pb-2.5">
               <CollectionPreviewList className="">
-                {[...collection.cards,...collection.cards].map((card) => (
+                {collection.cards.map((card) => (
                   <CollectionPreviewItem
                     imageUrl={card.imageUrl}
                     imageSize={56}
