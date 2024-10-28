@@ -1,46 +1,32 @@
-// prisma
-import type { CardCollection } from "@prisma/client"
+// server
+import { getUserCollections } from "@/server/actions/collection"
 
 // shadcn
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionWidgetCard } from "@/components/collection"
+import { CollectionWidgetList } from "@/components/collection/widget"
+import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
+import CollectionExplorer from "./collection-explorer"
 
-const mockedCollection: CardCollection = {
-  id: '_id',
-  userId: '_userId',
-  name: 'My Collection',
-  description: 'This is the description of my collection.',
-  tableSize: 'SMALL',
-  createdAt: new Date(),
-  updatedAt: new Date()
-}
+const CollectionsPage = async () => {
+  const userCollections = await getUserCollections()
 
-const CollectionsPage = () => {
   return (
     <Accordion type="single" defaultValue="user-collections">
-      <AccordionItem value="user-collections">
-        <AccordionTrigger>
-          <h2 className="mt-3 text-lg sm:text-2xl font-heading font-medium heading-decorator subheading">
-            Your Card Collections
-          </h2>
-        </AccordionTrigger>
-        <AccordionContent>
-          {/* TODO: add collection filter */}
-
-          <ul className="widget-container">
-            {/* TODO: GET -> user's card collections */}
-            {[mockedCollection].map((collection) => (
-              <li key={collection.id}>
-                <CollectionWidgetCard className="py-1"
-                  collection={collection}
-                />
-              </li>
-            ))}
-          </ul>
-        </AccordionContent>
-      </AccordionItem>
+      {userCollections.length > 0 && (
+        <AccordionItem value="user-collections">
+          <AccordionTrigger>
+            <h2 className="mt-3 text-lg sm:text-2xl font-heading font-medium heading-decorator subheading">
+              Your Card Collections
+            </h2>
+          </AccordionTrigger>
+          <AccordionContent>
+            <CollectionWidgetList collections={userCollections} />
+          </AccordionContent>
+        </AccordionItem>
+      )}
 
       <AccordionItem value="other-collections">
         <AccordionTrigger>
@@ -49,18 +35,20 @@ const CollectionsPage = () => {
           </h2>
         </AccordionTrigger>
         <AccordionContent>
-          {/* TODO: add collection filter */}
+          <div className="flex items-center gap-x-2">
+            <Separator className="w-1.5 h-5 bg-accent rounded-full" />
 
-          <ul className="widget-container">
-            {/* TODO: GET -> card collections */}
-            {[mockedCollection].map((collection) => (
-              <li key={collection.id}>
-                <CollectionWidgetCard className="py-1"
-                  collection={collection}
-                />
-              </li>
-            ))}
-          </ul>
+            <h3 className="mt-1 text-sm font-heading font-normal dark:font-light tracking-wide sm:text-base">
+              Filter collections by
+            </h3>
+          </div>
+
+          <div className="mt-1 mb-6 flex items-center gap-x-2 sm:gap-x-3.5">
+            <CollectionSort />
+            <CollectionFilter />
+          </div>
+
+          <CollectionExplorer excludeUser />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
