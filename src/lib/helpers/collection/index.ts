@@ -2,8 +2,7 @@
 export {
   parseSchemaToClientCollection,
   parseCollectionFilter,
-  pairSessionCardsWithCollection,
-  getRandomCollection
+  pairSessionCardsWithCollection
 } from "./server"
 
 /** Uploadthing exports */

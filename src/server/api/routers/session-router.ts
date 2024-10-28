@@ -10,6 +10,9 @@ import {
   protectedProcedure
 } from "@/server/api/trpc"
 
+// actions
+import { getRandomCollection } from "@/server/actions/collection"
+
 // validations
 import {
   abandonSessionSchema,
@@ -32,7 +35,6 @@ import {
   parseSessionFilter
 } from "@/lib/helpers/session"
 import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
-import { getRandomCollection } from "@/lib/helpers/collection"
 
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
@@ -132,13 +134,14 @@ export const sessionRouter = createTRPCRouter({
         })
       }
 
-      let collection: CardCollectionWithCards | null = null
+      let collection: ClientCardCollection | null = null
       if (input.collectionId) {
         collection = await ctx.db.cardCollection.findUnique({
           where: {
             id: input.collectionId
           },
           include: {
+            user: true,
             cards: true
           },
         })

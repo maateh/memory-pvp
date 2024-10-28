@@ -90,12 +90,12 @@ export function calculateSessionScore(
  * - Duplicates each card, assigning unique keys to create pairs, and initializes `flippedBy` and `matchedBy` as `null`.
  * - Returns a shuffled array of session cards for randomized placement on the game board.
  * 
- * @param {CardCollectionWithCards} collection - The card collection used to generate session cards, containing a list of memory cards.
+ * @param {ClientCardCollection} collection - The card collection used to generate session cards, containing a list of memory cards.
  * 
  * @returns {PrismaJson.SessionCard[]} - Array of session cards, each duplicated and shuffled for game use.
  */
 export function generateSessionCards(
-  collection: CardCollectionWithCards
+  collection: ClientCardCollection
 ): PrismaJson.SessionCard[] {
   const randomCards = collection.cards
     .sort(() => Math.random() - 0.5)

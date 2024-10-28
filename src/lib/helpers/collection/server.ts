@@ -1,9 +1,6 @@
-// server
-import { db } from "@/server/db"
-
 // types
 import type { z } from "zod"
-import type { MemoryCard, Prisma, TableSize } from "@prisma/client"
+import type { MemoryCard, Prisma } from "@prisma/client"
 import type { collectionFilterSchema } from "@/lib/validations/collection-schema"
 
 // constants
@@ -88,31 +85,4 @@ export function pairSessionCardsWithCollection(
   }))
 
   return cards
-}
-
-/**
- * Retrieves a random card collection of a specified table size from the database.
- * 
- * - Counts the total number of collections in the database to calculate a random offset.
- * - Selects a collection that matches the specified `tableSize`, skipping a random number of records for randomness.
- * - If no collections match the criteria, returns `null`.
- * 
- * @param {TableSize} tableSize - The required table size for the card collection.
- * 
- * @returns {Promise<CardCollectionWithCards | null>} - A randomly selected card collection including its cards, or `null` if no match is found.
- */
-export async function getRandomCollection(
-  tableSize: TableSize
-): Promise<CardCollectionWithCards | null> {
-  const count = await db.cardCollection.count()
-  const randomSkip = Math.floor(Math.random() * count)
-
-  // TODO: (!) hasn't been tested yet
-  return await db.cardCollection.findFirst({
-    where: { tableSize },
-    include: {
-      cards: true
-    },
-    skip: randomSkip
-  })
 }
