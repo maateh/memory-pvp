@@ -16,9 +16,16 @@ import {
 
 type CollectionWidgetCardProps = {
   collection: ClientCardCollection
+  imageSize?: number
+  previewImageSize?: number
 } & React.ComponentProps<typeof Card>
 
-const CollectionWidgetCard = ({ collection, className, ...props }: CollectionWidgetCardProps) => {
+const CollectionWidgetCard = ({
+  collection,
+  imageSize = 56,
+  previewImageSize = 24,
+  className, ...props
+}: CollectionWidgetCardProps) => {
   return (
     <Card className={cn("bg-primary/60 py-2.5 px-2", className)} {...props}>
       <Accordion type="single" collapsible>
@@ -45,7 +52,7 @@ const CollectionWidgetCard = ({ collection, className, ...props }: CollectionWid
                 {collection.cards.map((card) => (
                   <CollectionPreviewDenseItem className="-ml-2 first:-ml-2"
                     imageUrl={card.imageUrl}
-                    imageSize={24}
+                    imageSize={previewImageSize}
                     key={card.id}
                   />
                 ))}
@@ -59,7 +66,7 @@ const CollectionWidgetCard = ({ collection, className, ...props }: CollectionWid
                 {collection.cards.map((card) => (
                   <CollectionPreviewItem
                     imageUrl={card.imageUrl}
-                    imageSize={56}
+                    imageSize={imageSize}
                     key={card.id}
                   />
                 ))}

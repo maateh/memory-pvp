@@ -4,6 +4,7 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 // server
 import { signedIn } from "@/server/actions/signed-in"
 import { getPlayers } from "@/server/actions/player"
+import { getRandomCollection } from "@/server/actions/collection"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -13,16 +14,18 @@ import { SessionForm } from "@/components/session/form"
 import ActivePlayer from "./active-player"
 
 type BaseGameSetupPageProps = {
-  searchParams: {
+  searchParams: Partial<{
     type: GameType
     mode: GameMode
     tableSize: TableSize
-  }
+  }>
 }
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
   const players = await getPlayers(true)
+
+  const randomCollection = await getRandomCollection(searchParams.tableSize)
 
   return (
     <>
@@ -44,7 +47,10 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
       <Separator className="w-2/5 bg-border/60 mx-auto my-5 sm:w-1/5 lg:w-1/6" />
 
       <main className="flex-1 flex flex-col">
-        <SessionForm defaultValues={searchParams} />
+        <SessionForm
+          defaultValues={{ ...searchParams, collectionId: randomCollection?.id }}
+          randomCollection={randomCollection}
+        />
       </main>
     </>
   )

@@ -30,9 +30,10 @@ type SessionFormValues = z.infer<typeof createSessionSchema>
 
 type SessionFormProps = {
   defaultValues?: DefaultValues<SessionFormValues>
+  randomCollection: ClientCardCollection | null
 }
 
-const SessionForm = ({ defaultValues }: SessionFormProps) => {
+const SessionForm = ({ defaultValues, randomCollection }: SessionFormProps) => {
   const form = useForm<SessionFormValues>({
     resolver: zodResolver(createSessionSchema),
     defaultValues: {
@@ -69,7 +70,7 @@ const SessionForm = ({ defaultValues }: SessionFormProps) => {
       form={form}
       onSubmit={onSubmit}
     >
-      <SessionFormFields {...form} />
+      <SessionFormFields form={form} randomCollection={randomCollection} />
 
       <div className="mt-auto flex flex-col items-center gap-y-4">
         <Button className="p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg"
