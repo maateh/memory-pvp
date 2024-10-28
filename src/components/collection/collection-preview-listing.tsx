@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 // icons
-import { ImageIcon } from "lucide-react"
+import { Circle } from "lucide-react"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -15,7 +15,7 @@ type CollectionCardPreviewProps = {
 const CollectionCardPreview = ({ imageUrl, imageSize = 48, className }: CollectionCardPreviewProps) => {
   if (!imageUrl) {
     return (
-      <ImageIcon className={cn("p-1.5 text-muted-foreground rounded-2xl transition-shadow img-wrapper hover:shadow-md", className)}
+      <Circle className={cn("p-1.5 text-muted-foreground bg-muted-foreground rounded-2xl transition-shadow img-wrapper hover:shadow-md", className)}
         size={imageSize}
       />
     )
