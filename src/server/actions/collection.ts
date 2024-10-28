@@ -11,10 +11,14 @@ import { signedIn } from "@/server/actions/signed-in"
 import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
 /**
- * TODO: write doc
+ * Retrieves a list of card collections for the signed-in user and parses them into `ClientCardCollection` instances.
  * 
- * @param filter 
- * @returns 
+ * - Fetches collections from the database where the `userId` matches the signed-in user's ID.
+ * - Returns an empty array if no user is signed in.
+ * - Orders the collections by creation date in descending order.
+ * - Includes the user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
+ * 
+ * @returns {Promise<ClientCardCollection[]>} - An array of parsed collections, or an empty array if no user is signed in.
  */
 export async function getUserCollections(): Promise<ClientCardCollection[]> {
   const user = await signedIn()

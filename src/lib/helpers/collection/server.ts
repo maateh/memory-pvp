@@ -38,11 +38,14 @@ export function parseSchemaToClientCollection(
 }
 
 /**
- * TODO: write doc
+ * Parses the input filter to generate a Prisma query condition for filtering card collections.
  * 
- * @param userId 
- * @param filterInput 
- * @returns 
+ * - Constructs a `Prisma.CardCollectionWhereInput` object to match collections based on the given username, name, and table size.
+ * - Supports partial matches for the `username` and `name` fields.
+ * 
+ * @param {Object} filterInput - An input object based on `collectionFilterSchema`, containing filter criteria for collections.
+ * 
+ * @returns {Prisma.CardCollectionWhereInput} - A Prisma filter object for querying card collections by username, name, and table size.
  */
 export function parseCollectionFilter(
   filterInput: z.infer<typeof collectionFilterSchema>
