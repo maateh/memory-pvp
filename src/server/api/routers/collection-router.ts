@@ -10,12 +10,38 @@ import {
 import { utapi } from "@/server/uploadthing"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import {
+  parseCollectionFilter,
+  parseSchemaToClientCollection
+} from "@/lib/helpers/collection"
 
 // validations
-import { createCollectionSchema } from "@/lib/validations/collection-schema"
+import {
+  createCollectionSchema,
+  getCollectionsSchema
+} from "@/lib/validations/collection-schema"
 
 export const collectionRouter = createTRPCRouter({
+  get: protectedProcedure
+    .input(getCollectionsSchema)
+    .query(async ({ ctx, input }): Promise<ClientCardCollection[]> => {
+      const filter = parseCollectionFilter(input.filter)
+
+      const collections = await ctx.db.cardCollection.findMany({
+        where: {
+          ...filter,
+          NOT: input.excludeUser ? { userId: ctx.user.id } : undefined
+        },
+        orderBy: input.sort,
+        include: {
+          cards: true,
+          user: true
+        }
+      })
+
+      return collections.map((collection) => parseSchemaToClientCollection(collection))
+    }),
+
   create: protectedProcedure
     .input(createCollectionSchema)
     .mutation(async ({ ctx, input }) => {

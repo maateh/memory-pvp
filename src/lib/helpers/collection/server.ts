@@ -2,7 +2,9 @@
 import { db } from "@/server/db"
 
 // types
-import type { MemoryCard, TableSize } from "@prisma/client"
+import type { z } from "zod"
+import type { MemoryCard, Prisma, TableSize } from "@prisma/client"
+import type { collectionFilterSchema } from "@/lib/validations/collection-schema"
 
 // constants
 import { clientCardCollectionKeys, clientMemoryCardKeys } from "@/constants/collection"
@@ -35,6 +37,27 @@ export function parseSchemaToClientCollection(
     ...filteredCollection,
     user,
     cards
+  }
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param userId 
+ * @param filterInput 
+ * @returns 
+ */
+export function parseCollectionFilter(
+  filterInput: z.infer<typeof collectionFilterSchema>
+): Prisma.CardCollectionWhereInput {
+  const { username, name, tableSize } = filterInput
+
+  return {
+    user: {
+      username: { contains: username }
+    },
+    name: { contains: name },
+    tableSize
   }
 }
 
