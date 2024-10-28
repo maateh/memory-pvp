@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, type LucideProps } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -20,8 +20,10 @@ AccordionItem.displayName = "AccordionItem"
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
+    iconProps?: LucideProps
+  }
+>(({ className, children, iconProps, ...props }, ref) => (
   <AccordionPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -31,8 +33,9 @@ const AccordionTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronDown className="size-7 p-1.5 rounded-xl shrink-0 transition-transform duration-200 hover:bg-foreground/5"
-      strokeWidth={2.5}
+    <ChevronDown {...iconProps}
+      className={cn("size-7 p-1.5 rounded-xl shrink-0 transition-transform duration-200 hover:bg-foreground/5", iconProps?.className)}
+      strokeWidth={iconProps?.strokeWidth || 2.5}
     />
   </AccordionPrimitive.Trigger>
 ))
