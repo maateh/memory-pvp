@@ -53,7 +53,6 @@ export async function getRandomCollection(
   const count = await db.cardCollection.count()
   const randomSkip = Math.floor(Math.random() * count)
 
-  // TODO: (!) hasn't been tested yet
   const collection = await db.cardCollection.findFirst({
     where: { tableSize },
     include: {
