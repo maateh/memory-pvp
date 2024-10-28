@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 /** Filter map */
-export type FilterMapKeys = "statistics" | "rooms" | "history"
+export type FilterMapKeys = "statistics" | "rooms" | "history" | "collections"
 
 /** Filter types */
 export type FilterFields<T, K extends keyof T> = Pick<T, K>
@@ -42,11 +42,17 @@ const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
     sort: {
       startedAt: 'desc'
     }
+  },
+  collections: {
+    filter: {},
+    sort: {
+      createdAt: 'desc'
+    }
   }
 }))
 
 export const useFilterStore = <T extends FilterFields<T, keyof T>>(
-  selector: (state: FilterStore<T>) => FilterStore<T>[FilterMapKeys]['filter' |'sort']
+  selector: (state: FilterStore<T>) => FilterStore<T>[FilterMapKeys]['filter' | 'sort']
 ) => useFilterStoreImpl(selector)
 
 export const setFilterStore = useFilterStoreImpl.setState as <T extends FilterFields<T, keyof T>>(
