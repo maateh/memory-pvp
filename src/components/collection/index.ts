@@ -1,5 +1,5 @@
-export { default as CollectionCardPreview } from "./collection-card-preview"
 export {
+  CollectionCardPreview,
   CollectionPreviewDenseList,
   CollectionPreviewDenseItem,
   CollectionPreviewList,
