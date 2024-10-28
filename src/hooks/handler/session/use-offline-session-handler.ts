@@ -10,8 +10,11 @@ import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warn
 import { offlineSessionMetadata } from "@/constants/session"
 import { offlinePlayerMetadata } from "@/constants/player"
 
+// helpers
+import { generateSessionCards } from "@/lib/helpers/session"
+import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
+
 // utils
-import { getMockCards } from "@/lib/utils/game"
 import { clearSessionFromStorage, getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
 
 // hooks
@@ -36,12 +39,12 @@ export const useOfflineSessionHandler = () => {
    * - Only supports 'CASUAL' and 'SINGLE' modes in offline; shows a warning otherwise.
    * - Creates and saves a new session, then redirects to the offline game page.
    */
-  const startOfflineSession = (form: UseFormReturn<SessionFormValues>, forceStart: boolean = false) => {
+  const startOfflineSession = (form: UseFormReturn<SessionFormValues>, collection: ClientCardCollection, forceStart: boolean = false) => {
     const values = form.getValues()
 
     if (getSessionFromStorage() && !forceStart) {
       setCache({
-        forceStart: () => startOfflineSession(form, true),
+        forceStart: () => startOfflineSession(form, collection, true),
         continuePrevious: () => continueOfflineSession(form)
       })
 
@@ -56,13 +59,21 @@ export const useOfflineSessionHandler = () => {
       return
     }
 
+    if (!values.collectionId || !collection) {
+      toast.warning('Missing card collection!', {
+        description: "If you want to play in Offline, you need to select a card collection in advanced."
+      })
+      return
+    }
+
+    const sessionCards = generateSessionCards(collection)
+
     const offlineSession: UnsignedClientGameSession = {
       tableSize: values.tableSize,
       startedAt: new Date(),
       flipped: [],
-      cards: getMockCards(values.tableSize),
-      // FIXME: add collection selector to setup game form
-      collectionId: '',
+      cards: pairSessionCardsWithCollection(sessionCards, collection.cards),
+      collectionId: values.collectionId,
       players: {
         current: offlinePlayerMetadata
       },

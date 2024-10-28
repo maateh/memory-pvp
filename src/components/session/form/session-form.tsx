@@ -39,7 +39,8 @@ const SessionForm = ({ defaultValues, randomCollection }: SessionFormProps) => {
     defaultValues: {
       type: defaultValues?.type || 'CASUAL',
       mode: defaultValues?.mode || 'SINGLE',
-      tableSize: defaultValues?.tableSize || 'SMALL'
+      tableSize: defaultValues?.tableSize || 'SMALL',
+      collectionId: randomCollection?.id
     }
   })
 
@@ -62,6 +63,7 @@ const SessionForm = ({ defaultValues, randomCollection }: SessionFormProps) => {
 
   const type = form.watch('type')
   const mode = form.watch('mode')
+  const collectionId = form.watch('collectionId')
   const SubmitIcon = mode === 'SINGLE' ? SquarePlay : CircleFadingPlus
 
   return (
@@ -92,8 +94,8 @@ const SessionForm = ({ defaultValues, randomCollection }: SessionFormProps) => {
         <Button className="gap-x-2 rounded-2xl bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm font-normal sm:text-base"
           size="sm"
           type="button"
-          onClick={form.handleSubmit(() => startOfflineSession(form))}
-          disabled={startSession.isPending || type === 'COMPETITIVE' || mode !== 'SINGLE'}
+          onClick={form.handleSubmit(() => startOfflineSession(form, randomCollection!))}
+          disabled={startSession.isPending || type === 'COMPETITIVE' || mode !== 'SINGLE' || !collectionId || !randomCollection}
         >
           <WifiOff className="size-4 sm:size-5 shrink-0"
             strokeWidth={1.5}
