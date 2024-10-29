@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils"
 
 // components
-import { CollectionWidgetCard } from "@/components/collection"
+import { CollectionAccordionWidgetCard } from "@/components/collection/widget"
 
 type CollectionWidgetListProps = ({
   collections: ClientCardCollection[]
@@ -14,7 +14,7 @@ type CollectionWidgetListProps = ({
 
 const CollectionWidgetList = ({ collections, className, children, ...props }: CollectionWidgetListProps) => {
   return (
-    <ul className={cn("widget-container 2xl:grid-cols-3", className)}
+    <ul className={cn("grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3", className)}
       {...props}
     >
       {children || collections?.map((collection) => (
@@ -39,7 +39,7 @@ const CollectionWidgetItem = ({ collection, children, ...props }: CollectionWidg
   return (
     <li {...props}
     >
-      {collection ? <CollectionWidgetCard collection={collection} /> : children}
+      {collection ? <CollectionAccordionWidgetCard collection={collection} /> : children}
     </li>
   )
 }
