@@ -2,7 +2,7 @@
 
 // types
 import type { GameSession, GameStatus } from "@prisma/client"
-import type { FilterFields, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { Filter, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -13,9 +13,10 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-type StatusFilter = FilterFields<GameSession, 'status'>
+type StatusFilterFields = Pick<GameSession, 'status'>
+type StatusFilter = Filter<StatusFilterFields>
 
-const options: FilterOptions<StatusFilter> = {
+const options: FilterOptions<StatusFilterFields> = {
   status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
 }
 

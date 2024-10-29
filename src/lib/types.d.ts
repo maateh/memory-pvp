@@ -10,6 +10,9 @@ declare global {
     setTheme: (theme: Theme) => void
   }
 
+  /** Filtering types */
+  declare type FilterService = "store" | "params" | "mixed"
+
   /** User types */
   declare type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
 

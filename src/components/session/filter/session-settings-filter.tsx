@@ -2,7 +2,7 @@
 
 // types
 import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
-import type { FilterFields, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { Filter, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -17,9 +17,10 @@ import { Separator } from "@/components/ui/separator"
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 
-type SettingsFilter = FilterFields<GameSession, 'type' | 'mode' | 'tableSize'>
+type SettingsFilterFields = Pick<GameSession, 'type' | 'mode' | 'tableSize'>
+type SettingsFilter = Filter<SettingsFilterFields>
 
-const options: FilterOptions<SettingsFilter> = {
+const options: FilterOptions<SettingsFilterFields> = {
   type: ["CASUAL", "COMPETITIVE"],
   mode: ["SINGLE", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]

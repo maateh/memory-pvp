@@ -1,13 +1,8 @@
 import { useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-type FilterValue = string | number | boolean
-
-type Filter<T extends { [key in keyof T]: FilterValue }> = Partial<T>
-
-type SortKey = "asc" | "desc"
-
-type Sort<T> = Partial<{ [key in keyof T]: SortKey }>
+// types
+import type { Filter, FilterValue, Sort, SortKey } from "./store/use-filter-store"
 
 type UseFilterParamsReturn<T extends { [key in keyof T]: string | number | boolean }> = {
   filter: Filter<T>

@@ -2,36 +2,62 @@
 
 // types
 import type { CardCollection, TableSize } from "@prisma/client"
-import type { FilterFields, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { Filter, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { tableSizePlaceholders } from "@/constants/game"
 
 // shadcn
-import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
 
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
+import { useFilterParams } from "@/hooks/use-filter-params"
 
-type TCollectionFilter = FilterFields<CardCollection, 'tableSize' | 'name'>
+type CollectionFilterFields = Pick<CardCollection, 'tableSize' | 'name'>
+type TCollectionFilter = Filter<CollectionFilterFields>
 
-const options: FilterOptions<TCollectionFilter> = {
+const options: FilterOptions<CollectionFilterFields> = {
   name: [''],
   tableSize: ['SMALL', 'MEDIUM', 'LARGE']
 }
 
-const CollectionFilter = () => {
+type CollectionFilterProps = {
+  type: FilterService
+}
+
+const CollectionFilter = ({ type }: CollectionFilterProps) => {
   const filter = useFilterStore<TCollectionFilter>(({ collections }) => collections.filter)
+  const { filter: queryFilter, addFilterParam } = useFilterParams<TCollectionFilter>()
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    setFilterStore<TCollectionFilter>(({ collections }) => {
-      collections.filter = {
-        ...filter,
-        tableSize: filter.tableSize !== tableSize ? tableSize : undefined
-      }
+    if (type === 'store' || type === 'mixed') {
+      setFilterStore<TCollectionFilter>(({ collections }) => {
+        collections.filter = {
+          ...filter,
+          tableSize: filter.tableSize !== tableSize ? tableSize : undefined
+        }
+  
+        return { collections }
+      })
+    }
 
-      return { collections }
-    })
+    if (type === 'params' || type === 'mixed') {
+      addFilterParam('tableSize', tableSize)
+    }
+  }
+
+  const isTableSizeSelected = (tableSize: TableSize) => {
+    let isSelected = false
+    if (type === 'store' || type === 'mixed') {
+      isSelected = filter.tableSize === tableSize
+    }
+
+    if (type === 'params' || type === 'mixed') {
+      isSelected = queryFilter.tableSize === tableSize
+    }
+
+    return isSelected
   }
 
   // TODO: add search filter input
@@ -43,7 +69,7 @@ const CollectionFilter = () => {
           {options.tableSize.map((tableSize) => (
             <BreadcrumbButton
               onClick={() => handleSelectTableSize(tableSize)}
-              selected={filter.tableSize === tableSize}
+              selected={isTableSizeSelected(tableSize)}
               key={tableSize}
             >
               {tableSizePlaceholders[tableSize].label}

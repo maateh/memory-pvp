@@ -2,7 +2,7 @@
 
 // types
 import type { CardCollection } from "@prisma/client"
-import type { SortFields } from "@/hooks/store/use-filter-store"
+import type { Sort } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -15,21 +15,35 @@ import { ButtonTooltip } from "@/components/ui/button"
 
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
+import { useFilterParams } from "@/hooks/use-filter-params"
 
-type CollectionSortFilter = SortFields<CardCollection, 'createdAt'>
+type CollectionSortFields = Pick<CardCollection, 'createdAt'>
 
-const CollectionSort = () => {
-  const sort = useFilterStore<CollectionSortFilter>(({ collections }) => collections.sort)
+type TCollectionSort = Sort<CollectionSortFields>
+
+type CollectionSortProps = {
+  type: FilterService
+}
+
+const CollectionSort = ({ type }: CollectionSortProps) => {
+  const sort = useFilterStore<TCollectionSort>(({ collections }) => collections.sort)
+  const { toggleSortParam } = useFilterParams<TCollectionSort>()
 
   const handleToggleSort = () => {
-    setFilterStore<CollectionSortFilter>(({ collections }) => {
-      collections.sort = {
-        ...sort,
-        createdAt: sort.createdAt === 'asc' ? 'desc' : 'asc'
-      }
+    if (type === 'store' || type === 'mixed') {
+      setFilterStore<TCollectionSort>(({ collections }) => {
+        collections.sort = {
+          ...sort,
+          createdAt: sort.createdAt === 'asc' ? 'desc' : 'asc'
+        }
+  
+        return { collections }
+      })
+    }
 
-      return { collections }
-    })
+    if (type === 'params' || type === 'mixed') {
+      toggleSortParam('createdAt')
+    }
   }
 
   return (
@@ -64,4 +78,4 @@ const CollectionSort = () => {
 }
 
 export default CollectionSort
-export type { CollectionSortFilter as CollectionSort }
+export type { TCollectionSort as CollectionSort }
