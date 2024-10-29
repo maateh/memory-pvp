@@ -15,11 +15,11 @@ import {
 /** Base schemas */
 const collectionNameSchema = z.string()
   .min(4, { message: 'Collection name is too short.' })
-  .max(16, { message: 'Collection name is too long.' })
+  .max(28, { message: 'Collection name is too long.' })
 
 const collectionDescriptionSchema = z.string()
-  .min(10, { message: 'Collection description is too short.' })
-  .max(100, { message: 'Collection description is too long.' })
+  .min(8, { message: 'Collection description is too short.' })
+  .max(128, { message: 'Collection description is too long.' })
 
 const collectionCardImage = z.custom<File>()
   .refine((file: File) => file.size <= collectionMaxFileSizeInBytes, {

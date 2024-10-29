@@ -41,7 +41,8 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
             </FormLabel>
             <FormControl>
               <Input className="border border-input/40"
-                maxLength={16}
+                minLength={4}
+                maxLength={28}
                 {...field}
               />
             </FormControl>
@@ -60,7 +61,8 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
             </FormLabel>
             <FormControl>
               <Textarea className="font-extralight dark:font-thin border border-input/40 tracking-wide resize-none"
-                maxLength={100}
+                minLength={8}
+                maxLength={128}
                 {...field}
               />
             </FormControl>
