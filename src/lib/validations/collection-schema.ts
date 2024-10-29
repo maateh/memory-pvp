@@ -65,6 +65,16 @@ export const createCollectionSchema = createCollectionUtSchema.extend({
   utImages: z.array(utImageSchema)
 })
 
+export const updateCollectionSchema = z.object({
+  id: z.string(),
+  name: collectionNameSchema.optional(),
+  description: collectionDescriptionSchema.optional()
+})
+
+export const deleteCollectionSchema = z.object({
+  id: z.string()
+})
+
 /** Client side form validation */
 export const createCollectionClientSchema = createCollectionUtSchema.extend({
   images: z.array(collectionCardImage)
