@@ -6,6 +6,7 @@ import { toast } from "sonner"
 // types
 import type { UploadThingError } from "uploadthing/server"
 import type { TRPCApiError } from "@/trpc/error"
+import type { Filter, Sort } from "@/hooks/store/use-filter-store"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -30,6 +31,47 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
     }
   })
   return result
+}
+
+type ParseFilterParamsReturn<T extends { [key in keyof T]: string | number | boolean }> = {
+  filter: Filter<T>
+  sort: Sort<T>
+}
+
+/**
+ * Parses URL search parameters into separate filter and sort objects based on specified keys.
+ * 
+ * - Collects keys from `URLSearchParams` and differentiates them as either filter or sort parameters.
+ * - Sort parameters are indicated by "asc" or "desc" keys, where each value is categorized as ascending or descending.
+ * - All other keys are treated as filter parameters, with each key-value pair added to the `filter` object.
+ * - Returns an object with `filter` and `sort` properties, representing parsed filtering and sorting instructions.
+ * 
+ * @template T - The shape of the parameter object, where each key's value must be of type `string`, `number`, or `boolean`.
+ * @param {URLSearchParams} params - The search parameters to parse.
+ * @returns {ParseFilterParamsReturn<T>} - An object with `filter` and `sort` properties for filtered and sorted results.
+ */
+export function parseFilterParams<T extends { [key in keyof T]: string | number | boolean }>(
+  params: URLSearchParams
+): ParseFilterParamsReturn<T> {
+  const keys = Array.from(params.keys())
+
+  const sortAsc = params.getAll('asc').reduce((sortAsc, value) => ({
+    ...sortAsc,
+    [value]: 'asc'
+  }), {} as Sort<T>)
+
+  return {
+    filter: keys.filter((key) => !key.includes('asc') || !key.includes('desc'))
+      .reduce((filter, key) => ({
+        ...filter,
+        [key]: params.get(key)
+      }), {} as Filter<T>),
+
+    sort: params.getAll('desc').reduce((sort, value) => ({
+      ...sort,
+      [value]: 'desc'
+    }), sortAsc)
+  }
 }
 
 /**

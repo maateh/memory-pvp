@@ -4,9 +4,7 @@ import { create } from "zustand"
 export type FilterMapKeys = "statistics" | "rooms" | "history" | "collections"
 
 /** Filter types */
-export type FilterValue = string | number | boolean
-
-export type Filter<T> = Partial<{ [key in keyof T]: FilterValue }>
+export type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
 
 export type FilterOptions<T extends Pick<T, keyof T>> = {
   [key in keyof T]: T[key][]

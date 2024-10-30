@@ -2,7 +2,12 @@ import { useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 // types
-import type { Filter, FilterValue, Sort, SortKey } from "./store/use-filter-store"
+import type { Filter, Sort, SortKey } from "./store/use-filter-store"
+
+// utils
+import { parseFilterParams } from "@/lib/utils"
+
+export type FilterParamValue = string | number | boolean
 
 type UseFilterParamsReturn<T extends { [key in keyof T]: string | number | boolean }> = {
   filter: Filter<T>
@@ -30,13 +35,23 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
   const pathname = usePathname()
 
   /** 
+   * Parses the current URL parameters and separates into a `filter` and `sort` object.
+   * 
+   * @returns {Object} - An object within the parsed `filter` and `sort` parameters.
+   */
+  const { filter, sort } = useMemo(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    return parseFilterParams<T>(params)
+  }, [searchParams])
+
+  /** 
    * Creates a query string by adding or updating a parameter key and value in the existing URL search parameters.
    * 
    * @param {keyof T | SortKey} key - The key of the parameter to set.
-   * @param {FilterValue | keyof T} value - The value to set for the parameter.
+   * @param {FilterParamValue | keyof T} value - The value to set for the parameter.
    * @returns {string} - The updated query string.
    */
-  const createQueryString = useCallback((key: keyof T | SortKey, value: FilterValue | keyof T) => {
+  const createQueryString = useCallback((key: keyof T | SortKey, value: FilterParamValue | keyof T) => {
     const params = new URLSearchParams(searchParams.toString())
 
     if (typeof key === 'string') {
@@ -60,40 +75,6 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
     }
 
     return params.toString()
-  }, [searchParams])
-
-  /** 
-   * Parses the current URL parameters into a `filter` object.
-   * 
-   * @returns {Filter<T>} - The parsed filter parameters.
-   */
-  const filter: Filter<T> = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString())
-    const keys = Array.from(params.keys())
-
-    return keys.reduce((filter, key) => ({
-      ...filter,
-      [key]: params.get(key)
-    }), {} as Filter<T>)
-  }, [searchParams])
-
-  /** 
-   * Parses the current URL parameters into a `sort` object.
-   * 
-   * @returns {Sort<T>} - The parsed sort parameters.
-   */
-  const sort: Sort<T> = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    const sort = params.getAll('asc').reduce((sort, value) => ({
-      ...sort,
-      [value]: 'asc'
-    }), {} as Sort<T>)
-
-    return params.getAll('desc').reduce((sort, value) => ({
-      ...sort,
-      [value]: 'desc'
-    }), sort)
   }, [searchParams])
 
   /** 
