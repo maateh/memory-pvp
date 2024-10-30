@@ -1,11 +1,12 @@
-"use client"
-
 // types
 import type { CollectionFilter } from "@/components/collection/filter/collection-filter"
 import type { CollectionSort } from "@/components/collection/filter/collection-sort"
 
-// trpc
-import { api } from "@/trpc/client"
+// server
+import { getCollections } from "@/server/actions/collection"
+
+// utils
+import { parseFilterParams } from "@/lib/utils"
 
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"
@@ -14,30 +15,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { CardItem, Warning } from "@/components/shared"
 import { CollectionWidgetList } from "@/components/collection/widget"
 
-// hooks
-import { useFilterStore } from "@/hooks/store/use-filter-store"
-
 type CollectionExplorerProps = {
-  excludeUser?: boolean
+  params: CollectionFilter & CollectionSort
 }
 
-const CollectionExplorer = ({ excludeUser = false }: CollectionExplorerProps) => {
-  const filter = useFilterStore<CollectionFilter>(({ collections }) => collections.filter)
-  const sort = useFilterStore<CollectionSort>(({ collections }) => collections.sort)
+const CollectionExplorer = async ({ params }: CollectionExplorerProps) => {
+  const searchParams = new URLSearchParams(params)
 
-  const { data: collections, isFetching } = api.collection.get.useQuery({ filter, sort, excludeUser })
-
-  if (!collections || isFetching) {
-    return (
-      <CollectionWidgetList>
-        {Array(6).fill('').map((_, index) => (
-          <li key={index}>
-            <Skeleton className="h-40 bg-primary/80 rounded-2xl" />
-          </li>
-        ))}
-      </CollectionWidgetList>
-    )
-  }
+  const collections = await getCollections({
+    ...parseFilterParams<typeof params>(searchParams),
+    includeUser: true
+  })
 
   if (collections.length === 0) {
     return (
@@ -49,7 +37,23 @@ const CollectionExplorer = ({ excludeUser = false }: CollectionExplorerProps) =>
     )
   }
 
-  return <CollectionWidgetList collections={collections} />
+  return (
+    <CollectionWidgetList
+      collections={collections}
+    />
+  )
 }
 
-export default CollectionExplorer
+const CollectionExplorerSkeleton = () => {
+  return (
+    <CollectionWidgetList>
+      {Array(6).fill('').map((_, index) => (
+        <li key={index}>
+          <Skeleton className="h-32 bg-primary/80 rounded-2xl" />
+        </li>
+      ))}
+    </CollectionWidgetList>
+  )
+}
+
+export { CollectionExplorer, CollectionExplorerSkeleton }

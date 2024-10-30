@@ -1,57 +1,68 @@
-// server
-import { getUserCollections } from "@/server/actions/collection"
+import Link from "next/link"
+import { Suspense } from "react"
+
+// types
+import type { CollectionFilter as TCollectionFilter } from "@/components/collection/filter/collection-filter"
+import type { CollectionSort as TCollectionSort } from "@/components/collection/filter/collection-sort"
+
+// utils
+import { cn } from "@/lib/utils"
+
+// icons
+import { ImageUp } from "lucide-react"
 
 // shadcn
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionWidgetList } from "@/components/collection/widget"
 import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
-import CollectionExplorer from "./collection-explorer"
+import { CollectionExplorer, CollectionExplorerSkeleton } from "./collection-explorer"
 
-const CollectionsPage = async () => {
-  const userCollections = await getUserCollections()
+type CollectionsPageProps = {
+  searchParams: TCollectionFilter & TCollectionSort
+}
 
+const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
   return (
-    <Accordion type="single" defaultValue="user-collections">
-      {userCollections.length > 0 && (
-        <AccordionItem value="user-collections">
-          <AccordionTrigger>
-            <h2 className="mt-3 text-lg sm:text-2xl font-heading font-medium heading-decorator subheading">
-              Your Card Collections
-            </h2>
-          </AccordionTrigger>
-          <AccordionContent>
-            <CollectionWidgetList collections={userCollections} />
-          </AccordionContent>
-        </AccordionItem>
-      )}
-
-      <AccordionItem value="other-collections">
-        <AccordionTrigger>
-          <h2 className="mt-3 text-lg sm:text-2xl font-heading font-medium heading-decorator subheading">
-            Uploaded by other players
-          </h2>
-        </AccordionTrigger>
-        <AccordionContent>
+    <>
+      <div className="flex flex-wrap-reverse justify-between items-end gap-x-16 gap-y-4">
+        <div className="space-y-0.5">
           <div className="flex items-center gap-x-2">
             <Separator className="w-1.5 h-5 bg-accent rounded-full" />
 
-            <h3 className="mt-1 text-sm font-heading font-normal dark:font-light tracking-wide sm:text-base">
+            <h3 className="mt-1 text-base font-heading font-normal sm:text-lg">
               Filter collections by
             </h3>
           </div>
 
-          <div className="mt-1 mb-6 flex items-center gap-x-2 sm:gap-x-3.5">
+          <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
             <CollectionSort />
             <CollectionFilter />
           </div>
+        </div>
 
-          <CollectionExplorer excludeUser />
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        <Link className={cn(buttonVariants({
+          className: "ml-auto gap-x-3 rounded-2xl font-medium tracking-wide",
+          variant: "secondary",
+          size: "lg"
+        }))}
+          href="/collections/manage"
+          scroll={false}
+        >
+          <div>
+            Manage your collections
+          </div>
+          <ImageUp className="size-5 mx-auto sm:size-6" />
+        </Link>
+      </div>
+
+      <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
+
+      <Suspense fallback={<CollectionExplorerSkeleton />}>
+        <CollectionExplorer params={searchParams} />
+      </Suspense>
+    </>
   )
 }
 
