@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { CardCollection } from "@prisma/client"
+import type { CardCollection, TableSize } from "@prisma/client"
 import type { Filter, FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
@@ -23,7 +23,7 @@ const options: FilterOptions<CollectionFilterFields> = {
 }
 
 const CollectionFilter = () => {
-  const { filter: filterParams, addFilterParam } = useFilterParams<TCollectionFilter>()
+  const { filter, toggleFilterParam } = useFilterParams<TCollectionFilter>()
 
   // TODO: add search filter input
   // TODO: add exclude or include user toggle button
@@ -34,8 +34,8 @@ const CollectionFilter = () => {
         <BreadcrumbItemGroup>
           {options.tableSize.map((tableSize) => (
             <BreadcrumbButton
-              onClick={() => addFilterParam('tableSize', tableSize)}
-              selected={filterParams.tableSize === tableSize}
+              onClick={() => toggleFilterParam('tableSize', tableSize)}
+              selected={filter.tableSize === tableSize}
               key={tableSize}
             >
               {tableSizePlaceholders[tableSize].label}
