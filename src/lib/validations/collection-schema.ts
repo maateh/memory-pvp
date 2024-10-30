@@ -44,14 +44,13 @@ export const collectionFilterSchema = z.object({
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const collectionSortSchema = z.object({
   name: sortKeys,
-  tableSize: sortKeys,
   createdAt: sortKeys
 }).optional().default({})
 
 export const getCollectionsSchema = z.object({
   filter: collectionFilterSchema,
   sort: collectionSortSchema,
-  excludeUser: z.coerce.boolean().optional()
+  includeUser: z.coerce.boolean().optional()
 }).optional().default({})
 
 /** Form / API validations */

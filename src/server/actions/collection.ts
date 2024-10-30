@@ -1,14 +1,45 @@
 "use server"
 
 // types
+import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
+import type { getCollectionsSchema } from "@/lib/validations/collection-schema"
 
 // server
 import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
+
+/**
+ * TODO: write doc
+ * 
+ * @param input 
+ * @returns 
+ */
+export async function getCollections(
+  input: z.infer<typeof getCollectionsSchema>
+): Promise<ClientCardCollection[]> {
+  const filter = parseCollectionFilter(input.filter)
+  const { sort, includeUser } = input
+
+  if (!includeUser) {
+    const user = await signedIn()
+    filter.NOT = { userId: user?.id }
+  }
+
+  const collections = await db.cardCollection.findMany({
+    where: filter,
+    orderBy: sort,
+    include: {
+      user: true,
+      cards: true
+    }
+  })
+
+  return collections.map((collection) => parseSchemaToClientCollection(collection))
+}
 
 /**
  * Retrieves a list of card collections for the signed-in user and parses them into `ClientCardCollection` instances.
