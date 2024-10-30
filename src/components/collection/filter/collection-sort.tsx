@@ -2,55 +2,32 @@
 
 // types
 import type { CardCollection } from "@prisma/client"
-import type { Sort } from "@/hooks/store/use-filter-store"
+import type { Sort, SortKey } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
 
 // icons
-import { SortAsc, SortDesc } from "lucide-react"
+import { ArrowDownUp, SortAsc, SortDesc } from "lucide-react"
 
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
 
 // hooks
-import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
 type CollectionSortFields = Pick<CardCollection, 'createdAt'>
 
 type TCollectionSort = Sort<CollectionSortFields>
 
-type CollectionSortProps = {
-  type: FilterService
-}
-
-const CollectionSort = ({ type }: CollectionSortProps) => {
-  const sort = useFilterStore<TCollectionSort>(({ collections }) => collections.sort)
-  const { toggleSortParam } = useFilterParams<TCollectionSort>()
-
-  const handleToggleSort = () => {
-    if (type === 'store' || type === 'mixed') {
-      setFilterStore<TCollectionSort>(({ collections }) => {
-        collections.sort = {
-          ...sort,
-          createdAt: sort.createdAt === 'asc' ? 'desc' : 'asc'
-        }
-  
-        return { collections }
-      })
-    }
-
-    if (type === 'params' || type === 'mixed') {
-      toggleSortParam('createdAt')
-    }
-  }
+const CollectionSort = () => {
+  const { sort, toggleSortParam } = useFilterParams<TCollectionSort>()
 
   return (
     <ButtonTooltip className="p-1.5 hover:bg-transparent/10 dark:hover:bg-transparent/30 border border-border/20"
       variant="ghost"
       size="icon"
-      onClick={handleToggleSort}
+      onClick={() => toggleSortParam('createdAt')}
       tooltip={(
         <div className="flex items-center gap-x-1.5">
           <SortAsc className={cn("size-4 flex-none", { "hidden": sort.createdAt === 'desc' })} />
@@ -64,14 +41,19 @@ const CollectionSort = ({ type }: CollectionSortProps) => {
         </div>
       )}
     >
-      <SortAsc className={cn("size-4 sm:size-5 flex-none transition-all", {
+      <ArrowDownUp className={cn("size-4 sm:size-5 flex-none transition-all", {
+        "rotate-0 scale-100": !sort.createdAt,
+        "-rotate-90 scale-0": !!sort.createdAt
+      })} strokeWidth={2.5} />
+
+      <SortAsc className={cn("absolute size-4 sm:size-5 flex-none transition-all", {
         "rotate-0 scale-100": sort.createdAt === 'asc',
-        "-rotate-90 scale-0": sort.createdAt === 'desc'
+        "-rotate-90 scale-0": sort.createdAt !== 'asc'
       })} strokeWidth={2.5} />
 
       <SortDesc className={cn("absolute size-4 sm:size-5 flex-none transition-all", {
-        "rotate-90 scale-0": sort.createdAt === 'asc',
-        "rotate-0 scale-100": sort.createdAt === 'desc'
+        "rotate-0 scale-100": sort.createdAt === 'desc',
+        "-rotate-90 scale-0": sort.createdAt !== 'desc'
       })} strokeWidth={2.5} />
     </ButtonTooltip>
   )

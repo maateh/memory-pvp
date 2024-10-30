@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 /** Filter store keys */
-export type FilterMapKeys = "statistics" | "rooms" | "history" | "collections"
+export type FilterMapKeys = "statistics" | "rooms" | "history"
 
 /** Filter types */
 export type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
@@ -37,12 +37,6 @@ const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
     filter: {},
     sort: {
       startedAt: 'desc'
-    }
-  },
-  collections: {
-    filter: {},
-    sort: {
-      createdAt: 'desc'
     }
   }
 }))
