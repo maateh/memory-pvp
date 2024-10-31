@@ -1,3 +1,6 @@
+// types
+import type { CollectionSort as TCollectionSort } from "@/components/collection/filter/collection-sort"
+
 // actions
 import { getUserCollections } from "@/server/actions/collection"
 
@@ -8,9 +11,17 @@ import { Separator } from "@/components/ui/separator"
 import { LayoutCard } from "@/components/shared"
 import { CollectionForm } from "@/components/collection/form"
 import CollectionsManageTable from "./collections-manage-table"
+import { parseFilterParams } from "@/lib/utils"
 
-const CollectionsManagePage = async () => {
-  const userCollections = await getUserCollections()
+type CollectionsManagePageProps = {
+  searchParams: TCollectionSort
+}
+
+const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProps) => {
+  const params = new URLSearchParams(searchParams)
+  const { sort } = parseFilterParams<typeof searchParams>(params)
+
+  const userCollections = await getUserCollections(sort)
 
   return (
     <div className="grid grid-cols-9 gap-x-8 gap-y-16">

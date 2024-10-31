@@ -3,7 +3,7 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
-import type { getCollectionsSchema } from "@/lib/validations/collection-schema"
+import type { collectionSortSchema, getCollectionsSchema } from "@/lib/validations/collection-schema"
 
 // server
 import { db } from "@/server/db"
@@ -51,7 +51,9 @@ export async function getCollections(
  * 
  * @returns {Promise<ClientCardCollection[]>} - An array of parsed collections, or an empty array if no user is signed in.
  */
-export async function getUserCollections(): Promise<ClientCardCollection[]> {
+export async function getUserCollections(
+  sort: z.infer<typeof collectionSortSchema> = {}
+): Promise<ClientCardCollection[]> {
   const user = await signedIn()
   if (!user) return []
 
@@ -59,7 +61,7 @@ export async function getUserCollections(): Promise<ClientCardCollection[]> {
     where: {
       userId: user.id
     },
-    orderBy: {
+    orderBy: Object.keys(sort).length > 0 ? sort : {
       createdAt: 'desc'
     },
     include: {
