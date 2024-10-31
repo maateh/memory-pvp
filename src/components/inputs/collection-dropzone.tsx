@@ -52,7 +52,7 @@ const CollectionDropzone = ({ files, setFiles, routeConfig, hidePreview = false,
   const maxFileCount = routeConfig?.image?.maxFileCount
 
   return (
-    <div className={cn("px-4 py-8 flex flex-col items-center justify-center text-center rounded-2xl border border-input/50 border-dashed cursor-pointer", className)}
+    <div className={cn("px-4 py-8 flex flex-col items-center justify-center text-center rounded-2xl border border-border/25 border-dashed cursor-pointer transition duration-200 hover:bg-transparent/5", className)}
       {...getRootProps()}
     >
       <ImageUp className="size-6 mx-auto text-accent sm:size-8" />

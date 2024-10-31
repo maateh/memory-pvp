@@ -36,11 +36,11 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
         name="name"
         render={({ field }) => (
           <FormItem className="w-full max-w-md mx-auto">
-            <FormLabel className="dark:font-light">
+            <FormLabel className="font-normal">
               Collection Name
             </FormLabel>
             <FormControl>
-              <Input className="border border-input/40"
+              <Input className="border border-input/20"
                 minLength={4}
                 maxLength={28}
                 {...field}
@@ -56,11 +56,11 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
         name="description"
         render={({ field }) => (
           <FormItem className="w-full max-w-md mx-auto mt-4 mb-2">
-            <FormLabel className="dark:font-light">
+            <FormLabel className="font-normal">
               Description
             </FormLabel>
             <FormControl>
-              <Textarea className="font-extralight dark:font-thin border border-input/40 tracking-wide resize-none"
+              <Textarea className="font-extralight dark:font-thin border border-input/20 tracking-wide resize-none"
                 minLength={8}
                 maxLength={128}
                 {...field}
@@ -77,12 +77,12 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
         render={({ field }) => (
           <FormItem className="space-y-0.5">
             <FormControl>
-              <ButtonGroup className="flex flex-wrap items-center justify-evenly gap-x-4 gap-y-1.5"
+              <ButtonGroup className="flex flex-wrap items-center justify-around gap-x-5 gap-y-2"
                 defaultValue={field.value}
                 onValueChange={field.onChange}
               >
                 {Object.values(tableSizePlaceholders).map(({ key, label, Icon }) => (
-                  <ButtonGroupItem className="w-full max-w-36 flex items-center gap-x-2 border border-border/25 rounded-2xl hover:bg-accent/40 dark:hover:bg-accent/40 data-[state=checked]:bg-accent/60"
+                  <ButtonGroupItem className="flex-1 min-w-32 flex items-center gap-x-2 border border-border/25 rounded-2xl hover:bg-accent/40 dark:hover:bg-accent/40 data-[state=checked]:bg-accent/60"
                     size="icon"
                     variant="ghost"
                     type="button"
