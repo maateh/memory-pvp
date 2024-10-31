@@ -1,21 +1,17 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 // icons
-import { CloudCog,  ImageMinus, Images, Loader2 } from "lucide-react"
+import { Edit3, ImageMinus, Loader2 } from "lucide-react"
 
 // shadcn
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
 
 // components
 import CollectionDeleteWarning from "./collection-delete-warning"
@@ -28,7 +24,6 @@ type CollectionActionsDropdownProps = {
 } & React.ComponentProps<typeof DropdownMenuTrigger>
 
 const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDropdownProps) => {
-  const router = useRouter()
   const [showDeleteWarning, setShowDeleteWarning] = useState<boolean>(false)
 
   const { deleteCollection } = useDeleteCollectionMutation()
@@ -39,29 +34,12 @@ const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDr
         <DropdownMenuTrigger {...props} asChild />
 
         <DropdownMenuContent>
-          <DropdownMenuLabel className="flex items-center justify-between gap-x-8">
-            <div className="flex items-center gap-x-2">
-              <Separator className="h-4 w-1 rounded-full bg-border/50"
-                orientation="vertical"
-              />
-
-              <p className="pt-0.5 text-base font-normal font-heading tracking-wider">
-                Manage collection
-              </p>
-            </div>
-
-            <CloudCog className="size-4" strokeWidth={1.5} />
-          </DropdownMenuLabel>
-
-          <DropdownMenuSeparator />
-
           <DropdownMenuItem
             variant="muted"
-            // TODO: open dialog rendered on server using parallel routes
-            onClick={() => router.push(`/collections/${collection.id}`)}
+            onClick={() => {}} // TODO: implement ui for editing
           >
-            <Images className="size-4" />
-            <span>Collection info</span>
+            <Edit3 className="size-4" />
+            <span>Edit</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem
@@ -74,12 +52,11 @@ const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDr
             ) : (
               <ImageMinus className="size-4" />
             )}
-            <span>Delete collection</span>
+            <span>Delete</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* TODO: create a page for this component and render on server (`/collections/[collectionId]/delete`) */}
       <CollectionDeleteWarning
         collection={collection}
         open={showDeleteWarning}

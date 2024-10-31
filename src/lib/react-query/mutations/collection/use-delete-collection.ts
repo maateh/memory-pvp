@@ -17,7 +17,7 @@ export const useDeleteCollectionMutation = () => {
   const router = useRouter()
 
   const deleteCollection = api.collection.delete.useMutation({
-    onSuccess: async ({ name }) => {
+    onSuccess: ({ name }) => {
       toast.warning('Collection deleted!', {
         description: `Card collection with the following name has been deleted: ${name}`
       })

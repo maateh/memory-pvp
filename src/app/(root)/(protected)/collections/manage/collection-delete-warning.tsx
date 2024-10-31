@@ -16,6 +16,7 @@ import {
   WarningModal,
   WarningModalFooter
 } from "@/components/shared"
+import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
 
 // hooks
 import { useDeleteCollectionMutation } from "@/lib/react-query/mutations/collection"
@@ -34,10 +35,19 @@ const CollectionDeleteWarning = ({ collection, ...props }: CollectionDeleteWarni
       {...props}
     >
       <div className="grid gap-y-1.5 sm:gap-y-2">
-        <Images className="size-5 sm:size-7 mx-auto text-destructive" strokeWidth={2.25} />
-        <p className="mx-auto mt-1 text-xl sm:text-2xl font-heading font-semibold tracking-wider">
+        <p className="mx-auto mt-1 text-xl sm:text-2xl font-heading font-semibold tracking-wide">
           {collection.name}
         </p>
+
+        <CollectionPreviewDenseList>
+          {collection.cards.map((card) => (
+            <CollectionPreviewDenseItem
+              imageUrl={card.imageUrl}
+              imageSize={36}
+              key={card.id}
+            />
+          ))}
+        </CollectionPreviewDenseList>
       </div>
 
       <Separator className="w-1/5 mx-auto bg-border/15" />

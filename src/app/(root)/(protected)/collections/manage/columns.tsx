@@ -8,6 +8,7 @@ import { EllipsisVertical } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
 import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
@@ -15,8 +16,17 @@ import CollectionActionsDropdown from "./collection-actions-dropdown"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
   {
+    id: "Name",
     accessorKey: "name",
-    header: "Name",
+    enableHiding: false,
+    header() {
+      return (
+        <DataTableColumnSortingHeader
+          header="Name"
+          sortValueKey="name"
+        />
+      )
+    },
     cell({ getValue }) {
       const name = getValue() as ClientCardCollection['name']
 
@@ -28,8 +38,10 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
   },
   {
+    id: "Description",
     accessorKey: "description",
     header: "Description",
+    enableHiding: true,
     cell({ getValue }) {
       const description = getValue() as ClientCardCollection['description']
 
@@ -41,10 +53,13 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
   },
   {
+    id: "Cards",
     accessorKey: "cards",
     header: "Card images",
+    enableHiding: true,
     cell({ getValue }) {
       const cards = getValue() as ClientCardCollection['cards']
+
       return (
         <CollectionPreviewDenseList className="pl-1.5 justify-start">
           {cards.map((card) => (
@@ -59,8 +74,17 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     }
   },
   {
+    id: "Created at",
     accessorKey: "createdAt",
-    header: "Created at",
+    enableHiding: true,
+    header() {
+      return (
+        <DataTableColumnSortingHeader
+          header="Created at"
+          sortValueKey="createdAt"
+        />
+      )
+    },
     cell({ getValue }) {
       const date = getValue() as ClientCardCollection['createdAt']
       const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
@@ -69,7 +93,11 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
   },
   {
-    id: "actions",
+    id: "Actions",
+    enableHiding: false,
+    header({ table }) {
+      return <DataTableColumnToggle table={table} />
+    },
     cell({ row }) {
       const collection = row.original
 
