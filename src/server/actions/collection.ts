@@ -13,10 +13,14 @@ import { signedIn } from "@/server/actions/signed-in"
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
 /**
- * TODO: write doc
+ * Retrieves a list of card collections based on the specified filter and sorting options.
  * 
- * @param input 
- * @returns 
+ * - Parses and applies filter criteria from `input.filter`.
+ * - Sorts the results according to the specified `sort` parameter.
+ * - Excludes collections created by the signed-in user if `includeUser` is `false`.
+ * 
+ * @param {z.infer<typeof getCollectionsSchema>} input - The input object containing filter, sort, and user inclusion options.
+ * @returns {Promise<ClientCardCollection[]>} - A list of card collections matching the filter and sorting criteria.
  */
 export async function getCollections(
   input: z.infer<typeof getCollectionsSchema>
@@ -42,13 +46,14 @@ export async function getCollections(
 }
 
 /**
- * Retrieves a list of card collections for the signed-in user and parses them into `ClientCardCollection` instances.
+ * Retrieves a list of card collections for the signed-in user, sorted as specified and parsed into `ClientCardCollection` instances.
  * 
- * - Fetches collections from the database where the `userId` matches the signed-in user's ID.
+ * - Fetches collections from the database for the signed-in user.
  * - Returns an empty array if no user is signed in.
- * - Orders the collections by creation date in descending order.
- * - Includes the user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
+ * - Orders collections by the specified `sort` criteria or by creation date in descending order if no sort criteria are provided.
+ * - Includes user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
  * 
+ * @param {z.infer<typeof collectionSortSchema>} [sort={}] - The sorting criteria for ordering collections.
  * @returns {Promise<ClientCardCollection[]>} - An array of parsed collections, or an empty array if no user is signed in.
  */
 export async function getUserCollections(
