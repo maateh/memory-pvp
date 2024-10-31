@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 
 // components
-import { CollectionWidgetCard } from "@/components/collection"
+import { CollectionCard } from "@/components/collection"
 import SessionInfoSelect from "./session-info-select"
 
 type SessionFormFieldsProps = {
@@ -111,7 +111,7 @@ const SessionFormFields = ({ form, randomCollection }: SessionFormFieldsProps) =
       />
 
       <FormField
-        name="tableSize"
+        name="collectionId"
         control={form.control}
         render={({ field }) => (
           <FormItem className="w-full max-w-2xl m-auto lg:w-2/5">
@@ -136,10 +136,10 @@ const SessionFormFields = ({ form, randomCollection }: SessionFormFieldsProps) =
             </div>
             
             {randomCollection && (
-              <CollectionWidgetCard className="w-full bg-background/50"
+              <CollectionCard className="h-fit w-full bg-background/50"
                 collection={randomCollection}
-                imageSize={38}
-                previewImageSize={26}
+                imageSize={26}
+                withoutGameLink
               />
             )}
           </FormItem>

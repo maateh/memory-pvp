@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
-import { CollectionWidgetList } from "@/components/collection/widget"
+import { CollectionCard } from "@/components/collection"
 
 type CollectionExplorerProps = {
   params: CollectionFilter & CollectionSort
@@ -38,21 +38,28 @@ const CollectionExplorer = async ({ params }: CollectionExplorerProps) => {
   }
 
   return (
-    <CollectionWidgetList
-      collections={collections}
-    />
+    <ul className="grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3">
+      {collections.map((collection) => (
+        <li key={collection.id}>
+          <CollectionCard
+            collection={collection}
+            key={collection.id}
+          />
+        </li>
+      ))}
+    </ul>
   )
 }
 
 const CollectionExplorerSkeleton = () => {
   return (
-    <CollectionWidgetList>
+    <ul className="grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3">
       {Array(6).fill('').map((_, index) => (
         <li key={index}>
           <Skeleton className="h-32 bg-primary/80 rounded-2xl" />
         </li>
       ))}
-    </CollectionWidgetList>
+    </ul>
   )
 }
 
