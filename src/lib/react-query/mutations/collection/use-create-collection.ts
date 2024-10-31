@@ -30,7 +30,7 @@ export const useCreateCollectionMutation = ({ onAfterSuccess }: UseCreateCollect
       })
 
       onAfterSuccess?.()
-      router.back()
+      router.refresh()
     },
     onError: (err) => {
       handleApiError(err.shape?.cause, 'Failed to create card collection. Please try again later.')
