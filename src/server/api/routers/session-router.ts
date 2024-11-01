@@ -36,6 +36,9 @@ import {
 } from "@/lib/helpers/session"
 import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
 
+// utils
+import { parseSortToOrderBy } from "@/lib/utils"
+
 // constants
 import { SESSION_STORE_TTL } from "@/lib/redis"
 import { offlinePlayerMetadata } from "@/constants/player"
@@ -53,7 +56,7 @@ export const sessionRouter = createTRPCRouter({
 
       const sessions = await ctx.db.gameSession.findMany({
         where: filter,
-        orderBy: input.sort,
+        orderBy: parseSortToOrderBy(input.sort),
         include: getSessionSchemaIncludeFields()
       })
 

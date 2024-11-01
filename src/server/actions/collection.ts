@@ -12,6 +12,9 @@ import { signedIn } from "@/server/actions/signed-in"
 // helpers
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
+// utils
+import { parseSortToOrderBy } from "@/lib/utils"
+
 /**
  * Retrieves a list of card collections based on the specified filter and sorting options.
  * 
@@ -35,7 +38,9 @@ export async function getCollections(
 
   const collections = await db.cardCollection.findMany({
     where: filter,
-    orderBy: sort,
+    orderBy: parseSortToOrderBy(sort) || {
+      createdAt: 'desc'
+    },
     include: {
       user: true,
       cards: true
@@ -66,7 +71,7 @@ export async function getUserCollections(
     where: {
       userId: user.id
     },
-    orderBy: Object.keys(sort).length > 0 ? sort : {
+    orderBy: parseSortToOrderBy(sort) || {
       createdAt: 'desc'
     },
     include: {

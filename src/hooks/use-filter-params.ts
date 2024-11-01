@@ -138,37 +138,30 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
      */
     toggleSortParam(value: keyof T) {
       const params = new URLSearchParams(searchParams.toString())
-      const currentAscParams = params.getAll('asc')
-      const currentDescParams = params.getAll('desc')
-  
+      const sortAscParam = params.get('asc')
+      const sortDescParam = params.get('desc')
+
+      params.delete('desc')
+      params.delete('asc')
+
       let currentSortKey: SortKey | undefined
-  
-      if (currentAscParams.includes(value.toString())) {
+
+      if (sortAscParam === value.toString()) {
         currentSortKey = 'asc'
-      } else if (currentDescParams.includes(value.toString())) {
+      } else if (sortDescParam === value.toString()) {
         currentSortKey = 'desc'
       }
-  
+
       if (!currentSortKey) {
-        params.append('desc', value.toString())
+        params.set('desc', value.toString())
       }
-      
+
       if (currentSortKey === 'desc') {
-        params.append('asc', value.toString())
-  
-        params.delete('desc')
-        currentDescParams.filter((param) => param !== value.toString())
-          .map((value) => params.append('desc', value))
+        params.set('asc', value.toString())
       }
-  
-      if (currentSortKey === 'asc') {
-        params.delete('asc')
-        currentAscParams.filter((param) => param !== value.toString())
-          .map((value) => params.append('asc', value))
-      }
-  
+
       const query = params.toString()
       router.replace(pathname + '?' + query)
-    },
+    }
   }
 }

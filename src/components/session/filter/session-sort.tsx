@@ -30,7 +30,6 @@ const SessionSort = ({ filterKey }: SessionSortProps) => {
       const sort = state[filterKey].sort
 
       state[filterKey].sort = {
-        ...sort,
         startedAt: sort.startedAt === 'asc' ? 'desc' : 'asc'
       }
 

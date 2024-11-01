@@ -6,7 +6,7 @@ import { toast } from "sonner"
 // types
 import type { UploadThingError } from "uploadthing/server"
 import type { TRPCApiError } from "@/trpc/error"
-import type { Filter, Sort } from "@/hooks/store/use-filter-store"
+import type { Filter, Sort, SortKey } from "@/hooks/store/use-filter-store"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -54,24 +54,50 @@ export function parseFilterParams<T extends { [key in keyof T]: string | number 
   params: URLSearchParams
 ): ParseFilterParamsReturn<T> {
   const keys = Array.from(params.keys())
+  
+  const sortAscValue = params.get('asc')
+  const sortDescValue = params.get('desc')
 
-  const sortAsc = params.getAll('asc').reduce((sortAsc, value) => ({
-    ...sortAsc,
-    [value]: 'asc'
-  }), {} as Sort<T>)
+  params.delete('asc')
+  params.delete('desc')
+
+  let sort: Sort<T> = {}
+
+  if (sortAscValue) {
+    sort = { [sortAscValue]: 'asc' } as Sort<T>
+  } else if (sortDescValue) {
+    sort = { [sortDescValue]: 'desc' } as Sort<T>
+  }
 
   return {
-    filter: keys.filter((key) => !key.includes('asc') || !key.includes('desc'))
+    filter: keys.filter((key) => key !== 'asc' && key !== 'desc')
       .reduce((filter, key) => ({
         ...filter,
         [key]: params.get(key)
       }), {} as Filter<T>),
-
-    sort: params.getAll('desc').reduce((sort, value) => ({
-      ...sort,
-      [value]: 'desc'
-    }), sortAsc)
+    sort
   }
+}
+
+/**
+ * Converts a `sort` object into a single-field `orderBy` object for Prisma queries.
+ *
+ * This function returns the first defined sorting field in `{ field: direction }` format,
+ * or `undefined` if no sorting fields are provided.
+ * 
+ * @param sort - An object with sorting options, where each key is a field name 
+ *               and the value is "asc" or "desc".
+ * @returns An object with one sorting field for Prisma's `orderBy`, or `undefined`.
+ */
+export function parseSortToOrderBy<T extends { [K in keyof T]: SortKey }>(
+  sort: Partial<T>
+): Partial<T> | undefined {
+  const entries = Object.entries(sort)
+
+  if (entries.length === 0) return undefined
+
+  const [valueKey, sortKey] = entries[0]
+  return { [valueKey]: sortKey } as Partial<T>
 }
 
 /**

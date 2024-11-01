@@ -4,6 +4,9 @@ import type { CollectionSort as TCollectionSort } from "@/components/collection/
 // actions
 import { getUserCollections } from "@/server/actions/collection"
 
+// utils
+import { parseFilterParams } from "@/lib/utils"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
@@ -11,7 +14,6 @@ import { Separator } from "@/components/ui/separator"
 import { LayoutCard } from "@/components/shared"
 import { CollectionForm } from "@/components/collection/form"
 import CollectionsManageTable from "./collections-manage-table"
-import { parseFilterParams } from "@/lib/utils"
 
 type CollectionsManagePageProps = {
   searchParams: TCollectionSort

@@ -2,7 +2,7 @@
 
 // types
 import type { CardCollection } from "@prisma/client"
-import type { Sort, SortKey } from "@/hooks/store/use-filter-store"
+import type { Sort } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
