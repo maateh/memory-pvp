@@ -42,7 +42,7 @@ const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
 }))
 
 export const useFilterStore = <T extends Filter<T>>(
-  selector: (state: FilterStore<T>) => FilterStore<T>[FilterMapKeys]['filter' | 'sort']
+  selector: (state: FilterStore<T>) => FilterStore<T>[FilterMapKeys]
 ) => useFilterStoreImpl(selector)
 
 export const setFilterStore = useFilterStoreImpl.setState as <T extends Filter<T>>(

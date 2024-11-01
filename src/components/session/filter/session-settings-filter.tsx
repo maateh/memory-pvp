@@ -31,7 +31,7 @@ type SessionSettingsFilterProps = {
 }
 
 const SessionSettingsFilter = ({ filterKey }: SessionSettingsFilterProps) => {
-  const filter = useFilterStore<SettingsFilter>((state) => state[filterKey].filter)
+  const { filter } = useFilterStore<SettingsFilter>((state) => state[filterKey])
 
   const handleSelectType = (type: GameType) => {
     setFilterStore<SettingsFilter>((state) => {

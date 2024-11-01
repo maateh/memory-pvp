@@ -25,7 +25,7 @@ type SessionStatusFilterProps = {
 }
 
 const SessionStatusFilter = ({ filterKey }: SessionStatusFilterProps) => {
-  const filter = useFilterStore<StatusFilter>((state) => state[filterKey].filter)
+  const { filter } = useFilterStore<StatusFilter>((state) => state[filterKey])
 
   const handleSelectStatus = (status: GameStatus) => {
     setFilterStore<StatusFilter>((state) => {
