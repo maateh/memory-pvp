@@ -1,12 +1,5 @@
-// types
-import type { CollectionFilter } from "@/components/collection/filter/collection-filter"
-import type { CollectionSort } from "@/components/collection/filter/collection-sort"
-
-// server
-import { getCollections } from "@/server/actions/collection"
-
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"
@@ -16,17 +9,11 @@ import { CardItem, Warning } from "@/components/shared"
 import { CollectionCard } from "@/components/collection"
 
 type CollectionExplorerProps = {
-  params: CollectionFilter & CollectionSort
-}
+  collections: ClientCardCollection[]
+  cardProps?: Omit<React.ComponentProps<typeof CollectionCard>, 'collection'>
+} & React.ComponentProps<"ul">
 
-const CollectionExplorer = async ({ params }: CollectionExplorerProps) => {
-  const searchParams = new URLSearchParams(params)
-
-  const collections = await getCollections({
-    ...parseFilterParams<typeof params>(searchParams),
-    includeUser: true
-  })
-
+const CollectionExplorer = ({ collections, cardProps, className, ...props }: CollectionExplorerProps) => {
   if (collections.length === 0) {
     return (
       <CardItem className="py-3.5 justify-center">
@@ -38,10 +25,10 @@ const CollectionExplorer = async ({ params }: CollectionExplorerProps) => {
   }
 
   return (
-    <ul className="grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3">
+    <ul className={cn("grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3", className)} {...props}>
       {collections.map((collection) => (
         <li key={collection.id}>
-          <CollectionCard
+          <CollectionCard {...cardProps}
             collection={collection}
             key={collection.id}
           />
@@ -51,12 +38,18 @@ const CollectionExplorer = async ({ params }: CollectionExplorerProps) => {
   )
 }
 
-const CollectionExplorerSkeleton = () => {
+type CollectionExplorerSkeletonProps = {
+  skeletonProps?: React.ComponentProps<typeof Skeleton>
+} & React.ComponentProps<"ul">
+
+const CollectionExplorerSkeleton = ({ skeletonProps, className, ...props }: CollectionExplorerSkeletonProps) => {
   return (
-    <ul className="grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3">
+    <ul className={cn("grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3", className)} {...props}>
       {Array(6).fill('').map((_, index) => (
         <li key={index}>
-          <Skeleton className="h-32 bg-primary/80 rounded-2xl" />
+          <Skeleton {...skeletonProps}
+            className={cn("h-32 bg-primary/80 rounded-2xl", skeletonProps?.className)}
+          />
         </li>
       ))}
     </ul>

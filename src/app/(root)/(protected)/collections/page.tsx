@@ -5,8 +5,11 @@ import { Suspense } from "react"
 import type { CollectionFilter as TCollectionFilter } from "@/components/collection/filter/collection-filter"
 import type { CollectionSort as TCollectionSort } from "@/components/collection/filter/collection-sort"
 
+// server
+import { getCollections } from "@/server/actions/collection"
+
 // utils
-import { cn } from "@/lib/utils"
+import { cn, parseFilterParams } from "@/lib/utils"
 
 // icons
 import { ImageUp } from "lucide-react"
@@ -16,14 +19,21 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection"
 import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
-import { CollectionExplorer, CollectionExplorerSkeleton } from "./collection-explorer"
 
 type CollectionsPageProps = {
   searchParams: TCollectionFilter & TCollectionSort
 }
 
-const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
+const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
+  const params = new URLSearchParams(searchParams)
+
+  const collections = await getCollections({
+    ...parseFilterParams<typeof searchParams>(params),
+    includeUser: true
+  })
+
   return (
     <>
       <div className="flex flex-wrap-reverse justify-between items-end gap-x-16 gap-y-4">
@@ -60,7 +70,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
       <Suspense fallback={<CollectionExplorerSkeleton />}>
-        <CollectionExplorer params={searchParams} />
+        <CollectionExplorer collections={collections} />
       </Suspense>
     </>
   )
