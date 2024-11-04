@@ -7,7 +7,7 @@ import { api } from "@/trpc/client"
 // types
 import type { UseFormReturn } from "react-hook-form"
 import type { SessionFormValues } from "@/components/session/form/session-form"
-import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/warning/session-warning-modal"
+import type { SessionRunningWarningActions } from "@/app/game/(base)/setup/@warning/(.)warning/session-warning-modal"
 
 // utils
 import { logError, handleApiError } from "@/lib/utils"
