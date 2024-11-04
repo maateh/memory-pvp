@@ -50,10 +50,9 @@ const CollectionCard = ({
             </CardTitle>
           </div>
 
-          {/* TODO: handle this on the setup form */}
           {!withoutGameLink && (
             <Link className={cn(buttonVariants({
-              className: "expandable text-muted-foreground bg-muted hover:bg-muted/90 dark:hover:bg-muted/90 hover:text-foreground/70",
+              className: "expandable text-muted-foreground bg-muted hover:bg-muted/90 dark:hover:bg-muted/90 transition duration-300 hover:text-foreground/70 hover:scale-110",
               variant: "ghost",
               size: "icon"
             }))}

@@ -2,9 +2,13 @@
 import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
+import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
 import { getPlayers } from "@/server/actions/player"
 import { getRandomCollection } from "@/server/actions/collection"
+
+// helpers
+import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -18,6 +22,7 @@ type BaseGameSetupPageProps = {
     type: GameType
     mode: GameMode
     tableSize: TableSize
+    collection: string
   }>
 }
 
@@ -25,7 +30,22 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
   const players = await getPlayers(true)
 
-  const randomCollection = await getRandomCollection(searchParams.tableSize)
+  let clientCollection: ClientCardCollection | null = null
+  if (searchParams.collection) {
+    const collection = await db.cardCollection.findUnique({
+      where: {
+        id: searchParams.collection
+      },
+      include: {
+        user: true,
+        cards: true
+      }
+    })
+
+    clientCollection = collection ? parseSchemaToClientCollection(collection) : null
+  } else {
+    clientCollection = await getRandomCollection(searchParams.tableSize)
+  }
 
   return (
     <>
@@ -48,8 +68,8 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
 
       <main className="flex-1 flex flex-col">
         <SessionForm
-          defaultValues={{ ...searchParams, collectionId: randomCollection?.id }}
-          randomCollection={randomCollection}
+          defaultValues={{ ...searchParams, collectionId: clientCollection?.id }}
+          randomCollection={clientCollection}
         />
       </main>
     </>
