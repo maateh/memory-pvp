@@ -54,6 +54,21 @@ export function parseFilterParams<T extends { [key in keyof T]: string | number 
   params: URLSearchParams
 ): ParseFilterParamsReturn<T> {
   const keys = Array.from(params.keys())
+
+  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc')
+  .reduce((filter, key) => {
+    let value: string | boolean | null = params.get(key)
+
+    /** Parses `true` and `false` string values to boolean */
+    if (value === 'true' || value === 'false') {
+      value = value === 'true'
+    }
+
+    return {
+      ...filter,
+      [key]: value
+    }
+  }, {} as Filter<T>)
   
   const sortAscValue = params.get('asc')
   const sortDescValue = params.get('desc')
@@ -70,11 +85,7 @@ export function parseFilterParams<T extends { [key in keyof T]: string | number 
   }
 
   return {
-    filter: keys.filter((key) => key !== 'asc' && key !== 'desc')
-      .reduce((filter, key) => ({
-        ...filter,
-        [key]: params.get(key)
-      }), {} as Filter<T>),
+    filter,
     sort
   }
 }
