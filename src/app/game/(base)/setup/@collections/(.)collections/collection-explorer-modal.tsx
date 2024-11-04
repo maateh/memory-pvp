@@ -7,17 +7,16 @@ import { CollectionExplorer } from "@/components/collection"
 import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
 import { WidgetModal } from "@/components/widgets"
 
-type CollectionsExplorerModalProps = {
+type CollectionExplorerModalProps = {
   collections: ClientCardCollection[]
 }
 
-const CollectionsExplorerModal = ({ collections }: CollectionsExplorerModalProps) => {
+const CollectionExplorerModal = ({ collections }: CollectionExplorerModalProps) => {
   return (
     <WidgetModal
       widgetKey="_"
       title="Browse collections"
       description="Browse the following card collections and choose the one you would like to play with."
-
     >
       <div className="space-y-0.5">
         <div className="flex items-center gap-x-2">
@@ -46,4 +45,4 @@ const CollectionsExplorerModal = ({ collections }: CollectionsExplorerModalProps
   )
 }
 
-export default CollectionsExplorerModal
+export default CollectionExplorerModal

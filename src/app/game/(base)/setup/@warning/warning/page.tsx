@@ -1,38 +1,5 @@
-import dynamic from "next/dynamic"
+import { redirect } from "next/navigation"
 
-// trpc
-import { api } from "@/trpc/server"
+const SessionRunningWarningRedirect = () => redirect('/game/setup')
 
-// utils
-import { logError } from "@/lib/utils"
-
-// components
-const SessionRunningWarningModal = dynamic(() => import("./session-warning-modal"), { ssr: false })
-
-type SessionRunningWarningPageProps = {
-  searchParams?: {
-    slug?: string
-  }
-}
-
-const SessionRunningWarningPage = async ({ searchParams }: SessionRunningWarningPageProps) => { 
-  const isOffline = searchParams?.slug === 'offline'
-
-  try {
-    let clientSession: ClientGameSession | null = null
-    if (!isOffline) {
-      clientSession = await api.session.getActive()
-    }
-  
-    return (
-      <SessionRunningWarningModal
-        session={clientSession}
-        isOffline={isOffline}
-      />
-    )
-  } catch (err) {
-    logError(err)
-  }
-}
-
-export default SessionRunningWarningPage
+export default SessionRunningWarningRedirect
