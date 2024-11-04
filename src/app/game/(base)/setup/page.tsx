@@ -69,7 +69,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
       <main className="flex-1 flex flex-col">
         <SessionForm
           defaultValues={{ ...searchParams, collectionId: clientCollection?.id }}
-          randomCollection={clientCollection}
+          collection={clientCollection}
         />
       </main>
     </>
