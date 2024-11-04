@@ -91,6 +91,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
             size: "icon"
           }))}
             href="/game/setup/collections"
+            scroll={false}
           >
             <div>
               <span className="font-normal dark:font-light">

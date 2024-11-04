@@ -89,7 +89,7 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
      */
     addFilterParam(key: keyof T, value: string) {
       const query = createQueryString(key, value)
-      router.replace(pathname + '?' + query)
+      router.replace(pathname + '?' + query, { scroll: false })
     },
 
     /** 
@@ -106,7 +106,7 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
         ? removeQueryString(key)
         : createQueryString(key, value)
 
-      router.replace(pathname + '?' + query)
+      router.replace(pathname + '?' + query, { scroll: false })
     },
 
     /** 
@@ -116,7 +116,7 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
      */
     removeFilterParam(key: keyof T | SortKey) {
       const query = removeQueryString(key)
-      router.replace(pathname + '?' + query)
+      router.replace(pathname + '?' + query, { scroll: false })
     },
 
     /** 
@@ -124,7 +124,7 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
      */
     clearFilterParams() {
       searchParams.keys().map((key) => removeQueryString(key as keyof T | SortKey))
-      router.replace(pathname)
+      router.replace(pathname, { scroll: false })
     },
 
     /** 
@@ -161,7 +161,7 @@ export function useFilterParams<T extends { [key in keyof T]: string | number | 
       }
 
       const query = params.toString()
-      router.replace(pathname + '?' + query)
+      router.replace(pathname + '?' + query, { scroll: false })
     }
   }
 }
