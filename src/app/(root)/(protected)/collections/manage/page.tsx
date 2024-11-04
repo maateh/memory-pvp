@@ -1,5 +1,5 @@
 // types
-import type { CollectionSort as TCollectionSort } from "@/components/collection/filter/collection-sort"
+import type { CollectionSort } from "@/components/collection/filter/types"
 
 // actions
 import { getUserCollections } from "@/server/actions/collection"
@@ -16,7 +16,7 @@ import { CollectionForm } from "@/components/collection/form"
 import CollectionsManageTable from "./collections-manage-table"
 
 type CollectionsManagePageProps = {
-  searchParams: TCollectionSort
+  searchParams: CollectionSort
 }
 
 const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProps) => {

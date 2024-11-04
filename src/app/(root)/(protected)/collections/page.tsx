@@ -2,8 +2,10 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import type { CollectionFilter as TCollectionFilter } from "@/components/collection/filter/collection-filter"
-import type { CollectionSort as TCollectionSort } from "@/components/collection/filter/collection-sort"
+import type {
+  CollectionFilter as TCollectionFilter,
+  CollectionSort as TCollectionSort
+} from "@/components/collection/filter/types"
 
 // server
 import { getCollections } from "@/server/actions/collection"
@@ -20,35 +22,36 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection"
-import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
+import {
+  CollectionNameFilter,
+  CollectionSizeFilter,
+  CollectionSort,
+  CollectionUserToggleFilter
+} from "@/components/collection/filter"
 
 type CollectionsPageProps = {
   searchParams: TCollectionFilter & TCollectionSort
 }
 
 const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
-  const params = new URLSearchParams(searchParams)
+  const params = new URLSearchParams(searchParams as {})
+  const { filter, sort } = parseFilterParams<typeof searchParams>(params)
 
-  const collections = await getCollections({
-    ...parseFilterParams<typeof searchParams>(params),
-    includeUser: true
-  })
+  const includeUser = !!filter.includeUser
+  delete filter.includeUser
+
+  const collections = await getCollections({ filter, sort, includeUser })
 
   return (
     <>
       <div className="flex flex-wrap-reverse justify-between items-end gap-x-16 gap-y-4">
-        <div className="space-y-0.5">
-          <div className="flex items-center gap-x-2">
-            <Separator className="w-1.5 h-5 bg-accent rounded-full" />
-
-            <h3 className="mt-1 text-base font-heading font-normal sm:text-lg">
-              Filter collections by
-            </h3>
-          </div>
+        <div className="space-y-2">
+          <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
             <CollectionSort />
-            <CollectionFilter />
+            <CollectionSizeFilter />
+            <CollectionUserToggleFilter />
           </div>
         </div>
 

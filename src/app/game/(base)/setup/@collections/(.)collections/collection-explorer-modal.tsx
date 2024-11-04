@@ -4,7 +4,12 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { CollectionExplorer } from "@/components/collection"
-import { CollectionFilter, CollectionSort } from "@/components/collection/filter"
+import {
+  CollectionNameFilter,
+  CollectionSizeFilter,
+  CollectionSort,
+  CollectionUserToggleFilter
+} from "@/components/collection/filter"
 import { WidgetModal } from "@/components/widgets"
 
 type CollectionExplorerModalProps = {
@@ -18,18 +23,13 @@ const CollectionExplorerModal = ({ collections }: CollectionExplorerModalProps) 
       title="Browse collections"
       description="Browse the following card collections and choose the one you would like to play with."
     >
-      <div className="space-y-0.5">
-        <div className="flex items-center gap-x-2">
-          <Separator className="w-1.5 h-5 bg-accent rounded-full" />
-
-          <h3 className="mt-1 text-base font-heading font-normal sm:text-lg">
-            Filter collections by
-          </h3>
-        </div>
+      <div className="max-w-xs space-y-2">
+        <CollectionNameFilter />
 
         <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
           <CollectionSort />
-          <CollectionFilter />
+          <CollectionSizeFilter />
+          <CollectionUserToggleFilter includeByDefault />
         </div>
       </div>
 

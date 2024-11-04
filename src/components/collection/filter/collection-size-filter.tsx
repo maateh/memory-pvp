@@ -1,11 +1,14 @@
 "use client"
 
 // types
-import type { CardCollection, TableSize } from "@prisma/client"
-import type { Filter, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { CollectionFilter, CollectionFilterFields } from "./types"
+import type { FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { tableSizePlaceholders } from "@/constants/game"
+
+// utils
+import { cn } from "@/lib/utils"
 
 // shadcn
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
@@ -13,24 +16,16 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-type CollectionFilterFields = Pick<CardCollection, 'tableSize' | 'name'>
-
-type TCollectionFilter = Filter<CollectionFilterFields>
-
-const options: FilterOptions<CollectionFilterFields> = {
-  name: [''],
+const options: FilterOptions<Pick<CollectionFilterFields, 'tableSize'>> = {
   tableSize: ['SMALL', 'MEDIUM', 'LARGE']
 }
 
-const CollectionFilter = () => {
-  const { filter, toggleFilterParam } = useFilterParams<TCollectionFilter>()
-
-  // TODO: add search filter input
-  // TODO: add exclude or include user toggle button
+const CollectionSizeFilter = ({ className, ...props }: React.ComponentProps<typeof BreadcrumbList>) => {
+  const { filter, toggleFilterParam } = useFilterParams<CollectionFilter>()
 
   return (
     <Breadcrumb>
-      <BreadcrumbList className="sm:gap-y-1 sm:gap-x-1.5">
+      <BreadcrumbList className={cn("sm:gap-y-1 sm:gap-x-1.5", className)} {...props}>
         <BreadcrumbItemGroup>
           {options.tableSize.map((tableSize) => (
             <BreadcrumbButton
@@ -47,5 +42,4 @@ const CollectionFilter = () => {
   )
 }
 
-export default CollectionFilter
-export type { TCollectionFilter as CollectionFilter }
+export default CollectionSizeFilter

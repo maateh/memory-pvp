@@ -1,8 +1,7 @@
 "use client"
 
 // types
-import type { CardCollection } from "@prisma/client"
-import type { Sort } from "@/hooks/store/use-filter-store"
+import type { CollectionSort as TCollectionSort } from "./types"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -16,12 +15,10 @@ import { ButtonTooltip } from "@/components/ui/button"
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-type CollectionSortFields = Pick<CardCollection, 'createdAt'>
-
-type TCollectionSort = Sort<CollectionSortFields>
-
 const CollectionSort = () => {
   const { sort, toggleSortParam } = useFilterParams<TCollectionSort>()
+
+  // TODO: add other sort options, make it with a dropdown
 
   return (
     <ButtonTooltip className="p-1.5 hover:bg-transparent/10 dark:hover:bg-transparent/30 border border-border/20"
@@ -60,4 +57,3 @@ const CollectionSort = () => {
 }
 
 export default CollectionSort
-export type { TCollectionSort as CollectionSort }
