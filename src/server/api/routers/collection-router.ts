@@ -6,9 +6,6 @@ import {
   protectedProcedure
 } from "@/server/api/trpc"
 
-// server
-import { getCollections } from "@/server/actions/collection"
-
 // uploadthing
 import { utapi } from "@/server/uploadthing"
 
