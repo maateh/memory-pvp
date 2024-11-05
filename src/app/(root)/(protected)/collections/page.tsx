@@ -7,6 +7,9 @@ import type {
   CollectionSort as TCollectionSort
 } from "@/components/collection/filter/types"
 
+// constants
+import { collectionSortOptions } from "@/components/collection/filter/constants"
+
 // utils
 import { cn, parseFilterParams } from "@/lib/utils"
 
@@ -22,9 +25,9 @@ import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/col
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
-  CollectionSort,
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
+import { SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
   searchParams: TCollectionFilter & TCollectionSort
@@ -44,7 +47,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <CollectionSort />
+            <SortDropdownButton options={collectionSortOptions} />
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />
           </div>

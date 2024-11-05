@@ -1,5 +1,8 @@
 import { Suspense } from "react"
 
+// constants
+import { collectionSortOptions } from "@/components/collection/filter/constants"
+
 // shadcn
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
@@ -9,9 +12,9 @@ import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/col
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
-  CollectionSort,
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
+import { SortDropdownButton } from "@/components/shared"
 import { WidgetModal } from "@/components/widgets"
 
 type CollectionExplorerModalProps = Pick<
@@ -30,7 +33,7 @@ const CollectionExplorerModal = ({ filter, sort, includeUser }: CollectionExplor
         <CollectionNameFilter />
 
         <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-          <CollectionSort />
+          <SortDropdownButton options={collectionSortOptions} />
           <CollectionSizeFilter />
           <CollectionUserToggleFilter includeByDefault />
         </div>
