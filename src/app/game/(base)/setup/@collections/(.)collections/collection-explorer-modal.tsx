@@ -1,9 +1,11 @@
+import { Suspense } from "react"
+
 // shadcn
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionExplorer } from "@/components/collection"
+import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection"
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
@@ -12,11 +14,12 @@ import {
 } from "@/components/collection/filter"
 import { WidgetModal } from "@/components/widgets"
 
-type CollectionExplorerModalProps = {
-  collections: ClientCardCollection[]
-}
+type CollectionExplorerModalProps = Pick<
+  React.ComponentProps<typeof CollectionExplorer>,
+  'filter' | 'sort' | 'includeUser'
+>
 
-const CollectionExplorerModal = ({ collections }: CollectionExplorerModalProps) => {
+const CollectionExplorerModal = ({ filter, sort, includeUser }: CollectionExplorerModalProps) => {
   return (
     <WidgetModal
       widgetKey="_"
@@ -36,10 +39,14 @@ const CollectionExplorerModal = ({ collections }: CollectionExplorerModalProps) 
       <Separator className="w-11/12 mx-auto bg-border/10" />
 
       <ScrollArea className="max-h-96 pr-3">
-        <CollectionExplorer className="flex flex-col gap-y-5"
-          cardProps={{ imageSize: 36 }}
-          collections={collections}
-        />
+        <Suspense fallback={<CollectionExplorerSkeleton className="flex flex-col gap-y-5" />}>
+          <CollectionExplorer className="flex flex-col gap-y-5"
+            cardProps={{ imageSize: 36 }}
+            filter={filter}
+            sort={sort}
+            includeUser={includeUser}
+          />
+        </Suspense>
       </ScrollArea>
     </WidgetModal>
   )

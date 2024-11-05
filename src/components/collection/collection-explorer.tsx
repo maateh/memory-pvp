@@ -1,3 +1,9 @@
+// types
+import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+
+// server
+import { getCollections } from "@/server/actions/collection"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -9,11 +15,20 @@ import { CardItem, Warning } from "@/components/shared"
 import { CollectionCard } from "@/components/collection"
 
 type CollectionExplorerProps = {
-  collections: ClientCardCollection[]
+  filter: CollectionFilter
+  sort: CollectionSort
+  includeUser: boolean | undefined
   cardProps?: Omit<React.ComponentProps<typeof CollectionCard>, 'collection'>
 } & React.ComponentProps<"ul">
 
-const CollectionExplorer = ({ collections, cardProps, className, ...props }: CollectionExplorerProps) => {
+const CollectionExplorer = async ({
+  filter, sort, includeUser,
+  cardProps,
+  className,
+  ...props
+}: CollectionExplorerProps) => {
+  const collections = await getCollections({ filter, sort, includeUser })
+
   if (collections.length === 0) {
     return (
       <CardItem className="py-3.5 justify-center">

@@ -4,9 +4,6 @@ import type {
   CollectionSort as TCollectionSort
 } from "@/components/collection/filter/types"
 
-// server
-import { getCollections } from "@/server/actions/collection"
-
 // utils
 import { parseFilterParams } from "@/lib/utils"
 
@@ -17,16 +14,20 @@ type CollectionExplorerModalPageProps = {
   searchParams: TCollectionFilter & TCollectionSort
 }
 
-const CollectionExplorerModalPage = async ({ searchParams }: CollectionExplorerModalPageProps) => {
+const CollectionExplorerModalPage = ({ searchParams }: CollectionExplorerModalPageProps) => {
   const params = new URLSearchParams(searchParams as {})
   const { filter, sort } = parseFilterParams<typeof searchParams>(params)
 
   const includeUser = filter.includeUser === undefined ? true : !!filter.includeUser
   delete filter.includeUser
 
-  const collections = await getCollections({ filter, sort, includeUser })
-
-  return <CollectionExplorerModal collections={collections} />
+  return (
+    <CollectionExplorerModal
+      filter={filter}
+      sort={sort}
+      includeUser={includeUser}
+    />
+  )
 }
 
 export default CollectionExplorerModalPage

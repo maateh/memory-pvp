@@ -7,9 +7,6 @@ import type {
   CollectionSort as TCollectionSort
 } from "@/components/collection/filter/types"
 
-// server
-import { getCollections } from "@/server/actions/collection"
-
 // utils
 import { cn, parseFilterParams } from "@/lib/utils"
 
@@ -33,14 +30,12 @@ type CollectionsPageProps = {
   searchParams: TCollectionFilter & TCollectionSort
 }
 
-const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
+const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
   const params = new URLSearchParams(searchParams as {})
   const { filter, sort } = parseFilterParams<typeof searchParams>(params)
 
   const includeUser = !!filter.includeUser
   delete filter.includeUser
-
-  const collections = await getCollections({ filter, sort, includeUser })
 
   return (
     <>
@@ -73,7 +68,11 @@ const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
       <Suspense fallback={<CollectionExplorerSkeleton />}>
-        <CollectionExplorer collections={collections} />
+        <CollectionExplorer
+          filter={filter}
+          sort={sort}
+          includeUser={includeUser}
+        />
       </Suspense>
     </>
   )
