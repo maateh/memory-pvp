@@ -7,13 +7,22 @@ export type FilterMapKeys = "statistics" | "rooms" | "history"
 export type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
 
 export type FilterOptions<T extends Pick<T, keyof T>> = {
-  [key in keyof T]: T[key][]
+  [K in keyof T]: T[K][]
 }
 
 /** Sort types */
 export type SortKey = "asc" | "desc"
 
 export type Sort<T> = Partial<{ [key in keyof T]: SortKey }>
+
+export type SortOption<T> = {
+  sortValueKey: keyof T
+  label: string
+}
+
+export type SortOptions<T> = {
+  [K in keyof T]: SortOption<T>
+}
 
 /** Store types */
 type FilterStore<T extends Filter<T>> = {
