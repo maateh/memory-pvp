@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 // types
 import { CollectionFilter } from "./types"
@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
 import { useDebounce } from "@/hooks/use-debounce"
+import { useFilterParams } from "@/hooks/use-filter-params"
 
 type CollectionNameFilterProps = {
   inputProps?: Omit<React.ComponentProps<typeof Input>, 'type' | 'placeholder' | 'value' | 'onChange'>
@@ -25,15 +25,17 @@ const CollectionNameFilter = ({ inputProps, className, ...props }: CollectionNam
   const { filter, toggleFilterParam, removeFilterParam } = useFilterParams<CollectionFilter>()
 
   const [collectionName, setCollectionName] = useState<string>(filter.name || "")
-  const debouncedValue = useDebounce({ value: collectionName })
 
-  useEffect(() => {
-    if (collectionName) {
-      toggleFilterParam("name", collectionName)
-    } else {
-      removeFilterParam("name")
+  useDebounce({
+    value: collectionName,
+    onDebounce(debouncedValue) {
+      if (debouncedValue) {
+        toggleFilterParam("name", debouncedValue)
+      } else {
+        removeFilterParam("name")
+      }        
     }
-  }, [collectionName, debouncedValue, toggleFilterParam, removeFilterParam])
+  })
 
   return (
     <Label className={cn("text-base", className)} {...props}>
