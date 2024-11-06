@@ -1,7 +1,7 @@
 // types
 import type { CollectionSort } from "@/components/collection/filter/types"
 
-// actions
+// server
 import { getUserCollections } from "@/server/db/collection"
 
 // utils

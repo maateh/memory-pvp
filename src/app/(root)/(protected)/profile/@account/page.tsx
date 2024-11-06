@@ -1,4 +1,4 @@
-// actions
+// server
 import { signedIn } from '@/server/db/signed-in'
 
 // components

@@ -3,7 +3,7 @@
 // clerk
 import { SignedIn as ClerkSignedIn } from "@clerk/nextjs"
 
-// actions
+// server
 import { signedIn } from "@/server/db/signed-in"
 
 type SignedInProps = {

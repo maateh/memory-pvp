@@ -8,7 +8,7 @@ import {
   protectedProcedure
 } from "@/server/api/trpc"
 
-// actions
+// server
 import { getRandomCollection } from "@/server/db/collection"
 
 // validations
