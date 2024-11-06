@@ -2,7 +2,7 @@
 import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
 
 // server
-import { getClientSessions } from "@/server/actions/session"
+import { getClientSessions } from "@/server/db/session"
 
 // utils
 import { cn } from "@/lib/utils"

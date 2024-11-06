@@ -3,9 +3,9 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/signed-in"
-import { getPlayers } from "@/server/actions/player"
-import { getRandomCollection } from "@/server/actions/collection"
+import { signedIn } from "@/server/db/signed-in"
+import { getPlayers } from "@/server/db/player"
+import { getRandomCollection } from "@/server/db/collection"
 
 // helpers
 import { parseSchemaToClientCollection } from "@/lib/helpers/collection"

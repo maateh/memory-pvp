@@ -9,7 +9,7 @@ import {
 } from "@/server/api/trpc"
 
 // actions
-import { getRandomCollection } from "@/server/actions/collection"
+import { getRandomCollection } from "@/server/db/collection"
 
 // validations
 import {

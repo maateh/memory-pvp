@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 // server
-import { getClientSession } from "@/server/actions/session"
+import { getClientSession } from "@/server/db/session"
 
 // utils
 import { getSessionStatsMap } from "@/lib/utils/stats"

@@ -1,5 +1,5 @@
 // actions
-import { signedIn } from '@/server/actions/signed-in'
+import { signedIn } from '@/server/db/signed-in'
 
 // components
 import AccountWidgetCard from "./card"

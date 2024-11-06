@@ -1,5 +1,3 @@
-"use server"
-
 // types
 import type { z } from "zod"
 import type { GameSession } from "@prisma/client"
@@ -7,7 +5,7 @@ import type { getSessionsSchema } from "@/lib/validations/session-schema"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/signed-in"
+import { signedIn } from "@/server/db/signed-in"
 
 // helpers
 import {

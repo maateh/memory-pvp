@@ -1,11 +1,9 @@
-"use server"
-
 // prisma
 import type { PlayerProfile, Prisma } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/signed-in"
+import { signedIn } from "@/server/db/signed-in"
 
 // helpers
 import { parseSchemaToClientPlayer } from "@/lib/helpers/player"

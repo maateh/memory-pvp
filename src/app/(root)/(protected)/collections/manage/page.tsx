@@ -2,7 +2,7 @@
 import type { CollectionSort } from "@/components/collection/filter/types"
 
 // actions
-import { getUserCollections } from "@/server/actions/collection"
+import { getUserCollections } from "@/server/db/collection"
 
 // utils
 import { parseFilterParams } from "@/lib/utils"

@@ -1,5 +1,5 @@
 // server
-import { getPlayer } from "@/server/actions/player"
+import { getPlayer } from "@/server/db/player"
 
 // constants
 import { sessionHistoryWidgetInfo } from "@/components/widgets/constants"

@@ -1,5 +1,3 @@
-"use server"
-
 // types
 import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
@@ -7,7 +5,7 @@ import type { collectionSortSchema, getCollectionsSchema } from "@/lib/validatio
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/signed-in"
+import { signedIn } from "@/server/db/signed-in"
 
 // helpers
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
