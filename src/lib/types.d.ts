@@ -10,10 +10,9 @@ declare global {
     setTheme: (theme: Theme) => void
   }
 
-  /** Filtering types */
+  /** Filter types */
   declare type FilterService = "store" | "params" | "mixed"
 
-  /** Filter types */
   declare type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
 
   declare type FilterOptions<T> = {
