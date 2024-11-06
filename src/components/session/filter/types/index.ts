@@ -7,3 +7,6 @@ export type SessionSettingsFilter = Filter<SessionSettingsFilterFields>
 export type SessionStatusFilterFields = Pick<GameSession, 'status'>
 export type SessionStatusFilter = Filter<SessionStatusFilterFields>
 
+/** Sort types */
+export type SessionSortFields = Pick<GameSession, 'startedAt' | 'closedAt'>
+export type SessionSort = Sort<SessionSortFields>

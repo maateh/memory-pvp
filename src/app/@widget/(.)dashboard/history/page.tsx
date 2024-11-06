@@ -1,12 +1,14 @@
 // constants
 import { sessionHistoryWidgetInfo } from "@/components/widgets/constants" 
+import { sessionSortOptions } from "@/components/session/filter/constants"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { SessionCardList } from "@/components/session/card"
-import { SessionSettingsFilter, SessionSort, SessionStatusFilter } from "@/components/session/filter"
+import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
+import { SortDropdownButton } from "@/components/shared"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
 const SessionHistoryWidgetModal = () => {
@@ -19,7 +21,7 @@ const SessionHistoryWidgetModal = () => {
       <div className="space-y-2 sm:space-y-1">
         <div className="flex justify-between items-center gap-x-6">
           <SessionStatusFilter filterKey="history" />
-          <SessionSort filterKey="history" />
+          <SortDropdownButton options={sessionSortOptions} />
         </div>
 
         <Separator className="w-1/5 mx-auto bg-border/10" />
