@@ -1,17 +1,32 @@
+import { Suspense } from "react"
+
+// types
+import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
+
 // constants
 import { sessionHistoryWidgetInfo } from "@/components/widgets/constants" 
 import { sessionSortOptions } from "@/components/session/filter/constants"
+
+// utils
+import { parseFilterParams } from "@/lib/utils"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardList } from "@/components/session/card"
+import { SessionCardList, SessionCardListSkeleton } from "@/components/session"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import { SortDropdownButton } from "@/components/shared"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
 
-const SessionHistoryWidgetModal = () => {
+type CollectionsPageProps = {
+  searchParams: SessionFilter & SessionSort
+}
+
+const SessionHistoryWidgetModal = ({ searchParams }: CollectionsPageProps) => {
+  const params = new URLSearchParams(searchParams as {})
+  const { filter, sort } = parseFilterParams<typeof searchParams>(params)
+
   return (
     <WidgetModal {...sessionHistoryWidgetInfo}>
       <WidgetSubheader className="-mb-2">
@@ -31,7 +46,12 @@ const SessionHistoryWidgetModal = () => {
 
       <Separator className="w-4/5 mx-auto bg-border/15" />
 
-      <SessionCardList />
+      <Suspense fallback={<SessionCardListSkeleton />}>
+        <SessionCardList
+          filter={filter}
+          sort={sort}
+        />
+      </Suspense>
     </WidgetModal>
   )
 }

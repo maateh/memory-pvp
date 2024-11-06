@@ -1,14 +1,51 @@
 "use server"
 
-// prisma
+// types
+import type { z } from "zod"
 import type { GameSession } from "@prisma/client"
+import type { getSessionsSchema } from "@/lib/validations/session-schema"
 
 // server
 import { db } from "@/server/db"
 import { signedIn } from "@/server/actions/signed-in"
 
 // helpers
-import { getSessionSchemaIncludeFields, parseSchemaToClientSession } from "@/lib/helpers/session"
+import {
+  getSessionSchemaIncludeFields,
+  parseSchemaToClientSession,
+  parseSessionFilter
+} from "@/lib/helpers/session"
+
+// utils
+import { parseSortToOrderBy } from "@/lib/utils"
+
+/**
+ * TODO: write doc
+ * 
+ * @param input 
+ * @returns 
+ */
+export async function getClientSessions(
+  input: z.infer<typeof getSessionsSchema>
+): Promise<ClientGameSession[]> {
+  const user = await signedIn()
+  if (!user) return []
+
+  const filter = parseSessionFilter(user.id, input.filter)
+
+  const sessions = await db.gameSession.findMany({
+    where: filter,
+    orderBy: parseSortToOrderBy(input.sort),
+    include: getSessionSchemaIncludeFields()
+  })
+
+  const clientSessions = sessions.map((session) => {
+    const playerTag = session.owner.tag
+    return parseSchemaToClientSession(session, playerTag)
+  })
+
+  return clientSessions
+}
 
 /**
  * Retrieves a game session based on a unique filter (either `id`, `slug`, or both) and returns it in a client-friendly format.

@@ -90,5 +90,4 @@ const SessionCardSkeleton = () => {
   )
 }
 
-export default SessionCard
-export { SessionCardSkeleton }
+export { SessionCard, SessionCardSkeleton }

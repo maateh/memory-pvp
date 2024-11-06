@@ -58,7 +58,7 @@ export const clientSessionSchema = z.object({
   continuedAt: z.coerce.date().optional().nullable()
 })
 
-/** Forms / API validations */
+/** Query filters */
 export const sessionFilterSchema = clientSessionSchema
   .extend({ playerTag: playerTagSchema })
   .partial()
@@ -78,6 +78,12 @@ export const sessionSortSchema = z.object({
   continuedAt: sortKeys
 }).optional().default({})
 
+export const getSessionsSchema = z.object({
+  filter: sessionFilterSchema,
+  sort: sessionSortSchema
+}).optional().default({})
+
+/** Forms / API validations */
 export const createSessionSchema = clientSessionSchema.pick({
   type: true,
   mode: true,
