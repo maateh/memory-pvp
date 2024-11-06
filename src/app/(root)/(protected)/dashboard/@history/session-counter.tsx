@@ -4,8 +4,7 @@
 import { api } from "@/trpc/client"
 
 // types
-import type { SessionSettingsFilter } from "@/components/session/filter/session-settings-filter"
-import type { SessionStatusFilter } from "@/components/session/filter/session-status-filter"
+import type { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter/types"
 
 // icons
 import { Loader2, SquareSigma } from "lucide-react"
@@ -26,7 +25,7 @@ type SessionCounterProps = {
 }
 
 const SessionCounter = ({ playerTag }: SessionCounterProps) => {
-  const { filter } = useFilterStore<SessionFilter>((state) => state.history)
+  const filter = useFilterStore<SessionFilter>((state) => state.history)
 
   const { data: amount, isFetching } = api.session.count.useQuery({ ...filter, playerTag })
 

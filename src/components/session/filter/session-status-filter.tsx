@@ -1,8 +1,14 @@
 "use client"
 
+import { useMemo } from "react"
+
 // types
-import type { GameSession, GameStatus } from "@prisma/client"
+import type { GameStatus } from "@prisma/client"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
+import type {
+  SessionStatusFilter as TSessionStatusFilter,
+  SessionStatusFilterFields
+} from "./types"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -12,32 +18,42 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
+import { useFilterParams } from "@/hooks/use-filter-params"
 
-type StatusFilterFields = Pick<GameSession, 'status'>
-type StatusFilter = Filter<StatusFilterFields>
-
-const options: FilterOptions<StatusFilterFields> = {
+const options: FilterOptions<SessionStatusFilterFields> = {
   status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
 }
 
 type SessionStatusFilterProps = {
   filterKey: FilterStoreKey
+  filterService?: FilterService
 }
 
-const SessionStatusFilter = ({ filterKey }: SessionStatusFilterProps) => {
-  const { filter } = useFilterStore<StatusFilter>((state) => state[filterKey])
+const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionStatusFilterProps) => {
+  const filterStore = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
+  const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionStatusFilter>()
+
+  const filter: TSessionStatusFilter = useMemo(() => {
+    return filterService === 'store' ? filterStore : filterParams
+  }, [filterService, filterStore, filterParams])
 
   const handleSelectStatus = (status: GameStatus) => {
-    setFilterStore<StatusFilter>((state) => {
-      const filter = state[filterKey].filter
+    if (filterService === 'store' || filterService === 'mixed') {
+      setFilterStore<TSessionStatusFilter>((state) => {
+        const filter = state[filterKey]
+  
+        state[filterKey] = {
+          ...filter,
+          status: filter.status !== status ? status : undefined
+        }
+  
+        return { [filterKey]: state[filterKey] }
+      })
+    }
 
-      state[filterKey].filter = {
-        ...filter,
-        status: filter.status !== status ? status : undefined
-      }
-
-      return { [filterKey]: state[filterKey] }
-    })
+    if (filterService === 'params' || filterService === 'mixed') {
+      toggleFilterParam('status', status)
+    }
   }
 
   return (
@@ -62,4 +78,3 @@ const SessionStatusFilter = ({ filterKey }: SessionStatusFilterProps) => {
 }
 
 export default SessionStatusFilter
-export type { StatusFilter as SessionStatusFilter }

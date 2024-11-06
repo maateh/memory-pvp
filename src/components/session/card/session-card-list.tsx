@@ -1,9 +1,7 @@
 "use client"
 
 // types
-import type { SessionSettingsFilter } from "@/components/session/filter/session-settings-filter"
-import type { SessionStatusFilter } from "@/components/session/filter/session-status-filter"
-import type { SessionSort } from "@/components/session/filter/session-sort"
+import type { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter/types"
 
 // trpc
 import { api } from "@/trpc/client"
@@ -16,12 +14,13 @@ import { CardItem, Warning } from "@/components/shared"
 import { SessionCard, SessionCardSkeleton } from "@/components/session/card"
 
 // hooks
-import { useFilterStore } from "@/hooks/store/use-filter-store"
+import { useFilterParams } from "@/hooks/use-filter-params"
 
 type SessionFilter = SessionSettingsFilter & SessionStatusFilter
 
+// TODO: move to SSR
 const SessionCardList = () => {
-  const { filter, sort } = useFilterStore<SessionFilter>((state) => state.history)
+  const { filter, sort } = useFilterParams<SessionFilter>()
 
   const { data: sessions, isFetching } = api.session.get.useQuery({ filter, sort })
 

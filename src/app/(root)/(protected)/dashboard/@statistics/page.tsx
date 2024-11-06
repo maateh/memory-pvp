@@ -16,7 +16,10 @@ const PlayerStatisticsWidgetCard = async () => {
       <WidgetSubheader className="mt-2 mb-0.5">
         Session Settings
       </WidgetSubheader>
-      <SessionSettingsFilter filterKey="statistics" />
+      <SessionSettingsFilter
+        filterService="store"
+        filterKey="statistics"
+      />
 
       <WidgetSubheader className="mt-8 mb-3">
         {player ? <span className="text-accent">{player.tag}&apos;s</span> : 'Player'} statistics

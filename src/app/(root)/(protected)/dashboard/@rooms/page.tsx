@@ -17,7 +17,10 @@ const WaitingRoomsWidgetCard = async () => {
         Room Settings
       </WidgetSubheader>
 
-      <SessionSettingsFilter filterKey="rooms" />
+      <SessionSettingsFilter
+        filterService="store"
+        filterKey="rooms"
+      />
     </WidgetCard>
   )
 }
