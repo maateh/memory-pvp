@@ -20,10 +20,17 @@ import {
 import { parseSortToOrderBy } from "@/lib/utils"
 
 /**
- * TODO: write doc
+ * Retrieves a list of game sessions for the signed-in user, parsed into `ClientGameSession` instances.
  * 
- * @param input 
- * @returns 
+ * - Fetches game sessions from the database based on the provided filter and sort criteria.
+ * - Returns an empty array if no user is signed in.
+ * - Filters sessions using the signed-in user’s ID and additional criteria specified in the input.
+ * - Orders sessions according to the parsed sort criteria.
+ * - Includes session owner, collection, user, and player data as specified by `getSessionSchemaIncludeFields`.
+ * - Converts each session to the `ClientGameSession` format.
+ * 
+ * @param {z.infer<typeof getSessionsSchema>} input - The filter and sort criteria for retrieving sessions.
+ * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
 export async function getClientSessions(
   input: z.infer<typeof getSessionsSchema>
