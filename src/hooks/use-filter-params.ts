@@ -1,9 +1,6 @@
 import { useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-// types
-import type { Filter, Sort, SortKey } from "./store/use-filter-store"
-
 // utils
 import { parseFilterParams } from "@/lib/utils"
 

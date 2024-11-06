@@ -13,6 +13,27 @@ declare global {
   /** Filtering types */
   declare type FilterService = "store" | "params" | "mixed"
 
+  /** Filter types */
+  declare type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
+
+  declare type FilterOptions<T> = {
+    [K in keyof T]: T[K][]
+  }
+
+  /** Sort types */
+  declare type SortKey = "asc" | "desc"
+
+  declare type Sort<T> = Partial<{ [key in keyof T]: SortKey }>
+
+  declare type SortOption<T> = {
+    sortValueKey: keyof T
+    label: string
+  }
+
+  export type SortOptions<T> = {
+    [K in keyof T]: SortOption<T>
+  }
+
   /** User types */
   declare type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
 

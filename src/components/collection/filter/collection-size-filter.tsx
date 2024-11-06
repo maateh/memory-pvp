@@ -2,7 +2,6 @@
 
 // types
 import type { CollectionFilter, CollectionFilterFields } from "./types"
-import type { FilterOptions } from "@/hooks/store/use-filter-store"
 
 // constants
 import { tableSizePlaceholders } from "@/constants/game"

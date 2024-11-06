@@ -6,7 +6,6 @@ import { toast } from "sonner"
 // types
 import type { UploadThingError } from "uploadthing/server"
 import type { TRPCApiError } from "@/trpc/error"
-import type { Filter, Sort, SortKey } from "@/hooks/store/use-filter-store"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

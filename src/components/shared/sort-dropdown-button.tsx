@@ -4,7 +4,6 @@ import { useMemo } from "react"
 
 // types
 import type { LucideProps } from "lucide-react"
-import type { SortKey, SortOptions, SortOption } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"

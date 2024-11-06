@@ -2,7 +2,7 @@
 
 // types
 import type { GameMode, GameSession, GameType, TableSize } from "@prisma/client"
-import type { Filter, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
@@ -27,7 +27,7 @@ const options: FilterOptions<SettingsFilterFields> = {
 }
 
 type SessionSettingsFilterProps = {
-  filterKey: FilterMapKeys
+  filterKey: FilterStoreKey
 }
 
 const SessionSettingsFilter = ({ filterKey }: SessionSettingsFilterProps) => {

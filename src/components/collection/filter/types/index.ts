@@ -1,5 +1,4 @@
 import type { CardCollection } from "@prisma/client"
-import type { Filter, Sort } from "@/hooks/store/use-filter-store"
 
 /** Filter types */
 export type CollectionFilterFields = Pick<CardCollection, 'name' | 'tableSize'> & { includeUser: boolean }

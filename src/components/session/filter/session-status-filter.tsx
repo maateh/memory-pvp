@@ -2,7 +2,7 @@
 
 // types
 import type { GameSession, GameStatus } from "@prisma/client"
-import type { Filter, FilterMapKeys, FilterOptions } from "@/hooks/store/use-filter-store"
+import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -21,7 +21,7 @@ const options: FilterOptions<StatusFilterFields> = {
 }
 
 type SessionStatusFilterProps = {
-  filterKey: FilterMapKeys
+  filterKey: FilterStoreKey
 }
 
 const SessionStatusFilter = ({ filterKey }: SessionStatusFilterProps) => {
