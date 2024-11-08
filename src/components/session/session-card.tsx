@@ -2,10 +2,14 @@ import { formatDistance } from "date-fns"
 
 import Link from "next/link"
 
+// utils
+import { cn } from "@/lib/utils"
+
 // icons
 import { CalendarCheck, CalendarClock, ExternalLink, Hash } from "lucide-react"
 
 // shadcn
+import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
@@ -50,7 +54,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
       </div>
 
       <div className="flex items-center gap-x-3.5">
-        <div className="self-end flex items-center gap-x-1.5 text-foreground/85">
+        <div className="flex items-center gap-x-1.5 text-foreground/85">
           <DateIcon className="size-3 sm:size-3.5 flex-none" />
 
           <span className="text-xs small-caps">
@@ -58,7 +62,14 @@ const SessionCard = ({ session }: SessionCardProps) => {
           </span>
         </div>
 
-        <Link href={`/game/summary/${session.slug}`} target="_blank">
+        <Link className={cn(buttonVariants({
+          className: "p-1.5 border border-border/10 rofull",
+          variant: "ghost",
+          size: "icon"
+        }))}
+          href={`/game/summary/${session.slug}`}
+          target="_blank"
+        >
           <ExternalLink className="size-4 sm:size-5 text-muted-foreground transition group-hover:text-foreground/90" />
         </Link>
       </div>
