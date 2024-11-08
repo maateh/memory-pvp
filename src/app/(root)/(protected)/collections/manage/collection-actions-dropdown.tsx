@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 // components
+import CollectionEditModal from "./collection-edit-modal"
 import CollectionDeleteWarning from "./collection-delete-warning"
 
 // hooks
@@ -24,6 +25,7 @@ type CollectionActionsDropdownProps = {
 } & React.ComponentProps<typeof DropdownMenuTrigger>
 
 const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDropdownProps) => {
+  const [showEditPopover, setShowEditPopover] = useState<boolean>(false)
   const [showDeleteWarning, setShowDeleteWarning] = useState<boolean>(false)
 
   const { deleteCollection } = useDeleteCollectionMutation()
@@ -36,7 +38,7 @@ const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDr
         <DropdownMenuContent>
           <DropdownMenuItem
             variant="muted"
-            onClick={() => {}} // TODO: implement ui for editing
+            onClick={() => setShowEditPopover(true)}
           >
             <Edit3 className="size-4" />
             <span>Edit</span>
@@ -56,6 +58,12 @@ const CollectionActionsDropdown = ({ collection, ...props }: CollectionActionsDr
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <CollectionEditModal
+        collection={collection}
+        open={showEditPopover}
+        onOpenChange={() => setShowEditPopover(false)}      
+      />
 
       <CollectionDeleteWarning
         collection={collection}

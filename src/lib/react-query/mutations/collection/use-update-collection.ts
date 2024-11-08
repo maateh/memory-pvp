@@ -10,8 +10,8 @@ import { logError, handleApiError } from "@/lib/utils"
 
 type HandleUpdateCollectionParams = {
   collection: Pick<ClientCardCollection, 'id' | 'name' | 'description'>
-  updatedCollection: Pick<ClientCardCollection, 'name' | 'description'>
-  resetEditing: () => void
+  updatedCollection: Partial<Pick<ClientCardCollection, 'name' | 'description'>>
+  resetForm: () => void
 }
 
 export const useUpdateCollectionMutation = () => {
@@ -30,11 +30,11 @@ export const useUpdateCollectionMutation = () => {
     }
   })
 
-  const handleUpdateCollection = async ({ collection, updatedCollection, resetEditing }: HandleUpdateCollectionParams) => {
+  const handleUpdateCollection = async ({ collection, updatedCollection, resetForm }: HandleUpdateCollectionParams) => {
     const { name, description } = updatedCollection
 
     if (name === collection.name && description === collection.description) {
-      resetEditing()
+      resetForm()
       return
     }
 
@@ -44,7 +44,7 @@ export const useUpdateCollectionMutation = () => {
         name, description
       })
 
-      resetEditing()
+      resetForm()
     } catch (err) {
       logError(err)
     }
