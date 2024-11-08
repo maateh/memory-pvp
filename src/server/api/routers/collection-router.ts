@@ -71,14 +71,14 @@ export const collectionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }): Promise<ClientCardCollection> => {
       const { id, name, description } = input
 
-      const collectionAmount = await ctx.db.playerProfile.count({
+      const collection = await ctx.db.cardCollection.findFirst({
         where: {
           id,
           userId: ctx.user.id
         }
       })
 
-      if (collectionAmount === 0) {
+      if (!collection) {
         throw new TRPCError({
           code: 'FORBIDDEN',
           cause: new TRPCApiError({
