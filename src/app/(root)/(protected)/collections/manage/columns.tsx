@@ -93,6 +93,25 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
   },
   {
+    id: "Updated at",
+    accessorKey: "updatedAt",
+    enableHiding: true,
+    header() {
+      return (
+        <DataTableColumnSortingHeader
+          header="Updated at"
+          sortValueKey="updatedAt"
+        />
+      )
+    },
+    cell({ getValue }) {
+      const date = getValue() as ClientCardCollection['updatedAt']
+      const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
+
+      return <div>{formattedDate}</div>
+    },
+  },
+  {
     id: "Actions",
     enableHiding: false,
     header({ table }) {

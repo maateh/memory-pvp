@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 // types
-import type { SortingState } from "@tanstack/react-table"
+import type { SortingState, VisibilityState } from "@tanstack/react-table"
 
 // react-table
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
@@ -20,15 +20,19 @@ type CollectionsManageTableProps = {
 
 const CollectionsManageTable = ({ collections }: CollectionsManageTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    "Updated at": false
+  })
 
   const table = useReactTable({
     columns,
     data: collections,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
-      sorting
+      sorting, columnVisibility
     }
   })
   
