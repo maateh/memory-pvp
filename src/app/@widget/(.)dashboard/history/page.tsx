@@ -11,6 +11,7 @@ import { sessionSortOptions } from "@/components/session/filter/constants"
 import { parseFilterParams } from "@/lib/utils"
 
 // shadcn
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
 // components
@@ -46,12 +47,14 @@ const SessionHistoryWidgetModal = ({ searchParams }: CollectionsPageProps) => {
 
       <Separator className="w-4/5 mx-auto bg-border/15" />
 
-      <Suspense fallback={<SessionCardListSkeleton />}>
-        <SessionCardList
-          filter={filter}
-          sort={sort}
-        />
-      </Suspense>
+      <ScrollArea className="max-h-96 pr-3">
+        <Suspense fallback={<SessionCardListSkeleton />}>
+          <SessionCardList
+            filter={filter}
+            sort={sort}
+          />
+        </Suspense>
+      </ScrollArea>
     </WidgetModal>
   )
 }
