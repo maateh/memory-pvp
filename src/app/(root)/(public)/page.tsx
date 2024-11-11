@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { Logo, MobileToggle } from "@/components/shared"
+import { Logo } from "@/components/shared"
 
 const HomePage = () => {
   const { userId: clerkId } = auth()
@@ -16,8 +16,6 @@ const HomePage = () => {
   return (
     <>
       <div className="px-2.5 py-3.5 flex items-center gap-x-1.5 md:hidden">
-        <MobileToggle />
-
         <Separator className="h-8 bg-foreground/40"
           orientation="vertical"
         />
