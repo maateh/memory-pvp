@@ -4,7 +4,6 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 // components
 import { AppSidebar } from "@/components/app-sidebar"
 import { Navbar } from "@/components/navbar"
-import { SignedIn } from "@/components/shared"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
@@ -13,11 +12,9 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
         <AppSidebar />
 
         <div className="h-full w-full">
-          <SignedIn>
-            <div className="w-full">
-              <Navbar />
-            </div>
-          </SignedIn>
+          <div className="w-full">
+            <Navbar />
+          </div>
 
           <div className="root-wrapper">
             {children}

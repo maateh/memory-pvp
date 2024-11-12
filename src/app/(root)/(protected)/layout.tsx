@@ -1,5 +1,5 @@
 // components
-import { SignedIn } from "@/components/shared"
+import { SignedIn } from "@clerk/nextjs"
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   return (
