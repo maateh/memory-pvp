@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/sidebar"
 
 // components
+import { SignedIn } from "@clerk/nextjs"
+import { NavLinkGroups } from "./nav-link-group"
 import PlayerSwitcher from "./player-switcher"
-import NavLinkGroup from "./nav-link-group"
 import NavTheme from "./nav-theme"
 import NavLogin from "./nav-login"
 
@@ -47,16 +48,18 @@ const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) =>
       <SidebarSeparator />
 
       <SidebarContent>
-        <PlayerSwitcher
-          players={players}
-          activePlayer={activePlayer}
-        />
+        <SignedIn>
+          <PlayerSwitcher
+            players={players}
+            activePlayer={activePlayer}
+          />
+        </SignedIn>
 
         {/* TODO: design a new `Start game` button for the sidebar */}
 
         <SidebarSeparator className="w-1/2 mx-auto bg-sidebar-border/50" />
 
-        <NavLinkGroup />
+        <NavLinkGroups />
       </SidebarContent>
 
       <SidebarSeparator className="mb-2 mt-auto" />

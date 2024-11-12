@@ -7,6 +7,7 @@ import { BookImage, ChartColumn, ImagePlus, Images, LayoutDashboard, UserRoundCo
 export const navigation: NavGroup[] = [
   {
     label: "Links",
+    isProtected: true,
     links: [
       {
         title: "Dashboard",
@@ -41,6 +42,7 @@ export const navigation: NavGroup[] = [
   },
   {
     label: "Stats",
+    isProtected: false,
     links: [
       {
         title: 'Leaderboard',
