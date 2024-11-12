@@ -1,23 +1,26 @@
 "use client"
 
-import dynamic from "next/dynamic"
-
 // hooks
 import { useTheme } from "next-themes"
-import { useSidebar } from "@/components/ui/sidebar"
+
+// shadcn
+import { SidebarMenuButton } from "@/components/ui/sidebar"
 
 // components
-const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), { ssr: false })
+import { ThemeToggle } from "@/components/shared"
 
 const NavTheme = () => {
-  const { state } = useSidebar()
-  const { theme } = useTheme() as UseThemeProps
+  const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
-    <ThemeToggle className="group-data-[collapsible=icon]:!expandable group-data-[collapsible=icon]:!p-2"
-      expandable={state === 'expanded' ? 'right' : 'none'}
-      title={state === 'collapsed' ? `Switch to ${theme === 'light' ? 'Dark' : 'Light'}` : ''}
-    />
+    <SidebarMenuButton className="size-fit"
+      tooltip={`Switch to ${theme === 'light' ? 'Dark' : 'Light'}`}
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      asChild
+    >
+      <ThemeToggle className="bg-sidebar-primary/15 hover:bg-sidebar-primary/20 dark:bg-sidebar-primary/5 dark:hover:bg-sidebar-primary/10 group-data-[collapsible=icon]:!p-2"
+      />
+    </SidebarMenuButton>
   )
 }
 

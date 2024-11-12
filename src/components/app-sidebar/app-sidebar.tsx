@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 // server
+import { signedIn } from "@/server/db/signed-in"
 import { getPlayers } from "@/server/db/player"
 
 // icons
@@ -21,10 +22,12 @@ import {
 import { SignedIn } from "@clerk/nextjs"
 import { NavLinkGroups } from "./nav-link-group"
 import PlayerSwitcher from "./player-switcher"
+import NavUser from "./nav-user"
 import NavTheme from "./nav-theme"
-import NavLogin from "./nav-login"
 
 const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+  const user = await signedIn()
+
   const players = await getPlayers(true)
   const activePlayer = players.find((player) => player.isActive)
 
@@ -65,9 +68,8 @@ const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) =>
       <SidebarSeparator className="mb-2 mt-auto" />
 
       <SidebarFooter className="flex flex-row items-center justify-between group-data-[collapsible=icon]:flex-col">
+        <NavUser user={user} />
         <NavTheme />
-
-        <NavLogin />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

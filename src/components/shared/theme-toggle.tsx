@@ -1,5 +1,6 @@
 "use client"
 
+import { forwardRef } from "react"
 import { useTheme } from "next-themes"
 
 // utils
@@ -9,21 +10,21 @@ import { cn } from "@/lib/utils"
 import { LucideProps, Moon, Sun } from "lucide-react"
 
 // shadcn
-import { Button, ButtonProps } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 type ThemeToggleProps = {
   expandable?: "right" | "left" | "none"
   iconProps?: LucideProps
-} & Omit<ButtonProps, 'onClick'>
+} & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
-const ThemeToggle = ({
+const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
   expandable = "none",
   iconProps,
   className,
   variant = "ghost",
   size = "icon",
   ...props
-}: ThemeToggleProps) => {
+}, ref) => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
@@ -34,6 +35,7 @@ const ThemeToggle = ({
       variant={variant}
       size={size}
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      ref={ref}
       {...props}
     >
       <Sun {...iconProps}
@@ -53,6 +55,7 @@ const ThemeToggle = ({
       </div>
     </Button>
   )
-}
+})
+ThemeToggle.displayName = "ThemeToggle"
 
 export default ThemeToggle
