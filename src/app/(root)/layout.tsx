@@ -3,7 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 
 // components
 import { AppSidebar } from "@/components/app-sidebar"
-import { Navbar } from "@/components/navbar"
+import { Appbar } from "@/components/appbar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
@@ -13,7 +13,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => {
 
         <div className="h-full w-full">
           <div className="w-full">
-            <Navbar />
+            <Appbar />
           </div>
 
           <div className="root-wrapper">
