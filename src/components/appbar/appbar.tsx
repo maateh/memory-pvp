@@ -10,10 +10,8 @@ const Appbar = async () => {
   const activePlayer = players.find((player) => player.isActive)
 
   return (
-    <div className="z-50 h-12 overflow-hidden mx-2.5 my-3 px-2.5 flex flex-wrap sm:flex-nowrap gap-x-4 gap-y-6 items-center bg-sidebar border border-sidebar-border/30 text-sidebar-foreground rounded-3xl shadow-lg sm:mx-5 sm:px-5 transition-all md:py-2">
-      <div className="h-full flex items-center">
-        <AppbarPrefix />
-      </div>
+    <div className="h-12 overflow-hidden mx-2.5 my-3 px-2.5 flex flex-wrap justify-between items-center gap-x-4 gap-y-6 bg-sidebar border border-sidebar-border/30 text-sidebar-foreground rounded-3xl shadow-lg transition-all sm:mx-5 sm:px-5 sm:flex-nowrap md:py-2 md:justify-start">
+      <AppbarPrefix />
 
       {activePlayer && (
         <AppbarPlayerStats activePlayer={activePlayer} />

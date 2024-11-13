@@ -11,13 +11,18 @@ import { Spade } from "lucide-react"
 // shadcn
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+
+// hooks
+import { useSidebar } from "@/components/ui/sidebar"
 
 const NavbarPrefix = () => {
   const { state, isMobile } = useSidebar()
 
   return (
-    <div className="flex items-center gap-x-1.5 transition-all duration-500">
+    <div className={cn("h-full flex items-center gap-x-1.5 transition-all duration-300", {
+      "flex-1": state === 'collapsed' && !isMobile
+    })}>
       <SidebarTrigger className="size-8 hover:bg-accent/10 dark:hover:bg-accent/5" />
 
       <Separator className="h-5 w-1 bg-primary-foreground/15 rounded-sm"
@@ -25,8 +30,8 @@ const NavbarPrefix = () => {
       />
 
       <Link className={cn(buttonVariants({
-        className: cn("flex px-2.5 py-1 gap-x-2 hover:bg-accent/10 dark:hover:bg-accent/5 animate-in slide-in-from-left duration-500", {
-          "hidden": !isMobile && state === "expanded"
+        className: cn("flex px-2.5 py-1 gap-x-2 hover:bg-accent/10 dark:hover:bg-accent/5 scale-100 animate-in slide-in-from-left duration-300", {
+          "scale-0 hidden": !isMobile && state === "expanded"
         }),
         variant: "ghost",
         size: "icon"

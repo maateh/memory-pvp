@@ -29,7 +29,7 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
 
   return (
     <div className={cn("h-12 flex flex-wrap items-center gap-x-2 gap-y-6 overflow-y-hidden", {
-      "flex-auto justify-end": state === 'collapsed' || isMobile
+      "justify-end": state === 'collapsed' || isMobile
     })}>
       <div className="h-full flex items-center gap-x-2">
         <PlayerBadge player={activePlayer} />
