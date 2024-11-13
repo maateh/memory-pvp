@@ -32,7 +32,6 @@ export const navigation: NavGroup[] = [
         ]
       },
       // TODO: merge `Player Profiles` into `Dashboard`
-      // TODO: create a custom layout for clerk
       {
         title: "Profile",
         url: "/profile",

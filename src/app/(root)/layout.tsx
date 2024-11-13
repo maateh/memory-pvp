@@ -7,21 +7,21 @@ import { Appbar } from "@/components/appbar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
   return (
-    <main className="min-h-screen flex">
+    <div className="min-h-screen flex">
       <SidebarProvider>
         <AppSidebar />
 
-        <div className="h-full w-full">
-          <div className="w-full">
+        <div className="h-full w-full flex flex-col">
+          <header className="w-full">
             <Appbar />
-          </div>
+          </header>
 
-          <div className="root-wrapper">
+          <main className="flex-1 root-wrapper">
             {children}
-          </div>
+          </main>
         </div>
       </SidebarProvider>
-    </main>
+    </div>
   )
 }
 

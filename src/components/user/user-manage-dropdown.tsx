@@ -1,7 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-
 // clerk
 import { useClerk } from "@clerk/nextjs"
 
@@ -27,8 +25,7 @@ type UserManageDropdownProps = {
 } & React.ComponentProps<typeof DropdownMenuTrigger>
 
 const UserManageDropdown = ({ user, ...props }: UserManageDropdownProps) => {
-  const router = useRouter()
-  const { signOut } = useClerk()
+  const { signOut, openUserProfile } = useClerk()
 
   return (
     <DropdownMenu>
@@ -53,7 +50,7 @@ const UserManageDropdown = ({ user, ...props }: UserManageDropdownProps) => {
 
         <DropdownMenuItem
           variant="muted"
-          onClick={() => router.push('/profile/account')} // TODO: create a custom layout for clerk account manage
+          onClick={() => openUserProfile()}
         >
           <UserRoundCog className="size-4" />
           <span>Manage account</span>
