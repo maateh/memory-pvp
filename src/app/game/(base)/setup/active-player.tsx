@@ -1,8 +1,5 @@
 import Link from "next/link"
 
-// prisma
-import type { User } from "@prisma/client"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -13,12 +10,12 @@ import { UserPlus2 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
 // components
-import { SignInButton, Warning } from "@/components/shared"
+import { UserManageButton } from "@/components/user"
 import { PlayerWithAvatar } from "@/components/player"
 import SelectActivePlayer from "./select-active-player"
 
 type ActivePlayerProps = {
-  user: User | null
+  user: ClientUser | null
   players: ClientPlayer[]
 }
 
@@ -27,15 +24,10 @@ const ActivePlayer = ({ user, players }: ActivePlayerProps) => {
 
   if (!user) {
     return (
-      <>
-        <Warning className="text-destructive/90"
-          message="You are not signed in yet."
-        />
-
-        <SignInButton className="h-8 bg-destructive/75"
-          variant="destructive"
-        />
-      </>
+      <UserManageButton className="mx-auto"
+        user={null}
+        showSignInIfLoggedOut
+      />
     )
   }
 
