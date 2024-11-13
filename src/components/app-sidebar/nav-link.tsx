@@ -50,7 +50,7 @@ const NavSubLinkButton = ({ title, url, Icon }: TNavLink) => {
   return (
     <SidebarMenuSubItem key={title}>
       <SidebarMenuSubButton
-        isActive={pathname.includes(url)}
+        isActive={pathname === url}
         asChild
       >
         <Link href={url}>
