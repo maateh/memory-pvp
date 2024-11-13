@@ -12,8 +12,9 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
+import { UserAvatar } from "@/components/user"
+import { PlayerBadge } from "@/components/player"
 import { StatisticBadge } from "@/components/shared"
-import { PlayerWithAvatar } from "@/components/player"
 
 type SessionPlayerProps = {
   player: ClientPlayer
@@ -30,9 +31,14 @@ const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
       <div className="space-y-1.5">
-        <PlayerWithAvatar className={cn({ "flex-row-reverse": flipOrder })}
-          player={player}
-        />
+        <div className={cn("flex items-center gap-x-2", { "flex-row-reverse": flipOrder })}>
+          <UserAvatar user={{
+            imageUrl: player.imageUrl,
+            username: player.tag
+          }} />
+
+          <PlayerBadge player={player} />
+        </div>
 
         <StatisticBadge className="font-medium"
           variant={player.stats.score < 0 ? 'destructive' : 'accent'}

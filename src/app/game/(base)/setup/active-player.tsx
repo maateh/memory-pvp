@@ -10,8 +10,8 @@ import { UserPlus2 } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
 // components
-import { UserManageButton } from "@/components/user"
-import { PlayerWithAvatar } from "@/components/player"
+import { UserAvatar, UserManageButton } from "@/components/user"
+import { PlayerBadge } from "@/components/player"
 import SelectActivePlayer from "./select-active-player"
 
 type ActivePlayerProps = {
@@ -48,10 +48,9 @@ const ActivePlayer = ({ user, players }: ActivePlayerProps) => {
 
   return (
     <div className="w-fit mx-auto pt-1.5 flex items-center gap-x-2">
-      <PlayerWithAvatar className="mx-auto"
-        player={activePlayer}
-        imageSize={28}
-      />
+      <UserAvatar user={user} />
+
+      <PlayerBadge player={activePlayer} />
 
       <SelectActivePlayer players={players} />
     </div>
