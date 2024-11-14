@@ -1,6 +1,3 @@
-// components
-import { PageHeading } from "@/components/shared"
-
 type ProfileLayoutProps = {
   account: React.ReactNode
   players: React.ReactNode
@@ -8,14 +5,10 @@ type ProfileLayoutProps = {
 
 const ProfileLayout = ({ account, players }: ProfileLayoutProps) => {
   return (
-    <>
-      <PageHeading title="Profile" />
-
-      <div className="page-wrapper widget-container">
-        {account}
-        {players}
-      </div>
-    </>
+    <div className="page-wrapper widget-container">
+      {account}
+      {players}
+    </div>
   )
 }
 

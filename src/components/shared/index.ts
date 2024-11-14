@@ -1,4 +1,3 @@
-export { default as PageHeading } from "./page-heading"
 export { default as ThemeToggle } from "./theme-toggle"
 export { StatisticBadge, StatisticItem, StatisticList } from "./statistics"
 export { default as WarningModal, WarningModalFooter, WarningActionButton, WarningCancelButton } from "./warning-modal"
