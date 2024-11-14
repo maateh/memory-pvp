@@ -50,14 +50,16 @@ const AppBreadcrumbItem = ({ name, href, routeIndex, routesLength }: AppBreadcru
         "drop-shadow-md": isMain
       })}>
         {isLast ? (
-          <BreadcrumbPage className={cn("mt-0.5 sm:mt-1 text-foreground/80 font-semibold transition-all", {
-            "mt-0 text-foreground/90 text-xl sm:text-2xl font-bold": isMain
+          <BreadcrumbPage className={cn("transition-all", {
+            "mt-0.5 sm:mt-1 text-foreground/80 font-semibold": !isMain,
+            "text-foreground/90 text-xl sm:text-2xl font-bold": isMain
           })}>
             {name}
           </BreadcrumbPage>
         ) : (
-          <BreadcrumbLink className={cn("mt-0.5 sm:mt-1 text-muted-foreground transition-all underline-offset-4 decoration-0 decoration-foreground/25 hover:underline hover:text-foreground/80", {
-            "mt-0 sm:mt-0 text-foreground/90 text-xl sm:text-2xl font-bold hover:text-foreground": isMain
+          <BreadcrumbLink className={cn("transition-all underline-offset-4 decoration-0 decoration-foreground/25 hover:underline", {
+            "mt-0.5 sm:mt-1 text-muted-foreground hover:text-foreground/80": !isMain,
+            "text-foreground/90 text-xl sm:text-2xl font-bold hover:text-foreground": isMain
           })} asChild>
             <Link href={href}>
               {name}
