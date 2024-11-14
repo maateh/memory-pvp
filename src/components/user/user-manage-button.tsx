@@ -12,7 +12,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 // components
-import { UserAvatar, UserManagePopover } from "@/components/user"
+import { UserAvatar, UserManageDrawer, UserManagePopover } from "@/components/user"
+
+// hooks
+import { useIsMobile } from "@/hooks/use-is-mobile"
 
 type UserManageButtonProps = {
   showSignInIfLoggedOut?: boolean
@@ -29,6 +32,7 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
   ...props
 }, ref) => {
   const { user } = useClerk()
+  const isMobile = useIsMobile()
 
   const button = (
     <Button className={cn("flex items-center justify-center gap-x-1.5 border border-border/20 rounded-2xl bg-accent/15 hover:bg-accent/20 dark:bg-accent/5 dark:hover:bg-accent/10", {
@@ -60,7 +64,11 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
 
   if (!user) return null
 
-  return (
+  return isMobile ? (
+    <UserManageDrawer asChild>
+      {button}
+    </UserManageDrawer>
+  ) : (
     <UserManagePopover asChild>
       {button}
     </UserManagePopover>

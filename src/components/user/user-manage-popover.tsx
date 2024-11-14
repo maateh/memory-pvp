@@ -20,13 +20,12 @@ const UserManagePopover = ({ ...props }: React.ComponentProps<typeof PopoverTrig
   
   const email = user.emailAddresses[0].emailAddress
 
-  // TODO: create a drawer for mobile screens
   return (
     <Popover>
       <PopoverTrigger {...props} />
 
       <PopoverContent className="pt-5 pb-3 mx-2.5 border-border/25 rounded-xl">
-        <h3 className="text-lg sm:text-xl font-heading heading-decorator subheading">
+        <h3 className="text-xl font-heading heading-decorator subheading">
           Your Account
         </h3>
 
