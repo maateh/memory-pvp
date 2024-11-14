@@ -1,7 +1,9 @@
+"use client"
+
 import { forwardRef } from "react"
 
 // clerk
-import { SignInButton } from "@clerk/nextjs"
+import { SignInButton, useClerk } from "@clerk/nextjs"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -13,14 +15,12 @@ import { Button } from "@/components/ui/button"
 import { UserAvatar, UserManagePopover } from "@/components/user"
 
 type UserManageButtonProps = {
-  user: ClientUser | null
   showSignInIfLoggedOut?: boolean
   avatarProps?: Omit<React.ComponentProps<typeof UserAvatar>, 'user'>
   usernameProps?: React.ComponentProps<"span">
 } & React.ComponentProps<typeof Button>
 
 const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
-  user,
   showSignInIfLoggedOut,
   avatarProps,
   usernameProps,
@@ -28,6 +28,8 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
   variant = "ghost",
   ...props
 }, ref) => {
+  const { user } = useClerk()
+
   const button = (
     <Button className={cn("flex items-center justify-center gap-x-1.5 border border-border/20 rounded-2xl bg-accent/15 hover:bg-accent/20 dark:bg-accent/5 dark:hover:bg-accent/10", {
       "bg-destructive/25 hover:bg-destructive/30 dark:bg-destructive/20 dark:hover:bg-destructive/25": !user
@@ -35,7 +37,10 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
       ref={ref}
       {...props}
     >
-      <UserAvatar user={user} {...avatarProps} />
+      <UserAvatar
+        user={user as ClerkUser}
+        {...avatarProps}
+      />
 
       <span {...usernameProps}
         className={cn("mt-0.5 font-heading tracking-wide", usernameProps?.className)}
@@ -56,7 +61,7 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
   if (!user) return null
 
   return (
-    <UserManagePopover user={user} asChild>
+    <UserManagePopover asChild>
       {button}
     </UserManagePopover>
   )

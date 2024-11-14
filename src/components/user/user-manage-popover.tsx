@@ -14,11 +14,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { UserInfo } from "@/components/user"
 
-type UserManageTooltipProps = {
-  user: ClientUser
-} & React.ComponentProps<typeof PopoverTrigger>
-
-const UserManagePopover = ({ ...props }: UserManageTooltipProps) => {
+const UserManagePopover = ({ ...props }: React.ComponentProps<typeof PopoverTrigger>) => {
   const { user, openUserProfile, signOut } = useClerk()
   if (!user) return null
   

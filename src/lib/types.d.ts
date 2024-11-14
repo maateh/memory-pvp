@@ -1,5 +1,16 @@
+import type { UserResource } from "@clerk/types"
 import type { AppRouter } from "@/server/api/_app"
-import type { CardCollection, GameMode, GameSession, GameStatus, GameType, MemoryCard, PlayerProfile, TableSize, User } from "@prisma/client"
+import type {
+  CardCollection,
+  GameMode,
+  GameSession,
+  GameStatus,
+  GameType,
+  MemoryCard,
+  PlayerProfile,
+  TableSize,
+  User
+} from "@prisma/client"
 
 declare global {
   /** Theme types */
@@ -34,6 +45,7 @@ declare global {
   }
 
   /** User types */
+  declare type ClerkUser = Omit<UserResource, 'username'> & { username: string }
   declare type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
 
   /** Collection types */

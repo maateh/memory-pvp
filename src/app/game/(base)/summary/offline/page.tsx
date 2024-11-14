@@ -36,7 +36,6 @@ const OfflineSessionSummaryPage = async () => {
       {!user ? (
         <UserManageButton className="mx-auto text-base"
           size="lg"
-          user={null}
           showSignInIfLoggedOut
         />
       ) : (

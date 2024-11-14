@@ -25,7 +25,6 @@ const ActivePlayer = ({ user, players }: ActivePlayerProps) => {
   if (!user) {
     return (
       <UserManageButton className="mx-auto"
-        user={null}
         showSignInIfLoggedOut
       />
     )
