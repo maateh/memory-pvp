@@ -13,6 +13,9 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
+// components
+import { AppBreadcrumbs } from "@/components/appbar"
+
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
 
@@ -20,8 +23,8 @@ const NavbarPrefix = () => {
   const { state, isMobile } = useSidebar()
 
   return (
-    <div className={cn("h-full flex items-center gap-x-1.5 transition-all duration-300", {
-      "flex-1": state === 'collapsed' && !isMobile
+    <div className={cn("h-full flex items-center gap-x-1.5 transition-all duration-300 lg:flex-1", {
+      "flex-1": state === 'collapsed' || isMobile
     })}>
       <SidebarTrigger className="size-8 hover:bg-accent/10 dark:hover:bg-accent/5" />
 
@@ -29,9 +32,11 @@ const NavbarPrefix = () => {
         orientation="vertical"
       />
 
+      <AppBreadcrumbs className="hidden lg:flex" />
+
       <Link className={cn(buttonVariants({
-        className: cn("flex px-2.5 py-1 gap-x-2 hover:bg-accent/10 dark:hover:bg-accent/5 scale-100 animate-in slide-in-from-left duration-300", {
-          "scale-0 hidden": !isMobile && state === "expanded"
+        className: cn("flex px-2.5 py-1 gap-x-2 animate-in slide-in-from-left duration-300 hover:bg-accent/10 dark:hover:bg-accent/5 lg:hidden", {
+          "hidden": state === 'expanded' && !isMobile
         }),
         variant: "ghost",
         size: "icon"

@@ -28,16 +28,16 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
   ]), [activePlayer])
 
   return (
-    <div className={cn("h-12 flex flex-wrap items-center gap-x-2 gap-y-6 overflow-y-hidden", {
-      "justify-end": state === 'collapsed' || isMobile
+    <div className={cn("h-12 flex flex-wrap items-center gap-x-2 gap-y-6 overflow-y-hidden lg:justify-end", {
+      "justify-end": state === 'collapsed' && !isMobile
     })}>
       <div className="h-full flex items-center gap-x-2">
         <PlayerBadge player={activePlayer} />
-        <ChevronRightCircle className="hidden size-4 shrink-0 text-muted-foreground/85 sm:block" />
+        <ChevronRightCircle className="hidden size-3.5 -mx-0.5 shrink-0 text-muted-foreground/85 md:flex" />
       </div>
 
       {Object.values(stats).map(({ key, data, Icon }) => (
-        <StatisticBadge className="hidden sm:flex"
+        <StatisticBadge className="hidden flex-wrap md:flex"
           Icon={Icon}
           stat={data}
           key={key}
