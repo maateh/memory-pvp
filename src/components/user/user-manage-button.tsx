@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 // components
-import { UserAvatar, UserManageDropdown } from "@/components/user"
+import { UserAvatar, UserManagePopover } from "@/components/user"
 
 type UserManageButtonProps = {
   user: ClientUser | null
@@ -56,9 +56,9 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
   if (!user) return null
 
   return (
-    <UserManageDropdown user={user} asChild>
+    <UserManagePopover user={user} asChild>
       {button}
-    </UserManageDropdown>
+    </UserManagePopover>
   )
 })
 UserManageButton.displayName = "UserManageButton"
