@@ -2,7 +2,7 @@
 import type { NavGroup } from "@/components/app-sidebar/types"
 
 // icons
-import { BookImage, ChartColumn, ImagePlus, Images, LayoutDashboard, UserRoundCog } from "lucide-react"
+import { BookImage, ChartColumn, ImagePlus, Images, LayoutDashboard } from "lucide-react"
 
 export const navigation: NavGroup[] = [
   {
@@ -30,12 +30,6 @@ export const navigation: NavGroup[] = [
             Icon: ImagePlus
           }
         ]
-      },
-      // TODO: merge `Player Profiles` into `Dashboard`
-      {
-        title: "Profile",
-        url: "/profile",
-        Icon: UserRoundCog
       }
     ]
   },
