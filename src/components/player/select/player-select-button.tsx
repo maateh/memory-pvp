@@ -9,7 +9,7 @@ import { useClerk } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 
 // icons
-import { ChevronsUpDown } from "lucide-react"
+import { ChevronsUpDown, Hash } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -59,7 +59,17 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
 
         {activePlayer ? (
           <PlayerBadge player={activePlayer} />
-        ) : "Select player..."}
+        ) : (
+          <div className="flex items-center gap-x-2">
+            <Hash className="size-3.5 shrink-0 text-muted-foreground group-hover:opacity-95"
+              strokeWidth={2.5}
+            />
+
+            <span className="text-xs text-foreground/85 font-normal">
+              Select player...
+            </span>
+          </div>
+        )}
       </div>
 
       <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground/80" />
