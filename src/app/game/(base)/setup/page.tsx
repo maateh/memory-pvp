@@ -14,8 +14,9 @@ import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { PlayerSelectButton } from "@/components/player/select"
+import { UserManageButton } from "@/components/user"
 import { SessionForm } from "@/components/session/form"
-import ActivePlayer from "./active-player"
 
 type BaseGameSetupPageProps = {
   searchParams: Partial<{
@@ -58,10 +59,19 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
           ...but first, <span className="text-accent">configure</span> your game session.
         </p>
 
-        <ActivePlayer
-          user={user}
-          players={players}
-        />
+        {user && (
+          <PlayerSelectButton className="w-full max-w-56 px-2.5 border border-border/25 hover:bg-border/10 dark:hover:bg-border/10"
+            avatarProps={{ className: "sm:size-7" }}
+            players={players}
+            showUserAvatar
+          />
+        )}
+
+        {!user && (
+          <UserManageButton className="mx-auto"
+            showSignInIfLoggedOut
+          />
+        )}
       </header>
 
       <Separator className="w-2/5 bg-border/60 mx-auto my-5 sm:w-1/5 lg:w-1/6" />

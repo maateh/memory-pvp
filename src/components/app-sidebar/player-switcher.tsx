@@ -1,10 +1,4 @@
-"use client"
-
-// icons
-import { ChevronsUpDown } from "lucide-react"
-
 // shadcn
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -14,20 +8,13 @@ import {
 } from "@/components/ui/sidebar"
 
 // components
-import { SelectPlayerDropdown } from "@/components/inputs"
-import { PlayerBadge } from "@/components/player"
-
-// hooks
-import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
+import { PlayerSelectButton } from "@/components/player/select"
 
 type PlayerSwitcherProps = {
   players: ClientPlayer[]
-  activePlayer?: ClientPlayer
 }
 
-const PlayerSwitcher = ({ players, activePlayer }: PlayerSwitcherProps) => {
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
-
+const PlayerSwitcher = ({ players }: PlayerSwitcherProps) => {
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>
@@ -36,24 +23,14 @@ const PlayerSwitcher = ({ players, activePlayer }: PlayerSwitcherProps) => {
 
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-
-            </DropdownMenuTrigger>
-
-            <SelectPlayerDropdown
+          <SidebarMenuButton
+            size="lg"
+            asChild
+          >
+            <PlayerSelectButton className="border border-sidebar-border/15 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground dark:hover:bg-sidebar-accent/80 dark:hover:text-sidebar-accent-foreground/80"
               players={players}
-              handleSelectPlayer={handleSelectAsActive}
-              isPending={selectAsActive.isPending}
-            >
-              <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                size="lg"
-              >
-                {activePlayer && <PlayerBadge player={activePlayer} />}
-                <ChevronsUpDown className="ml-auto" />
-              </SidebarMenuButton>
-            </SelectPlayerDropdown>
-          </DropdownMenu>
+            />
+          </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
