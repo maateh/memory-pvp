@@ -27,7 +27,6 @@ import NavTheme from "./nav-theme"
 
 const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   const players = await getPlayers(true)
-  const activePlayer = players.find((player) => player.isActive)
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -52,7 +51,6 @@ const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) =>
         <SignedIn>
           <PlayerSwitcher
             players={players}
-            activePlayer={activePlayer}
           />
         </SignedIn>
 
