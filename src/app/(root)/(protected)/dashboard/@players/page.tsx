@@ -14,7 +14,7 @@ const PlayersWidget = async () => {
 
   return (
     <WidgetCard
-      widgetLink="/profile/players"
+      widgetLink="/dashboard/players"
       {...playerProfilesWidgetInfo}
     >
       <WidgetSubheader className="mt-2 mb-3.5">

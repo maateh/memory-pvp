@@ -35,7 +35,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
           tooltip="Add new player"
           variant="ghost"
           size="icon"
-          onClick={() => router.push('/profile/players', { scroll: false })}
+          onClick={() => router.push('/dashboard/players', { scroll: false })}
         >
           <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
         </ButtonTooltip>
