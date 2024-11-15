@@ -9,7 +9,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar"
 // components
 import { ThemeToggle } from "@/components/shared"
 
-const NavTheme = () => {
+const FooterTheme = () => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
@@ -24,4 +24,4 @@ const NavTheme = () => {
   )
 }
 
-export default NavTheme
+export default FooterTheme

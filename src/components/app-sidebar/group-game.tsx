@@ -11,7 +11,7 @@ import {
   SidebarMenuItem
 } from "@/components/ui/sidebar"
 
-const NavGame = () => {
+const GroupGame = () => {
   return (
     <SidebarGroup className="group-data-[state=expanded]:px-6 group-data-[mobile=true]:px-6">
       <SidebarMenu>
@@ -32,4 +32,4 @@ const NavGame = () => {
   )
 }
 
-export default NavGame
+export default GroupGame

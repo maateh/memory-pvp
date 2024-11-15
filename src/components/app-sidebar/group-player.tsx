@@ -14,7 +14,7 @@ type PlayerSwitcherProps = {
   players: ClientPlayer[]
 }
 
-const PlayerSwitcher = ({ players }: PlayerSwitcherProps) => {
+const GroupPlayer = ({ players }: PlayerSwitcherProps) => {
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>
@@ -37,4 +37,4 @@ const PlayerSwitcher = ({ players }: PlayerSwitcherProps) => {
   )
 }
 
-export default PlayerSwitcher
+export default GroupPlayer

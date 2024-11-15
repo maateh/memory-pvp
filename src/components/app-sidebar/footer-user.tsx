@@ -14,7 +14,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar"
 // components
 import { UserManageButton } from "@/components/user"
 
-const NavUser = forwardRef<HTMLButtonElement, React.ComponentProps<typeof SidebarMenuButton>>(({
+const FooterUser = forwardRef<HTMLButtonElement, React.ComponentProps<typeof SidebarMenuButton>>(({
   className,
   tooltip,
   ...props
@@ -41,6 +41,6 @@ const NavUser = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Sideba
     </SidebarMenuButton>
   )
 })
-NavUser.displayName = "NavUser"
+FooterUser.displayName = "NavUser"
 
-export default NavUser
+export default FooterUser

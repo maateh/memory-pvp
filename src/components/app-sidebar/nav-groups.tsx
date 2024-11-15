@@ -20,8 +20,6 @@ import {
 import { SignedIn } from "@clerk/nextjs"
 import { NavLinkButton, NavSubLinkButton } from "./nav-link"
 
-const NavLinkGroups = () => navigation.map((group) => <NavLinkGroup key={group.label} {...group} />)
-
 const NavLinkGroup = ({ label, links, isProtected }: NavGroup) => {
   const content = (
     <SidebarGroup key={label}>
@@ -71,4 +69,4 @@ const NavLinkGroup = ({ label, links, isProtected }: NavGroup) => {
   return content
 }
 
-export { NavLinkGroup, NavLinkGroups }
+export default () => navigation.map((group) => <NavLinkGroup key={group.label} {...group} />)
