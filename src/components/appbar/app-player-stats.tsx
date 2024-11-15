@@ -16,11 +16,11 @@ import { PlayerBadge } from "@/components/player"
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
 
-type NavbarPlayerStatsProps = {
+type AppPlayerStatsProps = {
   activePlayer: ClientPlayer
 }
 
-const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
+const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
   const { state, isMobile } = useSidebar()
 
   const stats = useMemo(() => getPlayerStatsMap(activePlayer, [
@@ -47,4 +47,4 @@ const NavbarPlayerStats = ({ activePlayer }: NavbarPlayerStatsProps) => {
   )
 }
 
-export default NavbarPlayerStats
+export default AppPlayerStats

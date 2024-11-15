@@ -19,7 +19,7 @@ import { AppBreadcrumbs } from "@/components/appbar"
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
 
-const NavbarPrefix = () => {
+const AppPrefix = () => {
   const { state, isMobile } = useSidebar()
 
   return (
@@ -52,4 +52,4 @@ const NavbarPrefix = () => {
   )
 }
 
-export default NavbarPrefix
+export default AppPrefix
