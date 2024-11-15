@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { NavGroup } from "./types"
+import type { NavGroup as TNavGroup } from "./types"
 
 // constants
 import { navigation } from "@/constants/navigation"
@@ -20,7 +20,7 @@ import {
 import { SignedIn } from "@clerk/nextjs"
 import { NavLinkButton, NavSubLinkButton } from "./nav-link"
 
-const NavLinkGroup = ({ label, links, isProtected }: NavGroup) => {
+const NavGroup = ({ label, links, isProtected }: TNavGroup) => {
   const content = (
     <SidebarGroup key={label}>
       <SidebarGroupLabel>
@@ -69,4 +69,6 @@ const NavLinkGroup = ({ label, links, isProtected }: NavGroup) => {
   return content
 }
 
-export default () => navigation.map((group) => <NavLinkGroup key={group.label} {...group} />)
+const NavGroups = () => navigation.map((group) => <NavGroup key={group.label} {...group} />)
+
+export default NavGroups
