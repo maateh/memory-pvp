@@ -3,14 +3,23 @@ import { waitingRoomsWidget } from "@/constants/dashboard"
 
 // components
 import { SessionSettingsFilter } from "@/components/session/filter"
-import { WidgetCard } from "@/components/widget"
+import {
+  WidgetActionWrapper,
+  WidgetCard,
+  WidgetLink,
+  WidgetSubtitle
+} from "@/components/widget"
 
 const WaitingRoomsWidgetCard = () => {
   return (
     <WidgetCard widget={waitingRoomsWidget}>
-      <h4 className="text-lg font-heading font-semibold small-caps heading-decorator subheading">
+      <WidgetActionWrapper>
+        <WidgetLink href={waitingRoomsWidget.href} />
+      </WidgetActionWrapper>
+
+      <WidgetSubtitle>
         Room Settings
-      </h4>
+      </WidgetSubtitle>
 
       <SessionSettingsFilter
         filterService="store"

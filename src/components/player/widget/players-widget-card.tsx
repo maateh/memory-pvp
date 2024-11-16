@@ -7,16 +7,33 @@ import { playersWidget } from "@/constants/dashboard"
 // components
 import { CardItem, Warning } from "@/components/shared"
 import { PlayerProfileCard } from "@/components/player/card"
-import { WidgetCard } from "@/components/widget"
+import {
+  WidgetActionWrapper,
+  WidgetCard,
+  WidgetLink,
+  WidgetQuickAccess,
+  WidgetSubtitle
+} from "@/components/widget"
+import { PlayerSelectDrawer } from "../select"
 
 const PlayersWidgetCard = async () => {
   const activePlayer = await getPlayer({ isActive: true }, true)
 
   return (
     <WidgetCard widget={playersWidget}>
-      <h4 className="text-lg font-heading font-semibold small-caps heading-decorator subheading">
+      <WidgetActionWrapper>
+        <PlayerSelectDrawer players={[]} asChild>
+          <WidgetQuickAccess>
+          
+          </WidgetQuickAccess>
+        </PlayerSelectDrawer>
+
+        <WidgetLink href={playersWidget.href} />
+      </WidgetActionWrapper>
+
+      <WidgetSubtitle>
         Active player profile
-      </h4>
+      </WidgetSubtitle>
 
       {activePlayer ? (
         <CardItem>

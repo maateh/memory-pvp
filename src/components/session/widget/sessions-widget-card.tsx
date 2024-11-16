@@ -10,16 +10,25 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { SessionCounter } from "@/components/session"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { WidgetCard } from "@/components/widget"
+import {
+  WidgetActionWrapper,
+  WidgetCard,
+  WidgetLink,
+  WidgetSubtitle
+} from "@/components/widget"
 
 const SessionsWidgetCard = async () => {
   const player = await getPlayer({ isActive: true })
 
   return (
     <WidgetCard widget={sessionsWidget}>
-      <h4 className="text-lg font-heading font-semibold small-caps heading-decorator subheading">
+      <WidgetActionWrapper>
+        <WidgetLink href={sessionsWidget.href} />
+      </WidgetActionWrapper>
+
+      <WidgetSubtitle>
         Summary of your sessions
-      </h4>
+      </WidgetSubtitle>
 
       <div className="space-y-1.5 sm:space-y-1">
         <SessionStatusFilter
