@@ -9,7 +9,7 @@ import { playerProfilesWidgetInfo } from "@/components/widgets/constants"
 
 // components
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
-import { PlayerProfileForm } from "@/components/player"
+import { PlayerProfileForm } from "@/components/player/form"
 import { PlayerProfileCardList } from '@/components/player/card'
 
 const PlayersWidgetModal = async () => {

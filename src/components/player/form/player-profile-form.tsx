@@ -11,12 +11,10 @@ import { Check, Loader2 } from "lucide-react"
 
 // shadcn
 import { ButtonTooltip } from "@/components/ui/button"
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 
 // components
 import { Form } from "@/components/shared"
-import { ColorPicker } from "@/components/inputs"
+import PlayerProfileFormFields from "./player-profile-form-fields"
 
 // hooks
 import { useForm } from "react-hook-form"
@@ -41,34 +39,7 @@ const PlayerProfileForm = () => {
       form={form}
       onSubmit={onSubmit}
     >
-      <FormField
-        control={form.control}
-        name="tag"
-        render={({ field }) => (
-          <FormItem className="flex-1">
-            <FormLabel>
-              Player Tag
-            </FormLabel>
-            <FormControl>
-              <Input {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="color"
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <ColorPicker {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <PlayerProfileFormFields form={form} />
 
       <ButtonTooltip className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
         tooltip="Add player profile"

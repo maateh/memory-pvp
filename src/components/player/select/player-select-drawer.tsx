@@ -13,7 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { PlayerProfileForm } from "@/components/player"
+import { PlayerProfileForm } from "@/components/player/form"
 import { PlayerSelectCommand } from "@/components/player/select"
 
 // hooks

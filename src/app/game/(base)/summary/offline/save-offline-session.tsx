@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { PlayerProfileForm } from "@/components/player"
+import { PlayerProfileForm } from "@/components/player/form"
 
 // hooks
 import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/session"
