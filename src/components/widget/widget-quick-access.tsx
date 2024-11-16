@@ -1,3 +1,5 @@
+"use client"
+
 import { forwardRef } from "react"
 
 // types
@@ -24,9 +26,9 @@ const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(
   children,
   ...props
 }, ref) => {
-  // TODO: add tooltip (fix ButtonTooltip)
   return (
     <Button className={cn("p-1.5", className)}
+      tooltip="Show preview"
       variant={variant}
       size={size}
       ref={ref}

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { BadgeInfo, Save, UserCog2 } from "lucide-react"
 
 // shadcn
-import { Button, ButtonTooltip } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { ButtonGroup, ButtonGroupItem } from "@/components/ui/button-group"
 import { Separator } from "@/components/ui/separator"
 
@@ -31,14 +31,14 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   return (
     <section className="w-11/12 max-w-lg mx-auto sm:max-w-screen-sm">
       <div className="flex items-center justify-center gap-x-2.5 sm:items-end">
-        <ButtonTooltip className="p-1.5 text-accent bg-accent/20 dark:bg-accent/10 sm:p-2"
+        <Button className="p-1.5 text-accent bg-accent/20 dark:bg-accent/10 sm:p-2"
           tooltip="Add new player"
           variant="ghost"
           size="icon"
           onClick={() => router.push('/dashboard/players', { scroll: false })}
         >
           <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
-        </ButtonTooltip>
+        </Button>
 
         <h2 className="text-base align-bottom font-heading font-semibold small-caps heading-decorator sm:text-lg">
           Select Player Profile

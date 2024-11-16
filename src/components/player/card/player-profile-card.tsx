@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { CheckCircle2, Loader2, Star, XCircle } from "lucide-react"
 
 // shadcn
-import { ButtonTooltip } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 // components
@@ -82,7 +82,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
       <div className="flex items-center gap-x-2.5">
         <div className={cn("flex gap-x-1", { "hidden": !editing })}>
-          <ButtonTooltip className="p-1"
+          <Button className="p-1"
             tooltip="Save changes"
             variant="ghost"
             size="icon"
@@ -98,9 +98,9 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             ) : (
               <CheckCircle2 className="size-[1.125rem] text-accent flex-none" />
             )}
-          </ButtonTooltip>
+          </Button>
 
-          <ButtonTooltip className="p-1"
+          <Button className="p-1"
             tooltip="Cancel"
             variant="ghost"
             size="icon"
@@ -108,7 +108,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             disabled={updatePlayer.isPending || deletePlayer.isPending}
           >
             <XCircle className="size-[1.125rem] text-destructive flex-none" />
-          </ButtonTooltip>
+          </Button>
         </div>
 
         <PlayerActionsDropdown

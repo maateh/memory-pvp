@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 import { ArrowDownUp, SortAsc, SortDesc } from "lucide-react"
 
 // shadcn
-import { Button, ButtonTooltip } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,20 +50,22 @@ function SortDropdownButton<T extends { [key in keyof T]: string | number | bool
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <ButtonTooltip className={cn("p-1.5 gap-x-2 border border-border/20", className)}
-          tooltip={(
-            <div className="flex items-center gap-x-1.5">
-              <ArrowDownUp className={cn("size-3.5 flex-none", { "hidden": !!sortKey })} />
-              <SortAsc className={cn("size-4 flex-none", { "hidden": sortKey !== 'asc' })} />
-              <SortDesc className={cn("size-4 flex-none", { "hidden": sortKey !== 'desc' })} />
-
-              <p className="font-light dark:font-extralight">
-                Sort by <span className={cn("lowercase text-accent font-medium", { "text-destructive": sortKey === 'desc' })}>
-                  {sortValueKey ? options[sortValueKey].label : 'default'}
-                </span>
-              </p>
-            </div>
-          )}
+        <Button className={cn("p-1.5 gap-x-2 border border-border/20", className)}
+          tooltip={{
+            children: (
+              <div className="flex items-center gap-x-1.5">
+                <ArrowDownUp className={cn("size-3.5 flex-none", { "hidden": !!sortKey })} />
+                <SortAsc className={cn("size-4 flex-none", { "hidden": sortKey !== 'asc' })} />
+                <SortDesc className={cn("size-4 flex-none", { "hidden": sortKey !== 'desc' })} />
+  
+                <p className="font-light dark:font-extralight">
+                  Sort by <span className={cn("lowercase text-accent font-medium", { "text-destructive": sortKey === 'desc' })}>
+                    {sortValueKey ? options[sortValueKey].label : 'default'}
+                  </span>
+                </p>
+              </div>
+            )
+          }}
           variant={variant}
           size={size}
           {...props}
@@ -91,7 +93,7 @@ function SortDropdownButton<T extends { [key in keyof T]: string | number | bool
             }, iconProps?.className)}
             strokeWidth={iconProps?.strokeWidth || 2.5}
           />
-        </ButtonTooltip>
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>

@@ -1,9 +1,20 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
 
+// types
+import type { VariantProps } from "class-variance-authority"
+
+// utils
+import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { Tooltip, TooltipContent, TooltipContentProps, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+
+// shadcn
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -31,45 +42,50 @@ const buttonVariants = cva(
   }
 )
 
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+type ButtonProps = {
   asChild?: boolean
-}
+  tooltip?: string | React.ComponentProps<typeof TooltipContent>
+} & React.ComponentProps<"button">
+  & VariantProps<typeof buttonVariants>
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    )
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
+  tooltip,
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}, ref) => {
+  const Comp = asChild ? Slot : "button"
+
+  const button = (
+    <Comp className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  )
+
+  if (!tooltip) {
+    return button
   }
-)
-Button.displayName = "Button"
 
-interface ButtonTooltipProps extends ButtonProps {
-  tooltip: React.ReactNode
-  tooltipProps?: Omit<TooltipContentProps, 'children'>
-}
+  if (typeof tooltip === "string") {
+    tooltip = {
+      children: tooltip
+    }
+  }
 
-const ButtonTooltip = React.forwardRef<HTMLButtonElement, ButtonTooltipProps>(
-  ({ tooltip, tooltipProps, ...props }, ref) => (
+  return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button ref={ref} {...props} />
+          {button}
         </TooltipTrigger>
-        <TooltipContent {...tooltipProps}>
-          {tooltip}
-        </TooltipContent>
+        <TooltipContent {...tooltip} key={tooltip.key} />
       </Tooltip>
     </TooltipProvider>
   )
-)
-ButtonTooltip.displayName = "ButtonTooltip"
+})
+Button.displayName = "Button"
 
-export { Button, ButtonTooltip, buttonVariants }
+export { Button, buttonVariants }

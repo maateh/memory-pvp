@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 
 // types
 import type { CollectionFilter } from "./types"
@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils"
 import { UserRoundCheck, UserRoundMinus } from "lucide-react"
 
 // shadcn
-import { ButtonTooltip } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
 type CollectionUserToggleFilterProps = {
   includeByDefault?: boolean
-} & Omit<React.ComponentProps<typeof ButtonTooltip>, 'tooltip' | 'onClick'>
+} & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
 const CollectionUserToggleFilter = ({
   includeByDefault = false,
@@ -39,19 +39,21 @@ const CollectionUserToggleFilter = ({
   }, [filter.includeUser, includeByDefault])
 
   return (
-    <ButtonTooltip className={cn("p-1.5 border border-border/20", className)}
+    <Button className={cn("p-1.5 border border-border/20", className)}
       variant={variant}
       size={size}
-      tooltip={(
-        <div className="flex items-center gap-x-2">
-          <UserRoundCheck className={cn("size-4 text-accent", { "hidden": !includeUser })} />
-          <UserRoundMinus className={cn("size-4 text-destructive", { "hidden": includeUser })} />
-
-          <p className="font-light dark:font-extralight">
-            {filter.includeUser ? 'Include' : 'Exclude'} collections created by you
-          </p>
-        </div>
-      )}
+      tooltip={{
+        children: (
+          <div className="flex items-center gap-x-2">
+            <UserRoundCheck className={cn("size-4 text-accent", { "hidden": !includeUser })} />
+            <UserRoundMinus className={cn("size-4 text-destructive", { "hidden": includeUser })} />
+  
+            <p className="font-light dark:font-extralight">
+              {filter.includeUser ? 'Include' : 'Exclude'} collections created by you
+            </p>
+          </div>
+        )
+      }}
       onClick={() => toggleFilterParam('includeUser', includeUser ? 'false' : 'true')}
       {...props}
     >
@@ -64,7 +66,7 @@ const CollectionUserToggleFilter = ({
         "rotate-0 scale-100": !includeUser,
         "-rotate-90 scale-0": includeUser
       })} />
-    </ButtonTooltip>
+    </Button>
   )
 }
 

@@ -10,7 +10,7 @@ import { createPlayerSchema } from "@/lib/validations/player-schema"
 import { Check, Loader2 } from "lucide-react"
 
 // shadcn
-import { ButtonTooltip } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 // components
 import { Form } from "@/components/shared"
@@ -41,7 +41,7 @@ const PlayerProfileForm = () => {
     >
       <PlayerProfileFormFields form={form} />
 
-      <ButtonTooltip className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
+      <Button className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
         tooltip="Add player profile"
         variant="ghost"
         size="icon"
@@ -56,7 +56,7 @@ const PlayerProfileForm = () => {
             strokeWidth={4}
           />
         )}
-      </ButtonTooltip>
+      </Button>
     </Form>
   )
 }
