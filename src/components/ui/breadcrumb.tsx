@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
-import { Button, type ButtonProps } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
 
@@ -117,7 +117,7 @@ BreadcrumbItemGroup.displayName = "BreadcrumbItemGroup"
 
 type BreadcrumbButtonProps = {
   selected: boolean
-} & ButtonProps
+} & React.ComponentProps<typeof Button>
 
 const BreadcrumbButton = ({
   selected = false,

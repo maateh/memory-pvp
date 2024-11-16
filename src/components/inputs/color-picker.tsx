@@ -6,13 +6,13 @@ import { HexColorPicker } from "react-colorful"
 import { cn } from "@/lib/utils"
 
 // shadcn
-import { Button, ButtonProps } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type ColorPickerProps = {
   value: string
   onChange: (value: string) => void
-} & Omit<ButtonProps, 'value' | 'onChange'>
+} & Omit<React.ComponentProps<typeof Button>, 'value' | 'onChange'>
 
 const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
   value,

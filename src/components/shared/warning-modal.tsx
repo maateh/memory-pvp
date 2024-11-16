@@ -5,7 +5,7 @@ import type { DialogProps } from "@radix-ui/react-dialog"
 import { cn } from "@/lib/utils"
 
 // shadcn
-import { Button, type ButtonProps } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
@@ -51,7 +51,7 @@ const WarningActionButton = ({
   variant = "destructive",
   children,
   ...props
-}: ButtonProps) => {
+}: React.ComponentProps<typeof Button>) => {
   return (
     <Button className={cn("flex-1 max-w-64", className)}
       variant={variant}
@@ -67,7 +67,7 @@ const WarningCancelButton = ({
   variant = "ghost",
   children,
   ...props
-}: ButtonProps) => {
+}: React.ComponentProps<typeof Button>) => {
   return (
     <Button className={cn("flex-1 max-w-64 border", className)}
       variant={variant}
