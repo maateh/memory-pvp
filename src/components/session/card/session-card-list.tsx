@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
-import { SessionCard, SessionCardSkeleton } from "@/components/session"
+import { SessionCard, SessionCardSkeleton } from "@/components/session/card"
 
 type SessionCardListProps = {
   filter: SessionFilter
@@ -58,4 +58,5 @@ const SessionCardListSkeleton = ({ className, ...props }: React.ComponentProps<"
   )
 }
 
-export { SessionCardList, SessionCardListSkeleton }
+export default SessionCardList
+export { SessionCardListSkeleton }

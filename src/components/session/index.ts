@@ -2,5 +2,3 @@ export { default as SessionStatusBadge, SessionStatusMarker } from "./session-st
 export { default as SessionInfoBadge } from "./session-info-badge"
 export { default as SessionBasics } from "./session-basics"
 export { default as SessionCounter } from "./session-counter"
-export { SessionCard, SessionCardSkeleton } from "./session-card"
-export { SessionCardList, SessionCardListSkeleton } from "./session-card-list"

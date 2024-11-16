@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardList, SessionCardListSkeleton } from "@/components/session"
+import { SessionCardList, SessionCardListSkeleton } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import { SortDropdownButton } from "@/components/shared"
 import { WidgetModal, WidgetSubheader } from "@/components/widgets"
