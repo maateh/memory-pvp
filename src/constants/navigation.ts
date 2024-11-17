@@ -2,9 +2,9 @@
 import type { NavGroup } from "@/components/app-sidebar/types"
 
 // icons
-import { BookImage, ChartColumn, ImagePlus, Images, LayoutDashboard } from "lucide-react"
+import { ChartColumn, Gamepad2, History, ImagePlus, Images, LayoutDashboard, Swords } from "lucide-react"
 
-export const navigation: NavGroup[] = [
+export const navigation = [
   {
     label: "Links",
     isProtected: true,
@@ -12,18 +12,30 @@ export const navigation: NavGroup[] = [
       {
         title: "Dashboard",
         url: "/dashboard",
-        Icon: LayoutDashboard
+        Icon: LayoutDashboard,
+        sublinks: [
+          {
+            title: "Player profiles",
+            url: "/dashboard/players",
+            Icon: Gamepad2
+          },
+          {
+            title: "Waiting rooms",
+            url: "/dashboard/rooms",
+            Icon: Swords
+          },
+          {
+            title: "Session history",
+            url: "/dashboard/sessions",
+            Icon: History
+          }
+        ]
       },
       {
         title: "Collections",
         url: "/collections",
-        Icon: BookImage,
+        Icon: Images,
         sublinks: [
-          {
-            title: "Explorer",
-            url: "/collections",
-            Icon: Images
-          },
           {
             title: "Manage",
             url: "/collections/manage",
@@ -44,4 +56,4 @@ export const navigation: NavGroup[] = [
       }
     ]
   }
-]
+] satisfies NavGroup[]
