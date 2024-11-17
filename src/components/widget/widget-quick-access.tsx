@@ -27,8 +27,8 @@ const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(
   ...props
 }, ref) => {
   return (
-    <Button className={cn("p-1.5", className)}
-      tooltip="Show preview"
+    <Button className={cn("p-1.5 border border-border/10", className)}
+      tooltip="Quick access"
       variant={variant}
       size={size}
       ref={ref}

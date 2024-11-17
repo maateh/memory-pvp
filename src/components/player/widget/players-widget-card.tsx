@@ -24,9 +24,7 @@ const PlayersWidgetCard = async () => {
     <WidgetCard widget={playersWidget}>
       <WidgetActionWrapper>
         <PlayerSelectDrawer players={players} asChild>
-          <WidgetQuickAccess>
-          
-          </WidgetQuickAccess>
+          <WidgetQuickAccess />
         </PlayerSelectDrawer>
 
         <WidgetLink href={playersWidget.href} />
