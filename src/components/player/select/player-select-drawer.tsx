@@ -36,15 +36,15 @@ const PlayerSelectDrawer = ({ players, ...props }: PlayerSelectDrawerProps) => {
             Select active player
           </DrawerTitle>
 
-          <DrawerDescription className="text-start text-sm text-muted-foreground font-light">
+          <DrawerDescription className="text-sm text-muted-foreground font-light">
             Player profiles makes it easier to use smurf accounts if you want.
           </DrawerDescription>
         </DrawerHeader>
 
         <Separator className="w-5/6 mx-auto mb-3 bg-border/15" />
 
-        <PlayerSelectCommand className="w-full max-w-xl mx-auto px-4"
-          listProps={{ className: "w-full max-w-lg mx-auto px-2" }}
+        <PlayerSelectCommand className="max-w-screen-md mx-auto px-4 sm:px-8"
+          listProps={{ className: "max-w-lg mx-auto px-2" }}
           players={players}
           handleSelect={handleSelectAsActive}
           isPending={selectAsActive.isPending}
