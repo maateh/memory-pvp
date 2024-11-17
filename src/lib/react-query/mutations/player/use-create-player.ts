@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { PlayerProfileFormValues } from "@/components/player/player-profile-form"
+import type { PlayerProfileFormValues } from "@/components/player/form/player-profile-form"
 
 // trpc
 import { api } from "@/trpc/client"
