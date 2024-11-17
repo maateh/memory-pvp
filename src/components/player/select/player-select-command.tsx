@@ -6,6 +6,7 @@ import { Hash, UserRoundPlus } from "lucide-react"
 // shadcn
 import {
   Command,
+  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/command"
 
 // components
+import { CardItem } from "@/components/shared"
 import { PlayerVerified } from "@/components/player"
 
 type PlayerSelectCommandProps = {
@@ -36,32 +38,40 @@ const PlayerSelectCommand = ({
     <Command {...props}>
       <CommandInput placeholder="Search player..." />
 
-      <CommandSeparator className="w-4/5 mx-auto bg-border/25" />
+      <CommandSeparator className="w-4/5 mx-auto mt-1.5 mb-0.5 bg-border/10" />
 
       <CommandList {...listProps}>
-        <CommandGroup heading="Players">
-          {players.map((player) => (
-            <CommandItem className="my-0.5 cursor-pointer"
-              value={player.tag}
-              onSelect={() => handleSelect(player)}
-              disabled={isPending}
-              key={player.tag}
-            >
-              <Hash className="size-4"
-                strokeWidth={2.5}
-                style={{ color: player.color }}
-              />
+        <CommandEmpty className="mt-2 text-sm text-muted-foreground font-light">
+          <CardItem className="py-2 justify-center">
+            No player found.
+          </CardItem>
+        </CommandEmpty>
 
-              <span className="mt-0.5">
-                {player.tag}
-              </span>
-
-              {player.isActive && (
-                <PlayerVerified className="ml-auto" />
-              )}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {players.length > 0 && (
+          <CommandGroup heading="Players">  
+            {players.map((player) => (
+              <CommandItem className="my-0.5 cursor-pointer"
+                value={player.tag}
+                onSelect={() => handleSelect(player)}
+                disabled={isPending}
+                key={player.tag}
+              >
+                <Hash className="size-4"
+                  strokeWidth={2.5}
+                  style={{ color: player.color }}
+                />
+  
+                <span className="mt-0.5">
+                  {player.tag}
+                </span>
+  
+                {player.isActive && (
+                  <PlayerVerified className="ml-auto" />
+                )}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
 
         {showCreateButton && (
           <>
