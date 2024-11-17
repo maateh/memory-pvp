@@ -7,52 +7,26 @@ import type { NavGroup as TNavGroup } from "./types"
 import { navigation } from "@/constants/navigation"
 
 // shadcn
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuSub
-} from "@/components/ui/sidebar"
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu } from "@/components/ui/sidebar"
 
 // components
 import { SignedIn } from "@clerk/nextjs"
-import { NavLinkButton, NavSubLinkButton } from "./nav-link"
+import NavLinkButton from "./nav-link"
 
 const NavGroup = ({ label, links, isProtected }: TNavGroup) => {
-  const content = (
-    <SidebarGroup key={label}>
+  const group = (
+    <SidebarGroup>
       <SidebarGroupLabel>
         {label}
       </SidebarGroupLabel>
 
       <SidebarMenu>
-        {links.map((link) => !link.sublinks?.length ? (
-          <NavLinkButton {...link}
+        {links.map((link) => (
+          <NavLinkButton
+            link={link}
             key={link.title}
             asChild
           />
-        ) : (
-          <Collapsible className="group/collapsible"
-            key={link.title}
-            defaultOpen
-            asChild
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <NavLinkButton {...link} collapsible />
-              </CollapsibleTrigger>
-
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {link.sublinks.map((sublink) => (
-                    <NavSubLinkButton key={sublink.title} {...sublink} />
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
         ))}
       </SidebarMenu>
     </SidebarGroup>
@@ -61,12 +35,12 @@ const NavGroup = ({ label, links, isProtected }: TNavGroup) => {
   if (isProtected) {
     return (
       <SignedIn>
-        {content}
+        {group}
       </SignedIn>
     )
   }
 
-  return content
+  return group
 }
 
 const NavGroups = () => navigation.map((group) => <NavGroup key={group.label} {...group} />)

@@ -10,56 +10,80 @@ import type { NavLink as TNavLink } from "./types"
 import { ChevronRight } from "lucide-react"
 
 // shadcn
-import { SidebarMenuButton, SidebarMenuSubButton, SidebarMenuSubItem } from "@/components/ui/sidebar"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import {
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem
+} from "@/components/ui/sidebar"
 
 type NavLinkButtonProps = {
-  collapsible?: boolean
-} & TNavLink & React.ComponentProps<typeof SidebarMenuButton>
+  link: TNavLink
+} & React.ComponentProps<typeof SidebarMenuButton>
 
-const NavLinkButton = ({ title, url, Icon, collapsible = false, ...props }: NavLinkButtonProps) => {
+const NavLinkButton = ({ link, ...props }: NavLinkButtonProps) => {
   const pathname = usePathname()
 
-  const content = (
-    <>
-      {Icon && <Icon />}
-      <span>{title}</span>
-    </>
-  )
-
-  return (
+  const button = (
     <SidebarMenuButton
-      isActive={pathname.includes(url)}
-      tooltip={title}
+      isActive={pathname.includes(link.url)}
+      tooltip={link.title}
+      asChild
       {...props}
     >
-      {!collapsible ? (
-        <Link href={url}>{content}</Link>
-      ) : (
-        <>
-          {content}
-          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-        </>
-      )}
+      <Link href={link.url}>
+        <link.Icon />
+        <span>{link.title}</span>
+      </Link>
     </SidebarMenuButton>
   )
-}
 
-const NavSubLinkButton = ({ title, url, Icon }: TNavLink) => {
-  const pathname = usePathname()
+  // Group is not collapsible
+  if (!link.sublinks?.length) {
+    return (
+      <SidebarMenuItem>
+        {button}
+      </SidebarMenuItem>
+    )
+  }
 
   return (
-    <SidebarMenuSubItem key={title}>
-      <SidebarMenuSubButton
-        isActive={pathname === url}
-        asChild
-      >
-        <Link href={url}>
-          <span>{title}</span>
-          {Icon && <Icon className="ml-auto" strokeWidth={1.85} />}
-        </Link>
-      </SidebarMenuSubButton>
-    </SidebarMenuSubItem>
+    <Collapsible className="group/collapsible" asChild>
+      <SidebarMenuItem>
+        {button}
+
+        <CollapsibleTrigger asChild>
+          <SidebarMenuAction>
+            <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+              strokeWidth={2.25}
+            />
+            <span className="sr-only">Toggle</span>
+          </SidebarMenuAction>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent className="transition-all">
+          <SidebarMenuSub>
+            {link.sublinks.map((sublink) => (
+              <SidebarMenuSubItem key={sublink.title}>
+                <SidebarMenuSubButton
+                  isActive={pathname === sublink.url}
+                  asChild
+                >
+                  <Link href={sublink.url}>
+                    <span>{sublink.title}</span>
+                    <sublink.Icon className="ml-auto" strokeWidth={1.85} />
+                  </Link>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
   )
 }
 
-export { NavLinkButton, NavSubLinkButton }
+export default NavLinkButton
