@@ -1,5 +1,5 @@
 // server
-import { getPlayer } from "@/server/db/player"
+import { getPlayers } from "@/server/db/player"
 
 // constants
 import { playersWidget } from "@/constants/dashboard"
@@ -7,6 +7,7 @@ import { playersWidget } from "@/constants/dashboard"
 // components
 import { CardItem, Warning } from "@/components/shared"
 import { PlayerProfileCard } from "@/components/player/card"
+import { PlayerSelectDrawer } from "@/components/player/select"
 import {
   WidgetActionWrapper,
   WidgetCard,
@@ -14,15 +15,15 @@ import {
   WidgetQuickAccess,
   WidgetSubtitle
 } from "@/components/widget"
-import { PlayerSelectDrawer } from "../select"
 
 const PlayersWidgetCard = async () => {
-  const activePlayer = await getPlayer({ isActive: true }, true)
+  const players = await getPlayers(true)
+  const activePlayer = players.find((player) => player.isActive)
 
   return (
     <WidgetCard widget={playersWidget}>
       <WidgetActionWrapper>
-        <PlayerSelectDrawer players={[]} asChild>
+        <PlayerSelectDrawer players={players} asChild>
           <WidgetQuickAccess>
           
           </WidgetQuickAccess>
