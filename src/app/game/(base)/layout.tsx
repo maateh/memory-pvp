@@ -11,7 +11,12 @@ import { Home, LayoutDashboard } from "lucide-react"
 import { buttonVariants } from "@/components/ui/button"
 
 // components
-const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), { ssr: false })
+import { ThemeToggleSkeleton } from "@/components/shared"
+
+const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), {
+  ssr: false,
+  loading: () => <ThemeToggleSkeleton className="bg-accent/30 rounded-full absolute top-3 right-3 sm:top-4 sm:right-4" />
+})
 
 type BaseGameLayoutProps = {
   children: React.ReactNode

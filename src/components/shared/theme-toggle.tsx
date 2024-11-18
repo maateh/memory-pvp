@@ -11,13 +11,16 @@ import { LucideProps, Moon, Sun } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type ThemeToggleProps = {
+  showTooltip?: boolean
   expandable?: "right" | "left" | "none"
   iconProps?: LucideProps
 } & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
 const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
+  showTooltip = false,
   expandable = "none",
   iconProps,
   className,
@@ -32,6 +35,7 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
       "expandable": expandable !== 'none',
       "flex-row-reverse expandable-left": expandable === 'left'
     }, className)}
+      tooltip={showTooltip ? `Switch to ${theme === 'light' ? 'Dark' : 'Light'}` : undefined}
       variant={variant}
       size={size}
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
@@ -58,4 +62,11 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
 })
 ThemeToggle.displayName = "ThemeToggle"
 
+const ThemeToggleSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (
+  <Skeleton className={cn("size-7 shrink-0 bg-border/50 rounded-xl", className)}
+    {...props}
+  />
+)
+
 export default ThemeToggle
+export { ThemeToggleSkeleton }

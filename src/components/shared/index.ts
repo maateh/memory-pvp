@@ -1,4 +1,4 @@
-export { default as ThemeToggle } from "./theme-toggle"
+export { default as ThemeToggle, ThemeToggleSkeleton } from "./theme-toggle"
 export { StatisticBadge, StatisticItem, StatisticList } from "./statistics"
 export { default as WarningModal, WarningModalFooter, WarningActionButton, WarningCancelButton } from "./warning-modal"
 export { default as Warning } from "./warning"
