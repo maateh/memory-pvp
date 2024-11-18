@@ -1,5 +1,5 @@
-// constants
-import { waitingRoomsWidget } from "@/constants/dashboard"
+// icons
+import { Swords } from "lucide-react"
 
 // components
 import { SessionSettingsFilter } from "@/components/session/filter"
@@ -12,9 +12,13 @@ import {
 
 const WaitingRoomsWidgetCard = () => {
   return (
-    <WidgetCard widget={waitingRoomsWidget}>
+    <WidgetCard
+      title="Waiting Rooms (WIP)"
+      description="Online multiplayer sessions where other players are currently waiting for their opponents or teammates."
+      Icon={Swords}
+    >
       <WidgetActionWrapper>
-        <WidgetLink href={waitingRoomsWidget.href} />
+        <WidgetLink href="/dashboard/rooms" />
       </WidgetActionWrapper>
 
       <WidgetSubtitle>

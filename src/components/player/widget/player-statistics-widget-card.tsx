@@ -1,8 +1,8 @@
 // server
 import { getPlayer } from "@/server/db/player"
 
-// constants
-import { playerStatisticsWidget } from "@/constants/dashboard"
+// icons
+import { ChartArea } from "lucide-react"
 
 // components
 import { SessionSettingsFilter } from "@/components/session/filter"
@@ -12,7 +12,11 @@ const StatisticsWidgetCard = async () => {
   const player = await getPlayer({ isActive: true })
   
   return (
-    <WidgetCard widget={playerStatisticsWidget}>
+    <WidgetCard
+      title="Player Statistics"
+      description="A brief summary about the statistics of your active player profile."
+      Icon={ChartArea}
+    >
       <WidgetSubtitle>
         {player ? <span className="text-accent">{player.tag}&apos;s</span> : 'Player'} statistics
       </WidgetSubtitle>

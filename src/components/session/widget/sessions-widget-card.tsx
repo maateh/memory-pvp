@@ -1,8 +1,8 @@
 // server
 import { getPlayer } from "@/server/db/player"
 
-// constants
-import { sessionsWidget } from "@/constants/dashboard"
+// icons
+import { History } from "lucide-react"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -21,9 +21,13 @@ const SessionsWidgetCard = async () => {
   const player = await getPlayer({ isActive: true })
 
   return (
-    <WidgetCard widget={sessionsWidget}>
+    <WidgetCard
+      title="Session History"
+      description="Browse through your previous game sessions."
+      Icon={History}
+    >
       <WidgetActionWrapper>
-        <WidgetLink href={sessionsWidget.href} />
+        <WidgetLink href="/dashboard/history" /> {/* TODO: change to `/dashboard/sessions` later */}
       </WidgetActionWrapper>
 
       <WidgetSubtitle>

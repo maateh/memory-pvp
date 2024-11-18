@@ -1,8 +1,5 @@
 // types
-import type { Widget } from "@/components/widget/types"
-
-// constants
-import { widgetIconMap } from "@/constants/dashboard"
+import type { LucideIcon, LucideProps } from "lucide-react"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -18,32 +15,36 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 type WidgetCardProps = {
-  widget: Widget
+  title: string
+  description: string
+  Icon: LucideIcon
+  iconProps?: LucideProps
   contentProps?: Omit<React.ComponentProps<typeof CardContent>, 'children'>
 } & React.ComponentProps<typeof Card>
 
 const WidgetCard = ({
-  widget,
+  title,
+  description,
+  Icon,
+  iconProps,
   contentProps,
   className,
   children,
   ...props
 }: WidgetCardProps) => {
-  const Icon = widgetIconMap[widget.key]
-
   return (
     <Card className={cn("relative bg-primary/10 dark:bg-primary/20", className)} {...props}>
       <CardHeader className="mt-4">
         <div className="flex-1 flex gap-x-3 sm:gap-x-4">
-          {Icon && <Icon className="size-5 sm:size-6 shrink-none" />}
+          <Icon className="size-5 sm:size-6 shrink-none" />
 
           <CardTitle className="text-xl sm:text-2xl font-heading heading-decorator">
-            {widget.title}
+            {title}
           </CardTitle>
         </div>
 
         <CardDescription className="font-light">
-          {widget.description}
+          {description}
         </CardDescription>
       </CardHeader>
 

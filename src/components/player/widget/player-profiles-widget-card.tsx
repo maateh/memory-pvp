@@ -1,8 +1,8 @@
 // server
 import { getPlayers } from "@/server/db/player"
 
-// constants
-import { playersWidget } from "@/constants/dashboard"
+// icons
+import { Gamepad2 } from "lucide-react"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
@@ -16,18 +16,22 @@ import {
   WidgetSubtitle
 } from "@/components/widget"
 
-const PlayersWidgetCard = async () => {
+const PlayerProfilesWidgetCard = async () => {
   const players = await getPlayers(true)
   const activePlayer = players.find((player) => player.isActive)
 
   return (
-    <WidgetCard widget={playersWidget}>
+    <WidgetCard
+      title="Player Profiles"
+      description="Create different player profiles to play with it. It makes easily possible to use smurf profiles if you want."
+      Icon={Gamepad2}
+    >
       <WidgetActionWrapper>
         <PlayerSelectDrawer players={players} asChild>
           <WidgetQuickAccess />
         </PlayerSelectDrawer>
 
-        <WidgetLink href={playersWidget.href} />
+        <WidgetLink href="/dashboard/players" />
       </WidgetActionWrapper>
 
       <WidgetSubtitle>
@@ -45,4 +49,4 @@ const PlayersWidgetCard = async () => {
   )
 }
 
-export default PlayersWidgetCard
+export default PlayerProfilesWidgetCard
