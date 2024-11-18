@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { UserAvatar, UserManageDrawer, UserManagePopover } from "@/components/user"
@@ -76,4 +77,11 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
 })
 UserManageButton.displayName = "UserManageButton"
 
+const UserManageButtonSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (
+  <Skeleton className={cn("h-10 w-full bg-border/50 rounded-xl", className)}
+    {...props}
+  />
+)
+
 export default UserManageButton
+export { UserManageButtonSkeleton }

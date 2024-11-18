@@ -1,6 +1,6 @@
 "use client"
 
-import { forwardRef } from "react"
+import dynamic from "next/dynamic"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -12,24 +12,20 @@ import { cn } from "@/lib/utils"
 import { SidebarMenuButton } from "@/components/ui/sidebar"
 
 // components
-import { UserManageButton } from "@/components/user"
+import { UserManageButtonSkeleton } from "@/components/user"
 
-const FooterUser = forwardRef<HTMLButtonElement, React.ComponentProps<typeof SidebarMenuButton>>(({
-  className,
-  tooltip,
-  ...props
-}, ref) => {
+const UserManageButton = dynamic(() => import("@/components/user/user-manage-button"), {
+  ssr: false,
+  loading: () => <UserManageButtonSkeleton className="bg-sidebar-primary/50 dark:bg-sidebar-primary/15 group-data-[collapsible=icon]:size-7" />
+})
+
+const FooterUser = () => {
   const { user } = useClerk()
 
   return (
     <SidebarMenuButton className={cn("h-10 gap-x-2 border-border/10 group-data-[collapsible=icon]:border-none group-data-[collapsible=icon]:rounded-full", {
       "bg-sidebar-primary/15 hover:bg-sidebar-primary/20 dark:bg-sidebar-primary/5 dark:hover:bg-sidebar-primary/10": !!user
-    }, className)}
-      tooltip={tooltip || user ? "Manage account" : "Sign In"}
-      ref={ref}
-      asChild
-      {...props}
-    >
+    })} asChild>
       <UserManageButton
         avatarProps={{
           className: "group-data-[collapsible=icon]:size-7",
@@ -40,7 +36,6 @@ const FooterUser = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Sid
       />
     </SidebarMenuButton>
   )
-})
-FooterUser.displayName = "NavUser"
+}
 
 export default FooterUser
