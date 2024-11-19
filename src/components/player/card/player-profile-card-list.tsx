@@ -1,31 +1,44 @@
-// shadcn
-import { ScrollArea } from "@/components/ui/scroll-area"
+// types
+import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
+
+// server
+import { getPlayers } from "@/server/db/player"
+
+// utils
+import { cn } from "@/lib/utils"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileCardListProps = {
-  players: ClientPlayer[]
-}
+  filter: PlayerFilter
+  sort: PlayerSort
+} & React.ComponentProps<"ul">
 
-const PlayerProfileCardList = ({ players }: PlayerProfileCardListProps) => {
-  if (!players.length) {
+const PlayerProfileCardList = async ({ filter, sort, className, ...props }: PlayerProfileCardListProps) => {
+  const players = await getPlayers({ filter, sort })
+
+  if (players.length === 0) {
+    const message = filter
+      ? "Couldn't find player with the specified filter."
+      : "You don't have any player profiles created."
+
     return (
-      <Warning message="Currently, you don't have any player profiles." />
+      <CardItem className="py-3.5 justify-center">
+        <Warning message={message} />
+      </CardItem>
     )
   }
 
   return (
-    <ScrollArea className="max-h-60 pr-3">
-      <ul className="space-y-2">
-        {players.map((player) => (
-          <CardItem key={player.tag}>
-            <PlayerProfileCard player={player} />
-          </CardItem>
-        ))}
-      </ul>
-    </ScrollArea>
+    <ul className={cn("space-y-2", className)} {...props}>
+      {players.map((player) => (
+        <CardItem key={player.tag}>
+          <PlayerProfileCard player={player} />
+        </CardItem>
+      ))}
+    </ul>
   )
 }
 

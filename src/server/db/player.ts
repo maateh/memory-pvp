@@ -1,3 +1,7 @@
+// types
+import type { z } from "zod"
+import type { getPlayersSchema } from "@/lib/validations/player-schema"
+
 // prisma
 import type { PlayerProfile, Prisma } from "@prisma/client"
 
@@ -64,7 +68,12 @@ export async function getPlayer(
  * 
  * @returns {Promise<ClientPlayer[]>} - A list of player profiles associated with the user.
  */
-export async function getPlayers(withAvatar: boolean = false): Promise<ClientPlayer[]> {
+export async function getPlayers(
+  filterInput: z.infer<typeof getPlayersSchema> = {},
+  withAvatar: boolean = false
+): Promise<ClientPlayer[]> {
+  const { filter, sort } = filterInput
+
   const user = await signedIn()
   if (!user) return []
 
@@ -80,11 +89,12 @@ export async function getPlayers(withAvatar: boolean = false): Promise<ClientPla
 
   const players = await db.playerProfile.findMany({
     where: {
-      userId: user.id
+      userId: user.id,
+      tag: { contains: filter?.tag }
     },
+    orderBy: sort,
     include
   })
 
-  const clientPlayers = players.map((player) => parseSchemaToClientPlayer(player))
-  return clientPlayers
+  return players.map((player) => parseSchemaToClientPlayer(player))
 }

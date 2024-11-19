@@ -26,7 +26,7 @@ import FooterUser from "./footer-user"
 import FooterTheme from "./footer-theme"
 
 const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  const players = await getPlayers(true)
+  const players = await getPlayers({}, true)
 
   return (
     <Sidebar collapsible="icon" {...props}>

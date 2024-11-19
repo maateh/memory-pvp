@@ -29,7 +29,7 @@ type BaseGameSetupPageProps = {
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
-  const players = await getPlayers(true)
+  const players = await getPlayers({}, true)
 
   let clientCollection: ClientCardCollection | null = null
   if (searchParams.collection) {

@@ -27,6 +27,22 @@ export const clientPlayerSchema = z.object({
   updatedAt: z.coerce.date().optional().nullable()
 })
 
+/* Query filters */
+export const playerFilterSchema = z.object({
+  tag: z.string()
+}).partial().optional().default({})
+
+const sortKeys = z.enum(['asc', 'desc']).optional()
+export const playerSortSchema = z.object({
+  tag: sortKeys,
+  createdAt: sortKeys
+}).optional().default({})
+
+export const getPlayersSchema = z.object({
+  filter: playerFilterSchema.optional(),
+  sort: playerSortSchema.optional()
+}).optional().default({})
+
 /** Forms / API validations */
 export const createPlayerSchema = z.object({
   tag: playerTagSchema,

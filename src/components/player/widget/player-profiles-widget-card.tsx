@@ -17,7 +17,7 @@ import {
 } from "@/components/widget"
 
 const PlayerProfilesWidgetCard = async () => {
-  const players = await getPlayers(true)
+  const players = await getPlayers({}, true)
   const activePlayer = players.find((player) => player.isActive)
 
   return (
