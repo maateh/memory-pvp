@@ -18,20 +18,28 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
   value,
   onChange,
   className,
-  style = { backgroundColor: value },
+  tooltip = "Select color",
+  variant = "ghost",
+  size = "icon",
+  children,
   ...props
 }, ref) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className={cn("size-8 rounded-lg border-2 border-border", className)}
-          size="icon"
-          style={{ backgroundColor: value }}
+        <Button className={cn({ "size-6": !children }, className)}
+          tooltip={tooltip}
+          variant={variant}
+          size={size}
+          style={!children ? { backgroundColor: value } : undefined}
           ref={ref}
           {...props}
-        />
+        >
+          {children}
+        </Button>
       </PopoverTrigger>
-      <PopoverContent>
+
+      <PopoverContent className="z-[100]">
         <HexColorPicker
           color={value}
           onChange={onChange}

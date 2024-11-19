@@ -27,7 +27,7 @@ const PlayerProfileForm = () => {
     resolver: zodResolver(createPlayerSchema),
     defaultValues: {
       tag: '',
-      color: '#92aa92'
+      color: '#82aa82'
     }
   })
 
@@ -35,24 +35,24 @@ const PlayerProfileForm = () => {
 
   return (
     <Form<PlayerProfileFormValues>
-      className="flex items-center gap-x-4"
+      className="mt-5 flex items-center gap-x-2"
       form={form}
       onSubmit={onSubmit}
     >
       <PlayerProfileFormFields form={form} />
 
-      <Button className="ml-3 p-1.5 hover:bg-transparent/5 dark:hover:bg-transparent/40"
-        tooltip="Add player profile"
+      <Button className="ml-3 p-2 border border-border/15 rounded-2xl hover:bg-transparent/5 dark:hover:bg-transparent/40"
+        tooltip="Create"
         variant="ghost"
         size="icon"
         disabled={createPlayer.isPending}
       >
         {createPlayer.isPending ? (
-          <Loader2 className="size-5 text-accent animate-spin"
-            strokeWidth={4}
+          <Loader2 className="size-4 text-accent animate-spin"
+            strokeWidth={2.5}
           />
         ) : (
-          <Check className="size-5 text-accent"
+          <Check className="size-4 text-accent"
             strokeWidth={4}
           />
         )}
