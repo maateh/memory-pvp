@@ -25,12 +25,12 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
   const { filter, sort } = parseFilterParams<typeof searchParams>(params)
 
   return (
-    <div className="page-wrapper relative grid grid-cols-9 gap-10">
-      <div className="w-full h-fit mx-auto col-span-9 xl:order-2 xl:col-span-4 xl:sticky xl:top-8">
+    <div className="page-wrapper relative flex flex-col gap-10 xl:flex-row">
+      <div className="flex-1 w-full xl:max-w-screen-sm xl:order-2">
         <PlayerCreateWidgetCard />
       </div>
 
-      <div className="w-full col-span-9 xl:col-span-5">
+      <div className="flex-1 w-full">
         <div className="flex items-end justify-between gap-x-6">
           <PlayerTagFilter className="flex-1" />
           <SortDropdownButton options={playerSortOptions} />
