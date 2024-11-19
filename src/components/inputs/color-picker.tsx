@@ -25,7 +25,7 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
   ...props
 }, ref) => {
   return (
-    <Popover>
+    <Popover modal>
       <PopoverTrigger asChild>
         <Button className={cn({ "size-6": !children }, className)}
           tooltip={tooltip}
