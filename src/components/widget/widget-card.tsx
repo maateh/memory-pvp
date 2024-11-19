@@ -33,8 +33,8 @@ const WidgetCard = ({
   ...props
 }: WidgetCardProps) => {
   return (
-    <Card className={cn("relative bg-primary/10 dark:bg-primary/20", className)} {...props}>
-      <CardHeader className="mt-4">
+    <Card className={cn("relative pt-4 bg-primary/20", className)} {...props}>
+      <CardHeader>
         <div className="flex-1 flex gap-x-3 sm:gap-x-4">
           <Icon className="size-5 sm:size-6 shrink-none" />
 
