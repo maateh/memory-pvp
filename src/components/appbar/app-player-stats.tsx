@@ -36,11 +36,10 @@ const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
         <ChevronRightCircle className="hidden size-3.5 -mx-0.5 shrink-0 text-muted-foreground/85 md:flex" />
       </div>
 
-      {Object.values(stats).map(({ key, data, Icon }) => (
+      {Object.values(stats).map((stat) => (
         <StatisticBadge className="hidden flex-wrap md:flex"
-          Icon={Icon}
-          stat={data}
-          key={key}
+          statistic={stat}
+          key={stat.key}
         />
       ))}
     </div>

@@ -3,7 +3,6 @@ import { cva, VariantProps } from "class-variance-authority"
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
 import type { RenderableStatistic } from "@/lib/utils/stats"
-import type { BadgeProps } from "@/components/ui/badge"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -67,9 +66,10 @@ const StatisticItem = ({
             "text-xs": size === 'sm'
           }, dataProps?.className)}
         >
-          <Separator className={cn("h-4 w-1.5 bg-accent rounded-full", { "bg-destructive": variant === 'destructive' })}
-            orientation="vertical"
-          />
+          <Separator className={cn("h-4 w-1.5 bg-accent rounded-full", {
+            "bg-destructive": variant === 'destructive'
+          })} orientation="vertical" />
+
           {typeof data === 'object' ? data : <p>{data}</p>}
         </div>
       </div>
@@ -84,28 +84,57 @@ const StatisticItem = ({
 }
 
 type StatisticBadgeProps = {
-  Icon: LucideIcon
+  showLabel?: boolean
   iconProps?: LucideProps
-} & Omit<BadgeProps, 'children'>
+  labelProps?: React.ComponentProps<"span">
+  dataProps?: React.ComponentProps<"span">
+} & Omit<React.ComponentProps<typeof Badge>, 'children'>
   & ({
-    stat: string | number
+    statistic: RenderableStatistic
+    Icon?: never
     children?: never
   } | {
-    stat?: never
+    statistic?: never
+    Icon: LucideIcon
     children: React.ReactNode
   })
 
-const StatisticBadge = ({ Icon, iconProps, className, stat, children, ...props }: StatisticBadgeProps) => {
+const StatisticBadge = ({
+  statistic,
+  showLabel = false,
+  Icon,
+  iconProps,
+  labelProps,
+  dataProps,
+  className,
+  children,
+  ...props
+}: StatisticBadgeProps) => {
+  const StatIcon = Icon || statistic.Icon
+
   return (
-    <Badge className={cn("py-1 gap-x-1.5 font-normal tracking-wide", className)}
-      {...props}
-    >
-      <Icon {...iconProps}
+    <Badge className={cn("py-1 gap-x-1.5 font-normal tracking-wide", className)} {...props}>
+      <StatIcon {...iconProps}
         className={cn("size-4 flex-none", iconProps?.className)}
         strokeWidth={iconProps?.strokeWidth || 1.75}
       />
 
-      {children || <span>{stat}</span>}
+      {children || (
+        <div className="flex items-center gap-x-1">
+          {showLabel && (
+            <>
+              <span {...labelProps}>{statistic?.label}</span>
+              <span className="font-semibold">|</span>
+            </>
+          )}
+
+          <span {...dataProps}
+            className={cn("font-semibold dark:font-medium", dataProps?.className)}
+          >
+            {statistic?.data}
+          </span>
+        </div>
+      )}
     </Badge>
   )
 }
