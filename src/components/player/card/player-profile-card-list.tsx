@@ -35,7 +35,7 @@ const PlayerProfileCardList = async ({ filter, sort, className, ...props }: Play
     <ul className={cn("space-y-2", className)} {...props}>
       {players.map((player) => (
         <CardItem key={player.tag}>
-          <PlayerProfileCard player={player} />
+          <PlayerProfileCard key={player.tag} player={player} />
         </CardItem>
       ))}
     </ul>
