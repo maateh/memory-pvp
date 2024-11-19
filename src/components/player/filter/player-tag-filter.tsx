@@ -44,7 +44,7 @@ const PlayerTagFilter = ({ inputProps, className, ...props }: PlayerTagFilterPro
         <Separator className="w-1.5 h-5 bg-accent rounded-full" />
 
         <p className="mt-1 font-heading tracking-wide">
-          Player name
+          Player tag
         </p>
       </div>
 
