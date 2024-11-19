@@ -6,12 +6,17 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 
 // icons
-import { EllipsisVertical, Loader2, PenOff, ShieldPlus, Trash2, UserCog, UserPen } from "lucide-react"
+import { EllipsisVertical, Loader2, PenOff, ShieldPlus, Trash2, UserPen } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 
 // components
 import PlayerDeleteWarning from "./player-delete-warning"
@@ -48,22 +53,6 @@ const PlayerActionsDropdown = ({ player, editing, toggleEditing }: PlayerActions
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel className="flex items-center justify-between gap-x-8">
-            <div className="flex items-center gap-x-2">
-              <Separator className="h-4 w-1 rounded-full bg-border/50"
-                orientation="vertical"
-              />
-
-              <p className="pt-0.5 text-base font-normal font-heading tracking-wider">
-                Manage player
-              </p>
-            </div>
-
-            <UserCog className="size-4" strokeWidth={1.5} />
-          </DropdownMenuLabel>
-
-          <DropdownMenuSeparator />
-
           <DropdownMenuItem
             variant="muted"
             onClick={toggleEditing}

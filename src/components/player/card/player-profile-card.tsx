@@ -1,16 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
-// lib
+// utils
 import { cn } from "@/lib/utils"
+import { getPlayerStatsMap } from "@/lib/utils/stats"
 
 // icons
-import { CheckCircle2, Loader2, Star, XCircle } from "lucide-react"
+import { CheckCircle2, Hash, Loader2, XCircle } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
 
 // components
 import { ColorPicker } from "@/components/inputs"
@@ -33,6 +35,10 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     color: player.color
   })
 
+  const playerStats = useMemo(() => getPlayerStatsMap(player, [
+    'score', 'sessions', 'timer', 'flips', 'matches'
+  ]), [player])
+
   const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation()
   const { deletePlayer } = useDeletePlayerMutation()
 
@@ -46,18 +52,23 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   return (
     <>
       <div className="flex gap-x-3 items-center">
-        <div className={cn("p-1.5 flex items-center justify-center rounded-xl", {
-          "bg-transparent/5 dark:bg-transparent/20 border border-border/25": editing
-        })}>
-          <ColorPicker className="size-4 border disabled:opacity-100"
-            value={updatedPlayer.color}
-            onChange={(color) => setUpdatedPlayer((prev) => ({ ...prev, color }))}
-            disabled={!editing}
+        <ColorPicker className={cn("border border-border/5 disabled:opacity-100", {
+          "bg-foreground/5 border-2 border-border/20": editing
+        })}
+          value={updatedPlayer.color}
+          onChange={(color) => setUpdatedPlayer((prev) => ({ ...prev, color }))}
+          disabled={!editing}
+        >
+          <Hash className="size-4"
+            style={{ color: updatedPlayer.color }}
+            strokeWidth={editing ? 4 : 2.5}
           />
-        </div>
+        </ColorPicker>
 
-        <div className="leading-snug">
+        <div className="leading-relaxed">
           <div className="flex items-center gap-x-2">
+            <Separator className="w-1 h-4 bg-accent rounded-full" />
+
             {editing ? (
               <Input className="h-fit py-0.5 mb-0.5 border-input/40"
                 value={updatedPlayer.tag}
@@ -69,14 +80,18 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
               </p>
             )}
 
-            {player.isActive && <PlayerVerified />}
+            {player.isActive && <PlayerVerified showTooltip />}
           </div>
 
-          <StatisticBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
-            Icon={Star}
-          >
-            Total score | <span className="font-semibold dark:font-medium">{player.stats.score} points</span>
-          </StatisticBadge>
+          <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            {Object.values(playerStats).map((stat) => (
+              <li key={stat.key}>
+                <StatisticBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
+                  statistic={stat}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
