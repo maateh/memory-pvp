@@ -67,7 +67,9 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
         <div className="leading-relaxed">
           <div className="flex items-center gap-x-2">
-            <Separator className="w-1 h-4 bg-accent rounded-full" />
+            <Separator className="w-1 h-4 rounded-full"
+              style={{ backgroundColor: updatedPlayer.color }}
+            />
 
             {editing ? (
               <Input className="h-fit py-0.5 mb-0.5 border-input/40"
