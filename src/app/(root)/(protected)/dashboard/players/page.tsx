@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { PlayerProfileCardList } from "@/components/player/card"
 import { PlayerTagFilter } from "@/components/player/filter"
 import { PlayerCreateWidgetCard } from "@/components/player/widget"
+import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import { SortDropdownButton } from "@/components/shared"
 
 type PlayersPageProps = {
@@ -34,6 +35,27 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
         <div className="flex items-end justify-between gap-x-6">
           <PlayerTagFilter className="flex-1" />
           <SortDropdownButton options={playerSortOptions} />
+        </div>
+
+        <Separator className="w-2/3 mx-auto my-4 bg-border/10 rounded-full" />
+
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-x-2">
+            <Separator className="w-1.5 h-5 bg-accent rounded-full" />
+            <h3 className="mt-1 text-base font-heading tracking-wide sm:text-lg">
+              Statistics filter
+            </h3>
+          </div>
+
+          <SessionStatusFilter
+            filterService="store"
+            filterKey="statistics"
+          />
+
+          <SessionSettingsFilter
+            filterService="store"
+            filterKey="statistics"
+          />
         </div>
 
         <Separator className="my-5 bg-border/20 rounded-full" />

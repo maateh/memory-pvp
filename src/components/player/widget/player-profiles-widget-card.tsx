@@ -4,8 +4,10 @@ import { getPlayers } from "@/server/db/player"
 // icons
 import { Gamepad2 } from "lucide-react"
 
+// shadcn
+import { Separator } from "@/components/ui/separator"
+
 // components
-import { CardItem, Warning } from "@/components/shared"
 import { PlayerProfileCard } from "@/components/player/card"
 import { PlayerSelectDrawer } from "@/components/player/select"
 import {
@@ -15,9 +17,11 @@ import {
   WidgetQuickAccess,
   WidgetSubtitle
 } from "@/components/widget"
+import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
+import { CardItem, Warning } from "@/components/shared"
 
 const PlayerProfilesWidgetCard = async () => {
-  const players = await getPlayers({}, true)
+  const players = await getPlayers()
   const activePlayer = players.find((player) => player.isActive)
 
   return (
@@ -34,16 +38,32 @@ const PlayerProfilesWidgetCard = async () => {
         <WidgetLink href="/dashboard/players" />
       </WidgetActionWrapper>
 
-      <WidgetSubtitle>
-        Active player profile
-      </WidgetSubtitle>
+      <div className="space-y-1.5">
+        <WidgetSubtitle>
+          Statistics filter
+        </WidgetSubtitle>
+
+        <SessionStatusFilter
+          filterService="store"
+          filterKey="statistics"
+        />
+
+        <SessionSettingsFilter
+          filterService="store"
+          filterKey="statistics"
+        />
+      </div>
+
+      <Separator className="w-1/2 mx-auto mt-4 mb-2 bg-border/10" />
 
       {activePlayer ? (
         <CardItem>
           <PlayerProfileCard player={activePlayer} />
         </CardItem>
       ) : (
-        <Warning message="Currently, you don't have any player profile." />
+        <CardItem className="justify-center">
+          <Warning message="Currently, you don't have any player profile." />
+        </CardItem>
       )}
     </WidgetCard>
   )
