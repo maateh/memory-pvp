@@ -1,6 +1,9 @@
 // icons
 import { Swords } from "lucide-react"
 
+// shadcn
+import { Separator } from "@/components/ui/separator"
+
 // components
 import { SessionSettingsFilter } from "@/components/session/filter"
 import {
@@ -9,6 +12,7 @@ import {
   WidgetLink,
   WidgetSubtitle
 } from "@/components/widget"
+import { Warning } from "@/components/shared"
 
 const WaitingRoomsWidgetCard = () => {
   return (
@@ -28,6 +32,13 @@ const WaitingRoomsWidgetCard = () => {
       <SessionSettingsFilter
         filterService="store"
         filterKey="rooms"
+      />
+
+      <Separator className="w-2/3 mx-auto my-4 bg-border/10" />
+
+      <Warning className="h-auto mt-6 mx-auto text-base font-heading"
+        messageProps={{ className: "mt-1" }}
+        message="Waiting rooms have not been implemented yet."
       />
     </WidgetCard>
   )
