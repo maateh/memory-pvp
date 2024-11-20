@@ -27,7 +27,7 @@ const SessionsWidgetCard = async () => {
       Icon={History}
     >
       <WidgetActionWrapper>
-        <WidgetLink href="/dashboard/history" /> {/* TODO: change to `/dashboard/sessions` later */}
+        <WidgetLink href="/dashboard/sessions" />
       </WidgetActionWrapper>
 
       <WidgetSubtitle>
