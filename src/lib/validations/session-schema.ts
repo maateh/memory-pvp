@@ -63,6 +63,7 @@ export const sessionFilterSchema = clientSessionSchema
   .extend({ playerTag: playerTagSchema })
   .partial()
   .omit({
+    stats: true,
     cards: true,
     flipped: true,
     players: true

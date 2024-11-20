@@ -28,14 +28,17 @@ export const clientPlayerSchema = z.object({
 })
 
 /* Query filters */
-export const playerFilterSchema = z.object({
-  tag: z.string()
+export const playerFilterSchema = clientPlayerSchema.omit({
+  stats: true,
+  imageUrl: true,
+  updatedAt: true
 }).partial().optional().default({})
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const playerSortSchema = z.object({
   tag: sortKeys,
   createdAt: sortKeys
+  // TODO: extend with stats?
 }).optional().default({})
 
 export const getPlayersSchema = z.object({

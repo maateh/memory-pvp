@@ -6,13 +6,12 @@ import type { Prisma } from "@prisma/client"
 
 // helpers
 import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
-import { pairSessionCardsWithCollection, parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
 
 // utils
 import { pickFields } from "@/lib/utils"
 
 // constants
-import { tableSizeMap } from "@/constants/game"
 import { clientSessionKeys } from "@/constants/session"
 
 // schema
@@ -134,7 +133,7 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const { playerTag, stats, ...filter } = filterInput
+  const { playerTag, ...filter } = filterInput
 
   return {
     owner: { userId },
@@ -145,7 +144,6 @@ export function parseSessionFilter(
         }
       }
     },
-    stats: stats as Prisma.JsonFilter<"GameSession"> | undefined,
     ...filter
   }
 }
