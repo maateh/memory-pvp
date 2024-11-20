@@ -43,7 +43,7 @@ function BadgeWithIcon({ Icon, iconProps, className, children, ...props }: Badge
   return (
     <Badge className={cn("gap-x-2", className)} {...props}>
       <Icon {...iconProps}
-        className={cn("size-4", iconProps?.className)}
+        className={cn("size-4 shrink-0", iconProps?.className)}
         strokeWidth={iconProps?.strokeWidth || 1.75}
       />
 

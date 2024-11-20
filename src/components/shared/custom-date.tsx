@@ -13,9 +13,9 @@ type CustomDateProps = {
 
 const CustomDate = ({ date, Icon, iconProps, className, ...props }: CustomDateProps) => {
   return (
-    <div className={cn("flex items-center gap-x-1.5 text-foreground/85 text-xs", className)} {...props}>
+    <div className={cn("flex items-center gap-x-2 text-foreground/85 text-xs", className)} {...props}>
       <Icon {...iconProps}
-        className={cn("size-3 sm:size-3.5 shrink-0", iconProps?.className)}
+        className={cn("size-3.5 shrink-0", iconProps?.className)}
         strokeWidth={iconProps?.strokeWidth || 2.25}
       />
 
