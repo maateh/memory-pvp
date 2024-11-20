@@ -11,6 +11,7 @@ import { parseFilterParams } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { SessionCardList } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import SessionsTable from "./sessions-table"
 
@@ -42,10 +43,15 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
         <SessionSettingsFilter filterKey="history" />
       </div>
 
-      <Separator className="my-5 bg-border/15" />
+      <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />
 
-      {/* TODO: show `SessionCardList` on smaller screens (needs to be refactored) */}
-      <SessionsTable sessions={sessions} />
+      <SessionCardList className="block xl:hidden"
+        sessions={sessions}
+      />
+
+      <div className="hidden xl:block">
+        <SessionsTable sessions={sessions} />
+      </div>
     </div>
   )
 }

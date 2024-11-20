@@ -16,9 +16,9 @@ import { DataTable } from "@/components/ui/data-table"
 
 type SessionsTableProps = {
   sessions: ClientGameSession[]
-} & Omit<React.ComponentProps<typeof DataTable>, 'table'>
+}
 
-const SessionsTable = ({ sessions, ...props }: SessionsTableProps) => {
+const SessionsTable = ({ sessions }: SessionsTableProps) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
@@ -34,7 +34,7 @@ const SessionsTable = ({ sessions, ...props }: SessionsTableProps) => {
     }
   })
   
-  return <DataTable table={table} {...props} />
+  return <DataTable table={table} />
 }
 
 export default SessionsTable

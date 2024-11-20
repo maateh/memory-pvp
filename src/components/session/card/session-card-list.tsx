@@ -1,9 +1,3 @@
-// types
-import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
-
-// server
-import { getClientSessions } from "@/server/db/session"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -12,25 +6,14 @@ import { CardItem, Warning } from "@/components/shared"
 import { SessionCard, SessionCardSkeleton } from "@/components/session/card"
 
 type SessionCardListProps = {
-  filter: SessionFilter
-  sort: SessionSort
+  sessions: ClientGameSession[]
 } & React.ComponentProps<"ul">
 
-const SessionCardList = async ({
-  filter, sort,
-  className,
-  ...props
-}: SessionCardListProps) => {
-  const sessions = await getClientSessions({ filter, sort,  })
-
+const SessionCardList = ({ sessions, className, ...props}: SessionCardListProps) => {
   if (sessions.length === 0) {
-    const message = filter
-      ? "Couldn't find game session with the specified filter."
-      : "You have no game session history yet."
-
     return (
       <CardItem className="py-3.5 justify-center">
-        <Warning message={message} />
+        <Warning message="Couldn't find game session with the specified filter or you haven't played in any game session yet." />
       </CardItem>
     )
   }
@@ -39,7 +22,7 @@ const SessionCardList = async ({
     <ul className={cn("space-y-3", className)} {...props}>
       {sessions.map((session) => (
         <CardItem className="rounded-2xl" key={session.slug}>
-          <SessionCard session={session} />
+          <SessionCard session={session} key={session.slug} />
         </CardItem>
       ))}
     </ul>
