@@ -3,14 +3,85 @@ import { TRPCError } from "@trpc/server"
 import { TRPCApiError } from "@/trpc/error"
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
-// lib
+// validations
+import { z } from "zod"
 import {
   createPlayerSchema,
   updatePlayerSchema,
-  playerTagSchema
+  playerTagSchema,
+  playerFilterSchema
 } from "@/lib/validations/player-schema"
+import { sessionFilterSchema } from "@/lib/validations/session-schema"
 
 export const playerProfileRouter = createTRPCRouter({
+  getStats: protectedProcedure
+    .input(z.object({
+      playerFilter: playerFilterSchema,
+      sessionFilter: sessionFilterSchema
+    }))
+    .query(async ({ ctx, input }): Promise<PrismaJson.PlayerStats> => {
+      const { playerFilter, sessionFilter } = input
+
+      const playerTag = playerFilter.tag
+      if (!playerTag) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          cause: new TRPCApiError({
+            key: 'PLAYER_PROFILE_NOT_FOUND',
+            message: 'Missing player tag.',
+            description: 'Player filter params must include the player tag.'
+          })
+        })
+      }
+
+      const sessions = await ctx.db.gameSession.findMany({
+        where: {
+          players: {
+            some: {
+              userId: ctx.user.id,
+              ...playerFilter
+            }
+          },
+          ...sessionFilter
+        },
+        select: {
+          stats: true,
+          results: {
+            where: {
+              player: {
+                userId: ctx.user.id,
+                ...playerFilter
+              }
+            },
+            include: {
+              player: true
+            }
+          }
+        }
+      })
+    
+      const stats = sessions.reduce((sum, { stats, results }) => {
+        const result = results.find((result) => result.player.tag === playerTag)
+        const score = result?.score || 0
+
+        return {
+          ...sum,
+          score: sum.score + score,
+          timer: sum.timer + stats.timer,
+          flips: sum.flips + stats.flips[playerTag],
+          matches: sum.matches + stats.matches[playerTag]
+        }
+      }, {
+        sessions: sessions.length,
+        score: 0,
+        timer: 0,
+        flips: 0,
+        matches: 0
+      } as PrismaJson.PlayerStats)
+
+      return stats
+    }),
+
   create: protectedProcedure
     .input(createPlayerSchema)
     .mutation(async ({ ctx, input }) => {
