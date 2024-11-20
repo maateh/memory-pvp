@@ -48,7 +48,7 @@ const SessionsWidgetCard = async () => {
         />
       </div>
 
-      <SessionCounter playerTag={player?.tag} />
+      <SessionCounter player={player} />
     </WidgetCard>
   )
 }
