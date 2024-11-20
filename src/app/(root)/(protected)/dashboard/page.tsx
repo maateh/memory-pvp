@@ -4,7 +4,7 @@ import { SessionsWidgetCard, WaitingRoomsWidgetCard } from "@/components/session
 
 const DashboardPage = () => {
   return (
-    <div className="page-wrapper widget-container">
+    <div className="page-wrapper grid gap-10 xl:grid-cols-2">
       <PlayerProfilesWidgetCard />
       <WaitingRoomsWidgetCard />
       <SessionsWidgetCard />
