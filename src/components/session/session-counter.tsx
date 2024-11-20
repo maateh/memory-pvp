@@ -31,26 +31,24 @@ const SessionCounter = ({ player }: SessionCounterProps) => {
 
   if (!player) {
     return (
-      <div className="mt-5 pt-2.5 border-t border-border/70">
-        <Warning className="w-fit font-heading"
-          messageProps={{ className: "mt-0.5" }}
-          iconProps={{ className: "size-4" }}
-          message="You have played 0 sessions."
-        />
-      </div>
+      <Warning className="w-full mt-5 pt-2.5 justify-start border-t border-border/50 font-heading"
+        messageProps={{ className: "mt-1" }}
+        iconProps={{ className: "size-4" }}
+        message="You have played 0 sessions."
+      />
     )
   }
 
   return (
-    <div className="mt-5 pt-2.5 flex gap-x-2 border-t border-border/70">
-      <SquareSigma className="size-4 sm:size-5 flex-none" />
+    <div className="mt-5 pt-3 flex gap-x-2 border-t border-border/50">
+      <SquareSigma className="size-4 sm:size-5 shrink-0" />
 
       <div className="flex items-center gap-x-1.5 font-heading dark:font-light">
         <span className="text-accent font-medium dark:font-normal">
-          {player.tag}&apos;s  
+          {player.tag}&apos;s
         </span> sessions
 
-        <Separator className="w-1 h-3 bg-border/50 rounded-full" />
+        <Separator className="w-1 h-3 mx-0.5 bg-border/50 rounded-full" />
 
         {!isFetching ? (
           <>
@@ -59,7 +57,7 @@ const SessionCounter = ({ player }: SessionCounterProps) => {
             </span> total
           </>
         ) : (
-          <Loader2 className="size-3.5 text-muted-foreground animate-spin"
+          <Loader2 className="size-3.5 shrink-0 text-muted-foreground animate-spin"
             strokeWidth={4}
           />
         )}

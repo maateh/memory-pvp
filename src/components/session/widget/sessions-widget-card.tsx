@@ -4,9 +4,6 @@ import { getPlayer } from "@/server/db/player"
 // icons
 import { History } from "lucide-react"
 
-// shadcn
-import { Separator } from "@/components/ui/separator"
-
 // components
 import { SessionCounter } from "@/components/session"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
@@ -30,17 +27,15 @@ const SessionsWidgetCard = async () => {
         <WidgetLink href="/dashboard/sessions" />
       </WidgetActionWrapper>
 
-      <WidgetSubtitle>
-        Summary of your sessions
-      </WidgetSubtitle>
+      <div className="space-y-1.5">
+        <WidgetSubtitle>
+          Session settings
+        </WidgetSubtitle>
 
-      <div className="space-y-1.5 sm:space-y-1">
         <SessionStatusFilter
           filterService="store"
           filterKey="history"
         />
-
-        <Separator className="w-1/5 mx-auto bg-border/10" />
 
         <SessionSettingsFilter
           filterService="store"
