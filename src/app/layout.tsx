@@ -34,11 +34,10 @@ export const metadata: Metadata = {
 }
 
 type BaseLayoutProps = {
-  widget: React.ReactNode
   children: React.ReactNode
 }
 
-const BaseLayout = ({ widget, children }: BaseLayoutProps) => {
+const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
@@ -59,7 +58,6 @@ const BaseLayout = ({ widget, children }: BaseLayoutProps) => {
             >
               <Toaster />
 
-              {widget}
               {children}
             </ThemeProvider>
           </TRPCProvider>
