@@ -87,6 +87,23 @@ export const playerProfileRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { tag, color } = input
 
+      const playersAmount = await ctx.db.playerProfile.count({
+        where: {
+          userId: ctx.user.id
+        }
+      })
+
+      if (playersAmount > 5) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          cause: new TRPCApiError({
+            key: 'PLAYER_PROFILE_LIMIT',
+            message: "Player profile limitation.",
+            description: 'Sorry, but you have reached the maximum number (5) of player profiles you can create.'
+          })
+        })
+      }
+
       const player = await ctx.db.playerProfile.findUnique({
         where: { tag }
       })
