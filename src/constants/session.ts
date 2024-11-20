@@ -8,6 +8,7 @@ export const clientSessionKeys: (keyof ClientGameSession)[] = [
 ] as const
 
 export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
+  'collectionId',
   'tableSize',
   'players', 'stats',
   'flipped', 'cards',
