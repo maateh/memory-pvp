@@ -58,10 +58,10 @@ export const useSessionStore = create<SessionStore>((set) => ({
     set(({ session }) => {
       if (session === null) return { session }
 
-      const playerTag = session.players.current.tag
+      const playerId = session.players.current.id
       const cards = session.cards.map(
         (card) => card.key === clickedCard.key
-          ? { ...card, flippedBy: playerTag }
+          ? { ...card, flippedBy: playerId }
           : card
       )
 
@@ -81,12 +81,12 @@ export const useSessionStore = create<SessionStore>((set) => ({
       set(({ session }) => {
         if (session === null) return { session }
 
-        const playerTag = session.players.current.tag
+        const playerId = session.players.current.id
         const cards = session.cards.map((card) => {
           const prevFlippedCardId = session?.flipped[0].id
 
           return card.id === prevFlippedCardId
-            ? { ...card, flippedBy: null, matchedBy: playerTag }
+            ? { ...card, flippedBy: null, matchedBy: playerId }
             : card
         })
 

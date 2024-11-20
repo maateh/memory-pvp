@@ -25,14 +25,14 @@ type SessionPlayerStatsProps = {
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
   const score = calculateSessionScore(
     session,
-    player.tag,
+    player.id,
     session.status === 'FINISHED' ? 'finish' : 'abandon'
   )
 
   const sessionPlayerStats = {
     score: score || 0,
-    flips: session.stats.flips[player.tag],
-    matches: session.stats.matches[player.tag],
+    flips: session.stats.flips[player.id],
+    matches: session.stats.matches[player.id],
     timer: formatTimer(session.stats.timer * 1000)
   }
 

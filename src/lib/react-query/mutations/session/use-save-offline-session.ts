@@ -26,7 +26,7 @@ export const useSaveOfflineSessionMutation = () => {
     }
   })
   
-  const handleSaveOfflineSession = async (playerTag: string) => {
+  const handleSaveOfflineSession = async (playerId: string) => {
     const offlineSession = getSessionFromStorage()
 
     if (!offlineSession) {
@@ -34,7 +34,7 @@ export const useSaveOfflineSessionMutation = () => {
       return
     }
 
-    if (!playerTag.length) {
+    if (!playerId.length) {
       toast.warning("Please select a player profile first.")
       return
     }
@@ -50,7 +50,7 @@ export const useSaveOfflineSessionMutation = () => {
     try {
       await saveOfflineSession.mutateAsync({
         ...offlineSession,
-        playerTag,
+        playerId,
         cards: validateCardMatches(offlineSession.cards)
       })
     } catch (err) {

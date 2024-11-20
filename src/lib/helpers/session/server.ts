@@ -55,25 +55,25 @@ export function generateSlug(
 
 /**
  * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
- * organizing player data based on the current player's tag.
+ * organizing player data based on the current player's ID.
  * 
  * - The `players` field is structured to have:
- *   - `current`: The player object whose tag matches the `currentPlayerTag`.
+ *   - `current`: The player object whose ID matches the `currentPlayerId`.
  *   - `other`: The other player in the session.
  * 
  * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
- * @param {string} currentPlayerTag - The tag of the current player to identify them in the session.
+ * @param {string} currentPlayerId - The ID of the current player to identify them in the session.
  * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
-  currentPlayerTag: string
+  currentPlayerId: string
 ): ClientGameSession {
   const filteredSession = pickFields(session, clientSessionKeys)
 
   const players = {
-    current: filteredSession.players.find((player) => player.tag === currentPlayerTag)!,
-    other: filteredSession.players.find((player) => player.tag !== currentPlayerTag)
+    current: filteredSession.players.find((player) => player.id === currentPlayerId)!,
+    other: filteredSession.players.find((player) => player.id !== currentPlayerId)
   }
 
   return {
@@ -133,15 +133,13 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const { playerTag, ...filter } = filterInput
+  const { playerId, ...filter } = filterInput
 
   return {
     owner: { userId },
     players: {
       some: {
-        tag: {
-          equals: playerTag
-        }
+        id: { equals: playerId }
       }
     },
     ...filter

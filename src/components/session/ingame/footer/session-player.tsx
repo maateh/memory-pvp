@@ -23,10 +23,10 @@ type SessionPlayerProps = {
 }
 
 const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
-  const flips = session.stats.flips[player.tag]
+  const flips = session.stats.flips[player.id]
 
   const freeFlips = getFreeFlips(session)
-  const score = calculateSessionScore(session, player.tag)
+  const score = calculateSessionScore(session, player.id)
 
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>

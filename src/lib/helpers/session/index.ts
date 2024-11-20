@@ -44,14 +44,14 @@ export function getFreeFlips(
  * - **PVP and COOP modes**: Not yet implemented, and currently return `null`.
  * 
  * @param {Object} session - The game session containing type, mode, table size, and stats.
- * @param {string} playerTag - The tag of the player whose score is being calculated.
+ * @param {string} playerId - The ID of the player whose score is being calculated.
  * @param {string} [action='finish'] - Specifies whether the player finished or abandoned the session. Defaults to 'finish'.
  * 
  * @returns {number | null} - The player's calculated score, or `null` if scoring is not applicable.
  */
 export function calculateSessionScore(
   session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
-  playerTag: string,
+  playerId: string,
   action: 'finish' | 'abandon' = 'finish'
 ): number | null {
   const { type, mode, tableSize, stats } = session
@@ -65,7 +65,7 @@ export function calculateSessionScore(
       return -freeFlips
     }
 
-    const flips = stats.flips[playerTag]
+    const flips = stats.flips[playerId]
     const score = freeFlips >= flips
       ? freeFlips
       : freeFlips * 2 - flips

@@ -45,8 +45,8 @@ export async function getClientSessions(
   })
 
   const clientSessions = sessions.map((session) => {
-    const playerTag = session.owner.tag
-    return parseSchemaToClientSession(session, playerTag)
+    const playerId = session.owner.id
+    return parseSchemaToClientSession(session, playerId)
   })
 
   return clientSessions
@@ -81,6 +81,6 @@ export async function getClientSession(
 
   const player = session.players.find((player) => player.userId === user.id)
 
-  const clientSession = parseSchemaToClientSession(session, player!.tag)
+  const clientSession = parseSchemaToClientSession(session, player!.id)
   return clientSession
 }

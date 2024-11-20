@@ -48,7 +48,7 @@ export function getSessionStatsMap(
   session: ClientGameSession,
   keys?: SessionStatsKeys[]
 ): RenderableStatsMap<SessionStatsKeys> {
-  const playerTag = session.players.current.tag
+  const playerId = session.players.current.id
 
   const stats: RenderableStatsMap<SessionStatsKeys> = {
     typeMode: {
@@ -73,13 +73,13 @@ export function getSessionStatsMap(
       key: "matches",
       Icon: Spade,
       label: "Matched Cards",
-      data: session.stats.matches[playerTag] + ' matches'
+      data: session.stats.matches[playerId] + ' matches'
     },
     flips: {
       key: "flips",
       Icon: ScanEye,
       label: "Card Flips",
-      data: session.stats.flips[playerTag] + ' flips'
+      data: session.stats.flips[playerId] + ' flips'
     },
     startedAt: {
       key: "startedAt",

@@ -24,7 +24,7 @@ type SaveOfflineSessionProps = {
 
 const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   const router = useRouter()
-  const [playerTag, setPlayerTag] = useState('')
+  const [playerId, setPlayerId] = useState('')
 
   const { saveOfflineSession, handleSaveOfflineSession } = useSaveOfflineSessionMutation()
 
@@ -64,14 +64,14 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
         </div>
       ) : (
         <ButtonGroup className="px-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3.5"
-          defaultValue={playerTag}
-          onValueChange={setPlayerTag}
+          defaultValue={playerId}
+          onValueChange={setPlayerId}
         >
           {players.map((player) => (
             <ButtonGroupItem className="min-w-36 max-w-36 flex-1"
               variant="outline"
-              value={player.tag}
-              key={player.tag}
+              value={player.id}
+              key={player.id}
             >
               <PlayerBadge className="border-none"
                 variant="outline"
@@ -88,8 +88,8 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
       <Button className="mx-auto flex gap-x-2"
         variant="secondary"
         size="lg"
-        onClick={() => handleSaveOfflineSession(playerTag)}
-        disabled={!playerTag || saveOfflineSession.isPending}
+        onClick={() => handleSaveOfflineSession(playerId)}
+        disabled={!playerId || saveOfflineSession.isPending}
       >
         <Save className="size-5 sm:size-6" />
         Save Results

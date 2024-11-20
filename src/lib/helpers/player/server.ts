@@ -57,7 +57,7 @@ export function calculatePlayerStats(
   session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
   action: 'finish' | 'abandon' = 'finish'
 ): PrismaJson.PlayerStats {
-  const score = calculateSessionScore(session, player.tag, action) || 0
+  const score = calculateSessionScore(session, player.id, action) || 0
 
   const sessionStats = session.stats
   const prevStats = player.stats
@@ -65,8 +65,8 @@ export function calculatePlayerStats(
   return {
     score: prevStats.score + score,
     timer: prevStats.timer + sessionStats.timer,
-    flips: prevStats.flips + sessionStats.flips[player.tag],
-    matches: prevStats.matches + sessionStats.matches[player.tag],
+    flips: prevStats.flips + sessionStats.flips[player.id],
+    matches: prevStats.matches + sessionStats.matches[player.id],
     sessions: ++prevStats.sessions
   }
 }

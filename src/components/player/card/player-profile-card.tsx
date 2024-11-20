@@ -45,7 +45,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
   const filter = useFilterStore<SessionFilter>((state) => state.statistics)
 
   const { data: stats, isFetching: isStatsFetching } = api.player.getStats.useQuery({
-    playerFilter: { tag: player.tag },
+    playerFilter: { id: player.id },
     sessionFilter: filter
   }, {
     refetchOnMount: false,

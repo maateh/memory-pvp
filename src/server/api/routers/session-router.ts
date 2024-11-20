@@ -55,7 +55,7 @@ export const sessionRouter = createTRPCRouter({
       if (!clientSession) {
         clientSession = parseSchemaToClientSession(
           ctx.activeSession,
-          ctx.player.tag
+          ctx.player.id
         )
       }
 
@@ -89,7 +89,7 @@ export const sessionRouter = createTRPCRouter({
             key: 'ACTIVE_SESSION',
             message: 'Failed to start a new game session.',
             description: 'You cannot participate in two game sessions at once with the same player.',
-            data: clientSession || parseSchemaToClientSession(activeSession, ctx.player.tag)
+            data: clientSession || parseSchemaToClientSession(activeSession, ctx.player.id)
           } as TRPCApiError
         })
       }
@@ -146,11 +146,11 @@ export const sessionRouter = createTRPCRouter({
             timer: 0,
             flips: {
               // TODO: add guest flips (update validation schema)
-              [ctx.player.tag]: 0
+              [ctx.player.id]: 0
             },
             matches: {
               // TODO: add guest matches (update validation schema)
-              [ctx.player.tag]: 0
+              [ctx.player.id]: 0
             }
           },
           collection: {
@@ -173,7 +173,7 @@ export const sessionRouter = createTRPCRouter({
         include: getSessionSchemaIncludeFields()
       })
 
-      return parseSchemaToClientSession(session, ctx.player.tag)
+      return parseSchemaToClientSession(session, ctx.player.id)
     }),
 
   store: activeSessionProcedure
@@ -224,9 +224,9 @@ export const sessionRouter = createTRPCRouter({
             createMany: {
               data: ctx.activeSession.players.map((player) => ({
                 playerId: player.id,
-                flips: session.stats.flips[player.tag],
-                matches: session.stats.matches[player.tag],
-                score: calculateSessionScore(session, ctx.player.tag)
+                flips: session.stats.flips[player.id],
+                matches: session.stats.matches[player.id],
+                score: calculateSessionScore(session, ctx.player.id)
               }))
             }
           }
@@ -277,11 +277,11 @@ export const sessionRouter = createTRPCRouter({
             createMany: {
               data: ctx.activeSession.players.map((player) => ({
                 playerId: player.id,
-                flips: session.stats.flips[player.tag],
-                matches: session.stats.matches[player.tag],
+                flips: session.stats.flips[player.id],
+                matches: session.stats.matches[player.id],
 
                 // TODO: in 'PVP' mode, only deducts for the player who abandoned the session
-                score: calculateSessionScore(session, ctx.player.tag, 'abandon')
+                score: calculateSessionScore(session, ctx.player.id, 'abandon')
               }))
             }
           }
@@ -292,12 +292,12 @@ export const sessionRouter = createTRPCRouter({
   saveOffline: protectedProcedure
     .input(saveOfflineGameSchema)
     .mutation(async ({ ctx, input }) => {
-      const { playerTag, collectionId, ...session } = input
+      const { playerId, collectionId, ...session } = input
 
       const playerProfile = await ctx.db.playerProfile.findFirst({
         where: {
           userId: ctx.user.id,
-          tag: playerTag
+          id: playerId
         },
         select: {
           id: true
@@ -316,16 +316,16 @@ export const sessionRouter = createTRPCRouter({
       }
 
       /**
-       * Replaces the default 'offlinePlayer.tag' placeholder constant
+       * Replaces the default 'offlinePlayer.id' placeholder constant
        * which is used by default in offline session stats.
        */
       const stats: PrismaJson.SessionStats = {
         ...session.stats,
         flips: {
-          [playerTag]: session.stats.flips[offlinePlayerMetadata.tag]
+          [playerId]: session.stats.flips[offlinePlayerMetadata.id]
         },
         matches: {
-          [playerTag]: session.stats.matches[offlinePlayerMetadata.tag]
+          [playerId]: session.stats.matches[offlinePlayerMetadata.id]
         }
       }
 

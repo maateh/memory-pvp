@@ -18,6 +18,7 @@ const playerStatsSchema = z.object({
 })
 
 export const clientPlayerSchema = z.object({
+  id: z.string(),
   tag: playerTagSchema,
   color: playerColorSchema,
   isActive: z.coerce.boolean(),

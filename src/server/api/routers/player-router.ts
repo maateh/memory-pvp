@@ -22,14 +22,14 @@ export const playerProfileRouter = createTRPCRouter({
     .query(async ({ ctx, input }): Promise<PrismaJson.PlayerStats> => {
       const { playerFilter, sessionFilter } = input
 
-      const playerTag = playerFilter.tag
-      if (!playerTag) {
+      const playerId = playerFilter.id
+      if (!playerId) {
         throw new TRPCError({
           code: 'CONFLICT',
           cause: new TRPCApiError({
             key: 'PLAYER_PROFILE_NOT_FOUND',
-            message: 'Missing player tag.',
-            description: 'Player filter params must include the player tag.'
+            message: 'Missing player ID.',
+            description: 'Player filter params must include the ID of the player.'
           })
         })
       }
@@ -61,15 +61,15 @@ export const playerProfileRouter = createTRPCRouter({
       })
     
       const stats = sessions.reduce((sum, { stats, results }) => {
-        const result = results.find((result) => result.player.tag === playerTag)
+        const result = results.find((result) => result.player.id === playerId)
         const score = result?.score || 0
 
         return {
           ...sum,
           score: sum.score + score,
           timer: sum.timer + stats.timer,
-          flips: sum.flips + stats.flips[playerTag],
-          matches: sum.matches + stats.matches[playerTag]
+          flips: sum.flips + stats.flips[playerId],
+          matches: sum.matches + stats.matches[playerId]
         }
       }, {
         sessions: sessions.length,
@@ -187,7 +187,7 @@ export const playerProfileRouter = createTRPCRouter({
           cause: new TRPCApiError({
             key: 'ACTIVE_PLAYER_PROFILE',
             message: 'Player profile cannot be deleted.',
-            description: `${player.tag} is an active player profile. Please select a new active profile before dleting this one.`
+            description: `${player.tag} is an active player profile. Please select another player profile before deleting this one.`
 
           })
         })

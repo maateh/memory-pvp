@@ -44,16 +44,16 @@ export function updateSessionStats(
 ): PrismaJson.SessionStats {
   const { players, stats, flipped } = session
 
-  const playerTag = players.current.tag
+  const playerId = players.current.id
   
   if (action === 'flip') {
-    const prevFlips = stats.flips[playerTag]
+    const prevFlips = stats.flips[playerId]
 
-    stats.flips[playerTag] = flipped.length === 1 ? prevFlips + 1 : prevFlips
+    stats.flips[playerId] = flipped.length === 1 ? prevFlips + 1 : prevFlips
   }
 
   if (action === 'match') {
-    ++stats.matches[playerTag]
+    ++stats.matches[playerId]
   }
 
   return stats

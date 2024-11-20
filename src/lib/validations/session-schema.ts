@@ -60,7 +60,7 @@ export const clientSessionSchema = z.object({
 
 /** Query filters */
 export const sessionFilterSchema = clientSessionSchema
-  .extend({ playerTag: playerTagSchema })
+  .extend({ playerId: z.string() })
   .partial()
   .omit({
     stats: true,
@@ -102,6 +102,6 @@ export const abandonSessionSchema = clientSessionSchema
   .optional()
 
 export const saveOfflineGameSchema = clientSessionSchema.extend({
-  playerTag: z.string(),
+  playerId: z.string(),
   cards: matchedCardsSchema
 }).omit({ slug: true, type: true, mode: true, status: true, players: true })

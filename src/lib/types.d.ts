@@ -87,7 +87,7 @@ declare global {
   /** Player types */
   declare type ClientPlayer = Omit<
     PlayerProfile,
-    'id' | 'userId' | 'sessionIds'
+    'userId' | 'sessionIds'
   > & {
     imageUrl: string | null
   }
