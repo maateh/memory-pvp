@@ -2,7 +2,6 @@
 import { Warning } from "@/components/shared"
 
 const WaitingRoomsPage = () => {
-  // TODO: design this page, remove modal
   return (
     <Warning className="mt-32 mx-auto text-lg lg:text-xl font-heading"
       messageProps={{ className: "mt-1" }}
