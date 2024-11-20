@@ -43,7 +43,7 @@ const PlayerTagFilter = ({ inputProps, className, ...props }: PlayerTagFilterPro
       <div className="mb-0.5 flex items-center gap-x-2">
         <Separator className="w-1.5 h-5 bg-accent rounded-full" />
 
-        <p className="mt-1 font-heading tracking-wide">
+        <p className="mt-1 text-base font-heading tracking-wide sm:text-lg">
           Player tag
         </p>
       </div>
