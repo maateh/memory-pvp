@@ -20,9 +20,9 @@ const PlayerProfileCardList = async ({ filter, sort, className, ...props }: Play
   const players = await getPlayers({ filter, sort })
 
   if (players.length === 0) {
-    const message = filter
+    const message = filter.tag
       ? "Couldn't find player with the specified filter."
-      : "You don't have any player profiles created."
+      : "Currently, you don't have any player profile."
 
     return (
       <CardItem className="py-3.5 justify-center">
