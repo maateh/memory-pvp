@@ -1,10 +1,16 @@
 "use client"
 
+// constants
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+
+// icons
+import { Dices, Gamepad2 } from "lucide-react"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionBasics } from "@/components/session"
+import { SessionInfoBadge } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
 import SessionSyncMarker from "./session-sync-marker"
 import SessionTimer from "./session-timer"
@@ -23,9 +29,19 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
           orientation="vertical"
         />
 
-        <SessionBasics className="max-sm:hidden"
-          session={session}
-        />
+        <div className="hidden sm:flex flex-wrap items-center gap-x-2 gap-y-1">
+          <SessionInfoBadge
+            Icon={Gamepad2}
+            label={gameTypePlaceholders[session.type].label}
+            subLabel={gameModePlaceholders[session.mode].label}
+          />
+
+          <SessionInfoBadge
+            Icon={Dices}
+            label={tableSizePlaceholders[session.tableSize].label}
+            subLabel={tableSizePlaceholders[session.tableSize].size}
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">

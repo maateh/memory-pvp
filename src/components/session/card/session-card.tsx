@@ -2,11 +2,14 @@ import { formatDistance } from "date-fns"
 
 import Link from "next/link"
 
+// constants
+import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+
 // utils
 import { cn } from "@/lib/utils"
 
 // icons
-import { CalendarCheck, CalendarClock, ExternalLink, Hash } from "lucide-react"
+import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, Hash } from "lucide-react"
 
 // shadcn
 import { buttonVariants } from "@/components/ui/button"
@@ -14,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { SessionBasics, SessionStatusBadge } from "@/components/session"
+import { SessionInfoBadge, SessionStatusBadge } from "@/components/session"
 
 type SessionCardProps = {
   session: ClientGameSession
@@ -45,11 +48,19 @@ const SessionCard = ({ session }: SessionCardProps) => {
             />
           </div>
 
-          <SessionBasics className="gap-x-2"
-            badgeProps={{ className: "py-0 px-2" }}
-            iconProps={{ className: "size-3.5" }}
-            session={session}
-          />
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <SessionInfoBadge
+              Icon={Gamepad2}
+              label={gameTypePlaceholders[session.type].label}
+              subLabel={gameModePlaceholders[session.mode].label}
+            />
+
+            <SessionInfoBadge
+              Icon={Dices}
+              label={tableSizePlaceholders[session.tableSize].label}
+              subLabel={tableSizePlaceholders[session.tableSize].size}
+            />
+          </div>
         </div>
       </div>
 
