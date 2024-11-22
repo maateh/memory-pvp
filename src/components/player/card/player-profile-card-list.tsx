@@ -1,32 +1,22 @@
-// types
-import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
-
-// server
-import { getPlayers } from "@/server/db/player"
-
 // utils
 import { cn } from "@/lib/utils"
+
+// shadcn
+import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileCardListProps = {
-  filter: PlayerFilter
-  sort: PlayerSort
+  players: ClientPlayer[]
 } & React.ComponentProps<"ul">
 
-const PlayerProfileCardList = async ({ filter, sort, className, ...props }: PlayerProfileCardListProps) => {
-  const players = await getPlayers({ filter, sort })
-
+const PlayerProfileCardList = ({ players, className, ...props }: PlayerProfileCardListProps) => {
   if (players.length === 0) {
-    const message = filter.tag
-      ? "Couldn't find player with the specified filter."
-      : "Currently, you don't have any player profile."
-
     return (
       <CardItem className="py-3.5 justify-center">
-        <Warning message={message} />
+        <Warning message="No players found." />
       </CardItem>
     )
   }
@@ -42,4 +32,17 @@ const PlayerProfileCardList = async ({ filter, sort, className, ...props }: Play
   )
 }
 
+const PlayerProfileCardListSkeleton = ({ className, ...props }: React.ComponentProps<"ul">) => {
+  return (
+    <ul className={cn("space-y-3 px-2 sm:px-4", className)} {...props}>
+      {Array(3).fill('').map((_, index) => (
+        <CardItem className="p-0" key={index}>
+          <Skeleton className="w-full h-28 bg-muted/75 rounded-xl" />
+        </CardItem>
+      ))}
+    </ul>
+  )
+}
+
 export default PlayerProfileCardList
+export { PlayerProfileCardListSkeleton }

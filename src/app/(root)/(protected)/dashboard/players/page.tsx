@@ -1,3 +1,8 @@
+import { Suspense } from "react"
+
+// server
+import { getPlayers } from "@/server/db/player"
+
 // types
 import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
 
@@ -11,11 +16,11 @@ import { parseFilterParams } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { PlayerProfileCardList } from "@/components/player/card"
+import { PlayerProfileCardList, PlayerProfileCardListSkeleton } from "@/components/player/card"
 import { PlayerTagFilter } from "@/components/player/filter"
 import { PlayerCreateWidgetCard } from "@/components/player/widget"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { SortDropdownButton } from "@/components/shared"
+import { Await, SortDropdownButton } from "@/components/shared"
 
 type PlayersPageProps = {
   searchParams: PlayerFilter & PlayerSort
@@ -23,7 +28,10 @@ type PlayersPageProps = {
 
 const PlayersPage = ({ searchParams }: PlayersPageProps) => {
   const params = new URLSearchParams(searchParams as {})
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params)
+  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
+    filter: PlayerFilter
+    sort: PlayerSort
+  }
 
   return (
     <div className="page-wrapper relative flex flex-col gap-10 xl:flex-row">
@@ -60,10 +68,11 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
 
         <Separator className="my-5 bg-border/20 rounded-full" />
 
-        <PlayerProfileCardList
-          filter={filter}
-          sort={sort}
-        />
+        <Suspense fallback={<PlayerProfileCardListSkeleton />}>
+          <Await promise={getPlayers({ filter, sort })}>
+            {(players) => <PlayerProfileCardList players={players} />}
+          </Await>
+        </Suspense>
       </div>
     </div>
   )
