@@ -1,9 +1,3 @@
-// types
-import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
-
-// server
-import { getCollections } from "@/server/db/collection"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -12,23 +6,14 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { CardItem, Warning } from "@/components/shared"
-import { CollectionCard } from "@/components/collection"
+import { CollectionExplorerCard } from "@/components/collection/explorer"
 
 type CollectionExplorerProps = {
-  filter: CollectionFilter
-  sort: CollectionSort
-  includeUser: boolean | undefined
-  cardProps?: Omit<React.ComponentProps<typeof CollectionCard>, 'collection'>
+  collections: ClientCardCollection[]
+  cardProps?: Omit<React.ComponentProps<typeof CollectionExplorerCard>, 'collection'>
 } & React.ComponentProps<"ul">
 
-const CollectionExplorer = async ({
-  filter, sort, includeUser,
-  cardProps,
-  className,
-  ...props
-}: CollectionExplorerProps) => {
-  const collections = await getCollections({ filter, sort, includeUser })
-
+const CollectionExplorer = ({ collections, cardProps, className, ...props }: CollectionExplorerProps) => {
   if (collections.length === 0) {
     return (
       <CardItem className="py-3.5 justify-center">
@@ -43,7 +28,7 @@ const CollectionExplorer = async ({
     <ul className={cn("grid gap-x-10 gap-y-8 xl:grid-cols-2 2xl:grid-cols-3", className)} {...props}>
       {collections.map((collection) => (
         <li key={collection.id}>
-          <CollectionCard {...cardProps}
+          <CollectionExplorerCard {...cardProps}
             collection={collection}
             key={collection.id}
           />
@@ -71,4 +56,5 @@ const CollectionExplorerSkeleton = ({ skeletonProps, className, ...props }: Coll
   )
 }
 
-export { CollectionExplorer, CollectionExplorerSkeleton }
+export default CollectionExplorer
+export { CollectionExplorerSkeleton }

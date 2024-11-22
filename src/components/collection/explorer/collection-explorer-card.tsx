@@ -23,19 +23,19 @@ import {
   CollectionPreviewDenseList
 } from "@/components/collection/collection-preview-listing"
 
-type CollectionCardProps = {
+type CollectionExplorerCardProps = {
   collection: ClientCardCollection
   imageSize?: number
   withoutGameLink?: boolean
 } & React.ComponentProps<typeof Card>
 
-const CollectionCard = ({
+const CollectionExplorerCard = ({
   collection,
   imageSize = 40,
   withoutGameLink = false,
   className,
   ...props
-}: CollectionCardProps) => {
+}: CollectionExplorerCardProps) => {
   return (
     <Card className={cn("h-full max-w-xl mx-auto bg-primary/60", className)} {...props}>
       <CardHeader className="pb-0">
@@ -83,4 +83,4 @@ const CollectionCard = ({
   )
 }
 
-export default CollectionCard
+export default CollectionExplorerCard
