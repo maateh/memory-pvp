@@ -1,2 +1,5 @@
 export { default as CollectionExplorer, CollectionExplorerSkeleton } from "./collection-explorer"
 export { default as CollectionExplorerCard } from "./collection-explorer-card"
+export { default as CollectionExplorerModal } from "./collection-explorer-modal"
+export { default as CollectionExplorerDrawer } from "./collection-explorer-drawer"
+export { default as CollectionExplorerPopup } from "./collection-explorer-popup"

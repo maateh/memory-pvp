@@ -2,10 +2,10 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import type {
-  CollectionFilter as TCollectionFilter,
-  CollectionSort as TCollectionSort
-} from "@/components/collection/filter/types"
+import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+
+// server
+import { getCollections } from "@/server/db/collection"
 
 // constants
 import { collectionSortOptions } from "@/components/collection/filter/constants"
@@ -21,16 +21,12 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection"
-import {
-  CollectionNameFilter,
-  CollectionSizeFilter,
-  CollectionUserToggleFilter
-} from "@/components/collection/filter"
-import { SortDropdownButton } from "@/components/shared"
+import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection/explorer"
+import { CollectionNameFilter, CollectionSizeFilter, CollectionUserToggleFilter } from "@/components/collection/filter"
+import { Await, SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
-  searchParams: TCollectionFilter & TCollectionSort
+  searchParams: CollectionFilter & CollectionSort
 }
 
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
@@ -71,11 +67,9 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
       <Suspense fallback={<CollectionExplorerSkeleton />}>
-        <CollectionExplorer
-          filter={filter}
-          sort={sort}
-          includeUser={includeUser}
-        />
+        <Await promise={getCollections({ filter, sort, includeUser })}>
+          {(collections) => <CollectionExplorer collections={collections} />}
+        </Await>
       </Suspense>
     </>
   )

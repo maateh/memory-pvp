@@ -22,7 +22,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 
 // components
 import { Form } from "@/components/shared"
-import { CollectionCard } from "@/components/collection"
+import { CollectionExplorerCard } from "@/components/collection/explorer"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
@@ -79,6 +79,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     >
       <SessionFormFields form={form} />
 
+      {/* TODO: redesign */}
       <div className="w-full max-w-2xl m-auto lg:w-2/5">
         <div className="flex flex-wrap-reverse justify-between items-center gap-x-6 gap-y-2">
           <h3 className="relative -inset-y-0.5 inset-x-2 text-lg font-heading font-semibold tracking-wide heading-decorator subheading sm:text-2xl">
@@ -90,7 +91,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
             variant: "ghost",
             size: "icon"
           }))}
-            href="/game/setup/collections"
+            href="/collections/explorer"
             scroll={false}
           >
             <div>
@@ -103,7 +104,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
         </div>
         
         {collection && (
-          <CollectionCard className="h-fit w-full bg-background/50"
+          <CollectionExplorerCard className="h-fit w-full bg-background/50"
             collection={collection}
             imageSize={26}
             withoutGameLink
