@@ -1,13 +1,11 @@
 type BaseGameSetupLayoutProps = {
-  collections: React.ReactNode
   warning: React.ReactNode
   children: React.ReactNode
 }
 
-const BaseGameSetupLayout = ({ collections, warning, children }: BaseGameSetupLayoutProps) => {
+const BaseGameSetupLayout = ({ warning, children }: BaseGameSetupLayoutProps) => {
   return (
     <>
-      {collections}
       {warning}
       {children}
     </>

@@ -70,6 +70,7 @@ const SessionRunningWarningModal = ({ session, isOffline }: SessionRunningWarnin
     clearCache()
   }
 
+  // TODO: redesign `WarningModal` (+switch to `AlertDialog`)
   return (
     <WarningModal
       title={(
