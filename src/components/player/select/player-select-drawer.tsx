@@ -23,7 +23,7 @@ import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerSelectDrawerProps = {
   players: ClientPlayer[]
-  renderer?: "trigger" | "router"
+  renderer?: PopupRenderer
 } & React.ComponentProps<typeof DrawerTrigger>
 
 const PlayerSelectDrawer = ({ players, renderer = "trigger", ...props }: PlayerSelectDrawerProps) => {

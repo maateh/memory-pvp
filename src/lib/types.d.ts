@@ -21,6 +21,9 @@ declare global {
     setTheme: (theme: Theme) => void
   }
 
+  /* Popups */
+  declare type PopupRenderer = "trigger" | "router"
+
   /** Filter types */
   declare type FilterService = "store" | "params" | "mixed"
 
