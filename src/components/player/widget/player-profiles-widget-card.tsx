@@ -1,5 +1,5 @@
 // server
-import { getPlayers } from "@/server/db/player"
+import { getPlayer } from "@/server/db/player"
 
 // icons
 import { Gamepad2 } from "lucide-react"
@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileCard } from "@/components/player/card"
-import { PlayerSelectDrawer } from "@/components/player/select"
 import {
   WidgetActionWrapper,
   WidgetCard,
@@ -21,8 +20,7 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import { CardItem, Warning } from "@/components/shared"
 
 const PlayerProfilesWidgetCard = async () => {
-  const players = await getPlayers()
-  const activePlayer = players.find((player) => player.isActive)
+  const activePlayer = await getPlayer({ isActive: true })
 
   return (
     <WidgetCard
@@ -31,9 +29,7 @@ const PlayerProfilesWidgetCard = async () => {
       Icon={Gamepad2}
     >
       <WidgetActionWrapper>
-        <PlayerSelectDrawer players={players} asChild>
-          <WidgetQuickAccess />
-        </PlayerSelectDrawer>
+        <WidgetQuickAccess href="/players/select" />
 
         <WidgetLink href="/dashboard/players" />
       </WidgetActionWrapper>
