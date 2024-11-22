@@ -1,3 +1,5 @@
+import { Suspense } from "react"
+
 // types
 import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
 
@@ -11,8 +13,9 @@ import { parseFilterParams } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardList } from "@/components/session/card"
+import { SessionCardList, SessionCardListSkeleton } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
+import { Await } from "@/components/shared"
 import SessionsTable from "./sessions-table"
 
 type SessionsPageProps = {
@@ -25,8 +28,6 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
     filter: SessionFilter
     sort: SessionSort
   }
-
-  const sessions = await getClientSessions({ filter, sort })
 
   return (
     <div className="page-wrapper">
@@ -45,13 +46,21 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
 
       <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />
 
-      <SessionCardList className="block xl:hidden"
-        sessions={sessions}
-      />
+      <Suspense fallback={<SessionCardListSkeleton />}>
+        <Await promise={getClientSessions({ filter, sort })}>
+          {(sessions) => (
+            <>
+              <div className="block xl:hidden">
+                <SessionCardList sessions={sessions} />
+              </div>
 
-      <div className="hidden xl:block">
-        <SessionsTable sessions={sessions} />
-      </div>
+              <div className="hidden xl:block">
+                <SessionsTable sessions={sessions} />
+              </div>
+            </>
+          )}
+        </Await>
+      </Suspense>
     </div>
   )
 }

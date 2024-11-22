@@ -78,24 +78,27 @@ const SessionCard = ({ session }: SessionCardProps) => {
 
 const SessionCardSkeleton = () => {
   return (
-    <div className="w-full flex justify-between items-center">
-      <div className="flex items-center gap-x-3">
-        <Skeleton className="size-3.5 rounded-full border border-border bg-muted-foreground/80" />
+    <div className="w-full py-1.5 px-1 sm:px-2 flex flex-wrap justify-between gap-x-3 gap-y-2">
+      <div className="space-y-2">
+        <Skeleton className="w-36 h-6 bg-muted/80 rounded-full" />
 
-        <div className="flex flex-col gap-y-2">
-          <div className="flex gap-x-2">
-            <Skeleton className="w-32 h-5 bg-muted/80" />
-            <Skeleton className="w-20 h-4 bg-muted/80" />
-          </div>
-
-          <div className="flex gap-x-2">
-            <Skeleton className="w-24 h-5 bg-accent/35" />
-            <Skeleton className="w-24 h-5 bg-accent/35" />
-          </div>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <Skeleton className="w-32 h-7 bg-muted/80 rounded-full" />
+          <Skeleton className="w-32 h-7 bg-muted/80 rounded-full" />
         </div>
       </div>
 
-      <ExternalLink className="size-4 sm:size-5 text-muted-foreground animate-pulse transition group-hover:text-foreground/90" />
+      <div className="ml-auto flex flex-col items-end justify-between">
+        <div className="mb-1.5 flex flex-wrap-reverse items-center gap-x-1.5 gap-y-1">
+          <Skeleton className="w-28 h-6 bg-muted/80 rounded-full" />
+
+          <Skeleton className="size-7 sm:size-8 bg-muted/80 rounded-full" />
+        </div>
+
+        <Separator className="w-11/12 ml-auto mt-auto mb-1.5 bg-border/65" />
+
+        <Skeleton className="w-24 h-4 bg-muted/80 rounded-full" />
+      </div>
     </div>
   )
 }
