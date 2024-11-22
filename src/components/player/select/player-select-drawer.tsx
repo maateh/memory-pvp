@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+
 // shadcn
 import {
   Drawer,
@@ -21,14 +23,20 @@ import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
 
 type PlayerSelectDrawerProps = {
   players: ClientPlayer[]
+  renderer?: "trigger" | "router"
 } & React.ComponentProps<typeof DrawerTrigger>
 
-const PlayerSelectDrawer = ({ players, ...props }: PlayerSelectDrawerProps) => {
+const PlayerSelectDrawer = ({ players, renderer = "trigger", ...props }: PlayerSelectDrawerProps) => {
+  const router = useRouter()
+
   const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
 
   return (
-    <Drawer>
-      <DrawerTrigger {...props} />
+    <Drawer
+      open={renderer === 'router' || undefined}
+      onOpenChange={renderer === 'router' ? router.back : undefined}
+    >
+      {renderer === "trigger" && <DrawerTrigger {...props} />}
 
       <DrawerContent className="border-border/25">
         <DrawerHeader className="gap-y-0">

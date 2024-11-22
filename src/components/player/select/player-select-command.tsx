@@ -79,7 +79,7 @@ const PlayerSelectCommand = ({
 
             <CommandGroup heading="Create">
               <CommandItem className="cursor-pointer" asChild>
-                <Link href="/dashboard/players" scroll={false}>
+                <Link href="/players/select" scroll={false}>
                   <UserRoundPlus className="size-4" />
                   <span>
                     Add new player

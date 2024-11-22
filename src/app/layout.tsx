@@ -35,9 +35,10 @@ export const metadata: Metadata = {
 
 type BaseLayoutProps = {
   children: React.ReactNode
+  popup: React.ReactNode
 }
 
-const BaseLayout = ({ children }: BaseLayoutProps) => {
+const BaseLayout = ({ children, popup }: BaseLayoutProps) => {
   return (
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
@@ -58,6 +59,7 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
             >
               <Toaster />
 
+              {popup}
               {children}
             </ThemeProvider>
           </TRPCProvider>
