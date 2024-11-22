@@ -41,4 +41,4 @@ const PopupLoader = () => {
   )
 }
 
-export { PopupLoader }
+export default PopupLoader

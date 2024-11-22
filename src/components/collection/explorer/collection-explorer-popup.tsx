@@ -1,41 +1,63 @@
-"use client"
+import { Suspense } from "react"
 
 // types
-import type { DialogTrigger } from "@/components/ui/dialog"
-import type { DrawerTrigger } from "@/components/ui/drawer"
+import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+
+// server
+import { getCollections } from "@/server/db/collection"
+
+// constants
+import { collectionSortOptions } from "@/components/collection/filter/constants"
+
+// shadcn
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionExplorerDrawer, CollectionExplorerModal } from "@/components/collection/explorer"
-
-// hooks
-import { useIsMobile } from "@/hooks/use-is-mobile"
+import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection/explorer"
+import { CollectionNameFilter, CollectionSizeFilter, CollectionUserToggleFilter } from "@/components/collection/filter"
+import { Await, SortDropdownButton } from "@/components/shared"
+import { Popup, PopupHeader } from "@/components/popup"
 
 type CollectionExplorerPopupProps = {
-  collections: ClientCardCollection[]
-  renderer: PopupRenderer
-  drawerProps?: React.ComponentProps<typeof DrawerTrigger>
-  modalProps?: React.ComponentProps<typeof DialogTrigger>
+  filter: CollectionFilter
+  sort: CollectionSort
+  includeUser: boolean | undefined
 }
 
-const CollectionExplorerPopup = ({ collections, renderer, drawerProps, modalProps }: CollectionExplorerPopupProps) => {
-  const isMobile = useIsMobile()
-
-  if (isMobile) {
-    return (
-      <CollectionExplorerDrawer
-        renderer={renderer}
-        collections={collections}
-        {...drawerProps}
-      />
-    )
-  }
-
+const CollectionExplorerPopup = ({ filter, sort, includeUser }: CollectionExplorerPopupProps) => {
   return (
-    <CollectionExplorerModal
-      renderer={renderer}
-      collections={collections}
-      {...modalProps}
-    />
+    <Popup renderer="router">
+      <PopupHeader
+        title="Browse collections"
+        description="Browse the following card collections and choose the one you would like to play with."
+      />
+
+      <div className="max-w-xs px-6 space-y-2 md:px-0">
+        <CollectionNameFilter />
+
+        <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
+          <SortDropdownButton options={collectionSortOptions} />
+          <CollectionSizeFilter />
+          <CollectionUserToggleFilter includeByDefault />
+        </div>
+      </div>
+
+      <Separator className="w-11/12 mx-auto my-5 md:my-2.5 bg-border/25" />
+
+      <ScrollArea className="h-auto px-3 mb-4 overflow-y-auto md:pl-0 md:max-h-96">
+        <Suspense fallback={<CollectionExplorerSkeleton />}>
+          <Await promise={getCollections({ filter, sort, includeUser })}>
+            {(collections) => (
+              <CollectionExplorer className="md:grid-cols-2 2xl:grid-cols-2"
+                cardProps={{ imageSize: 36 }}
+                collections={collections}
+              />
+            )}
+          </Await>
+        </Suspense>
+      </ScrollArea>
+    </Popup>
   )
 }
 

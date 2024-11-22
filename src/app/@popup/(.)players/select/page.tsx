@@ -6,7 +6,7 @@ import { getPlayers } from "@/server/db/player"
 // components
 import { Await } from "@/components/shared"
 import { PlayerSelectDrawer } from "@/components/player/select"
-import { PopupLoader } from "@/app/@popup/popup-loader"
+import { PopupLoader } from "@/components/popup"
 
 const PlayersSelectPopup = () => {
   return (

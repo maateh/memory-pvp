@@ -1,4 +1,4 @@
 // components
-import { PopupLoader } from "@/app/@popup/popup-loader"
+import { PopupLoader } from "@/components/popup";
 
 export default PopupLoader
