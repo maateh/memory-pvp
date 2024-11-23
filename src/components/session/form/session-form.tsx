@@ -11,17 +11,14 @@ import type { DefaultValues } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createSessionSchema } from "@/lib/validations/session-schema"
 
-// utils
-import { cn } from "@/lib/utils"
-
 // icons
-import { CircleFadingPlus, Images, Loader2, SquarePlay, WifiOff } from "lucide-react"
+import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"
 
 // shadcn
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 // components
-import { Form } from "@/components/shared"
+import { CardItem, Form } from "@/components/shared"
 import { CollectionExplorerCard } from "@/components/collection/explorer"
 import SessionFormFields from "./session-form-fields"
 
@@ -79,45 +76,37 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     >
       <SessionFormFields form={form} />
 
-      {/* TODO: redesign */}
-      <div className="w-full max-w-2xl m-auto lg:w-2/5">
-        <div className="flex flex-wrap-reverse justify-between items-center gap-x-6 gap-y-2">
-          <h3 className="relative -inset-y-0.5 inset-x-2 text-lg font-heading font-semibold tracking-wide heading-decorator subheading sm:text-2xl">
-            Card collection
-          </h3>
-
-          <Link className={cn(buttonVariants({
-            className: "mb-2.5 ml-auto p-2.5 gap-x-2 text-muted-foreground border border-border/20 rounded-2xl expandable expandable-left",
-            variant: "ghost",
-            size: "icon"
-          }))}
-            href="/collections/explorer"
-            scroll={false}
-          >
-            <div>
-              <span className="font-normal dark:font-light">
-                Browse collections...
-              </span>
-            </div>
-            <Images className="size-4" strokeWidth={2.5} />
+      <div className="my-auto flex justify-center">
+        <Button className="w-full max-w-xl p-0 whitespace-normal transition-transform hover:scale-105 hover:no-underline"
+          tooltip={collection ? "Click to select another collection" : "Manage collections"}
+          variant={collection ? "link" : "destructive"}
+          size="icon"
+          type="button"
+          asChild
+        >
+          <Link href={collection ? "/collections/explorer" : "/collections/manage"} scroll={false}>
+            {collection ? (
+              <CollectionExplorerCard className="h-fit w-full bg-background/50"
+                collection={collection}
+                imageSize={28}
+                withoutGameLink
+              />
+            ) : (
+              <CardItem className="justify-center text-center bg-destructive/85 text-destructive-foreground">
+                <p className="mt-1 text-base sm:text-lg font-heading font-semibold">
+                  Create your first ever card collection!
+                </p>
+              </CardItem>
+            )}
           </Link>
-        </div>
-        
-        {collection && (
-          <CollectionExplorerCard className="h-fit w-full bg-background/50"
-            collection={collection}
-            imageSize={26}
-            withoutGameLink
-          />
-        )}
+        </Button>
       </div>
-      
 
       <div className="mt-auto flex flex-col items-center gap-y-4">
         <Button className="p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg"
           variant="secondary"
           size="lg"
-          disabled={!clerkUser || startSession.isPending}
+          disabled={!clerkUser || startSession.isPending || !collectionId || !collection}
         >
           {startSession.isPending ? (
             <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
