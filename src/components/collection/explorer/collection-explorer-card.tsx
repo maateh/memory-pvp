@@ -19,8 +19,8 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import {
-  CollectionPreviewDenseItem,
-  CollectionPreviewDenseList
+  CollectionPreviewItem,
+  CollectionPreviewList
 } from "@/components/collection/collection-preview-listing"
 
 type CollectionExplorerCardProps = {
@@ -69,15 +69,16 @@ const CollectionExplorerCard = ({
       </CardHeader>
 
       <CardContent>
-        <CollectionPreviewDenseList className="pt-2 justify-start group-data-[state=open]:hidden">
+        <CollectionPreviewList className="pt-2 justify-start group-data-[state=open]:hidden" dense>
           {collection.cards.map((card) => (
-            <CollectionPreviewDenseItem className="-ml-2 first:-ml-2"
+            <CollectionPreviewItem className="-ml-2 first:-ml-2"
               imageUrl={card.imageUrl}
               imageSize={imageSize}
               key={card.id}
+              dense
             />
           ))}
-        </CollectionPreviewDenseList>
+        </CollectionPreviewList>
       </CardContent>
     </Card>
   )

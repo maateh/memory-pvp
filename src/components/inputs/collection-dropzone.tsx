@@ -15,7 +15,7 @@ import { cn, generateFileUrls } from "@/lib/utils"
 import { ImageUp } from "lucide-react"
 
 // copmponents
-import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
+import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 
 // hooks
 import { useDropzone } from "@uploadthing/react"
@@ -76,14 +76,17 @@ const CollectionDropzone = ({ files, setFiles, routeConfig, hidePreview = false,
         )}
       </div>
 
-      <CollectionPreviewDenseList className={cn({ "mt-4": files.length > 0, "hidden": hidePreview })}>
-        {previewUrls.map((url) => (
-          <CollectionPreviewDenseItem
-            imageUrl={url}
-            key={url}
-          />
-        ))}
-      </CollectionPreviewDenseList>
+      {!hidePreview && (
+        <CollectionPreviewList className={cn({ "mt-4": files.length > 0 })} dense>
+          {previewUrls.map((url) => (
+            <CollectionPreviewItem
+              imageUrl={url}
+              key={url}
+              dense
+            />
+          ))}
+        </CollectionPreviewList>
+      )}
     </div>
   )
 }

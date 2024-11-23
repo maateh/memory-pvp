@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
-import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
+import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 import CollectionActionsDropdown from "./collection-actions-dropdown"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
@@ -61,15 +61,16 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
       const cards = getValue() as ClientCardCollection['cards']
 
       return (
-        <CollectionPreviewDenseList className="pl-1.5 justify-start">
+        <CollectionPreviewList className="pl-1.5 justify-start" dense>
           {cards.map((card) => (
-            <CollectionPreviewDenseItem className="first:-ml-1.5 -ml-1.5"
+            <CollectionPreviewItem className="first:-ml-1.5 -ml-1.5"
               imageUrl={card.imageUrl}
               imageSize={20}
               key={card.id}
+              dense
             />
           ))}
-        </CollectionPreviewDenseList>
+        </CollectionPreviewList>
       )
     }
   },

@@ -1,47 +1,18 @@
-import Image from "next/image"
-
-// icons
-import { Circle } from "lucide-react"
-
 // utils
 import { cn } from "@/lib/utils"
 
-type CollectionCardPreviewProps = {
-  imageUrl: string | null
-  imageSize?: number
-  className?: string
-}
+// components
+import { MemoryCardImage } from "@/components/collection"
 
-const CollectionCardPreview = ({ imageUrl, imageSize = 48, className }: CollectionCardPreviewProps) => {
-  if (!imageUrl) {
-    return (
-      <Circle className={cn("p-1.5 text-muted-foreground bg-muted-foreground rounded-2xl transition-shadow img-wrapper hover:shadow-md", className)}
-        size={imageSize}
-      />
-    )
-  }
+type CollectionPreviewListProps = {
+  dense?: boolean
+} & React.ComponentProps<"ul">
 
+const CollectionPreviewList = ({ dense = false, className, ...props }: CollectionPreviewListProps) => {
   return (
-    <Image className={cn("rounded-2xl shadow-md transition-shadow img-wrapper hover:shadow-lg", className)}
-      src={imageUrl}
-      alt="card image"
-      height={imageSize}
-      width={imageSize}
-    />
-  )
-}
-
-const CollectionPreviewList = ({ className, ...props }: React.ComponentProps<"ul">) => {
-  return (
-    <ul className={cn("flex flex-wrap justify-around items-center gap-1.5", className)}
-      {...props}
-    />
-  )
-}
-
-const CollectionPreviewDenseList = ({ className, ...props }: React.ComponentProps<"ul">) => {
-  return (
-    <ul className={cn("flex flex-wrap items-center justify-center gap-y-2", className)}
+    <ul className={cn("flex flex-wrap items-center gap-1.5", {
+      "gap-x-0 gap-y-2": dense
+    }, className)}
       {...props}
     />
   )
@@ -50,28 +21,25 @@ const CollectionPreviewDenseList = ({ className, ...props }: React.ComponentProp
 type CollectionPreviewItemProps = {
   imageUrl: string | null
   imageSize?: number
+  dense?: boolean
 } & React.ComponentProps<"li">
 
-const CollectionPreviewItem = ({ imageUrl, imageSize, children, ...props }: CollectionPreviewItemProps) => {
+const CollectionPreviewItem = ({
+  imageUrl,
+  imageSize,
+  dense = false,
+  className,
+  children,
+  ...props
+}: CollectionPreviewItemProps) => {
   return (
-    <li {...props}>
-      {children || (
-        <CollectionCardPreview
-          imageUrl={imageUrl}
-          imageSize={imageSize}
-        />
-      )}
-    </li>
-  )
-}
-
-const CollectionPreviewDenseItem = ({ imageUrl, imageSize, className, children, ...props }: CollectionPreviewItemProps) => {
-  return (
-    <li className={cn("relative -ml-2.5 first:ml-0 transition-all duration-500 ease-in-out hover:z-10 hover:-translate-y-2", className)}
+    <li className={cn({
+      "relative -ml-2.5 first:ml-0 transition-all duration-500 ease-in-out hover:z-10 hover:scale-110 hover:-translate-y-2": dense
+    }, className)}
       {...props}
     >
       {children || (
-        <CollectionCardPreview
+        <MemoryCardImage
           imageUrl={imageUrl}
           imageSize={imageSize}
         />
@@ -80,10 +48,4 @@ const CollectionPreviewDenseItem = ({ imageUrl, imageSize, className, children, 
   )
 }
 
-export {
-  CollectionCardPreview,
-  CollectionPreviewList,
-  CollectionPreviewItem,
-  CollectionPreviewDenseList,
-  CollectionPreviewDenseItem
-}
+export { CollectionPreviewList, CollectionPreviewItem }

@@ -3,9 +3,6 @@
 // types
 import type { DialogProps } from "@radix-ui/react-dialog"
 
-// icons
-import { Images } from "lucide-react"
-
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
@@ -16,7 +13,7 @@ import {
   WarningModal,
   WarningModalFooter
 } from "@/components/shared"
-import { CollectionPreviewDenseItem, CollectionPreviewDenseList } from "@/components/collection"
+import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 
 // hooks
 import { useDeleteCollectionMutation } from "@/lib/react-query/mutations/collection"
@@ -39,15 +36,16 @@ const CollectionDeleteWarning = ({ collection, ...props }: CollectionDeleteWarni
           {collection.name}
         </p>
 
-        <CollectionPreviewDenseList>
+        <CollectionPreviewList dense>
           {collection.cards.map((card) => (
-            <CollectionPreviewDenseItem
+            <CollectionPreviewItem
               imageUrl={card.imageUrl}
               imageSize={36}
               key={card.id}
+              dense
             />
           ))}
-        </CollectionPreviewDenseList>
+        </CollectionPreviewList>
       </div>
 
       <Separator className="w-1/5 mx-auto bg-border/15" />
