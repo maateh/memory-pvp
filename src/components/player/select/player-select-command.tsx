@@ -2,6 +2,9 @@
 
 import Link from "next/link"
 
+// utils
+import { cn } from "@/lib/utils"
+
 // icons
 import { Hash, UserRoundPlus } from "lucide-react"
 
@@ -15,6 +18,8 @@ import {
   CommandList,
   CommandSeparator
 } from "@/components/ui/command"
+import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { CardItem } from "@/components/shared"
@@ -92,4 +97,27 @@ const PlayerSelectCommand = ({ players, showPopupLink = false, listProps, ...pro
   )
 }
 
+type PlayerSelectCommandSkeletonProps = {
+  listProps?: React.ComponentProps<"ul">
+} & React.ComponentProps<"div">
+
+const PlayerSelectCommandSkeleton = ({ listProps, className, ...props }: PlayerSelectCommandSkeletonProps) => {
+  return (
+    <div className={cn("px-8", className)} {...props}>
+      <Skeleton className="w-full h-11 px-3 bg-muted-foreground/15 rounded-2xl" />
+
+      <Separator className="w-4/5 mx-auto my-3 bg-border/10" />
+
+      <ul {...listProps}
+        className={cn("space-y-2 px-4 max-h-80 overflow-y-auto overflow-x-hidden", listProps?.className)}
+      >
+        {Array(3).fill('').map((_, index) => (
+          <Skeleton className="w-full h-7 bg-muted-foreground/25 rounded-lg" key={index} />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 export default PlayerSelectCommand
+export { PlayerSelectCommandSkeleton }

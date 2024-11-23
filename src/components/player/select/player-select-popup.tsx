@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerProfileForm } from "@/components/player/form"
-import { PlayerSelectCommand } from "@/components/player/select"
+import { PlayerSelectCommand, PlayerSelectCommandSkeleton } from "@/components/player/select"
 import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
 import { Await } from "@/components/shared"
 
@@ -41,7 +41,11 @@ const PlayerSelectPopup = ({ renderer, players, ...props }: PlayerSelectPopupPro
         )}
 
         {renderer === 'router' && (
-          <Suspense fallback="loading..."> {/* TODO: skeleton */}
+          <Suspense fallback={(
+            <PlayerSelectCommandSkeleton className="w-full max-w-xl mx-auto"
+              listProps={{ className: "max-w-md mx-auto" }}
+            />
+          )}>
             <Await promise={getPlayers()}>
               {(players) => (
                 <PlayerSelectCommand className="max-w-screen-md mx-auto px-4 sm:px-8"
