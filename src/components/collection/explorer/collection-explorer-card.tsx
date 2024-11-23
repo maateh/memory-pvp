@@ -1,13 +1,7 @@
-import Link from "next/link"
-
 // utils
 import { cn } from "@/lib/utils"
 
-// icons
-import { ImagePlay } from "lucide-react"
-
 // shadcn
-import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -18,21 +12,18 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // components
-import {
-  CollectionPreviewItem,
-  CollectionPreviewList
-} from "@/components/collection/collection-preview-listing"
+import { CollectionPreviewItem, CollectionPreviewList, CollectionQuickSetupLink } from "@/components/collection"
 
 type CollectionExplorerCardProps = {
   collection: ClientCardCollection
   imageSize?: number
-  withoutGameLink?: boolean
+  showQuickSetup?: boolean
 } & React.ComponentProps<typeof Card>
 
 const CollectionExplorerCard = ({
   collection,
   imageSize = 40,
-  withoutGameLink = false,
+  showQuickSetup = false,
   className,
   ...props
 }: CollectionExplorerCardProps) => {
@@ -50,17 +41,7 @@ const CollectionExplorerCard = ({
             </CardTitle>
           </div>
 
-          {!withoutGameLink && (
-            <Link className={cn(buttonVariants({
-              className: "expandable text-muted-foreground bg-muted hover:bg-muted/90 dark:hover:bg-muted/90 transition duration-300 hover:text-foreground/70 hover:scale-110",
-              variant: "ghost",
-              size: "icon"
-            }))}
-              href={`/game/setup?collection=${collection.id}`}
-            >
-              <ImagePlay className="size-4 sm:size-5" />
-            </Link>
-          )}
+          {showQuickSetup && <CollectionQuickSetupLink collectionId={collection.id} />}
         </div>
 
         <CardDescription className="w-fit font-extralight text-sm text-start break-all">

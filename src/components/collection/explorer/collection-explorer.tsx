@@ -31,6 +31,7 @@ const CollectionExplorer = ({ collections, cardProps, className, ...props }: Col
           <CollectionExplorerCard {...cardProps}
             collection={collection}
             key={collection.id}
+            showQuickSetup
           />
         </li>
       ))}

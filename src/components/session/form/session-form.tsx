@@ -89,7 +89,6 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
               <CollectionExplorerCard className="h-fit w-full bg-background/50"
                 collection={collection}
                 imageSize={28}
-                withoutGameLink
               />
             ) : (
               <CardItem className="justify-center text-center bg-destructive/85 text-destructive-foreground">
