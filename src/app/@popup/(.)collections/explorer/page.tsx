@@ -23,6 +23,7 @@ const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProp
 
   return (
     <CollectionExplorerPopup
+      renderer="router"
       filter={filter}
       sort={sort}
       includeUser={includeUser}
