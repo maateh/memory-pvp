@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 
 // icons
@@ -18,22 +20,18 @@ import {
 import { CardItem } from "@/components/shared"
 import { PlayerVerified } from "@/components/player"
 
+// hooks
+import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
+
 type PlayerSelectCommandProps = {
   players: ClientPlayer[]
-  isPending: boolean
-  handleSelect: (player: ClientPlayer) => void
-  showCreateButton?: boolean
+  showPopupLink?: boolean
   listProps?: React.ComponentProps<typeof CommandList>
 } & React.ComponentProps<typeof Command>
 
-const PlayerSelectCommand = ({
-  players,
-  isPending,
-  handleSelect,
-  showCreateButton = false,
-  listProps,
-  ...props
-}: PlayerSelectCommandProps) => {
+const PlayerSelectCommand = ({ players, showPopupLink = false, listProps, ...props }: PlayerSelectCommandProps) => {
+  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
+
   return (
     <Command {...props}>
       <CommandInput placeholder="Search player..." />
@@ -52,8 +50,8 @@ const PlayerSelectCommand = ({
             {players.map((player) => (
               <CommandItem className="my-0.5 cursor-pointer"
                 value={player.tag}
-                onSelect={() => handleSelect(player)}
-                disabled={isPending}
+                onSelect={() => handleSelectAsActive(player)}
+                disabled={selectAsActive.isPending}
                 key={player.tag}
               >
                 <Hash className="size-4"
@@ -73,7 +71,7 @@ const PlayerSelectCommand = ({
           </CommandGroup>
         )}
 
-        {showCreateButton && (
+        {showPopupLink && (
           <>
             <CommandSeparator className="w-4/5 mx-auto my-1.5 bg-border/25" />
 

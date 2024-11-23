@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { PlayerSelectDrawer, PlayerSelectPopover } from "@/components/player/select"
+import { PlayerSelectPopover, PlayerSelectPopup } from "@/components/player/select"
 import { UserAvatar } from "@/components/user"
 
 // hooks
@@ -77,9 +77,13 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
   )
 
   return isMobile ? (
-    <PlayerSelectDrawer players={players} asChild>
+    <PlayerSelectPopup
+      renderer="trigger"
+      players={players}
+      asChild
+    >
       {button}
-    </PlayerSelectDrawer>
+    </PlayerSelectPopup>
   ) : (
     <PlayerSelectPopover players={players} asChild>
       {button}
