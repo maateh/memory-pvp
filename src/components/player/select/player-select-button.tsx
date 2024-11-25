@@ -16,7 +16,8 @@ import { Button } from "@/components/ui/button"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { PlayerSelectPopover, PlayerSelectPopup } from "@/components/player/select"
+import { PlayerSelectPopover } from "@/components/player/select"
+import { PlayerSelectPopup } from "@/components/player/popup"
 import { UserAvatar } from "@/components/user"
 
 // hooks

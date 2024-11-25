@@ -1,5 +1,5 @@
 // components
-import { PlayerSelectPopup } from "@/components/player/select"
+import { PlayerSelectPopup } from "@/components/player/popup"
 
 const PlayersSelectPopup = () => <PlayerSelectPopup renderer="router" />
 

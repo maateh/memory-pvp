@@ -5,7 +5,7 @@ import type { CollectionFilter, CollectionSort } from "@/components/collection/f
 import { parseFilterParams } from "@/lib/utils"
 
 // components
-import { CollectionExplorerPopup } from "@/components/collection/explorer"
+import { CollectionExplorerPopup } from "@/components/collection/popup"
 
 type CollectionsExplorerPopupProps = {
   searchParams: CollectionFilter & CollectionSort
