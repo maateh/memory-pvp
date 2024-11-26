@@ -28,10 +28,9 @@ type CollectionEditFormValues = z.infer<typeof updateCollectionSchema>
 
 type CollectionEditFormProps = {
   collection: ClientCardCollection
-  resetForm?: () => void
 }
 
-const CollectionEditForm = ({ collection, resetForm }: CollectionEditFormProps) => {
+const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
   const form = useForm<CollectionEditFormValues>({
     resolver: zodResolver(updateCollectionSchema),
     defaultValues: collection
@@ -44,10 +43,7 @@ const CollectionEditForm = ({ collection, resetForm }: CollectionEditFormProps) 
       await handleUpdateCollection({
         collection,
         updatedCollection: values,
-        resetForm: () => {
-          form.reset()
-          resetForm?.()
-        }
+        resetForm: form.reset
       })
     } catch (err) {
       logError(err)

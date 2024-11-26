@@ -20,7 +20,7 @@ export const useUpdateCollectionMutation = () => {
   const updateCollection = api.collection.update.useMutation({
     onSuccess: async ({ name }) => {
       toast.success('Collection updated!', {
-        description: `New name of your card collection: ${name}`
+        description: `Updated collection name: ${name}`
       })
 
       router.refresh()
