@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 import { getPlayerStatsMap } from "@/lib/utils/stats"
 
 // icons
-import { CheckCircle2, Hash, Loader2, XCircle } from "lucide-react"
+import { CheckCircle2, EllipsisVertical, Hash, Loader2, XCircle } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -154,7 +154,14 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           player={player}
           editing={editing}
           toggleEditing={handleToggleEditing}
-        />
+        >
+          <Button className="p-1 sm:p-1.5"
+            variant="ghost"
+            size="icon"
+          >
+            <EllipsisVertical className="size-3.5 sm:size-4 shrink-0" />
+          </Button>
+        </PlayerActionsDropdown>
       </div>
     </>
   )
