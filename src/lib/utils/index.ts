@@ -1,10 +1,12 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+import { DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action"
 import { toast } from "sonner"
 
 // types
 import type { UploadThingError } from "uploadthing/server"
+import type { ActionError } from "@/server/actions/_error"
 import type { TRPCApiError } from "@/trpc/error"
 
 export function cn(...inputs: ClassValue[]) {
@@ -172,6 +174,18 @@ export function handleApiError(
   }
 
   toast.error('Something went wrong.', { description: fallbackDescription })
+}
+
+export function handleActionError(
+  error: ActionError | undefined,
+  fallbackDescription?: string
+) {
+  if (error?.name === 'ActionError') {
+    toast.error(error.message, { description: error.description })
+    return
+  }
+
+  toast.error(DEFAULT_SERVER_ERROR_MESSAGE, { description: fallbackDescription })
 }
 
 /**
