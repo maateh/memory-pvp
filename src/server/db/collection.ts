@@ -14,6 +14,33 @@ import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/help
 import { parseSortToOrderBy } from "@/lib/utils"
 
 /**
+ * TODO: write doc
+ * 
+ * @param
+ * @returns 
+ */
+export async function getCollection({ id, userProtected = true }: {
+  id: string
+  userProtected?: boolean
+}): Promise<ClientCardCollection | null> {
+  if (userProtected) {
+    const user = await signedIn()
+    if (!user) return null
+  }
+
+  const collection = await db.cardCollection.findUnique({
+    where: { id },
+    include: {
+      user: true,
+      cards: true
+    }
+  })
+
+  if (!collection) return null
+  return parseSchemaToClientCollection(collection)
+}
+
+/**
  * Retrieves a list of card collections based on the specified filter and sorting options.
  * 
  * - Parses and applies filter criteria from `input.filter`.
