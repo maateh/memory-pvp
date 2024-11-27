@@ -33,4 +33,10 @@ export class ActionError {
 
     this.name = 'ActionError'
   }
+
+  static throw(error: ActionErrorOpts, message?: string): never {
+    throw new Error(message, {
+      cause: new ActionError(error)
+    })
+  }
 }

@@ -15,14 +15,15 @@ import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
  */
 export const actionClient = createSafeActionClient({
   handleServerError(err) {
-    if (err instanceof ActionError) {
-      return err
+    if (err.cause instanceof ActionError) {
+      return { ...err.cause }
     }
 
-    return new ActionError({
+    return {
+      name: 'ActionError',
       key: 'UNKNOWN',
       message: DEFAULT_SERVER_ERROR_MESSAGE
-    })
+    } satisfies ActionError
   }
 }).use(async ({ next }) => next({ ctx: { db } }))
 
