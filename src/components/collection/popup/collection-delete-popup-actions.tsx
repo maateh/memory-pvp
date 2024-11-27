@@ -2,11 +2,14 @@
 
 import { useRouter } from "next/navigation"
 
+// utils
+import { logError } from "@/lib/utils"
+
 // shadcn
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useDeleteCollectionMutation } from "@/lib/react-query/mutations/collection"
+import { useDeleteCollectionAction } from "@/lib/safe-action/collection"
 
 type CollectionDeletePopupActionsProps = {
   collection: ClientCardCollection
@@ -15,7 +18,19 @@ type CollectionDeletePopupActionsProps = {
 const CollectionDeletePopupActions = ({ collection }: CollectionDeletePopupActionsProps) => {
   const router = useRouter()
 
-  const { deleteCollection, handleDeleteCollection } = useDeleteCollectionMutation()
+  const {
+    executeAsync: executeDeleteCollection,
+    status: deleteCollectionStatus
+  } = useDeleteCollectionAction()
+
+  const handleExecute = async () => {
+    try {
+      await executeDeleteCollection({ id: collection.id })
+      router.back()
+    } catch (err) {
+      logError(err)
+    }
+  }
 
   return (
     <>
@@ -28,11 +43,8 @@ const CollectionDeletePopupActions = ({ collection }: CollectionDeletePopupActio
 
       <Button className="min-w-32"
         variant="destructive"
-        onClick={() => handleDeleteCollection({
-          collectionId: collection.id,
-          closeDialog: router.back
-        })}
-        disabled={deleteCollection.isPending}
+        onClick={handleExecute}
+        disabled={deleteCollectionStatus === 'executing'}
       >
         Delete
       </Button> 

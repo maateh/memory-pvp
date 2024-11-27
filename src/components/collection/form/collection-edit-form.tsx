@@ -1,5 +1,7 @@
 "use client"
 
+import { useForm } from "react-hook-form"
+
 // types
 import type { z } from "zod"
 
@@ -21,8 +23,7 @@ import { Form } from "@/components/shared"
 import CollectionEditFormFields from "./collection-edit-form-fields"
 
 // hooks
-import { useForm } from "react-hook-form"
-import { useUpdateCollectionMutation } from "@/lib/react-query/mutations/collection"
+import { useUpdateCollectionAction } from "@/lib/safe-action/collection"
 
 type CollectionEditFormValues = z.infer<typeof updateCollectionSchema>
 
@@ -36,15 +37,23 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
     defaultValues: collection
   })
 
-  const { updateCollection, handleUpdateCollection } = useUpdateCollectionMutation()
+  const {
+    executeAsync: executeUpdateCollection,
+    status: updateCollectionStatus
+  } = useUpdateCollectionAction()
 
-  const onSubmit = async (values: CollectionEditFormValues) => {
+  const handleExecute = async (values: CollectionEditFormValues) => {
+    if (
+      values.name === collection.name &&
+      values.description === collection.description
+    ) {
+      form.reset()
+      return
+    }
+
     try {
-      await handleUpdateCollection({
-        collection,
-        updatedCollection: values,
-        resetForm: form.reset
-      })
+      await executeUpdateCollection(values)
+      form.reset()
     } catch (err) {
       logError(err)
     }
@@ -54,7 +63,7 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
     <Form<CollectionEditFormValues>
       className="mt-5"
       form={form}
-      onSubmit={onSubmit}
+      onSubmit={handleExecute}
     >
       <CollectionEditFormFields form={form} />
 
@@ -62,9 +71,9 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
         variant="secondary"
         size="sm"
         type="submit"
-        disabled={updateCollection.isPending}
+        disabled={updateCollectionStatus === 'executing'}
       >
-        {updateCollection.isPending ? (
+        {updateCollectionStatus === 'executing' ? (
           <Loader2 className="size-4 shrink-0 animate-spin" />
         ) : (
           <Edit3 className="size-4 shrink-0" />

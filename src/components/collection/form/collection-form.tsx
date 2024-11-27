@@ -1,30 +1,26 @@
 "use client"
 
-import { toast } from "sonner"
+import { useForm } from "react-hook-form"
 
 // types
 import type { z } from "zod"
 
 // constants
-import { collectionMaxSizeMap, collectionMinSizeMap, collectionSizeEndpointMap } from "@/constants/collection"
+import { collectionMaxSizeMap, collectionMinSizeMap } from "@/constants/collection"
 
 // utils
-import { handleApiError, logError } from "@/lib/utils"
+import { logError } from "@/lib/utils"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createCollectionClientSchema } from "@/lib/validations/collection-schema"
 
-// shadcn
-import { Form } from "@/components/shared"
-
 // components
+import { Form } from "@/components/shared"
 import CollectionFormFields from "./collection-form-fields"
 
 // hooks
-import { useForm } from "react-hook-form"
-import { useUploadThing } from "@/hooks/use-upload-thing"
-import { useCreateCollectionMutation } from "@/lib/react-query/mutations/collection"
+import { useCreateCollectionAction } from "@/lib/safe-action/collection"
 
 type CollectionFormValues = z.infer<typeof createCollectionClientSchema>
 
@@ -39,60 +35,37 @@ const CollectionForm = () => {
     }
   })
 
-  const tableSize = form.watch('tableSize')
-  const images = form.watch('images')
+  const {
+    startUpload,
+    routeConfig,
+    isUploading,
+    status: createCollectionStatus
+  } = useCreateCollectionAction({ form })
 
-  const { createCollection, handleCreateCollection } = useCreateCollectionMutation({
-    onAfterSuccess: form.reset
-  })
-
-  const { startUpload, routeConfig, isUploading } = useUploadThing(collectionSizeEndpointMap[tableSize], {
-    onClientUploadComplete: async (files) => {
-      toast.info("Card images uploaded!", {
-        description: "Now we're going to start creating your card collection..."
-      })
-
-      const utImages = files.map(({ key, url }) => ({
-        utKey: key,
-        imageUrl: url
-      }))
-
-      await handleCreateCollection({ ...form.getValues(), utImages })
-    },
-    onUploadError: (err) => {
-      let description = "Failed to create card collection. Please try again later."
-
-      if (err.code === "FILE_LIMIT_EXCEEDED") {
-        description = "Sorry, but due to limitations, only one card collection can be uploaded per account."
-      }
-
-      handleApiError(err, description)
-    }
-  })
-
-  const onSubmit = async (values: CollectionFormValues) => {
-    const { images, ...data } = values
-
+  const handleExecute = async ({ images, ...values }: CollectionFormValues) => {
     try {
-      await startUpload(images, data)
+      await startUpload(images, values)
     } catch (err) {
       logError(err)
     }
   }
 
+  const tableSize = form.watch('tableSize')
+  const images = form.watch('images')
+
   return (
     <Form<CollectionFormValues>
       className="mt-5"
       form={form}
-      onSubmit={onSubmit}
+      onSubmit={handleExecute}
     >
       <CollectionFormFields
         form={form}
         routeConfig={routeConfig}
-        isPending={isUploading || createCollection.isPending}
+        isPending={isUploading || createCollectionStatus === 'executing'}
         disabled={
           isUploading || 
-          createCollection.isPending || 
+          createCollectionStatus === 'executing' || 
           images.length < collectionMinSizeMap[tableSize] ||
           images.length > collectionMaxSizeMap[tableSize]
         }
