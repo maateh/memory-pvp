@@ -26,7 +26,7 @@ import { CardItem } from "@/components/shared"
 import { PlayerVerified } from "@/components/player"
 
 // hooks
-import { useSelectAsActiveMutation } from "@/lib/react-query/mutations/player"
+import { useSelectAsActiveAction } from "@/lib/safe-action/player"
 
 type PlayerSelectCommandProps = {
   players: ClientPlayer[]
@@ -35,7 +35,7 @@ type PlayerSelectCommandProps = {
 } & React.ComponentProps<typeof Command>
 
 const PlayerSelectCommand = ({ players, showPopupLink = false, listProps, ...props }: PlayerSelectCommandProps) => {
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
+  const { execute: executeSelectAsActive, status: selectAsActiveStatus } = useSelectAsActiveAction()
 
   return (
     <Command {...props}>
@@ -55,8 +55,8 @@ const PlayerSelectCommand = ({ players, showPopupLink = false, listProps, ...pro
             {players.map((player) => (
               <CommandItem className="my-0.5 cursor-pointer"
                 value={player.tag}
-                onSelect={() => handleSelectAsActive(player)}
-                disabled={selectAsActive.isPending}
+                onSelect={() => executeSelectAsActive(player.tag)}
+                disabled={selectAsActiveStatus === 'executing'}
                 key={player.tag}
               >
                 <Hash className="size-4"

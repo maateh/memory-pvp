@@ -6,8 +6,15 @@ import { revalidatePath } from "next/cache"
 import { ActionError } from "@/server/actions/_error"
 import { playerActionClient, protectedActionClient } from "@/server/actions"
 
+// helpers
+import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
+
 // validations
-import { createPlayerSchema, playerTagSchema, updatePlayerSchema } from "@/lib/validations/player-schema"
+import {
+  createPlayerSchema,
+  playerTagSchema,
+  updatePlayerSchema
+} from "@/lib/validations/player-schema"
 
 export const createPlayer = protectedActionClient
   .schema(createPlayerSchema)
@@ -28,8 +35,8 @@ export const createPlayer = protectedActionClient
       })
     }
 
-    const player = await ctx.db.playerProfile.findUnique({ where: { tag } })
-    if (player) {
+    const tagAlreadyTaken = await ctx.db.playerProfile.findUnique({ where: { tag } })
+    if (tagAlreadyTaken) {
       throw new ActionError({
         key: 'ALREADY_TAKEN',
         message: 'Player tag is already in use.',
@@ -37,23 +44,24 @@ export const createPlayer = protectedActionClient
       })
     }
 
-    const isActiveAmount = await ctx.db.playerProfile.count({
+    const activePlayerAmount = await ctx.db.playerProfile.count({
       where: {
         userId: ctx.user.id,
         isActive: true
       }
     })
 
-    revalidatePath('/dashboard/players')
-
-    return await ctx.db.playerProfile.create({
+    const player = await ctx.db.playerProfile.create({
       data: {
         userId: ctx.user.id,
-        isActive: isActiveAmount === 0,
+        isActive: activePlayerAmount === 0,
         tag,
         color
       }
     })
+
+    revalidatePath('/dashboard/players')
+    return parseSchemaToClientPlayer(player)
   })
 
 export const selectPlayerAsActive = playerActionClient
@@ -69,9 +77,7 @@ export const selectPlayerAsActive = playerActionClient
       }
     })
 
-    revalidatePath('/')
-
-    return await ctx.db.playerProfile.update({
+    const player = await ctx.db.playerProfile.update({
       where: {
         userId: ctx.user.id,
         tag
@@ -80,6 +86,9 @@ export const selectPlayerAsActive = playerActionClient
         isActive: true
       }
     })
+
+    revalidatePath('/')
+    return parseSchemaToClientPlayer(player)
   })
 
 export const updatePlayer = playerActionClient
@@ -87,7 +96,7 @@ export const updatePlayer = playerActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { previousTag, tag, color } = parsedInput
 
-    const player = await ctx.db.playerProfile.findUnique({
+    const tagAlreadyTaken = await ctx.db.playerProfile.findUnique({
       where: {
         tag: tag,
         AND: {
@@ -98,7 +107,7 @@ export const updatePlayer = playerActionClient
       }
     })
 
-    if (player) {
+    if (tagAlreadyTaken) {
       throw new ActionError({
         key: 'ALREADY_TAKEN',
         message: 'Player tag is already in use.',
@@ -106,38 +115,37 @@ export const updatePlayer = playerActionClient
       })
     }
 
-    revalidatePath('/dashboard/players')
-
-    return await ctx.db.playerProfile.update({
+    const player = await ctx.db.playerProfile.update({
       where: {
         userId: ctx.user.id,
         tag: previousTag
       },
       data: { tag, color }
     })
+
+    revalidatePath('/dashboard/players')
+    return parseSchemaToClientPlayer(player)
   })
 
 export const deletePlayer = playerActionClient
   .schema(playerTagSchema)
   .action(async ({ ctx, parsedInput: tag }) => {
-    const player = await ctx.db.playerProfile.findUnique({
+    const playerIsActive = await ctx.db.playerProfile.findUnique({
       where: {
         tag,
         isActive: true
       }
     })
 
-    if (player) {
+    if (playerIsActive) {
       throw new ActionError({
         key: 'ACTIVE_PLAYER_PROFILE',
         message: 'Player profile cannot be deleted.',
-        description: `${player.tag} is an active player profile. Please select another player profile before deleting this one.`
+        description: `${playerIsActive.tag} is an active player profile. Please select another player profile before deleting this one.`
       })
     }
 
-    revalidatePath('/dashboard/players')
-
-    return await ctx.db.playerProfile.delete({
+    const player = await ctx.db.playerProfile.delete({
       where: {
         userId: ctx.user.id,
         tag,
@@ -146,4 +154,7 @@ export const deletePlayer = playerActionClient
         }
       }
     })
+    
+    revalidatePath('/dashboard/players')
+    return parseSchemaToClientPlayer(player)
   })

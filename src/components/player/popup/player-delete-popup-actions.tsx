@@ -4,9 +4,7 @@ import { useRouter } from "next/navigation"
 
 // shadcn
 import { Button } from "@/components/ui/button"
-
-// hooks
-import { useDeletePlayerMutation } from "@/lib/react-query/mutations/player"
+import { useDeletePlayerAction } from "@/lib/safe-action/player"
 
 type PlayerDeletePopupActionsProps = {
   player: ClientPlayer
@@ -15,7 +13,7 @@ type PlayerDeletePopupActionsProps = {
 const PlayerDeletePopupActions = ({ player }: PlayerDeletePopupActionsProps) => {
   const router = useRouter()
 
-  const { deletePlayer, handleDeletePlayer } = useDeletePlayerMutation()
+  const { execute: executeDeletePlayer, status: deletePlayerStatus } = useDeletePlayerAction()
 
   return (
     <>
@@ -28,8 +26,8 @@ const PlayerDeletePopupActions = ({ player }: PlayerDeletePopupActionsProps) => 
 
       <Button className="min-w-32"
         variant="destructive"
-        onClick={() => handleDeletePlayer({ player, closeDialog: () => {} })}
-        disabled={deletePlayer.isPending}
+        onClick={() => executeDeletePlayer(player.tag)}
+        disabled={deletePlayerStatus === 'executing'}
       >
         Delete
       </Button> 

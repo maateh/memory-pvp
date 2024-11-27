@@ -15,11 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 // hooks
-import {
-  useDeletePlayerMutation,
-  useSelectAsActiveMutation,
-  useUpdatePlayerMutation
-} from "@/lib/react-query/mutations/player"
+import { useSelectAsActiveAction } from "@/lib/safe-action/player"
 
 type PlayerActionsDropdownProps = {
   player: ClientPlayer
@@ -30,9 +26,7 @@ type PlayerActionsDropdownProps = {
 const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: PlayerActionsDropdownProps) => {
   const router = useRouter()
 
-  const { updatePlayer } = useUpdatePlayerMutation()
-  const { deletePlayer } = useDeletePlayerMutation()
-  const { selectAsActive, handleSelectAsActive } = useSelectAsActiveMutation()
+  const { execute: executeSelectAsActive, status: selectAsActiveStatus } = useSelectAsActiveAction()
 
   return (
     <DropdownMenu>
@@ -42,16 +36,15 @@ const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: Pla
         <DropdownMenuItem
           variant="muted"
           onClick={toggleEditing}
-          disabled={updatePlayer.isPending || deletePlayer.isPending}
         >
           {!editing ? (
             <>
-              <UserPen className="size-4" />
+              <UserPen className="size-4 shrink-0" />
               <span>Edit player</span>
             </>
           ) : (
             <>
-              <PenOff className="size-4" />
+              <PenOff className="size-4 shrink-0" />
               <span>Cancel editing</span>
             </>
           )}
@@ -61,13 +54,13 @@ const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: Pla
           <>
             <DropdownMenuItem
               variant="accent"
-              onClick={() => handleSelectAsActive(player)}
-              disabled={selectAsActive.isPending || deletePlayer.isPending}
+              onClick={() => executeSelectAsActive(player.tag)}
+              disabled={selectAsActiveStatus === 'executing'}
             >
-              {selectAsActive.isPending ? (
-                <Loader2 className="size-4 animate-spin" />
+              {selectAsActiveStatus === 'executing' ? (
+                <Loader2 className="size-4 shrink-0 animate-spin" />
               ) : (
-                <ShieldPlus className="size-4" />
+                <ShieldPlus className="size-4 shrink-0" />
               )}
               <span>Select as active</span>
             </DropdownMenuItem>
@@ -77,13 +70,8 @@ const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: Pla
             <DropdownMenuItem
               variant="destructive"
               onClick={() => router.push(`/players/${player.tag}/delete`)}
-              disabled={deletePlayer.isPending || updatePlayer.isPending || selectAsActive.isPending}
             >
-              {deletePlayer.isPending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Trash2 className="size-4" />
-              )}
+              <Trash2 className="size-4 shrink-0" />
               <span>Delete player</span>
             </DropdownMenuItem>
           </>

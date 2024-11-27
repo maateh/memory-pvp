@@ -1,10 +1,16 @@
 "use client"
 
-import { z } from "zod"
+import { useForm } from "react-hook-form"
+
+// types
+import type { z } from "zod"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createPlayerSchema } from "@/lib/validations/player-schema"
+
+// utils
+import { logError } from "@/lib/utils"
 
 // icons
 import { Check, Loader2 } from "lucide-react"
@@ -17,8 +23,7 @@ import { Form } from "@/components/shared"
 import PlayerProfileFormFields from "./player-profile-form-fields"
 
 // hooks
-import { useForm } from "react-hook-form"
-import { useCreatePlayerMutation } from "@/lib/react-query/mutations/player"
+import { useCreatePlayerAction } from "@/lib/safe-action/player"
 
 type PlayerProfileFormValues = z.infer<typeof createPlayerSchema>
 
@@ -31,13 +36,22 @@ const PlayerProfileForm = () => {
     }
   })
 
-  const { createPlayer, onSubmit } = useCreatePlayerMutation({ onAfterSuccess: form.reset })
+  const { executeAsync: executeCreatePlayer, status: createPlayerStatus } = useCreatePlayerAction()
+
+  const handleExecute = async (values: PlayerProfileFormValues) => {
+    try {
+      await executeCreatePlayer(values)
+      form.reset()
+    } catch (err) {
+      logError(err)
+    }
+  }
 
   return (
     <Form<PlayerProfileFormValues>
       className="mt-5 flex items-center gap-x-2"
       form={form}
-      onSubmit={onSubmit}
+      onSubmit={handleExecute}
     >
       <PlayerProfileFormFields form={form} />
 
@@ -45,14 +59,14 @@ const PlayerProfileForm = () => {
         tooltip="Create"
         variant="ghost"
         size="icon"
-        disabled={createPlayer.isPending}
+        disabled={createPlayerStatus === 'executing'}
       >
-        {createPlayer.isPending ? (
-          <Loader2 className="size-4 text-accent animate-spin"
+        {createPlayerStatus === 'executing' ? (
+          <Loader2 className="size-4 shrink-0 text-accent animate-spin"
             strokeWidth={2.5}
           />
         ) : (
-          <Check className="size-4 text-accent"
+          <Check className="size-4 shrink-0 text-accent"
             strokeWidth={4}
           />
         )}

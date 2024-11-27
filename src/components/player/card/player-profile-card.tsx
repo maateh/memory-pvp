@@ -9,7 +9,7 @@ import type { SessionFilter } from "@/components/session/filter/types"
 import { api } from "@/trpc/client"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn, logError } from "@/lib/utils"
 import { getPlayerStatsMap } from "@/lib/utils/stats"
 
 // icons
@@ -29,7 +29,7 @@ import PlayerActionsDropdown from "./player-actions-dropdown"
 
 // hooks
 import { useFilterStore } from "@/hooks/store/use-filter-store"
-import { useDeletePlayerMutation, useUpdatePlayerMutation } from "@/lib/react-query/mutations/player"
+import { useUpdatePlayerAction } from "@/lib/safe-action/player"
 
 type PlayerProfileCardProps = {
   player: ClientPlayer
@@ -57,14 +57,25 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     stats: stats || player.stats
   }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])
 
-  const { updatePlayer, handleUpdatePlayer } = useUpdatePlayerMutation()
-  const { deletePlayer } = useDeletePlayerMutation()
+  const { executeAsync: executeUpdatePlayer, status: updatePlayerStatus } = useUpdatePlayerAction()
 
   const handleToggleEditing = () => {
     setEditing((editing) => {
       if (editing) setUpdatedPlayer(player)
       return !editing
     })
+  }
+
+  const handleExecute = async () => {
+    try {
+      await executeUpdatePlayer({
+        previousTag: player.tag,
+        ...updatedPlayer
+      })
+      setEditing(false)
+    } catch (err) {
+      logError(err)
+    }
   }
 
   return (
@@ -125,14 +136,10 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             tooltip="Save changes"
             variant="ghost"
             size="icon"
-            onClick={() => handleUpdatePlayer({
-              player,
-              updatedPlayer,
-              resetEditing: () => setEditing(false)
-            })}
-            disabled={updatePlayer.isPending || deletePlayer.isPending}
+            onClick={handleExecute}
+            disabled={updatePlayerStatus === 'executing'}
           >
-            {updatePlayer.isPending ? (
+            {updatePlayerStatus === 'executing' ? (
               <Loader2 className="size-[1.125rem] text-accent animate-spin flex-none" />
             ) : (
               <CheckCircle2 className="size-[1.125rem] text-accent flex-none" />
@@ -144,7 +151,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             variant="ghost"
             size="icon"
             onClick={handleToggleEditing}
-            disabled={updatePlayer.isPending || deletePlayer.isPending}
+            disabled={updatePlayerStatus === 'executing'}
           >
             <XCircle className="size-[1.125rem] text-destructive flex-none" />
           </Button>
