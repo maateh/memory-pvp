@@ -1,7 +1,7 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 
 // helpers
 import { validateCardMatches } from "@/lib/helpers/session"
@@ -30,7 +30,6 @@ type SaveOfflineSessionProps = {
 }
 
 const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
-  const router = useRouter()
   const [playerId, setPlayerId] = useState('')
 
   const {
@@ -56,14 +55,15 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   return (
     <section className="w-11/12 max-w-lg mx-auto sm:max-w-screen-sm">
       <div className="flex items-center justify-center gap-x-2.5 sm:items-end">
-        <Button className="p-1.5 text-accent bg-accent/20 dark:bg-accent/10 sm:p-2"
+        <Button className="p-1.5 sm:p-2"
           tooltip="Add new player"
-          variant="ghost"
+          variant="outline"
           size="icon"
-          // TODO: use popup
-          onClick={() => router.push('/dashboard/players', { scroll: false })}
+          asChild
         >
-          <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
+          <Link href="/players/select" scroll={false}>
+            <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
+          </Link>
         </Button>
 
         <h2 className="text-base align-bottom font-heading font-semibold small-caps heading-decorator sm:text-lg">
