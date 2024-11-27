@@ -4,8 +4,9 @@ import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { db } from "@/server/db"
 import { ActionError } from "@/server/actions/_error"
+import { db } from "@/server/db"
+import { redis } from "@/lib/redis"
 
 // helpers
 import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
@@ -25,7 +26,7 @@ export const actionClient = createSafeActionClient({
       message: DEFAULT_SERVER_ERROR_MESSAGE
     } satisfies ActionError
   }
-}).use(async ({ next }) => next({ ctx: { db } }))
+}).use(async ({ next }) => next({ ctx: { db, redis } }))
 
 /**
  * TODO: write doc

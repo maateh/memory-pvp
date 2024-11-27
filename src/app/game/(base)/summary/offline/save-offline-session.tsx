@@ -3,6 +3,13 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
+// helpers
+import { validateCardMatches } from "@/lib/helpers/session"
+
+// utils
+import { getSessionFromStorage } from "@/lib/utils/storage"
+import { logError } from "@/lib/utils"
+
 // icons
 import { BadgeInfo, Save, UserCog2 } from "lucide-react"
 
@@ -16,7 +23,7 @@ import { PlayerBadge } from "@/components/player"
 import { PlayerProfileForm } from "@/components/player/form"
 
 // hooks
-import { useSaveOfflineSessionMutation } from "@/lib/react-query/mutations/session"
+import { useSaveOfflineSessionAction } from "@/lib/safe-action/session"
 
 type SaveOfflineSessionProps = {
   players: ClientPlayer[]
@@ -26,7 +33,25 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   const router = useRouter()
   const [playerId, setPlayerId] = useState('')
 
-  const { saveOfflineSession, handleSaveOfflineSession } = useSaveOfflineSessionMutation()
+  const {
+    executeAsync: executeSaveOfflineSession,
+    status: saveOfflineSessionStatus
+  } = useSaveOfflineSessionAction()
+
+  const handleExecute = async () => {
+    const offlineSession = getSessionFromStorage()
+    if (!offlineSession) return
+
+    try {
+      await executeSaveOfflineSession({
+        ...offlineSession,
+        playerId,
+        cards: validateCardMatches(offlineSession.cards)
+      })
+    } catch (err) {
+      logError(err)
+    }
+  }
 
   return (
     <section className="w-11/12 max-w-lg mx-auto sm:max-w-screen-sm">
@@ -35,6 +60,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
           tooltip="Add new player"
           variant="ghost"
           size="icon"
+          // TODO: use popup
           onClick={() => router.push('/dashboard/players', { scroll: false })}
         >
           <UserCog2 className="size-4 sm:size-5" strokeWidth={2.25} />
@@ -46,7 +72,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
       </div>
 
       <p className="max-w-md mt-1.5 mx-auto text-sm text-center font-heading dark:font-light sm:text-base">
-        Please, select a player profile first where you would like to save the results of your offline session.
+        Please, select a player profile first to save the results of your offline session.
       </p>
 
       <Separator className="w-1/5 mx-auto mt-3.5 mb-5 bg-border/15" />
@@ -88,8 +114,8 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
       <Button className="mx-auto flex gap-x-2"
         variant="secondary"
         size="lg"
-        onClick={() => handleSaveOfflineSession(playerId)}
-        disabled={!playerId || saveOfflineSession.isPending}
+        onClick={handleExecute}
+        disabled={saveOfflineSessionStatus === 'executing'}
       >
         <Save className="size-5 sm:size-6" />
         Save Results

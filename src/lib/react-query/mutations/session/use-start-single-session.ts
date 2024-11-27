@@ -15,6 +15,7 @@ import { logError, handleApiError } from "@/lib/utils"
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
 import { useCacheStore } from "@/hooks/store/use-cache-store"
+import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
 type UseStartSingleSessionMutationParams = {
   form: UseFormReturn<SessionFormValues>
@@ -38,6 +39,7 @@ export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMut
     },
     onError: (err) => {
       if (err.shape?.cause.key === 'ACTIVE_SESSION') {
+        // TODO: must be refactored
         setCache({
           forceStart: () => handleStartSingleSession(form.getValues(), true),
           continuePrevious: () => {
@@ -70,20 +72,11 @@ export const useStartSingleSessionMutation = ({ form }: UseStartSingleSessionMut
     }
   })
 
-  const abandonSession = api.session.abandon.useMutation({
-    onSuccess: () => {
-      toast.warning('Your previous session has been abandoned.', {
-        description: 'Session has also been saved, but from now on it cannot continue.'
-      })
-    },
-    onError: (err) => {
-      handleApiError(err.shape?.cause, 'Failed to abandon session. Please try again.')
-    }
-  })
+  const { executeAsync: executeAbandonSession } = useAbandonSessionAction()
 
   const handleStartSingleSession = async (values: SessionFormValues, forceStart: boolean = false) => {
     try {
-      if (forceStart) await abandonSession.mutateAsync()
+      if (forceStart) await executeAbandonSession(undefined)
       await startSession.mutateAsync(values)
 
       form.reset()

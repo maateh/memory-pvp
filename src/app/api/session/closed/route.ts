@@ -1,10 +1,10 @@
-// trpc
-import { api } from "@/trpc/server"
+// actions
+import { saveSession } from "@/server/actions/session"
 
 export async function POST(req: Request) {
   try {
     const clientSession = await req.json() as ClientGameSession
-    await api.session.save(clientSession)
+    await saveSession(clientSession)
 
     return Response.json({ status: 'OK' })
   } catch (err) {

@@ -12,30 +12,16 @@ import {
 import { getRandomCollection } from "@/server/db/collection"
 
 // validations
-import {
-  abandonSessionSchema,
-  clientSessionSchema,
-  createSessionSchema,
-  finishSessionSchema,
-  saveOfflineGameSchema,
-  saveSessionSchema,
-  sessionFilterSchema
-} from "@/lib/validations/session-schema"
+import { createSessionSchema, sessionFilterSchema } from "@/lib/validations/session-schema"
 
 // helpers
 import {
-  calculateSessionScore,
   generateSessionCards,
   generateSlug,
   getSessionSchemaIncludeFields,
   parseSchemaToClientSession,
   parseSessionFilter
 } from "@/lib/helpers/session"
-import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
-
-// constants
-import { SESSION_STORE_TTL } from "@/lib/redis"
-import { offlinePlayerMetadata } from "@/constants/player"
 
 export const sessionRouter = createTRPCRouter({
   count: protectedProcedure
@@ -62,6 +48,7 @@ export const sessionRouter = createTRPCRouter({
       return clientSession
     }),
 
+  // TODO: related query hook will be refactored
   create: playerProcedure
     .input(createSessionSchema)
     .mutation(async ({ ctx, input }): Promise<ClientGameSession> => {
@@ -174,179 +161,5 @@ export const sessionRouter = createTRPCRouter({
       })
 
       return parseSchemaToClientSession(session, ctx.player.id)
-    }),
-
-  store: activeSessionProcedure
-    .input(clientSessionSchema)
-    .mutation(async ({ ctx, input: session }) => {
-      return await ctx.redis.set(
-        `session:${ctx.activeSession.slug}`,
-        session,
-        { ex: SESSION_STORE_TTL }
-      )
-    }),
-
-  save: activeSessionProcedure
-    .input(saveSessionSchema)
-    .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
-
-      return await ctx.db.gameSession.update({
-        where: {
-          id: ctx.activeSession.id
-        },
-        data: session
-      })
-    }),
-
-  finish: activeSessionProcedure
-    .input(finishSessionSchema)
-    .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
-
-      /** Updates the statistics of session players */
-      await ctx.db.$transaction(
-        getBulkUpdatePlayerStatsOperations(
-          ctx.activeSession.players,
-          session
-        )
-      )
-
-      return await ctx.db.gameSession.update({
-        where: {
-          id: ctx.activeSession.id
-        },
-        data: {
-          ...session,
-          status: 'FINISHED',
-          closedAt: new Date(),
-          results: {
-            createMany: {
-              data: ctx.activeSession.players.map((player) => ({
-                playerId: player.id,
-                flips: session.stats.flips[player.id],
-                matches: session.stats.matches[player.id],
-                score: calculateSessionScore(session, ctx.player.id)
-              }))
-            }
-          }
-        }
-      })
-    }),
-
-  abandon: activeSessionProcedure
-    .input(abandonSessionSchema)
-    .mutation(async ({ ctx, input: session }) => {
-      await ctx.redis.del(`session:${ctx.activeSession.slug}`)
-
-      if (!session) {
-        const validation = await abandonSessionSchema.safeParseAsync(ctx.activeSession)
-
-        if (!validation.success) {
-          throw new TRPCError({
-            code: 'PARSE_ERROR',
-            cause: new TRPCApiError({
-              key: 'UNKNOWN',
-              message: 'Something went wrong.',
-              description: 'Session data appears to be corrupted because it failed to be parsed.'
-            })
-          })
-        }
-
-        session = validation.data!
-      }
-
-      /** Updates the statistics of session players */
-      await ctx.db.$transaction(
-        getBulkUpdatePlayerStatsOperations(
-          ctx.activeSession.players,
-          session,
-          'abandon'
-        )
-      )
-
-      return await ctx.db.gameSession.update({
-        where: {
-          id: ctx.activeSession.id
-        },
-        data: {
-          ...session,
-          status: 'ABANDONED',
-          closedAt: new Date(),
-          results: {
-            createMany: {
-              data: ctx.activeSession.players.map((player) => ({
-                playerId: player.id,
-                flips: session.stats.flips[player.id],
-                matches: session.stats.matches[player.id],
-
-                // TODO: in 'PVP' mode, only deducts for the player who abandoned the session
-                score: calculateSessionScore(session, ctx.player.id, 'abandon')
-              }))
-            }
-          }
-        }
-      })
-    }),
-  
-  saveOffline: protectedProcedure
-    .input(saveOfflineGameSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { playerId, collectionId, ...session } = input
-
-      const playerProfile = await ctx.db.playerProfile.findFirst({
-        where: {
-          userId: ctx.user.id,
-          id: playerId
-        },
-        select: {
-          id: true
-        }
-      })
-
-      if (!playerProfile) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          cause: new TRPCApiError({
-            key: 'PLAYER_PROFILE_NOT_FOUND',
-            message: 'Player profile not found.',
-            description: "Please, select or create a new player profile where you'd like to save your offline session data."
-          })
-        })
-      }
-
-      /**
-       * Replaces the default 'offlinePlayer.id' placeholder constant
-       * which is used by default in offline session stats.
-       */
-      const stats: PrismaJson.SessionStats = {
-        ...session.stats,
-        flips: {
-          [playerId]: session.stats.flips[offlinePlayerMetadata.id]
-        },
-        matches: {
-          [playerId]: session.stats.matches[offlinePlayerMetadata.id]
-        }
-      }
-
-      return await ctx.db.gameSession.create({
-        data: {
-          ...session, stats,
-          slug: generateSlug({ type: 'CASUAL', mode: 'SINGLE' }, true),
-          type: 'CASUAL',
-          mode: 'SINGLE',
-          status: 'OFFLINE',
-          closedAt: new Date(),
-          collection: {
-            connect: { id: collectionId }
-          },
-          owner: {
-            connect: { id: playerProfile.id }
-          },
-          players: {
-            connect: { id: playerProfile.id }
-          }
-        }
-      })
     })
 })

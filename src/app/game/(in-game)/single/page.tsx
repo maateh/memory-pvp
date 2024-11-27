@@ -1,62 +1,26 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-
-import { toast } from "sonner"
-
-// trpc
-import { api } from "@/trpc/client"
-
 // helpers
 import { validateCardMatches } from "@/lib/helpers/session"
 
 // utils
-import { handleApiError, logError } from "@/lib/utils"
+import { logError } from "@/lib/utils"
 
 // components
 import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
-import { useSessionStore } from "@/hooks/store/use-session-store"
+import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
 
 const InGameSinglePage = () => {
-  const router = useRouter()
-
-  const storeSession = api.session.store.useMutation({
-    onMutate: () => {
-      useSessionStore.setState({ syncState: "PENDING" })
-    },
-    onSuccess: () => {
-      useSessionStore.setState({ syncState: "SYNCHRONIZED" })
-    },
-    onError: (err) => {
-      if (err.shape?.cause.key === 'SESSION_NOT_FOUND' && finishSession.isPending) {
-        return
-      }
-
-      useSessionStore.setState({ syncState: "OUT_OF_SYNC" })
-      handleApiError(err.shape?.cause, 'Failed to store game session.')
-    }
-  })
-  
-  const finishSession = api.session.finish.useMutation({
-    onSuccess: ({ slug }) => {
-      router.replace(`/game/summary/${slug}`)
-
-      toast.success('You finished your game session!', {
-        description: 'Session data has been successfully saved.'
-      })
-    },
-    onError: (err) => {
-      handleApiError(err.shape?.cause, 'Failed to save game session.')
-    }
-  })
+  const { executeAsync: executeFinishSession } = useFinishSessionAction()
+  const { executeAsync: executeStoreSession } = useStoreSessionAction()
 
   const { clientSession, handleCardFlip } = useGameHandler({
     onHeartbeat: async () => {
       try {
-        await storeSession.mutateAsync(clientSession)
+        await executeStoreSession(clientSession)
       } catch (err) {
         logError(err)
       }
@@ -67,7 +31,7 @@ const InGameSinglePage = () => {
     },
     onFinish: async () => {
       try {
-        await finishSession.mutateAsync({
+        await executeFinishSession({
           ...clientSession,
           cards: validateCardMatches(clientSession.cards)
         })
