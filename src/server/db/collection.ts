@@ -14,10 +14,16 @@ import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/help
 import { parseSortToOrderBy } from "@/lib/utils"
 
 /**
- * TODO: write doc
+ * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.
  * 
- * @param
- * @returns 
+ * - If `userProtected` is enabled, ensures that a user is signed in before fetching the collection.
+ * - Fetches the collection with its associated user and cards data.
+ * - Returns `null` if the collection is not found or if the user is not signed in when `userProtected` is `true`.
+ * 
+ * @param {Object} options - Options for retrieving the collection.
+ * @param {string} options.id - The ID of the collection to retrieve.
+ * @param {boolean} [options.userProtected=true] - Whether to require the user to be signed in to fetch the collection.
+ * @returns {Promise<ClientCardCollection | null>} - The parsed collection or `null` if not found.
  */
 export async function getCollection({ id, userProtected = true }: {
   id: string

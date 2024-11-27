@@ -12,7 +12,10 @@ import { redis } from "@/lib/redis"
 import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
 
 /**
- * TODO: write doc
+ * Creates a safe action client with error handling and adds a shared context for `db` and `redis`.
+ * 
+ * - Handles server errors by mapping them to `ActionError` instances.
+ * - Injects `db` and `redis` into the context for downstream middleware and actions.
  */
 export const actionClient = createSafeActionClient({
   handleServerError(err) {
@@ -29,7 +32,11 @@ export const actionClient = createSafeActionClient({
 }).use(async ({ next }) => next({ ctx: { db, redis } }))
 
 /**
- * TODO: write doc
+ * Extends the action client to enforce user authentication.
+ * 
+ * - Verifies the user using the clerk authentication service.
+ * - Fetches the associated user record from the database.
+ * - Throws an `ActionError` if the user is not authenticated or if no user record is found.
  */
 export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
@@ -55,7 +62,10 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
 })
 
 /**
- * TODO: write doc
+ * Extends the protected action client to validate the active player profile.
+ * 
+ * - Checks if the authenticated user has an active player profile in the database.
+ * - Throws an `ActionError` if no active player profile is found.
  */
 export const playerActionClient = protectedActionClient.use(async ({ ctx, next }) => {
   const player = await ctx.db.playerProfile.findFirst({
@@ -76,7 +86,11 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
 })
 
 /**
- * TODO: write doc
+ * Extends the player action client to enforce active game session validation.
+ * 
+ * - Checks if the active player is currently in a running game session.
+ * - Verifies access to the game session for the authenticated user.
+ * - Throws an `ActionError` if no active session is found or access is denied.
  */
 export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
