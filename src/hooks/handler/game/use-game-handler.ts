@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react"
-import { redirect } from "next/navigation"
 
 // hooks
 import { useSessionStore } from "@/hooks/store/use-session-store"
@@ -12,7 +11,7 @@ type UseGameHandlerProps = {
 }
 
 type UseGameHandlerReturn = {
-  clientSession: ClientGameSession
+  clientSession: ClientGameSession | null
   handleCardFlip: (clickedCard: ClientSessionCard) => void
 }
 
@@ -50,7 +49,6 @@ export const useGameHandler = ({
 }: UseGameHandlerProps): UseGameHandlerReturn => {
   /** Check if there is any registered session. */
   const clientSession = useSessionStore((state) => state.session)
-  if (!clientSession) redirect('/game/setup')
 
   /** Initialize required states and handlers for the game. */
   const syncState = useSessionStore((state) => state.syncState)
@@ -69,6 +67,8 @@ export const useGameHandler = ({
    * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
    */
   const handleCardFlip = (clickedCard: ClientSessionCard) => {
+    if (!clientSession) return
+
     const flippable = clientSession.flipped.length < 2
       && clickedCard.flippedBy === null
       && clickedCard.matchedBy === null
@@ -143,7 +143,7 @@ export const useGameHandler = ({
    *   a (possibly) session saving callback.
    */
   useEffect(() => {
-    const isOver = clientSession.cards.every((card) => card.matchedBy !== null)
+    const isOver = clientSession?.cards.every((card) => card.matchedBy !== null)
     if (isOver) {
       finishRef.current()
       return () => unregisterSession()

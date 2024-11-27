@@ -20,7 +20,7 @@ const InGameSinglePage = () => {
   const { clientSession, handleCardFlip } = useGameHandler({
     onHeartbeat: async () => {
       try {
-        await executeStoreSession(clientSession)
+        await executeStoreSession(clientSession!)
       } catch (err) {
         logError(err)
       }
@@ -32,14 +32,20 @@ const InGameSinglePage = () => {
     onFinish: async () => {
       try {
         await executeFinishSession({
-          ...clientSession,
-          cards: validateCardMatches(clientSession.cards)
+          ...clientSession!,
+          cards: validateCardMatches(clientSession!.cards)
         })
       } catch (err) {
         logError(err)
       }
     }
   })
+
+  if (!clientSession) {
+    return (
+      <>TODO: loading fallback</>
+    )
+  }
 
   return (
     <>

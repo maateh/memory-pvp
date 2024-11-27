@@ -1,6 +1,6 @@
 "use client"
 
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
@@ -14,19 +14,32 @@ import { MemoryTable, SessionHeader } from "@/components/session/ingame"
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 
 const InGameOfflinePage = () => {
+  const router = useRouter()
+
   const { clientSession, handleCardFlip } = useGameHandler({
-    onIngameUpdate: () => saveSessionToStorage(clientSession),
-    onFinish: () => {
+    onIngameUpdate: () => {
+      if (!clientSession) return
       saveSessionToStorage(clientSession)
+    },
+    onFinish: () => {
+      if (clientSession) {
+        saveSessionToStorage(clientSession)
+      }
 
       toast.success('You finished your offline game session!', {
-        description: "Now, you've been redirected to save your results if you want.",
+        description: "You will be redirected to save your results if you want.",
         id: '_' /** Note: prevent re-render by adding a custom id. */
       })
 
-      redirect('/game/summary/offline')
+      router.replace('/game/summary/offline')
     }
   })
+
+  if (!clientSession) {
+    return (
+      <>TODO: loading fallback</>
+    )
+  }
 
   return (
     <>
