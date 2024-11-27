@@ -9,7 +9,14 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { CollectionExplorerCard } from "@/components/collection/explorer"
-import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
+import {
+  Popup,
+  PopupContent,
+  PopupFooter,
+  PopupHeader,
+  PopupRedirectFallback,
+  PopupTrigger
+} from "@/components/popup"
 import { Await } from "@/components/shared"
 import CollectionDeletePopupActions from "./collection-delete-popup-actions"
 
@@ -70,7 +77,10 @@ const CollectionDeletePopup = ({ renderer, collection, collectionId, ...props }:
                   </PopupFooter>
                 </div>
               ) : (
-                <>TODO: not found fallback</>
+                <PopupRedirectFallback
+                  message="Popup cannot be loaded."
+                  description="Unable to find collection with this identifier."
+                />
               )}
             </Await>
           </Suspense>

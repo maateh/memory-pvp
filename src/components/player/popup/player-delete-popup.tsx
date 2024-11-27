@@ -11,7 +11,14 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
+import {
+  Popup,
+  PopupContent,
+  PopupFooter,
+  PopupHeader,
+  PopupRedirectFallback,
+  PopupTrigger
+} from "@/components/popup"
 import { Await, StatisticItem, StatisticList } from "@/components/shared"
 import PlayerDeletePopupActions from "./player-delete-popup-actions"
 
@@ -45,7 +52,10 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
               {(player) => player ? (
                 <PlayerDeletePopupContent player={player} />
               ) : (
-                <>TODO: fallback</>
+                <PopupRedirectFallback
+                  message="Popup cannot be loaded."
+                  description="Unable to find player with this identifier."
+                />
               )}
             </Await>
           </Suspense>
