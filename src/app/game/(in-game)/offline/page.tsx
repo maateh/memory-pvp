@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { saveSessionToStorage } from "@/lib/utils/storage"
 
 // components
-import { MemoryTable, SessionHeader } from "@/components/session/ingame"
+import { MemoryTable, SessionHeader, SessionLoader } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
@@ -36,9 +36,7 @@ const InGameOfflinePage = () => {
   })
 
   if (!clientSession) {
-    return (
-      <>TODO: loading fallback</>
-    )
+    return <SessionLoader />
   }
 
   return (

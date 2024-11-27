@@ -7,7 +7,7 @@ import { validateCardMatches } from "@/lib/helpers/session"
 import { logError } from "@/lib/utils"
 
 // components
-import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
+import { MemoryTable, SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
@@ -42,9 +42,7 @@ const InGameSinglePage = () => {
   })
 
   if (!clientSession) {
-    return (
-      <>TODO: loading fallback</>
-    )
+    return <SessionLoader />
   }
 
   return (
