@@ -19,6 +19,7 @@ import {
 } from "@/components/popup"
 import { Await, RedirectFallback, StatisticItem, StatisticList } from "@/components/shared"
 import SessionRunningPopupActions from "./session-running-popup-actions"
+import { Skeleton } from "@/components/ui/skeleton"
 
 type SessionRunningPopupProps = ({
   renderer: "trigger"
@@ -42,13 +43,13 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
 
         <Separator className="w-5/6 mx-auto mb-4 md:mb-0 bg-border/15" />
 
-        {session && <SessionRunningContent session={session} />}
+        {session && <SessionRunningPopupContent session={session} />}
 
         {renderer === 'router' && !session && (
-          <Suspense fallback="loading..."> {/* TODO: skeleton */}
+          <Suspense fallback={<SessionRunningPopupSkeleton />}>
             <Await promise={getActiveSession()}>
               {(session) => session?.data ? (
-                <SessionRunningContent session={session.data} />
+                <SessionRunningPopupContent session={session.data} />
               ) : (
                 <RedirectFallback
                   type="back"
@@ -64,7 +65,7 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
   )
 }
 
-const SessionRunningContent = ({ session }: { session: ClientGameSession }) => (
+const SessionRunningPopupContent = ({ session }: { session: ClientGameSession }) => (
   <div className="px-4 md:px-0">
     <StatisticList className="max-w-xl mx-auto">
       {Object.values(getSessionStatsMap(session)).map((stat) => (
@@ -83,6 +84,16 @@ const SessionRunningContent = ({ session }: { session: ClientGameSession }) => (
       <SessionRunningPopupActions />
     </PopupFooter>
   </div>
+)
+
+const SessionRunningPopupSkeleton = () => (
+  <StatisticList className="w-full mx-auto p-4">
+    {Array(6).fill('').map((_, index) => (
+      <Skeleton className="w-40 h-12 bg-destructive/10 rounded-2xl"
+        key={index}
+      />
+    ))}
+  </StatisticList>
 )
 
 export default SessionRunningPopup

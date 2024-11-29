@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { toast } from "sonner"
 
 // types
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
@@ -34,7 +35,9 @@ const SessionRunningPopupActions = () => {
 
   const handleForceStart = async () => {
     if (!sessionValues) {
-      // TODO: error toast
+      toast.error("Session cache not not found.", {
+        description: "Please try reloading the page."
+      })
       return
     }
 
