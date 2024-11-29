@@ -48,7 +48,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
           <PlayerBadge player={session.players.current} />
 
           {session.status === 'RUNNING' ? (
-            <Button className="ml-auto p-2.5 rounded-full"
+            <Button className="ml-auto p-2.5 rounded-full hover:bg-muted/50"
               tooltip="Continue session"
               variant="ghost"
               size="sm"
@@ -61,7 +61,7 @@ const SessionCard = ({ session }: SessionCardProps) => {
               </Link>
             </Button>
           ) : (
-            <Button className="ml-auto p-2.5 rounded-full"
+            <Button className="ml-auto p-2.5 rounded-full hover:bg-muted/50"
               tooltip="Open summary"
               variant="ghost"
               size="icon"

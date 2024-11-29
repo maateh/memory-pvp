@@ -173,10 +173,10 @@ export const columns: ColumnDef<ClientGameSession>[] = [
 
       if (session.status === 'RUNNING') {
         return (
-          <Button className="ml-auto p-2.5 rounded-full"
+          <Button className="ml-auto p-1.5 rounded-full"
             tooltip="Continue session"
             variant="ghost"
-            size="sm"
+            size="icon"
             asChild
           >
             <Link href="/game/single">

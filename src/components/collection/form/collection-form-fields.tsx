@@ -82,7 +82,7 @@ const CollectionFormFields = ({ form, routeConfig, isPending, disabled }: Collec
                 onValueChange={field.onChange}
               >
                 {Object.values(tableSizePlaceholders).map(({ key, label, Icon }) => (
-                  <ButtonGroupItem className="flex-1 min-w-32 flex items-center gap-x-2 border border-border/25 rounded-2xl hover:bg-accent/40 dark:hover:bg-accent/40 data-[state=checked]:bg-accent/60"
+                  <ButtonGroupItem className="flex-1 min-w-32 flex items-center gap-x-2 border border-border/25 rounded-2xl hover:bg-accent/10 data-[state=checked]:bg-accent/60"
                     size="icon"
                     variant="ghost"
                     type="button"
