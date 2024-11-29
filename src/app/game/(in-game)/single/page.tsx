@@ -1,62 +1,32 @@
-"use client"
+import { Suspense } from "react"
 
-// helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+// actions
+import { getActiveSession } from "@/server/actions/session"
 
-// utils
-import { logError } from "@/lib/utils"
+// providers
+import { SessionStoreProvider } from "@/components/providers"
 
 // components
-import { MemoryTable, SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
+import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
+import { Await } from "@/components/shared"
+import SingleGameHandler from "./single-game-handler"
 
-// hooks
-import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
-import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
-
-const InGameSinglePage = () => {
-  const { executeAsync: executeFinishSession } = useFinishSessionAction()
-  const { executeAsync: executeStoreSession } = useStoreSessionAction()
-
-  const { clientSession, handleCardFlip } = useGameHandler({
-    onHeartbeat: async () => {
-      try {
-        await executeStoreSession(clientSession!)
-      } catch (err) {
-        logError(err)
-      }
-    },
-    onBeforeUnload: async () => {
-      const payload = JSON.stringify(clientSession)
-      navigator.sendBeacon('/api/session/closed', payload)
-    },
-    onFinish: async () => {
-      try {
-        await executeFinishSession({
-          ...clientSession!,
-          cards: validateCardMatches(clientSession!.cards)
-        })
-      } catch (err) {
-        logError(err)
-      }
-    }
-  })
-
-  if (!clientSession) {
-    return <SessionLoader />
-  }
-
+const SingleGamePage = () => {
   return (
-    <>
-      <SessionHeader session={clientSession} />
+    <Suspense fallback={<SessionLoader />}>
+      <Await promise={getActiveSession()}>
+        {(session) => session?.data ? (
+          <SessionStoreProvider session={session.data}>
+            <SessionHeader session={session.data} />
 
-      <MemoryTable
-        session={clientSession}
-        handleCardFlip={handleCardFlip}
-      />
+            <SingleGameHandler />
 
-      <SessionFooter session={clientSession} />
-    </>
+            <SessionFooter />
+          </SessionStoreProvider>
+        ) : <>TODO: not found fallback</>}
+      </Await>
+    </Suspense>
   )
 }
 
-export default InGameSinglePage
+export default SingleGamePage
