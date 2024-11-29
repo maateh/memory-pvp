@@ -1,18 +1,20 @@
+"use client"
+
 import { useRef } from "react"
 
 // utils
 import { formatTimer } from "@/lib/utils/game"
 
 // hooks
+import { useSessionStore } from "@/components/providers/session-store-provider"
 import { useTimer } from "@/hooks/use-timer"
-import { useSessionStore } from "@/hooks/store/use-session-store"
 
 type SessionTimerProps = {
-  session: ClientGameSession
+  timer: number
 }
 
-const SessionTimer = ({ session }: SessionTimerProps) => {
-  const initialTimerRef = useRef<number>(session.stats.timer)
+const SessionTimer = ({ timer }: SessionTimerProps) => {
+  const initialTimerRef = useRef<number>(timer)
 
   const updateSessionTimer = useSessionStore((state) => state.updateTimer)
 

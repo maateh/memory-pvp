@@ -2,14 +2,19 @@
 
 import { redirect, RedirectType } from "next/navigation"
 
+// server
+import { getRandomCollection } from "@/server/db/collection"
+import { updateSessionStatus } from "@/server/db/mutations/session-mutation"
+
 // actions
 import { ActionError } from "@/server/actions/_error"
-import { protectedActionClient, sessionActionClient } from "@/server/actions"
+import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/actions"
 
 // validations
 import {
   abandonSessionSchema,
   clientSessionSchema,
+  createSessionSchema,
   finishSessionSchema,
   saveOfflineGameSchema,
   saveSessionSchema
@@ -17,16 +22,121 @@ import {
 
 // helpers
 import {
-  calculateSessionScore,
+  generateSessionCards,
   generateSlug,
   getSessionSchemaIncludeFields,
   parseSchemaToClientSession
 } from "@/lib/helpers/session"
-import { getBulkUpdatePlayerStatsOperations } from "@/lib/helpers/player"
 
 // constants
 import { offlinePlayerMetadata } from "@/constants/player"
 import { SESSION_STORE_TTL } from "@/lib/redis"
+
+export const getActiveSession = sessionActionClient
+  .action(async ({ ctx }) => {
+    const storeKey = `session:${ctx.activeSession.slug}`
+    const clientSession = await ctx.redis.get<ClientGameSession>(storeKey)
+
+    if (clientSession) return clientSession
+    return parseSchemaToClientSession(ctx.activeSession, ctx.player.id)
+  })
+
+export const createSession = playerActionClient
+  .schema(createSessionSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const { collectionId, forceStart, ...sessionValues } = parsedInput
+
+    // TODO: implement "PVP" & "COOP" game modes
+    // Note: Socket.io implementation required
+    if (sessionValues.mode !== 'SINGLE') {
+      ActionError.throw({
+        key: 'UNKNOWN',
+        message: 'Sorry, but currently you can only play in Single.',
+        description: 'This feature is still work in progress. Please, try again later.'
+      })
+    }
+
+    /* Checks if there is any ongoing session */
+    const activeSession = await ctx.db.gameSession.findFirst({
+      where: {
+        status: 'RUNNING',
+        players: {
+          some: { id: ctx.player.id }
+        }
+      }
+    })
+
+    /* Throws a custom 'ACTIVE_SESSION' action error if active session found */
+    if (activeSession && !forceStart) {
+      ActionError.throw({
+        key: 'ACTIVE_SESSION',
+        message: 'Active game session found.',
+        description: 'Would you like to continue the ongoing session or start a new one?'
+      })
+    }
+
+    /* Abandons session if 'forceStart' is applied and active session found */
+    if (activeSession && forceStart) {
+      await updateSessionStatus({
+        session: activeSession,
+        player: ctx.player,
+        action: 'abandon'
+      })
+    }
+
+    /* Loads the given or a randomly generated collection for the session */
+    let collection: ClientCardCollection | null = null
+    if (collectionId) {
+      collection = await ctx.db.cardCollection.findUnique({
+        where: { id: collectionId },
+        include: {
+          user: true,
+          cards: true
+        },
+      })
+    } else {
+      collection = await getRandomCollection(sessionValues.tableSize)
+    }
+
+    if (!collection) {
+      ActionError.throw({
+        key: 'COLLECTION_NOT_FOUND',
+        message: 'Sorry, but we cannot find card collection for your session.',
+        description: 'Please, try select another card collection or try again later.'
+      })
+    }
+
+    /* Creates the game session then redirects the user to the game page */
+    await ctx.db.gameSession.create({
+      data: {
+        ...sessionValues,
+        slug: generateSlug({ type: sessionValues.type, mode: sessionValues.mode }),
+        status: 'RUNNING',
+        flipped: [],
+        cards: generateSessionCards(collection),
+        stats: {
+          timer: 0,
+          flips: { // TODO: add guest flips (update validation schema)
+            [ctx.player.id]: 0
+          },
+          matches: { // TODO: add guest matches (update validation schema)
+            [ctx.player.id]: 0
+          }
+        },
+        collection: {
+          connect: { id: collection.id }
+        },
+        owner: {
+          connect: { id: ctx.player.id }
+        },
+        players: { // TODO: connect guest (update validation schema)
+          connect: [{ id: ctx.player.id }]
+        }
+      }
+    })
+
+    redirect('/game/single')
+  })
 
 export const storeSession = sessionActionClient
   .schema(clientSessionSchema)
@@ -67,31 +177,10 @@ export const finishSession = sessionActionClient
   .action(async ({ ctx, parsedInput: session }) => {
     await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
-    /* Updates the statistics of session players */
-    await ctx.db.$transaction(
-      getBulkUpdatePlayerStatsOperations(
-        ctx.activeSession.players,
-        session
-      )
-    )
-
-    const { slug } = await ctx.db.gameSession.update({
-      where: { id: ctx.activeSession.id },
-      data: {
-        ...session,
-        status: 'FINISHED',
-        closedAt: new Date(),
-        results: {
-          createMany: {
-            data: ctx.activeSession.players.map((player) => ({
-              playerId: player.id,
-              flips: session.stats.flips[player.id],
-              matches: session.stats.matches[player.id],
-              score: calculateSessionScore(session, ctx.player.id)
-            }))
-          }
-        }
-      }
+    const { slug } = await updateSessionStatus({
+      session,
+      player: ctx.player,
+      action: 'finish'
     })
 
     redirect(`/game/summary/${slug}`, RedirectType.replace)
@@ -116,34 +205,10 @@ export const abandonSession = sessionActionClient
       session = validation.data!
     }
 
-    /* Updates the statistics of session players */
-    await ctx.db.$transaction(
-      getBulkUpdatePlayerStatsOperations(
-        ctx.activeSession.players,
-        session,
-        'abandon'
-      )
-    )
-
-    const { slug } = await ctx.db.gameSession.update({
-      where: { id: ctx.activeSession.id },
-      data: {
-        ...session,
-        status: 'ABANDONED',
-        closedAt: new Date(),
-        results: {
-          createMany: {
-            data: ctx.activeSession.players.map((player) => ({
-              playerId: player.id,
-              flips: session.stats.flips[player.id],
-              matches: session.stats.matches[player.id],
-
-              // TODO: in 'PVP' mode, only deducts for the player who abandoned the session
-              score: calculateSessionScore(session, ctx.player.id, 'abandon')
-            }))
-          }
-        }
-      }
+    const { slug } = await updateSessionStatus({
+      session,
+      player: ctx.player,
+      action: 'abandon'
     })
 
     redirect(`/game/summary/${slug}`, RedirectType.replace)

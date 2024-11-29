@@ -7,7 +7,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // icons
-import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, Minus } from "lucide-react"
+import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, Minus, StepForward } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,7 @@ import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/component
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { SessionInfoBadge, SessionBadge, SessionContinueButton } from "@/components/session"
+import { SessionInfoBadge, SessionBadge } from "@/components/session"
 import { CustomDate } from "@/components/shared"
 
 export const columns: ColumnDef<ClientGameSession>[] = [
@@ -173,9 +173,18 @@ export const columns: ColumnDef<ClientGameSession>[] = [
 
       if (session.status === 'RUNNING') {
         return (
-          <SessionContinueButton className="p-1.5"
-            session={session}
-          />
+          <Button className="ml-auto p-2.5 rounded-full"
+            tooltip="Continue session"
+            variant="ghost"
+            size="sm"
+            asChild
+          >
+            <Link href="/game/single">
+              <StepForward className="size-4 sm:size-5 shrink-0 text-accent"
+                strokeWidth={2.5}
+              />
+            </Link>
+          </Button>
         )
       }
 

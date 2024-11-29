@@ -89,7 +89,10 @@ export const createSessionSchema = clientSessionSchema.pick({
   type: true,
   mode: true,
   tableSize: true
-}).extend({ collectionId: z.string().optional() })
+}).extend({
+  collectionId: z.string().optional(),
+  forceStart: z.coerce.boolean().optional()
+})
 
 export const saveSessionSchema = clientSessionSchema.omit({ players: true })
 

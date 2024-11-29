@@ -7,22 +7,24 @@ import { storeSession } from "@/server/actions/session"
 import { handleActionError } from "@/lib/utils"
 
 // hooks
-import { useSessionStore } from "@/hooks/store/use-session-store"
+import { useSessionStore } from "@/components/providers/session-store-provider"
 import { useFinishSessionAction } from "./use-finish-session"
 
 export const useStoreSessionAction = () => {
+  const updateSyncState = useSessionStore((state) => state.updateSyncState)
+
   const { status: finishSessionStatus } = useFinishSessionAction()
 
   return useAction(storeSession, {
-    onExecute: () => useSessionStore.setState({ syncState: "PENDING" }),
-    onSuccess: () => useSessionStore.setState({ syncState: "SYNCHRONIZED" }),
+    onExecute: () => updateSyncState("PENDING"),
+    onSuccess: () => updateSyncState("SYNCHRONIZED"),
     onError: ({ error }) => {
       if (
         error.serverError?.key === 'SESSION_NOT_FOUND' &&
         finishSessionStatus === 'executing'
       ) return
   
-      useSessionStore.setState({ syncState: "OUT_OF_SYNC" })
+      updateSyncState("OUT_OF_SYNC")
       handleActionError(error.serverError)
     }
   })

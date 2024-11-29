@@ -1,6 +1,7 @@
 "use client"
 
 import { useTheme } from "next-themes"
+import { toast } from "sonner"
 
 // constants
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/constants/game"
 
 // utils
+import { clearSessionFromStorage } from "@/lib/utils/storage"
 import { logError } from "@/lib/utils"
 
 // icons
@@ -28,17 +30,13 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
+import { useSessionStore } from "@/components/providers/session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
-type SessionActionsDropdownProps = {
-  session: ClientGameSession
-}
-
-const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
+const SessionActionsDropdown = () => {
   const { theme, setTheme } = useTheme() as UseThemeProps
+  const session = useSessionStore((state) => state.session)
 
-  const { abandonOfflineSession } = useOfflineSessionHandler()
   const {
     executeAsync: executeAbandonSession,
     status: abandonSessionStatus
@@ -46,7 +44,11 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
 
   const handleAbandonSession = async () => {
     if (session.status === 'OFFLINE') {
-      abandonOfflineSession()
+      clearSessionFromStorage()
+    
+      toast.info('Offline session has been abandoned.', {
+        description: 'Abandoned offline sessions are not saved.'
+      })
       return
     }
 

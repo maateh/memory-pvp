@@ -15,9 +15,6 @@ import { db } from '@/server/db'
 // redis
 import { redis } from "@/lib/redis"
 
-// helpers
-import { getSessionSchemaIncludeFields } from '@/lib/helpers/session'
-
 export const createTRPCContext = cache(
   async (opts: { req: Request }) => {
     return { db, redis, ...opts }
@@ -74,69 +71,5 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
 
   return next({
     ctx: { user }
-  })
-})
-
-export const playerProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const player = await ctx.db.playerProfile.findFirst({
-    where: {
-      userId: ctx.user.id,
-      isActive: true
-    }
-  })
-
-  if (!player) {
-    throw new TRPCError({
-      code: 'NOT_FOUND',
-      cause: new TRPCApiError({
-        key: 'PLAYER_PROFILE_NOT_FOUND',
-        message: 'Active player profile not found.'
-      })
-    })
-  }
-
-  return next({
-    ctx: { player }
-  })
-})
-
-export const activeSessionProcedure = playerProcedure.use(async ({ ctx, next }) => {
-  const activeSession = await ctx.db.gameSession.findFirst({
-    where: {
-      status: 'RUNNING',
-      players: {
-        some: {
-          id: ctx.player.id
-        }
-      }
-    },
-    include: getSessionSchemaIncludeFields()
-  })
-
-  if (!activeSession) {
-    throw new TRPCError({
-      code: 'NOT_FOUND',
-      cause: new TRPCApiError({
-        key: 'SESSION_NOT_FOUND',
-        message: 'Game session not found.',
-        description: "You aren't currently participating in any game session."
-      })
-    })
-  }
-
-  const hasAccess = activeSession.players.some((player) => player.userId === ctx.user.id)
-  if (!hasAccess) {
-    throw new TRPCError({
-      code: 'FORBIDDEN',
-      cause: new TRPCApiError({
-        key: 'SESSION_ACCESS_DENIED',
-        message: "Game session access denied.",
-        description: "You don't have access to this game session."
-      })
-    })
-  }
-
-  return next({
-    ctx: { activeSession }
   })
 })

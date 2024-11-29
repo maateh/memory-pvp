@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 
 // hooks
-import { useSessionStore } from "@/hooks/store/use-session-store"
+import { useSessionStore } from "@/components/providers/session-store-provider"
 
 type UseGameHandlerProps = {
   onIngameUpdate?: () => void
@@ -11,7 +11,6 @@ type UseGameHandlerProps = {
 }
 
 type UseGameHandlerReturn = {
-  clientSession: ClientGameSession | null
   handleCardFlip: (clickedCard: ClientSessionCard) => void
 }
 
@@ -38,7 +37,6 @@ type UseGameHandlerReturn = {
  *    - Registers the session, tracks game progress, and triggers the finish logic when the game is over.
  * 
  * @returns {UseGameHandlerReturn} - An object containing:
- * - `clientSession`: The current session data.
  * - `handleCardFlip`: Function to handle card flipping logic.
  */
 export const useGameHandler = ({
@@ -47,15 +45,13 @@ export const useGameHandler = ({
   onBeforeUnload,
   onFinish
 }: UseGameHandlerProps): UseGameHandlerReturn => {
-  /** Check if there is any registered session. */
-  const clientSession = useSessionStore((state) => state.session)
+  const session = useSessionStore((state) => state.session)
 
   /** Initialize required states and handlers for the game. */
   const syncState = useSessionStore((state) => state.syncState)
   const handleFlipUpdate = useSessionStore((state) => state.handleFlipUpdate)
   const handleMatchUpdate = useSessionStore((state) => state.handleMatchUpdate)
   const handleUnmatchUpdate = useSessionStore((state) => state.handleUnmatchUpdate)
-  const unregisterSession = useSessionStore((state) => state.unregister)
 
   /**
    * Flips the clicked memory card and handles matching logic.
@@ -67,16 +63,14 @@ export const useGameHandler = ({
    * - If matched, marks both cards as matched. Otherwise, flips them back after a delay.
    */
   const handleCardFlip = (clickedCard: ClientSessionCard) => {
-    if (!clientSession) return
-
-    const flippable = clientSession.flipped.length < 2
+    const flippable = session.flipped.length < 2
       && clickedCard.flippedBy === null
       && clickedCard.matchedBy === null
 
     if (!flippable) return
 
     const flipped: PrismaJson.SessionCardMetadata[] = [
-      ...clientSession.flipped,
+      ...session.flipped,
       { id: clickedCard.id, key: clickedCard.key }
     ]
     handleFlipUpdate(clickedCard)
@@ -143,10 +137,10 @@ export const useGameHandler = ({
    *   a (possibly) session saving callback.
    */
   useEffect(() => {
-    const isOver = clientSession?.cards.every((card) => card.matchedBy !== null)
+    const isOver = session.cards.every((card) => card.matchedBy !== null)
     if (isOver) {
       finishRef.current()
-      return () => unregisterSession()
+      return
     }
 
     if (ingameUpdateRef.current) {
@@ -162,7 +156,7 @@ export const useGameHandler = ({
         window.removeEventListener('beforeunload', beforeUnloadRef.current)
       }
     }
-  }, [clientSession, unregisterSession])
+  }, [session])
 
-  return { clientSession, handleCardFlip }
+  return { handleCardFlip }
 }

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
 // icons
-import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2 } from "lucide-react"
+import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, StepForward } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { SessionInfoBadge, SessionBadge, SessionContinueButton } from "@/components/session"
+import { SessionInfoBadge, SessionBadge } from "@/components/session"
 import { CustomDate } from "@/components/shared"
 
 type SessionCardProps = {
@@ -48,9 +48,18 @@ const SessionCard = ({ session }: SessionCardProps) => {
           <PlayerBadge player={session.players.current} />
 
           {session.status === 'RUNNING' ? (
-            <SessionContinueButton className="ml-auto"
-              session={session}
-            />
+            <Button className="ml-auto p-2.5 rounded-full"
+              tooltip="Continue session"
+              variant="ghost"
+              size="sm"
+              asChild
+            >
+              <Link href="/game/single">
+                <StepForward className="size-4 sm:size-5 shrink-0 text-accent"
+                  strokeWidth={2.5}
+                />
+              </Link>
+            </Button>
           ) : (
             <Button className="ml-auto p-2.5 rounded-full"
               tooltip="Open summary"

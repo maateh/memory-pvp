@@ -1,12 +1,12 @@
 type BaseGameSetupLayoutProps = {
-  warning: React.ReactNode
+  popup: React.ReactNode
   children: React.ReactNode
 }
 
-const BaseGameSetupLayout = ({ warning, children }: BaseGameSetupLayoutProps) => {
+const BaseGameSetupLayout = ({ popup, children }: BaseGameSetupLayoutProps) => {
   return (
     <>
-      {warning}
+      {popup}
       {children}
     </>
   )
