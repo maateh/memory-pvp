@@ -23,12 +23,18 @@ export const useCreateOfflineSession = () => {
   const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
 
   /**
-   * TODO: write doc
+   * Executes the logic for starting an offline game session based on the provided session values and card collection.
    * 
-   * @param
-   * @returns 
+   * - Validates if the selected session type and mode are supported for offline play (must be `CASUAL` and `SINGLE`).
+   * - Checks for any ongoing offline sessions and handles warnings or redirection if needed.
+   * - Ensures that a card collection is selected before proceeding.
+   * - Generates and stores a new offline game session in `localStorage`.
+   * - Redirects the user to the offline game page upon successful session creation.
+   * 
+   * @param {SessionFormValuesCache} values - Object containing session values and the selected card collection.
+   * @returns {void}
    */
-  const execute = ({ sessionValues, collection }: SessionFormValuesCache) => {
+  const execute = ({ sessionValues, collection }: SessionFormValuesCache): void => {
     /* Checks if the values are valid for an offline session */
     if (sessionValues.type !== 'CASUAL' || sessionValues.mode !== 'SINGLE') {
       toast.warning('Not supported in Offline mode!', {
