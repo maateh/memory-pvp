@@ -10,8 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 // components
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 import { CollectionEditForm } from "@/components/collection/form"
-import { Popup, PopupContent, PopupHeader, PopupRedirectFallback, PopupTrigger } from "@/components/popup"
-import { Await } from "@/components/shared"
+import { Popup, PopupContent, PopupHeader, PopupTrigger } from "@/components/popup"
+import { Await, RedirectFallback } from "@/components/shared"
 
 type CollectionEditPopupProps = ({
   renderer: "trigger"
@@ -46,8 +46,9 @@ const CollectionEditPopup = ({ renderer, collection, collectionId, ...props }: C
               {(collection) => collection ? (
                 <CollectionEditContent collection={collection} />
               ) : (
-                <PopupRedirectFallback
-                  message="Popup cannot be loaded."
+                <RedirectFallback
+                  type="back"
+                  message="Collection cannot be loaded."
                   description="Unable to find collection with this identifier."
                 />
               )}

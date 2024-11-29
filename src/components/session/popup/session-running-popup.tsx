@@ -15,10 +15,9 @@ import {
   PopupContent,
   PopupFooter,
   PopupHeader,
-  PopupRedirectFallback,
   PopupTrigger
 } from "@/components/popup"
-import { Await, StatisticItem, StatisticList } from "@/components/shared"
+import { Await, RedirectFallback, StatisticItem, StatisticList } from "@/components/shared"
 import SessionRunningPopupActions from "./session-running-popup-actions"
 
 type SessionRunningPopupProps = ({
@@ -51,9 +50,10 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
               {(session) => session?.data ? (
                 <SessionRunningContent session={session.data} />
               ) : (
-                <PopupRedirectFallback
-                  message="Popup cannot be loaded."
-                  description="Unable to find active session."
+                <RedirectFallback
+                  type="back"
+                  message="Session cannot be loaded."
+                  description="Unable to load your active session."
                 />
               )}
             </Await>

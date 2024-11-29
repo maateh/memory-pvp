@@ -8,7 +8,7 @@ import { SessionStoreProvider } from "@/components/providers"
 
 // components
 import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
-import { Await } from "@/components/shared"
+import { Await, RedirectFallback } from "@/components/shared"
 import SingleGameHandler from "./single-game-handler"
 
 const SingleGamePage = () => {
@@ -23,7 +23,16 @@ const SingleGamePage = () => {
 
             <SessionFooter />
           </SessionStoreProvider>
-        ) : <>TODO: not found fallback</>}
+        ) : (
+          <RedirectFallback
+            redirect="/game/setup"
+            type="replace"
+            message="Active session cannot be loaded."
+            description="Unable to find active session."
+          >
+            <SessionLoader />
+          </RedirectFallback>
+        )}
       </Await>
     </Suspense>
   )

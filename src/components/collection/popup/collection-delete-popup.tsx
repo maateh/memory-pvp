@@ -14,10 +14,9 @@ import {
   PopupContent,
   PopupFooter,
   PopupHeader,
-  PopupRedirectFallback,
   PopupTrigger
 } from "@/components/popup"
-import { Await } from "@/components/shared"
+import { Await, RedirectFallback } from "@/components/shared"
 import CollectionDeletePopupActions from "./collection-delete-popup-actions"
 
 type CollectionDeletePopupProps = ({
@@ -77,8 +76,9 @@ const CollectionDeletePopup = ({ renderer, collection, collectionId, ...props }:
                   </PopupFooter>
                 </div>
               ) : (
-                <PopupRedirectFallback
-                  message="Popup cannot be loaded."
+                <RedirectFallback
+                  type="back"
+                  message="Collection cannot be loaded."
                   description="Unable to find collection with this identifier."
                 />
               )}

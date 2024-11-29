@@ -6,16 +6,17 @@ import { getSessionFromStorage } from "@/lib/utils/storage"
 // components
 import { offlineSessionMetadata } from "@/constants/session"
 import { SessionRunningPopup } from "@/components/session/popup"
-import { PopupRedirectFallback } from "@/components/popup"
+import { RedirectFallback } from "@/components/shared"
 
 const OfflineSessionWarning = () => {
   const session = getSessionFromStorage()
 
   if (!session) {
     return (
-      <PopupRedirectFallback
-        message="Popup cannot be loaded."
-        description="Unable to find active offline session."
+      <RedirectFallback
+        type="back"
+        message="Offline session cannot be loaded."
+        description="Unable to load your active offline session."
       />
     )
   }
