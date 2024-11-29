@@ -40,7 +40,7 @@ export const useCreateOfflineSession = () => {
     /* Checks if there is any ongoing offline session */
     if (getSessionFromStorage() && !sessionValues.forceStart) {
       setCache({ sessionValues, collection })
-      router.replace('/game/setup/warning/offline')
+      router.push('/game/setup/warning/offline')
       return
     }
 
@@ -75,7 +75,9 @@ export const useCreateOfflineSession = () => {
     })
 
     /* Redirects the user to the game page */
-    router.push('/game/offline')
+    if (sessionValues.forceStart) router.replace('/game/offline')
+    else router.push('/game/offline')
+
     toast.success('Game started in offline mode!', {
       description: `${sessionValues.type} | ${sessionValues.mode} | ${sessionValues.tableSize}`
     })

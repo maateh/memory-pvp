@@ -135,7 +135,13 @@ export const createSession = playerActionClient
       }
     })
 
-    redirect('/game/single')
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
+    redirect('/game/single', forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const storeSession = sessionActionClient
@@ -183,6 +189,12 @@ export const finishSession = sessionActionClient
       action: 'finish'
     })
 
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
     redirect(`/game/summary/${slug}`, RedirectType.replace)
   })
 
@@ -211,6 +223,12 @@ export const abandonSession = sessionActionClient
       action: 'abandon'
     })
 
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
     redirect(`/game/summary/${slug}`, RedirectType.replace)
   })
 
@@ -268,5 +286,11 @@ export const saveOfflineSession = protectedActionClient
       }
     })
 
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
     redirect(`/game/summary/${slug}`, RedirectType.replace)
   })

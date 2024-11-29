@@ -60,7 +60,7 @@ const SessionRunningPopupActions = () => {
         disabled={createSessionStatus === 'executing'}
         asChild
       >
-        <Link href={!isOffline ? '/game/single' : '/game/offline'}>
+        <Link href={!isOffline ? '/game/single' : '/game/offline'} replace>
           Continue session
         </Link>
       </Button>
