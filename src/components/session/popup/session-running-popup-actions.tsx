@@ -14,14 +14,14 @@ import { Button } from "@/components/ui/button"
 
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
-import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
+import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateSessionAction } from "@/lib/safe-action/session"
 
 const SessionRunningPopupActions = () => {
   const pathname = usePathname()
   const isOffline = pathname === '/game/setup/warning/offline'
 
-  const { startOfflineSession } = useOfflineSessionHandler()
+  const { execute: createOfflineSession } = useCreateOfflineSession()
   const {
     executeAsync: executeCreateSession,
     status: createSessionStatus
@@ -39,7 +39,7 @@ const SessionRunningPopupActions = () => {
     }
 
     if (isOffline) {
-      startOfflineSession({
+      createOfflineSession({
         sessionValues: { ...sessionValues, forceStart: true },
         collection
       })
