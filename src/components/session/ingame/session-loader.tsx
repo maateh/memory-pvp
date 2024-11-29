@@ -18,7 +18,7 @@ const SessionLoader = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setDisabled(false)
-    }, 5000)
+    }, 7000)
 
     return () => {
       clearTimeout(timeoutId)
@@ -26,30 +26,28 @@ const SessionLoader = () => {
   }, [setDisabled])
 
   return (
-    <main className="flex-1 w-full relative">
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <LoaderCircle className="size-12 sm:size-14 md:size-16 shrink-0 text-muted-foreground animate-spin" />
-      </div>
-
-      <div className={cn("flex flex-col gap-y-2 items-center animate-in slide-in-from-bottom-16 duration-1000 absolute m-auto bottom-16 left-0 right-0", {
+    <main className="flex-1 w-full flex flex-col justify-center items-center gap-y-6">
+      <p className={cn("w-fit mx-auto px-6 text-foreground/80 text-center text-2xl sm:text-3xl font-heading font-bold tracking-wide animate-in slide-in-from-top-32 duration-700", {
         "hidden": disabled
       })}>
-        <p className="text-center text-xl sm:text-2xl font-heading font-bold tracking-wide heading-decorator">
-          Session not loading?
-        </p>
+        Session not loading?
+      </p>
 
-        <Button className="font-heading sm:text-base sm:tracking-wide"
-          size="lg"
-          disabled={disabled}
-          asChild
-        >
-          <Link href="/game/setup" replace>
-            <span className="mt-1">
-              Start a new one
-            </span>
-          </Link>
-        </Button>
-      </div>
+      <LoaderCircle className="size-12 sm:size-14 md:size-16 shrink-0 text-foreground/40 animate-spin" />
+
+      <Button className={cn("font-heading text-foreground/80 text-base sm:text-lg sm:tracking-wide animate-in slide-in-from-bottom-32 duration-700", {
+        "hidden": disabled
+      })}
+        size="lg"
+        disabled={disabled}
+        asChild
+      >
+        <Link href="/game/setup" replace>
+          <span className="mt-1">
+            Start a new one
+          </span>
+        </Link>
+      </Button>
     </main>
   )
 }
