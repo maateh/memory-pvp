@@ -32,6 +32,15 @@ import {
 import { offlinePlayerMetadata } from "@/constants/player"
 import { SESSION_STORE_TTL } from "@/lib/redis"
 
+export const getActiveSession = sessionActionClient
+  .action(async ({ ctx }) => {
+    const storeKey = `session:${ctx.activeSession.slug}`
+    const clientSession = await ctx.redis.get<ClientGameSession>(storeKey)
+
+    if (clientSession) return clientSession
+    return parseSchemaToClientSession(ctx.activeSession, ctx.player.id)
+  })
+
 export const createSession = playerActionClient
   .schema(createSessionSchema)
   .action(async ({ ctx, parsedInput }) => {
