@@ -1,3 +1,8 @@
+"use client"
+
+// types
+import type { SessionSyncState } from "@/components/providers/session-store-provider"
+
 // utils
 import { cn } from "@/lib/utils"
 
@@ -11,9 +16,12 @@ import { Separator } from "@/components/ui/separator"
 import { CustomTooltip } from "@/components/shared"
 
 // hooks
-import { useSessionStore, type SessionSyncState } from "@/hooks/store/use-session-store"
+import { useSessionStore } from "@/components/providers/session-store-provider"
 
-const syncStateMap: Record<SessionSyncState, { icon: React.ReactNode; description: string }> = {
+const syncStateMap: Record<SessionSyncState, {
+  icon: React.ReactNode
+  description: string
+}> = {
   "SYNCHRONIZED": {
     icon: <RefreshCcw className="size-3.5 text-accent" />,
     description: "Session is synchronized."

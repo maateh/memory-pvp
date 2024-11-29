@@ -28,15 +28,13 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // hooks
+import { useSessionStore } from "@/components/providers/session-store-provider"
 import { useOfflineSessionHandler } from "@/hooks/handler/session/use-offline-session-handler"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
-type SessionActionsDropdownProps = {
-  session: ClientGameSession
-}
-
-const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
+const SessionActionsDropdown = () => {
   const { theme, setTheme } = useTheme() as UseThemeProps
+  const session = useSessionStore((state) => state.session)
 
   const { abandonOfflineSession } = useOfflineSessionHandler()
   const {

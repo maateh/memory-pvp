@@ -1,6 +1,3 @@
-// helpers
-import { calculateSessionScore, getFreeFlips } from "@/lib/helpers/session"
-
 // utils
 import { cn } from "@/lib/utils"
 
@@ -18,16 +15,13 @@ import { StatisticBadge } from "@/components/shared"
 
 type SessionPlayerProps = {
   player: ClientPlayer
-  session: ClientGameSession
+  flips: number
+  freeFlips: number | null
+  score: number | null
   flipOrder?: boolean
 }
 
-const SessionPlayer = ({ player, session, flipOrder }: SessionPlayerProps) => {
-  const flips = session.stats.flips[player.id]
-
-  const freeFlips = getFreeFlips(session)
-  const score = calculateSessionScore(session, player.id)
-
+const SessionPlayer = ({ player, flips, freeFlips, score, flipOrder }: SessionPlayerProps) => {
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
       <div className="space-y-1.5">

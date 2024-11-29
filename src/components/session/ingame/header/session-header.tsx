@@ -1,5 +1,3 @@
-"use client"
-
 // constants
 import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
 
@@ -23,7 +21,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
-        <SessionActionsDropdown session={session} />
+        <SessionActionsDropdown />
 
         <Separator className="h-4 sm:h-5 w-1 bg-border/50 rounded-full"
           orientation="vertical"
@@ -45,7 +43,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
-        <SessionTimer session={session} />
+        <SessionTimer timer={session.stats.timer} />
 
         {session.status !== 'OFFLINE' && (
           <>
