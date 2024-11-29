@@ -1,7 +1,6 @@
 export { default as Await } from "./await"
 export { default as ThemeToggle, ThemeToggleSkeleton } from "./theme-toggle"
 export { StatisticBadge, StatisticItem, StatisticList } from "./statistics"
-export { default as WarningModal, WarningModalFooter, WarningActionButton, WarningCancelButton } from "./warning-modal"
 export { default as Warning } from "./warning"
 export { default as CardItem } from "./card-item"
 export { default as CustomDate } from "./custom-date"
