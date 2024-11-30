@@ -1,3 +1,6 @@
+// clerk
+import { auth } from "@clerk/nextjs/server"
+
 // shadcn
 import { SidebarProvider } from "@/components/ui/sidebar"
 
@@ -6,9 +9,11 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { Appbar, AppBreadcrumbs } from "@/components/appbar"
 
 const RootLayout = ({ children }: React.PropsWithChildren) => {
+  const { userId } = auth()
+
   return (
     <div className="min-h-screen flex">
-      <SidebarProvider>
+      <SidebarProvider open={!userId ? false : undefined}>
         <AppSidebar />
 
         <div className="h-full w-full flex flex-col">
