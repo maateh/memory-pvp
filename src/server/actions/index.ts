@@ -42,7 +42,7 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {
-    throw new ActionError({
+    ActionError.throw({
       key: 'CLERK_UNAUTHORIZED',
       message: 'You are not signed in to your account.'
     })
@@ -51,7 +51,7 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const user = await ctx.db.user.findUnique({ where: { clerkId } })
 
   if (!user) {
-    throw new ActionError({
+    ActionError.throw({
       key: 'USER_NOT_FOUND',
       message: "No user data found in the database.",
       description: "Please try to remove your Clerk account and repeat the registration process."
@@ -76,7 +76,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
   })
 
   if (!player) {
-    throw new ActionError({
+    ActionError.throw({
       key: 'PLAYER_PROFILE_NOT_FOUND',
       message: 'Active player profile not found.'
     })
@@ -106,7 +106,7 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
   })
 
   if (!activeSession) {
-    throw new ActionError({
+    ActionError.throw({
       key: 'SESSION_NOT_FOUND',
       message: 'Game session not found.',
       description: "You are currently not participating in any game session."
@@ -115,7 +115,7 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
 
   const hasAccess = activeSession.players.some((player) => player.userId === ctx.user.id)
   if (!hasAccess) {
-    throw new ActionError({
+    ActionError.throw({
       key: 'SESSION_ACCESS_DENIED',
       message: "Game session access denied.",
       description: "You don't have access to this game session."

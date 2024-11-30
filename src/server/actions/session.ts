@@ -245,7 +245,7 @@ export const saveOfflineSession = protectedActionClient
     })
 
     if (playerAmount === 0) {
-      throw new ActionError({
+      ActionError.throw({
         key: 'PLAYER_PROFILE_NOT_FOUND',
         message: 'Player profile not found.',
         description: "Select or create a new player to save your offline session."
