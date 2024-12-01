@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
@@ -34,6 +35,7 @@ import { useSessionStore } from "@/components/providers/session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
 const SessionActionsDropdown = () => {
+  const router = useRouter()
   const { theme, setTheme } = useTheme() as UseThemeProps
   const session = useSessionStore((state) => state.session)
 
@@ -46,6 +48,7 @@ const SessionActionsDropdown = () => {
     if (session.status === 'OFFLINE') {
       clearSessionFromStorage()
     
+      router.replace('/game/setup')
       toast.info('Offline session has been abandoned.', {
         description: 'Abandoned offline sessions are not saved.'
       })
