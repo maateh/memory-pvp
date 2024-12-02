@@ -5,6 +5,7 @@ import { getClientSession } from "@/server/db/session"
 
 // utils
 import { getSessionStatsMap } from "@/lib/utils/stats"
+import { cn } from "@/lib/utils"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -41,15 +42,17 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
 
       <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 
-      <div className="grid gap-x-16 gap-y-12 lg:grid-cols-2">
+      <div className={cn("mx-auto grid gap-x-16 gap-y-12", {
+        "lg:grid-cols-2": !!clientSession.players.other
+      })}>
         <SessionPlayerStats
           player={clientSession.players.current}
           session={clientSession}
         />
 
-        {clientSession.players.current && (
+        {clientSession.players.other && (
           <SessionPlayerStats
-            player={clientSession.players.current}
+            player={clientSession.players.other}
             session={clientSession}
           />
         )}
