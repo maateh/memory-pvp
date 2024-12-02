@@ -29,6 +29,7 @@ export async function updateSessionStatus({ session, sessionPlayers, player, act
   return await db.gameSession.update({
     where: { slug: session.slug },
     data: {
+      ...session,
       status: action === 'finish' ? 'FINISHED' : 'ABANDONED',
       closedAt: new Date(),
       results: {
