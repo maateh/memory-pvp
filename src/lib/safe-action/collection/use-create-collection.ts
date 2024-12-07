@@ -8,8 +8,8 @@ import type { CollectionFormValues } from "@/components/collection/form/collecti
 // actions
 import { createCollection } from "@/server/actions/collection"
 
-// constants
-import { collectionSizeEndpointMap } from "@/constants/collection"
+// config
+import { collectionSizeEndpointMap } from "@/config/collection-settings"
 import { tableSizePlaceholders } from "@/constants/game"
 
 // utils

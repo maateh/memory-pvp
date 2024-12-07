@@ -29,8 +29,3 @@ export function pairSessionCardsWithCollection(
 
   return cards
 }
-
-/** Uploadthing exports */
-export {
-  getCollectionImageSettings
-} from "./uploadthing"

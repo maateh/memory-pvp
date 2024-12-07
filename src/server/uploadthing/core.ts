@@ -10,8 +10,8 @@ import { UploadThingError } from "uploadthing/server"
 import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
 
-// helpers
-import { getCollectionImageSettings } from "@/lib/helpers/collection"
+// config
+import { getCollectionImageSettings } from "@/config/collection-settings"
 
 // validations
 import { createCollectionUtSchema } from "@/lib/validations/collection-schema"

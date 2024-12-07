@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form"
 // types
 import type { z } from "zod"
 
-// constants
-import { collectionMaxSizeMap, collectionMinSizeMap } from "@/constants/collection"
+// config
+import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // utils
 import { logError } from "@/lib/utils/error"

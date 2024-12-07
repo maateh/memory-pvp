@@ -3,14 +3,14 @@ import { z } from "zod"
 // prisma
 import { TableSize } from "@prisma/client"
 
-// constants
+// config
 import {
   collectionAcceptedMimeTypes,
   collectionMaxFileSize,
   collectionMaxFileSizeInBytes,
   collectionMaxSizeMap,
   collectionMinSizeMap
-} from "@/constants/collection"
+} from "@/config/collection-settings"
 
 /** Base schemas */
 const collectionNameSchema = z.string()
