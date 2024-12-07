@@ -2,7 +2,15 @@
 import type { NavGroup } from "@/components/app-sidebar/types"
 
 // icons
-import { ChartColumn, Gamepad2, History, ImagePlus, Images, LayoutDashboard, Swords } from "lucide-react"
+import {
+  ChartColumn,
+  Gamepad2,
+  History,
+  ImagePlus,
+  Images,
+  LayoutDashboard,
+  Swords
+} from "lucide-react"
 
 export const navigation = [
   {
