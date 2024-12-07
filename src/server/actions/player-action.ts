@@ -10,11 +10,11 @@ import { playerActionClient, protectedActionClient } from "@/server/actions"
 import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
 
 // validations
+import { playerTagSchema } from "@/lib/schema/player-schema"
 import {
   createPlayerSchema,
-  playerTagSchema,
   updatePlayerSchema
-} from "@/lib/schema/player-schema"
+} from "@/lib/schema/validation/player-validation"
 
 export const createPlayer = protectedActionClient
   .schema(createPlayerSchema)

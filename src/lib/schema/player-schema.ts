@@ -5,11 +5,11 @@ export const playerTagSchema = z.string()
   .min(4, { message: 'Too short.' })
   .max(16, { message: 'Too long.' })
 
-const playerColorSchema = z.string()
+export const playerColorSchema = z.string()
   .length(7, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
   .regex(/^#/, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
 
-const playerStatsSchema = z.object({
+export const playerStatsSchema = z.object({
   score: z.coerce.number(),
   timer: z.coerce.number(),
   flips: z.coerce.number(),
@@ -26,31 +26,4 @@ export const clientPlayerSchema = z.object({
   stats: playerStatsSchema,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date().optional().nullable()
-})
-
-/* Query filters */
-export const playerFilterSchema = clientPlayerSchema.omit({
-  stats: true,
-  imageUrl: true,
-  createdAt: true,
-  updatedAt: true
-}).partial().optional().default({})
-
-const sortKeys = z.enum(['asc', 'desc']).optional()
-export const playerSortSchema = z.object({
-  tag: sortKeys,
-  createdAt: sortKeys
-  // TODO: extend with stats?
-}).partial().optional().default({})
-
-/* Form / API validations */
-export const createPlayerSchema = z.object({
-  tag: playerTagSchema,
-  color: playerColorSchema
-})
-
-export const updatePlayerSchema = z.object({
-  previousTag: playerTagSchema,
-  tag: playerTagSchema.optional(),
-  color: playerColorSchema.optional()
 })
