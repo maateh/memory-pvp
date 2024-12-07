@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 
 // helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+import { validateCardMatches } from "@/lib/helpers/session-helper"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"

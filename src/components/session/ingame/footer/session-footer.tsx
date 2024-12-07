@@ -2,6 +2,9 @@
 
 import { useMemo } from "react"
 
+// helpers
+import { calculateSessionScore, getFreeFlips } from "@/lib/helpers/session-helper"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
@@ -10,7 +13,6 @@ import SessionPlayer from "./session-player"
 
 // hooks
 import { useSessionStore } from "@/components/providers/session-store-provider"
-import { calculateSessionScore, getFreeFlips } from "@/lib/helpers/session"
 
 const SessionFooter = () => {
   const session = useSessionStore((state) => state.session)

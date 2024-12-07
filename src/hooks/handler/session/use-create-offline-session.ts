@@ -8,7 +8,7 @@ import type { SessionFormValuesCache } from "@/components/session/form/session-f
 import { offlinePlayerMetadata } from "@/config/player-settings"
 
 // helpers
-import { generateSessionCards } from "@/lib/helpers/session"
+import { generateSessionCards } from "@/lib/helpers/session-helper"
 import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
 
 // utils

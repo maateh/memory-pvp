@@ -1,7 +1,7 @@
 "use client"
 
 // helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+import { validateCardMatches } from "@/lib/helpers/session-helper"
 
 // utils
 import { logError } from "@/lib/utils/error"

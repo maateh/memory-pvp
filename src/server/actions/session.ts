@@ -26,7 +26,7 @@ import {
 } from "@/lib/validations/session-schema"
 
 // helpers
-import { generateSessionCards, generateSlug } from "@/lib/helpers/session"
+import { generateSessionCards, generateSessionSlug } from "@/lib/helpers/session-helper"
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/utils/parser/session-parser"
@@ -109,7 +109,7 @@ export const createSession = playerActionClient
     await ctx.db.gameSession.create({
       data: {
         ...sessionValues,
-        slug: generateSlug({ type: sessionValues.type, mode: sessionValues.mode }),
+        slug: generateSessionSlug({ type: sessionValues.type, mode: sessionValues.mode }),
         status: 'RUNNING',
         flipped: [],
         cards: generateSessionCards(collection),
@@ -268,7 +268,7 @@ export const saveOfflineSession = protectedActionClient
     const { slug } = await ctx.db.gameSession.create({
       data: {
         ...session, stats,
-        slug: generateSlug({ type: 'CASUAL', mode: 'SINGLE' }, true),
+        slug: generateSessionSlug({ type: 'CASUAL', mode: 'SINGLE' }, true),
         type: 'CASUAL',
         mode: 'SINGLE',
         status: 'OFFLINE',

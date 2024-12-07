@@ -5,7 +5,7 @@ import type { PlayerProfile, Prisma } from "@prisma/client"
 import { db } from "@/server/db"
 
 // helpers
-import { calculateSessionScore } from "@/lib/helpers/session"
+import { calculateSessionScore } from "@/lib/helpers/session-helper"
 
 /**
  * Calculates and updates the player's cumulative stats based on their performance in a game session.

@@ -6,7 +6,7 @@ import { db } from "@/server/db"
 
 // helpers
 import { calculatePlayerStats } from "@/lib/helpers/player"
-import { calculateSessionScore } from "@/lib/helpers/session"
+import { calculateSessionScore } from "@/lib/helpers/session-helper"
 
 export async function updateSessionStatus({ session, sessionPlayers, player, action }: {
   session: Pick<ClientGameSession, 'slug' | 'type' | 'mode' | 'tableSize' | 'stats'>

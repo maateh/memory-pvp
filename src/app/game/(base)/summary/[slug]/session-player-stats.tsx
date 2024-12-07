@@ -1,5 +1,5 @@
 // helpers
-import { calculateSessionScore } from "@/lib/helpers/session"
+import { calculateSessionScore } from "@/lib/helpers/session-helper"
 
 // utils
 import { cn } from "@/lib/utils"
