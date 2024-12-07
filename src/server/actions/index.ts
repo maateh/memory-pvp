@@ -8,8 +8,8 @@ import { ActionError } from "@/server/actions/_error"
 import { db } from "@/server/db"
 import { redis } from "@/lib/redis"
 
-// helpers
-import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
+// config
+import { sessionSchemaFields } from "@/config/session-settings"
 
 /**
  * Creates a safe action client with error handling and adds a shared context for `db` and `redis`.
@@ -102,7 +102,7 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
         }
       }
     },
-    include: getSessionSchemaIncludeFields()
+    include: sessionSchemaFields
   })
 
   if (!activeSession) {

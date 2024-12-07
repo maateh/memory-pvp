@@ -1,8 +1,5 @@
 import { nanoid } from "nanoid"
 
-// types
-import type { Prisma } from "@prisma/client"
-
 /**
  * Generates a unique slug for a game session based on its type and mode.
  * 
@@ -37,33 +34,4 @@ export function generateSlug(
   const id = nanoid(8).replace(/_/g, '-')
 
   return `${prefix}_${id}`
-}
-
-/**
- * Provides the fields to include when querying game sessions, optimized for converting the results into a `ClientGameSession` type instance.
- * 
- * - Includes the session's `owner`, along with the associated `collection`, which contains detailed `user` and `cards` information.
- * - Also includes `players` data, with each player's `user` image URL for enhanced client-side rendering.
- * 
- * This setup ensures that all necessary related data is loaded for transforming a session query into a `ClientGameSession` format.
- * 
- * @returns {Prisma.GameSessionInclude} - An object defining the fields to include in session queries.
- */
-export function getSessionSchemaIncludeFields() {
-  return {
-    owner: true,
-    collection: {
-      include: {
-        user: true,
-        cards: true
-      }
-    },
-    players: {
-      include: {
-        user: {
-          select: { imageUrl: true }
-        }
-      }
-    }
-  } satisfies Prisma.GameSessionInclude
 }

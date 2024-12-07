@@ -122,7 +122,7 @@ export function generateSessionCards(
 }
 
 /** Server exports */
-export { generateSlug, getSessionSchemaIncludeFields } from "./server"
+export { generateSlug } from "./server"
 
 /** Client exports */
 export { validateCardMatches, updateSessionStats } from "./client"

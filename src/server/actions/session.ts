@@ -12,6 +12,7 @@ import { playerActionClient, protectedActionClient, sessionActionClient } from "
 
 // config
 import { offlinePlayerMetadata } from "@/config/player-settings"
+import { sessionSchemaFields } from "@/config/session-settings"
 import { SESSION_STORE_TTL } from "@/lib/redis"
 
 // validations
@@ -25,11 +26,7 @@ import {
 } from "@/lib/validations/session-schema"
 
 // helpers
-import {
-  generateSessionCards,
-  generateSlug,
-  getSessionSchemaIncludeFields
-} from "@/lib/helpers/session"
+import { generateSessionCards, generateSlug } from "@/lib/helpers/session"
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/utils/parser/session-parser"
@@ -174,7 +171,7 @@ export const saveSession = sessionActionClient
     const session = await ctx.db.gameSession.update({
       where: { id: ctx.activeSession.id },
       data: clientSession,
-      include: getSessionSchemaIncludeFields()
+      include: sessionSchemaFields
     })
 
     return parseSchemaToClientSession(session, ctx.player.id)
@@ -191,8 +188,8 @@ export const finishSession = sessionActionClient
       action: 'finish'
     })
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+    /*
+     * Note: Unfortunately, passing 'RedirectType.replace' as redirect type doesn't work in NextJS 14.
      * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
      * 
      * https://github.com/vercel/next.js/discussions/60864

@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-// constants
-import { offlineSessionMetadata } from "@/constants/session"
+// config
+import { offlineSessionMetadata } from "@/config/session-settings"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"

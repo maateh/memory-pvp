@@ -7,8 +7,8 @@ import type { getSessionsSchema } from "@/lib/validations/session-schema"
 import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
 
-// helpers
-import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
+// config
+import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
 import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/utils/parser/session-parser"
@@ -38,7 +38,7 @@ export async function getClientSessions( // TODO: implement pagination
   const sessions = await db.gameSession.findMany({
     where: parseSessionFilter(user.id, input.filter),
     orderBy: parseSortToOrderBy(input.sort),
-    include: getSessionSchemaIncludeFields()
+    include: sessionSchemaFields
   })
 
   const clientSessions = sessions.map((session) => {
@@ -68,7 +68,7 @@ export async function getClientSession(
 
   const session = await db.gameSession.findUnique({
     where: filter,
-    include: getSessionSchemaIncludeFields()
+    include: sessionSchemaFields
   })
 
   if (!session) return null
