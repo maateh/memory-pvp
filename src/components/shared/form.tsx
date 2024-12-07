@@ -2,7 +2,7 @@
 import type { FieldValues, SubmitErrorHandler, SubmitHandler, UseFormReturn } from "react-hook-form"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Form as ShadcnForm } from "@/components/ui/form"

@@ -5,13 +5,14 @@ import { Suspense } from "react"
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getCollections } from "@/server/db/collection"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // constants
 import { collectionSortOptions } from "@/components/collection/filter/constants"
 
 // utils
-import { cn, parseFilterParams } from "@/lib/utils"
+import { cn } from "@/lib/util"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // icons
 import { ImageUp } from "lucide-react"
@@ -32,9 +33,6 @@ type CollectionsPageProps = {
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
   const params = new URLSearchParams(searchParams as {})
   const { filter, sort } = parseFilterParams<typeof searchParams>(params)
-
-  const includeUser = !!filter.includeUser
-  delete filter.includeUser
 
   return (
     <>
@@ -67,7 +65,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
       <Suspense fallback={<CollectionExplorerSkeleton />}>
-        <Await promise={getCollections({ filter, sort, includeUser })}>
+        <Await promise={getCollections({ filter, sort })}>
           {(collections) => <CollectionExplorer collections={collections} />}
         </Await>
       </Suspense>

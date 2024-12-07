@@ -5,8 +5,8 @@ import type { UseFormReturn } from "react-hook-form"
 import type { ExpandedRouteConfig } from "uploadthing/types"
 import type { CollectionFormValues } from "@/components/collection/form/collection-form"
 
-// constants
-import { tableSizePlaceholders } from "@/constants/game"
+// config
+import { tableSizePlaceholders } from "@/config/game-settings"
 
 // icons
 import { ImagePlus, Loader2 } from "lucide-react"
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 // components
-import { CollectionDropzone } from "@/components/inputs"
+import { CollectionDropzone } from "@/components/input"
 
 type CollectionFormFieldsProps = {
   form: UseFormReturn<CollectionFormValues>

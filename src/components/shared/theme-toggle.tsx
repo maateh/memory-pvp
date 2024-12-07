@@ -4,7 +4,7 @@ import { forwardRef } from "react"
 import { useTheme } from "next-themes"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { LucideProps, Moon, Sun } from "lucide-react"

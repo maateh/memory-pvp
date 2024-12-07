@@ -36,7 +36,7 @@ const RedirectFallback = ({
         default: router.back()
       }
     }
-  }, [router])
+  }, [router, type, message, description, redirect])
 
   return children
 }

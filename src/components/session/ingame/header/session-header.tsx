@@ -1,5 +1,9 @@
-// constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+// config
+import {
+  gameModePlaceholders,
+  gameTypePlaceholders,
+  tableSizePlaceholders
+} from "@/config/game-settings"
 
 // icons
 import { Dices, Gamepad2 } from "lucide-react"

@@ -5,15 +5,15 @@ import { useForm } from "react-hook-form"
 // types
 import type { z } from "zod"
 
-// constants
-import { collectionMaxSizeMap, collectionMinSizeMap } from "@/constants/collection"
+// config
+import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createCollectionClientSchema } from "@/lib/validations/collection-schema"
+import { createCollectionClientSchema } from "@/lib/schema/validation/collection-validation"
 
 // components
 import { Form } from "@/components/shared"

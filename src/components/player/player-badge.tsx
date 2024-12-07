@@ -3,7 +3,7 @@ import type { VariantProps } from "class-variance-authority"
 
 // utils
 import { cva } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Hash } from "lucide-react"

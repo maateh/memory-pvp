@@ -4,15 +4,14 @@ import { toast } from "sonner"
 // types
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
-// constants
-import { offlinePlayerMetadata } from "@/constants/player"
+// config
+import { offlinePlayerMetadata } from "@/config/player-settings"
 
 // helpers
-import { generateSessionCards } from "@/lib/helpers/session"
-import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
+import { generateSessionCards, pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
 
 // utils
-import { getSessionFromStorage, saveSessionToStorage } from "@/lib/utils/storage"
+import { getSessionFromStorage, saveSessionToStorage } from "@/lib/util/storage"
 
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"

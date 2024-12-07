@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { abandonSession } from "@/server/actions/session"
+import { abandonSession } from "@/server/action/session-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 export const useAbandonSessionAction = () => useAction(abandonSession, {
   onSuccess() {
@@ -14,6 +14,6 @@ export const useAbandonSessionAction = () => useAction(abandonSession, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to abandon session. Please try again.')
+    handleServerError(error.serverError, 'Failed to abandon session. Please try again.')
   }
 })

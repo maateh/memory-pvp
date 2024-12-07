@@ -1,10 +1,10 @@
 "use client"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
+import { getSessionFromStorage } from "@/lib/util/storage"
 
 // components
-import { offlineSessionMetadata } from "@/constants/session"
+import { offlineSessionMetadata } from "@/config/session-settings"
 import { SessionRunningPopup } from "@/components/session/popup"
 import { RedirectFallback } from "@/components/shared"
 

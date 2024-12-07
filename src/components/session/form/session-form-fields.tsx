@@ -2,8 +2,12 @@
 import type { UseFormReturn } from "react-hook-form"
 import type { SessionFormValues } from "./session-form"
 
-// constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+// config
+import {
+  gameModePlaceholders,
+  gameTypePlaceholders,
+  tableSizePlaceholders
+} from "@/config/game-settings"
 
 // shadcn
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"

@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 
 // server
-import { getPlayer } from "@/server/db/player"
+import { getPlayer } from "@/server/db/query/player-query"
 
 // utils
-import { getPlayerStatsMap } from "@/lib/utils/stats"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -47,7 +47,7 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
 
         {renderer === 'router' && (
           <Suspense fallback={<PlayerDeletePopupSkeleton />}>
-            <Await promise={getPlayer({ tag: playerTag })}>
+            <Await promise={getPlayer({ filter: { tag: playerTag } })}>
               {(player) => player ? (
                 <PlayerDeletePopupContent player={player} />
               ) : (
@@ -68,7 +68,7 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
 const PlayerDeletePopupContent = ({ player }: { player: ClientPlayer }) => (
   <>
     <StatisticList className="px-4 mt-2 max-w-lg mx-auto">
-      {Object.values(getPlayerStatsMap(player, ['tag', 'score', 'timer'])).map((stat) => (
+      {Object.values(getRendererPlayerStats(player, ['tag', 'score', 'timer'])).map((stat) => (
         <StatisticItem className="min-w-32 max-w-40"
           variant="destructive"
           size="sm"

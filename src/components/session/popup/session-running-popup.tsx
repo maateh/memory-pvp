@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 
 // actions
-import { getActiveSession } from "@/server/actions/session"
+import { getActiveSession } from "@/server/action/session-action"
 
 // utils
-import { getSessionStatsMap } from "@/lib/utils/stats"
+import { getRendererSessionStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -68,7 +68,7 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
 const SessionRunningPopupContent = ({ session }: { session: ClientGameSession }) => (
   <div className="px-4 md:px-0">
     <StatisticList className="max-w-xl mx-auto">
-      {Object.values(getSessionStatsMap(session)).map((stat) => (
+      {Object.values(getRendererSessionStats(session)).map((stat) => (
         <StatisticItem className="min-w-36 max-w-44"
           variant="destructive"
           size="sm"

@@ -4,11 +4,11 @@ import Link from "next/link"
 import { useState } from "react"
 
 // helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+import { validateCardMatches } from "@/lib/helper/session-helper"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
-import { logError } from "@/lib/utils"
+import { getSessionFromStorage } from "@/lib/util/storage"
+import { logError } from "@/lib/util/error"
 
 // icons
 import { BadgeInfo, Save, UserCog2 } from "lucide-react"

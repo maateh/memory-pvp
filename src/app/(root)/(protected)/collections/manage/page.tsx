@@ -2,10 +2,10 @@
 import type { CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getUserCollections } from "@/server/db/collection"
+import { getUserCollections } from "@/server/db/query/collection-query"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // components
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"
@@ -19,7 +19,7 @@ const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProp
   const params = new URLSearchParams(searchParams)
   const { sort } = parseFilterParams<typeof searchParams>(params)
 
-  const userCollections = await getUserCollections(sort)
+  const userCollections = await getUserCollections({ sort })
 
   return (
     <div className="grid grid-cols-9 gap-x-8 gap-y-16">

@@ -3,12 +3,12 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
-import { getPlayers } from "@/server/db/player"
-import { getRandomCollection } from "@/server/db/collection"
+import { signedIn } from "@/server/action/user-action"
+import { getPlayers } from "@/server/db/query/player-query"
+import { getRandomCollection } from "@/server/db/query/collection-query"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -29,7 +29,7 @@ type BaseGameSetupPageProps = {
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
-  const players = await getPlayers({}, true)
+  const players = await getPlayers({ withAvatar: true })
 
   let clientCollection: ClientCardCollection | null = null
   if (searchParams.collection) {

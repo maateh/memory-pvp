@@ -6,11 +6,11 @@ import { useForm } from "react-hook-form"
 import type { z } from "zod"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { updateCollectionSchema } from "@/lib/validations/collection-schema"
+import { updateCollectionSchema } from "@/lib/schema/validation/collection-validation"
 
 // icons
 import { Edit3, Loader2 } from "lucide-react"

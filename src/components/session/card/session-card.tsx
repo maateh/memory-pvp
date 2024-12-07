@@ -1,7 +1,11 @@
 import Link from "next/link"
 
-// constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+// config
+import {
+  gameModePlaceholders,
+  gameTypePlaceholders,
+  tableSizePlaceholders
+} from "@/config/game-settings"
 
 // icons
 import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, StepForward } from "lucide-react"

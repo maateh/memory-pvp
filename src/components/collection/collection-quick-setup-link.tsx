@@ -5,7 +5,7 @@ import { forwardRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { ImagePlay } from "lucide-react"

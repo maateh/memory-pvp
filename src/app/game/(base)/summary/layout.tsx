@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Cog } from "lucide-react"

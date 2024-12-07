@@ -9,11 +9,9 @@ import { auth } from '@clerk/nextjs/server'
 import { initTRPC, TRPCError } from '@trpc/server'
 import { TRPCApiError } from '@/trpc/error'
 
-// db
+// server
 import { db } from '@/server/db'
-
-// redis
-import { redis } from "@/lib/redis"
+import { redis } from "@/server/redis"
 
 export const createTRPCContext = cache(
   async (opts: { req: Request }) => {

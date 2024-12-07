@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // server
-import { getCollection } from "@/server/db/collection"
+import { getCollection } from "@/server/db/query/collection-query"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

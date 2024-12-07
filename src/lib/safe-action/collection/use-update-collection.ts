@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { updateCollection } from "@/server/actions/collection"
+import { updateCollection } from "@/server/action/collection-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 export const useUpdateCollectionAction = () => useAction(updateCollection, {
   onSuccess({ data: collection }) {
@@ -16,6 +16,6 @@ export const useUpdateCollectionAction = () => useAction(updateCollection, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to update card collection. Please try again later.')
+    handleServerError(error.serverError, 'Failed to update card collection. Please try again later.')
   }
 })

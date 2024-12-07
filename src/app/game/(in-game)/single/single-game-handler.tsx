@@ -1,16 +1,16 @@
 "use client"
 
 // helpers
-import { validateCardMatches } from "@/lib/helpers/session"
+import { validateCardMatches } from "@/lib/helper/session-helper"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/util/error"
 
 // components
 import { MemoryTable } from "@/components/session/ingame"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
 

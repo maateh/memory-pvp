@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // utils
-import { saveSessionToStorage } from "@/lib/utils/storage"
+import { saveSessionToStorage } from "@/lib/util/storage"
 
 // components
 import { SessionHeader, MemoryTable } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
 const OfflineGameHandler = () => {
   const router = useRouter()

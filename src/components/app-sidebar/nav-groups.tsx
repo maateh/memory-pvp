@@ -3,8 +3,8 @@
 // types
 import type { NavGroup as TNavGroup } from "./types"
 
-// constants
-import { navigation } from "@/constants/navigation"
+// config
+import { navigation } from "@/config/navigation-settings"
 
 // shadcn
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu } from "@/components/ui/sidebar"

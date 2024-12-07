@@ -5,12 +5,12 @@ import { redirect } from "next/navigation"
 
 import { toast } from "sonner"
 
-// constants
-import { offlineSessionMetadata } from "@/constants/session"
+// config
+import { offlineSessionMetadata } from "@/config/session-settings"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
-import { getSessionStatsMap } from "@/lib/utils/stats"
+import { getSessionFromStorage } from "@/lib/util/storage"
+import { getRendererSessionStats } from "@/lib/util/stats"
 
 // components
 import { SessionStatistics } from "@/components/session/summary"
@@ -27,16 +27,12 @@ const OfflineSessionResults = () => {
     redirect('/game/setup')
   }
 
-  const stats = useMemo(() => getSessionStatsMap({
+  const stats = useMemo(() => getRendererSessionStats({
     ...session,
     ...offlineSessionMetadata
   }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt']), [session])
 
-  return (
-    <SessionStatistics
-      stats={stats}
-    />
-  )
+  return <SessionStatistics stats={stats} />
 }
 
 export default OfflineSessionResults

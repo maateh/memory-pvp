@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { finishSession } from "@/server/actions/session"
+import { finishSession } from "@/server/action/session-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 export const useFinishSessionAction = () => useAction(finishSession, {
   onSuccess() {
@@ -14,6 +14,6 @@ export const useFinishSessionAction = () => useAction(finishSession, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to save game session.')
+    handleServerError(error.serverError, 'Failed to save game session.')
   }
 })

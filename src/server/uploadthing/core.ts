@@ -8,13 +8,13 @@ import { UploadThingError } from "uploadthing/server"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/action/user-action"
 
-// helpers
-import { getCollectionImageSettings } from "@/lib/helpers/collection"
+// config
+import { getCollectionImageSettings } from "@/config/collection-settings"
 
 // validations
-import { createCollectionUtSchema } from "@/lib/validations/collection-schema"
+import { createCollectionUtSchema } from "@/lib/schema/validation/collection-validation"
 
 /** Middleware to limit the number of card collections that can be created by users. */
 async function collectionLimitMiddleware({ input }: { input: z.infer<typeof createCollectionUtSchema> }) {

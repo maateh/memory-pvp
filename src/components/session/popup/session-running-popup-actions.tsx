@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/util/error"
 
 // shadcn
 import { Button } from "@/components/ui/button"

@@ -7,10 +7,10 @@ import type { z } from "zod"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createPlayerSchema } from "@/lib/validations/player-schema"
+import { createPlayerSchema } from "@/lib/schema/validation/player-validation"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/util/error"
 
 // icons
 import { Check, Loader2 } from "lucide-react"

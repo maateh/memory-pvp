@@ -1,13 +1,10 @@
-// types
-import type { RenderableStatistic } from "@/lib/utils/stats"
-
 // helpers
-import { calculateSessionScore } from "@/lib/helpers/session"
+import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
 
 // utils
-import { cn } from "@/lib/utils"
-import { formatTimer } from "@/lib/utils/game"
-import { getPlayerStatsMap } from "@/lib/utils/stats"
+import { cn } from "@/lib/util"
+import { formatTimer } from "@/lib/util/game"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -15,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { StatisticItem, StatisticList } from "@/components/shared"
 
-type PlayerStatsKeys = keyof Pick<ReturnType<keyof typeof getPlayerStatsMap>, 'score' | 'flips' | 'matches' | 'timer'>
+type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, 'score' | 'timer' | 'matches' | 'flips'>
 
 type SessionPlayerStatsProps = {
   player: ClientPlayer
@@ -23,7 +20,7 @@ type SessionPlayerStatsProps = {
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  const score = calculateSessionScore(
+  const score = calculatePlayerSessionScore(
     session,
     player.id,
     session.status === 'FINISHED' ? 'finish' : 'abandon'
@@ -36,8 +33,9 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
     timer: formatTimer(session.stats.timer * 1000)
   }
 
-  const scoreKey: Array<PlayerStatsKeys> = score ? ['score'] : []
-  const stats = getPlayerStatsMap(player, [...scoreKey, 'flips', 'matches', 'timer'])
+  /* Note: only `COMPETITIVE` sessions have score values */
+  const scoreKey: Array<SessionPlayerStatKeys> = score ? ['score'] : []
+  const stats = getRendererPlayerStats(player, [...scoreKey, 'flips', 'matches', 'timer'])
 
   return (
     <div>
@@ -57,7 +55,7 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
             statistic={{
               ...stat,
               data: renderStatData({
-                key: key as PlayerStatsKeys,
+                key: key as SessionPlayerStatKeys,
                 data: stat.data,
                 sessionPlayerStats
               })
@@ -70,14 +68,11 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
   )
 }
 
-/** Local utils */
-type GetStatDataParams = {
-  key: PlayerStatsKeys
-  data: RenderableStatistic['data']
-  sessionPlayerStats: {
-    score: number
-    flips: number
-    matches: number
+/* Local utils */
+type RenderStatDataParams = {
+  key: SessionPlayerStatKeys
+  data: RendererStat['data']
+  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, 'timer'>> & {
     timer: string
   }
 }
@@ -89,15 +84,15 @@ type GetStatDataParams = {
  * - If the session-specific stat is a positive number, it is prefixed with a '+' sign to indicate an increase.
  * - If the key is 'score' and the score value is negative, the stat is styled with a 'destructive' color to indicate a negative impact.
  * 
- * @param {GetStatDataParams} params - The parameters for rendering the stat.
+ * @param {RenderStatDataParams} params - The parameters for rendering the stat.
  * @param {PlayerStatsKeys} params.key - The key representing the specific statistic.
- * @param {RenderableStatistic['data']} params.data - The current value of the statistic to display.
+ * @param {RendererStat['data']} params.data - The current value of the statistic to display.
  * @param {Object} params.sessionPlayerStats - An object containing session-specific updates for the player's statistics.
  * 
  * @returns {React.ReactNode} - A JSX element that displays the stat data along with session updates.
  */
-function renderStatData({ key, data, sessionPlayerStats }: GetStatDataParams): React.ReactNode {
-  let sessionPlayerStat = sessionPlayerStats[key as PlayerStatsKeys]
+function renderStatData({ key, data, sessionPlayerStats }: RenderStatDataParams): React.ReactNode {
+  let sessionPlayerStat: number | string = sessionPlayerStats[key]
 
   if (typeof sessionPlayerStat === 'number' && sessionPlayerStat > 0) {
     sessionPlayerStat = `+${sessionPlayerStat}`

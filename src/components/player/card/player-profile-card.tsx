@@ -9,8 +9,9 @@ import type { SessionFilter } from "@/components/session/filter/types"
 import { api } from "@/trpc/client"
 
 // utils
-import { cn, logError } from "@/lib/utils"
-import { getPlayerStatsMap } from "@/lib/utils/stats"
+import { cn } from "@/lib/util"
+import { logError } from "@/lib/util/error"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // icons
 import { CheckCircle2, EllipsisVertical, Hash, Loader2, XCircle } from "lucide-react"
@@ -22,7 +23,7 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { ColorPicker } from "@/components/inputs"
+import { ColorPicker } from "@/components/input"
 import { StatisticBadge } from "@/components/shared"
 import { PlayerVerified } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"
@@ -52,7 +53,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     refetchOnWindowFocus: false
   })
 
-  const playerStats = useMemo(() => getPlayerStatsMap({
+  const playerStats = useMemo(() => getRendererPlayerStats({
     ...player,
     stats: stats || player.stats
   }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])

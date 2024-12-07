@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { updatePlayer } from "@/server/actions/player"
+import { updatePlayer } from "@/server/action/player-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 export const useUpdatePlayerAction = () => useAction(updatePlayer, {
   onSuccess({ data: player }) {
@@ -16,6 +16,6 @@ export const useUpdatePlayerAction = () => useAction(updatePlayer, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to update player. Please try again later.')
+    handleServerError(error.serverError, 'Failed to update player. Please try again later.')
   }
 })

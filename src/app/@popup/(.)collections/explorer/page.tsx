@@ -2,7 +2,7 @@
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // components
 import { CollectionExplorerPopup } from "@/components/collection/popup"
@@ -18,15 +18,11 @@ const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProp
     sort: CollectionSort
   }
 
-  const includeUser = filter.includeUser === undefined ? true : !!filter.includeUser
-  delete filter.includeUser
-
   return (
     <CollectionExplorerPopup
       renderer="router"
       filter={filter}
       sort={sort}
-      includeUser={includeUser}
     />
   )
 }

@@ -1,5 +1,5 @@
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { AlertTriangle, LucideProps } from "lucide-react"

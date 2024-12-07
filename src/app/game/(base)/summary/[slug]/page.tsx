@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic"
 
 // server
-import { getClientSession } from "@/server/db/session"
+import { getClientSession } from "@/server/db/query/session-query"
 
 // utils
-import { getSessionStatsMap } from "@/lib/utils/stats"
-import { cn } from "@/lib/utils"
+import { getRendererSessionStats } from "@/lib/util/stats"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -32,13 +32,11 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
     return <SessionNotFound />
   }
 
-  const stats = getSessionStatsMap(clientSession)
+  const stats = getRendererSessionStats(clientSession)
 
   return (
     <>
-     <SessionStatistics
-        stats={stats}
-      />
+     <SessionStatistics stats={stats} />
 
       <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 

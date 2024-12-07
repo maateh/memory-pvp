@@ -5,7 +5,7 @@ import type { VariantProps } from "class-variance-authority"
 import type { LucideProps } from "lucide-react"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Expand } from "lucide-react"

@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getCollections } from "@/server/db/collection"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // constants
 import { collectionSortOptions } from "@/components/collection/filter/constants"
@@ -24,12 +24,10 @@ type CollectionExplorerPopupProps = ({
   collections: ClientCardCollection[]
   filter?: never
   sort?: never
-  includeUser?: never
 } | {
   renderer: "router"
   filter: CollectionFilter
   sort: CollectionSort
-  includeUser: boolean | undefined
   collections?: never
 }) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
 
@@ -38,7 +36,6 @@ const CollectionExplorerPopup = ({
   collections,
   filter,
   sort,
-  includeUser,
   ...props
 }: CollectionExplorerPopupProps) => {
   return (
@@ -73,7 +70,7 @@ const CollectionExplorerPopup = ({
 
           {renderer === "router" && (
             <Suspense fallback={<CollectionExplorerSkeleton />}>
-            <Await promise={getCollections({ filter, sort, includeUser })}>
+            <Await promise={getCollections({ filter, sort })}>
               {(collections) => (
                 <CollectionExplorer className="md:grid-cols-2 2xl:grid-cols-2"
                   cardProps={{ imageSize: 36 }}

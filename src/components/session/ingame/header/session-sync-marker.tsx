@@ -1,10 +1,10 @@
 "use client"
 
 // types
-import type { SessionSyncState } from "@/components/providers/session-store-provider"
+import type { SessionSyncState } from "@/components/provider/session-store-provider"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { BadgeInfo, RefreshCcw, RefreshCcwDot, RefreshCwOff } from "lucide-react"
@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { CustomTooltip } from "@/components/shared"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
 const syncStateMap: Record<SessionSyncState, {
   icon: React.ReactNode

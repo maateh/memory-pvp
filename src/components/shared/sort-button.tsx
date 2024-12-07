@@ -1,7 +1,7 @@
 "use client"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { ArrowDownUp, LucideProps, SortAsc, SortDesc } from "lucide-react"

@@ -6,10 +6,10 @@ import { toast } from "sonner"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
-import { createSession } from "@/server/actions/session"
+import { createSession } from "@/server/action/session-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
@@ -37,7 +37,7 @@ export const useCreateSessionAction = () => {
         return
       }
 
-      handleActionError(error.serverError, 'Failed to start game session. Please try again later.')
+      handleServerError(error.serverError, 'Failed to start game session. Please try again later.')
     }
   })
 }

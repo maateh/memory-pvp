@@ -10,8 +10,12 @@ import type {
   SessionSettingsFilterFields
 } from "./types"
 
-// constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+// config
+import {
+  gameModePlaceholders,
+  gameTypePlaceholders,
+  tableSizePlaceholders
+} from "@/config/game-settings"
 
 // icons
 import { ChevronRightCircle } from "lucide-react"

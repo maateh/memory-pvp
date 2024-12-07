@@ -1,13 +1,13 @@
 import { useAction } from "next-safe-action/hooks"
 
 // actions
-import { storeSession } from "@/server/actions/session"
+import { storeSession } from "@/server/action/session-action"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/util/error"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useFinishSessionAction } from "./use-finish-session"
 
 export const useStoreSessionAction = () => {
@@ -25,7 +25,7 @@ export const useStoreSessionAction = () => {
       ) return
   
       updateSyncState("OUT_OF_SYNC")
-      handleActionError(error.serverError)
+      handleServerError(error.serverError)
     }
   })
 }

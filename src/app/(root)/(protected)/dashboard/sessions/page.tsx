@@ -4,10 +4,10 @@ import { Suspense } from "react"
 import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
 
 // server
-import { getClientSessions } from "@/server/db/session"
+import { getClientSessions } from "@/server/db/query/session-query"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

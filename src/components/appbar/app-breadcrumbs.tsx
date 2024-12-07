@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Breadcrumb, BreadcrumbList } from "@/components/ui/breadcrumb"

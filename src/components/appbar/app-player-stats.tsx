@@ -3,8 +3,8 @@
 import { useMemo } from "react"
 
 // utils
-import { getPlayerStatsMap } from "@/lib/utils/stats"
-import { cn } from "@/lib/utils"
+import { getRendererPlayerStats } from "@/lib/util/stats"
+import { cn } from "@/lib/util"
 
 // icons
 import { ChevronRightCircle } from "lucide-react"
@@ -23,7 +23,7 @@ type AppPlayerStatsProps = {
 const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
   const { state, isMobile } = useSidebar()
 
-  const stats = useMemo(() => getPlayerStatsMap(activePlayer, [
+  const stats = useMemo(() => getRendererPlayerStats(activePlayer, [
     'score', 'sessions', 'timer', 'flips', 'matches'
   ]), [activePlayer])
 

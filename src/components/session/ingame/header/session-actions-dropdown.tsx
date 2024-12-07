@@ -4,16 +4,16 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
-// constants
+// config
 import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/constants/game"
+} from "@/config/game-settings"
 
 // utils
-import { clearSessionFromStorage } from "@/lib/utils/storage"
-import { logError } from "@/lib/utils"
+import { clearSessionFromStorage } from "@/lib/util/storage"
+import { logError } from "@/lib/util/error"
 
 // icons
 import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"
@@ -31,7 +31,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
 const SessionActionsDropdown = () => {

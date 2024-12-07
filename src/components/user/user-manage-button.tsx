@@ -6,7 +6,7 @@ import { forwardRef } from "react"
 import { SignInButton, useClerk } from "@clerk/nextjs"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Button } from "@/components/ui/button"

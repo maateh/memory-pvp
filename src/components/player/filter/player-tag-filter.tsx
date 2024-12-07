@@ -6,7 +6,7 @@ import { useState } from "react"
 import type { PlayerFilter } from "./types"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Label } from "@/components/ui/label"

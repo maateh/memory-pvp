@@ -3,10 +3,10 @@
 import { useRef } from "react"
 
 // utils
-import { formatTimer } from "@/lib/utils/game"
+import { formatTimer } from "@/lib/util/game"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useTimer } from "@/hooks/use-timer"
 
 type SessionTimerProps = {

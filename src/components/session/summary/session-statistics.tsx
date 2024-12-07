@@ -1,6 +1,3 @@
-// types
-import type { getSessionStatsMap } from "@/lib/utils/stats"
-
 // shadcn
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -9,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { StatisticItem, StatisticList } from "@/components/shared"
 
 type SessionStatisticsProps = {
-  stats: ReturnType<typeof getSessionStatsMap>
+  stats: RendererStatsMap<RendererSessionStatKeys>
 }
 
 const SessionStatistics = ({ stats }: SessionStatisticsProps) => {

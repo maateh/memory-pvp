@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 
 // actions
-import { getActiveSession } from "@/server/actions/session"
+import { getActiveSession } from "@/server/action/session-action"
 
 // providers
-import { SessionStoreProvider } from "@/components/providers"
+import { SessionStoreProvider } from "@/components/provider"
 
 // components
 import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"

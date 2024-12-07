@@ -6,7 +6,7 @@ import type { LucideProps } from "lucide-react"
 import { flexRender } from "@tanstack/react-table"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { TableProperties } from "lucide-react"
