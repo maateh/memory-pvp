@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 // server
-import { getClientSession } from "@/server/db/session"
+import { getClientSession } from "@/server/db/queries/session-query"
 
 // utils
 import { getRendererSessionStats } from "@/lib/utils/stats"

@@ -1,7 +1,6 @@
 // types
 import type { z } from "zod"
-import type { GameSession } from "@prisma/client"
-import type { getSessionsSchema } from "@/lib/validations/session-schema"
+import type { sessionFilterSchema, sessionSortSchema } from "@/lib/validations/session-schema"
 
 // server
 import { db } from "@/server/db"
@@ -12,8 +11,6 @@ import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
 import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/utils/parser/session-parser"
-
-// utils
 import { parseSortToOrderBy } from "@/lib/utils/parser"
 
 /**
@@ -26,27 +23,24 @@ import { parseSortToOrderBy } from "@/lib/utils/parser"
  * - Includes session owner, collection, user, and player data as specified by `getSessionSchemaIncludeFields`.
  * - Converts each session to the `ClientGameSession` format.
  * 
- * @param {z.infer<typeof getSessionsSchema>} input - The filter and sort criteria for retrieving sessions.
+ * @param {Object} input - The filter and sort criteria for retrieving sessions.
  * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
-export async function getClientSessions( // TODO: implement pagination
-  input: z.infer<typeof getSessionsSchema>
-): Promise<ClientGameSession[]> {
+export async function getClientSessions({ filter, sort }: {
+  filter: z.infer<typeof sessionFilterSchema>
+  sort: z.infer<typeof sessionSortSchema>
+  // pagination: z.infer<typeof paginationSchema> TODO: implement
+}): Promise<ClientGameSession[]> {
   const user = await signedIn()
   if (!user) return []
 
   const sessions = await db.gameSession.findMany({
-    where: parseSessionFilter(user.id, input.filter),
-    orderBy: parseSortToOrderBy(input.sort),
+    where: parseSessionFilter(user.id, filter),
+    orderBy: parseSortToOrderBy(sort),
     include: sessionSchemaFields
   })
 
-  const clientSessions = sessions.map((session) => {
-    const playerId = session.owner.id
-    return parseSchemaToClientSession(session, playerId)
-  })
-
-  return clientSessions
+  return sessions.map((session) => parseSchemaToClientSession(session, session.owner.id))
 }
 
 /**
@@ -57,17 +51,21 @@ export async function getClientSessions( // TODO: implement pagination
  * - Ensures the authenticated user has access to the session by checking if they are one of the players.
  * - Transforms the session data into a client-friendly format using `parseSchemaToClientSession`.
  * 
- * @param {Object} filter - Filter to find the game session by `id`, `slug`, or both.
+ * @param {Object} filter - Filter to find the game session by `id` or `slug`.
  * @returns {Promise<ClientGameSession | null>} - The client-friendly game session or `null` if not found or unauthorized.
  */
-export async function getClientSession(
-  filter: Pick<GameSession, 'id'> | Pick<GameSession, 'slug'> | Pick<GameSession, 'id' | 'slug'>
-): Promise<ClientGameSession | null> {
+export async function getClientSession({ id, slug }: {
+  id: string
+  slug?: never
+} | {
+  slug: string
+  id?: never
+}): Promise<ClientGameSession | null> {
   const user = await signedIn()
   if (!user) return null
 
   const session = await db.gameSession.findUnique({
-    where: filter,
+    where: { id, slug },
     include: sessionSchemaFields
   })
 
@@ -77,7 +75,5 @@ export async function getClientSession(
   if (!hasAccess) return null
 
   const player = session.players.find((player) => player.userId === user.id)
-
-  const clientSession = parseSchemaToClientSession(session, player!.id)
-  return clientSession
+  return parseSchemaToClientSession(session, player!.id)
 }

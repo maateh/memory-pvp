@@ -4,9 +4,9 @@ import { z } from "zod"
 import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 
 // validations
-import { clientPlayerSchema, playerTagSchema } from "@/lib/validations/player-schema"
+import { clientPlayerSchema } from "@/lib/validations/player-schema"
 
-/** Base schemas */
+/* Base schemas */
 const sessionCardMetadataSchema = z.object({
   id: z.string(),
   key: z.coerce.number()
@@ -55,19 +55,22 @@ export const clientSessionSchema = z.object({
   flipped: z.array(sessionCardMetadataSchema),
 
   startedAt: z.coerce.date(),
-  continuedAt: z.coerce.date().optional().nullable()
+  continuedAt: z.coerce.date().optional().nullable(),
+  closedAt: z.coerce.date().optional().nullable()
 })
 
-/** Query filters */
+/* Query filters */
 export const sessionFilterSchema = clientSessionSchema
   .extend({ playerId: z.string() })
-  .partial()
   .omit({
     stats: true,
     cards: true,
     flipped: true,
-    players: true
-  }).optional().default({})
+    players: true,
+    startedAt: true,
+    continuedAt: true,
+    closedAt: true
+  }).partial().optional().default({})
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const sessionSortSchema = z.object({
@@ -76,15 +79,11 @@ export const sessionSortSchema = z.object({
   tableSize: sortKeys,
   status: sortKeys,
   startedAt: sortKeys,
-  continuedAt: sortKeys
-}).optional().default({})
+  continuedAt: sortKeys,
+  closedAt: sortKeys
+}).partial().optional().default({})
 
-export const getSessionsSchema = z.object({
-  filter: sessionFilterSchema,
-  sort: sessionSortSchema
-}).optional().default({})
-
-/** Forms / API validations */
+/* Forms / API validations */
 export const createSessionSchema = clientSessionSchema.pick({
   type: true,
   mode: true,
