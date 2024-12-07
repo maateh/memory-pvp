@@ -4,7 +4,7 @@
 import { validateCardMatches } from "@/lib/helpers/session"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 
 // components
 import { MemoryTable } from "@/components/session/ingame"

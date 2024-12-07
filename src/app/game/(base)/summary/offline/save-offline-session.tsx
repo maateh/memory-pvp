@@ -8,7 +8,7 @@ import { validateCardMatches } from "@/lib/helpers/session"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 
 // icons
 import { BadgeInfo, Save, UserCog2 } from "lucide-react"

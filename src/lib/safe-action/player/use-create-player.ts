@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { createPlayer } from "@/server/actions/player"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 export const useCreatePlayerAction = () => useAction(createPlayer, {
   onSuccess({ data: player }) {
@@ -16,6 +16,6 @@ export const useCreatePlayerAction = () => useAction(createPlayer, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to create player. Please try again later.')
+    handleServerError(error.serverError, 'Failed to create player. Please try again later.')
   }
 })

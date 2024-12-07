@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { deleteCollection } from "@/server/actions/collection"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 export const useDeleteCollectionAction = () => {
   const router = useRouter()
@@ -22,7 +22,7 @@ export const useDeleteCollectionAction = () => {
       router.back()
     },
     onError({ error }) {
-      handleActionError(error.serverError, 'Failed to delete card collection. Please try again later.')
+      handleServerError(error.serverError, 'Failed to delete card collection. Please try again later.')
     }
   })
 }

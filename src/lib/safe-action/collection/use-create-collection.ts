@@ -13,7 +13,7 @@ import { collectionSizeEndpointMap } from "@/constants/collection"
 import { tableSizePlaceholders } from "@/constants/game"
 
 // utils
-import { handleActionError, handleApiError, logError } from "@/lib/utils"
+import { handleServerError, logError } from "@/lib/utils/error"
 
 // hooks
 import { useUploadThing } from "@/hooks/use-upload-thing"
@@ -35,7 +35,7 @@ export const useCreateCollectionAction = ({ form }: UseCreateCollectionActionPar
       })
     },
     onError({ error }) {
-      handleActionError(error.serverError, 'Failed to create card collection. Please try again later.')
+      handleServerError(error.serverError, 'Failed to create card collection. Please try again later.')
     }
   })
 
@@ -66,7 +66,7 @@ export const useCreateCollectionAction = ({ form }: UseCreateCollectionActionPar
         description = "Sorry, but due to limitations, only one card collection can be uploaded per account."
       }
 
-      handleApiError(err, description)
+      handleServerError(err, description)
     }
   })
 

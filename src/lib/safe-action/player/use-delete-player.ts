@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import { deletePlayer } from "@/server/actions/player"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 export const useDeletePlayerAction = () => {
   const router = useRouter()
@@ -22,7 +22,7 @@ export const useDeletePlayerAction = () => {
       router.back()
     },
     onError({ error }) {
-      handleActionError(error.serverError, 'Failed to delete player profile. Please try again later.')
+      handleServerError(error.serverError, 'Failed to delete player profile. Please try again later.')
     }
   })
 }

@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { saveOfflineSession } from "@/server/actions/session"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 import { clearSessionFromStorage } from "@/lib/utils/storage"
 
 export const useSaveOfflineSessionAction = () => useAction(saveOfflineSession, {
@@ -17,6 +17,6 @@ export const useSaveOfflineSessionAction = () => useAction(saveOfflineSession, {
     })
   },
   onError: ({ error }) => {
-    handleActionError(error.serverError, "Offline game session could not be saved.")
+    handleServerError(error.serverError, "Offline game session could not be saved.")
   }
 })

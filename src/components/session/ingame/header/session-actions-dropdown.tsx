@@ -13,7 +13,7 @@ import {
 
 // utils
 import { clearSessionFromStorage } from "@/lib/utils/storage"
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 
 // icons
 import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"

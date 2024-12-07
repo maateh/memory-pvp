@@ -9,7 +9,7 @@ import type { SessionFormValuesCache } from "@/components/session/form/session-f
 import { createSession } from "@/server/actions/session"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
@@ -37,7 +37,7 @@ export const useCreateSessionAction = () => {
         return
       }
 
-      handleActionError(error.serverError, 'Failed to start game session. Please try again later.')
+      handleServerError(error.serverError, 'Failed to start game session. Please try again later.')
     }
   })
 }

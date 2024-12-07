@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { updatePlayer } from "@/server/actions/player"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 export const useUpdatePlayerAction = () => useAction(updatePlayer, {
   onSuccess({ data: player }) {
@@ -16,6 +16,6 @@ export const useUpdatePlayerAction = () => useAction(updatePlayer, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to update player. Please try again later.')
+    handleServerError(error.serverError, 'Failed to update player. Please try again later.')
   }
 })

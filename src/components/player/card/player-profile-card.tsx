@@ -9,7 +9,8 @@ import type { SessionFilter } from "@/components/session/filter/types"
 import { api } from "@/trpc/client"
 
 // utils
-import { cn, logError } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 import { getRendererPlayerStats } from "@/lib/utils/stats"
 
 // icons

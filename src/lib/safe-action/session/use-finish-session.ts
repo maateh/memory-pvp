@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { finishSession } from "@/server/actions/session"
 
 // utils
-import { handleActionError } from "@/lib/utils"
+import { handleServerError } from "@/lib/utils/error"
 
 export const useFinishSessionAction = () => useAction(finishSession, {
   onSuccess() {
@@ -14,6 +14,6 @@ export const useFinishSessionAction = () => useAction(finishSession, {
     })
   },
   onError({ error }) {
-    handleActionError(error.serverError, 'Failed to save game session.')
+    handleServerError(error.serverError, 'Failed to save game session.')
   }
 })

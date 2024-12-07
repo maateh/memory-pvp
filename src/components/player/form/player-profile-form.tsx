@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { createPlayerSchema } from "@/lib/validations/player-schema"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 
 // icons
 import { Check, Loader2 } from "lucide-react"

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 
 // utils
-import { logError } from "@/lib/utils"
+import { logError } from "@/lib/utils/error"
 
 // shadcn
 import { Button } from "@/components/ui/button"

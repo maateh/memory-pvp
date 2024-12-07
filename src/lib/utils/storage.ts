@@ -9,6 +9,7 @@ const STORAGE_KEY = "CLIENT_GAME_SESSION"
 
 /**
  * Retrieves the game session from localStorage.
+ * - Does nothing if running in a non-browser environment.
  * 
  * @returns {UnsignedClientGameSession | null} - The parsed session data or `null` if not found.
  * - Returns `null` if running in a non-browser environment or if the session doesn't exist.
@@ -24,6 +25,7 @@ export function getSessionFromStorage(): UnsignedClientGameSession | null {
 
 /**
  * Saves the game session to localStorage.
+ * - Does nothing if running in a non-browser environment.
  * 
  * @param {UnsignedClientGameSession} session - The session data to be saved.
  * @returns {UnsignedClientGameSession | void} - Returns the session or void if in a non-browser environment.
