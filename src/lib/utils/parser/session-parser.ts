@@ -4,7 +4,7 @@ import type { Prisma } from "@prisma/client"
 import type { sessionFilterSchema } from "@/lib/validations/session-schema"
 
 // helpers
-import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
+import { pairSessionCardsWithCollection } from "@/lib/helpers/session-helper"
 
 // utils
 import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
