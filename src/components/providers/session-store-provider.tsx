@@ -6,9 +6,6 @@ import { createStore, useStore } from "zustand"
 // types
 import type { StoreApi } from "zustand"
 
-// helpers
-import { updateSessionStats } from "@/lib/helpers/session"
-
 export type SessionSyncState = "SYNCHRONIZED" | "OUT_OF_SYNC" | "PENDING"
 
 type SessionStore = {
@@ -59,11 +56,18 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
               : card
           )
     
+          /*
+           * Note: updates `flips` value of the player inside the session stats.
+           * Then, updates the session object itself.
+           */
+          const prevFlips = session.stats.flips[playerId]
+          session.stats.flips[playerId] = session.flipped.length === 1
+              ? prevFlips + 1 : prevFlips
+
           session = {
             ...session,
             cards,
-            flipped: [...session.flipped, { id: clickedCard.id, key: clickedCard.key }],
-            stats: updateSessionStats(session, 'flip')
+            flipped: [...session.flipped, { id: clickedCard.id, key: clickedCard.key }]
           }
     
           return { session }
@@ -84,11 +88,15 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
                 : card
             })
     
+            /*
+             * Note: updates `matches` value of the player inside the session stats.
+             * Then, updates the session object itself.
+             */
+            ++session.stats.matches[playerId]
             session = {
               ...session,
               cards,
-              flipped: [],
-              stats: updateSessionStats(session, "match")
+              flipped: []
             }
     
             return { session, syncState: 'OUT_OF_SYNC' }

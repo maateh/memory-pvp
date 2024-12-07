@@ -125,4 +125,4 @@ export function generateSessionCards(
 export { generateSlug } from "./server"
 
 /** Client exports */
-export { validateCardMatches, updateSessionStats } from "./client"
+export { validateCardMatches } from "./client"
