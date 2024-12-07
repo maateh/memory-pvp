@@ -1,5 +1,5 @@
-/** Offline metadata */
-export const offlinePlayerMetadata: ClientPlayer = {
+/* Offline player metadata */
+export const offlinePlayerMetadata = {
   color: '#ffffff',
   id: '_offline',
   tag: '_offline',
@@ -14,4 +14,4 @@ export const offlinePlayerMetadata: ClientPlayer = {
     matches: 0,
     sessions: 0
   }
-} as const
+} satisfies ClientPlayer

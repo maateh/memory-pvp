@@ -10,6 +10,10 @@ import { updateSessionStatus } from "@/server/db/mutations/session-mutation"
 import { ActionError } from "@/server/actions/_error"
 import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/actions"
 
+// config
+import { offlinePlayerMetadata } from "@/config/player-settings"
+import { SESSION_STORE_TTL } from "@/lib/redis"
+
 // validations
 import {
   abandonSessionSchema,
@@ -29,10 +33,6 @@ import {
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/utils/parser/session-parser"
-
-// constants
-import { offlinePlayerMetadata } from "@/constants/player"
-import { SESSION_STORE_TTL } from "@/lib/redis"
 
 export const getActiveSession = sessionActionClient
   .action(async ({ ctx }) => {

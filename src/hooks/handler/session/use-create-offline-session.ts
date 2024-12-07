@@ -4,8 +4,8 @@ import { toast } from "sonner"
 // types
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
-// constants
-import { offlinePlayerMetadata } from "@/constants/player"
+// config
+import { offlinePlayerMetadata } from "@/config/player-settings"
 
 // helpers
 import { generateSessionCards } from "@/lib/helpers/session"
