@@ -8,11 +8,10 @@ import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
 
 // helpers
-import {
-  getSessionSchemaIncludeFields,
-  parseSchemaToClientSession,
-  parseSessionFilter
-} from "@/lib/helpers/session"
+import { getSessionSchemaIncludeFields } from "@/lib/helpers/session"
+
+// utils
+import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/utils/parser/session-parser"
 
 // utils
 import { parseSortToOrderBy } from "@/lib/utils/parser"
@@ -30,16 +29,14 @@ import { parseSortToOrderBy } from "@/lib/utils/parser"
  * @param {z.infer<typeof getSessionsSchema>} input - The filter and sort criteria for retrieving sessions.
  * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
-export async function getClientSessions(
+export async function getClientSessions( // TODO: implement pagination
   input: z.infer<typeof getSessionsSchema>
 ): Promise<ClientGameSession[]> {
   const user = await signedIn()
   if (!user) return []
 
-  const filter = parseSessionFilter(user.id, input.filter)
-
   const sessions = await db.gameSession.findMany({
-    where: filter,
+    where: parseSessionFilter(user.id, input.filter),
     orderBy: parseSortToOrderBy(input.sort),
     include: getSessionSchemaIncludeFields()
   })

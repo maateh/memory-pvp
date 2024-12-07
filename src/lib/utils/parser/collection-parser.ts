@@ -3,12 +3,19 @@ import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
 import type { collectionFilterSchema } from "@/lib/validations/collection-schema"
 
-// constants
-import { clientCardCollectionKeys, clientMemoryCardKeys } from "@/constants/collection"
-import { clientUserKeys } from "@/constants/user"
-
 // utils
 import { pickFields } from "@/lib/utils/parser"
+import { clientUserKeys } from "@/lib/utils/parser/user-parser"
+
+/* Schema parser keys */
+export const clientCardCollectionKeys: (keyof ClientCardCollection)[] = [
+  'id', 'name', 'description', 'tableSize', 'cards',
+  'user', 'createdAt', 'updatedAt'
+] as const
+
+export const clientMemoryCardKeys: (keyof ClientMemoryCard)[] = [
+  'id', 'imageUrl'
+]
 
 /**
  * Transforms a prisma schema object into a `ClientCardCollection` format, including only relevant fields for the client.

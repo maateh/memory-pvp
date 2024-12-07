@@ -1,21 +1,7 @@
 import { nanoid } from "nanoid"
 
 // types
-import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
-
-// helpers
-import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
-import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
-
-// utils
-import { pickFields } from "@/lib/utils/parser"
-
-// constants
-import { clientSessionKeys } from "@/constants/session"
-
-// schema
-import { sessionFilterSchema } from "@/lib/validations/session-schema"
 
 /**
  * Generates a unique slug for a game session based on its type and mode.
@@ -37,7 +23,7 @@ export function generateSlug(
 ): string {
   const { type, mode } = session
 
-  /**
+  /*
    * Creates a prefix by slicing then merging the first
    * characters of session 'type' and 'mode'.
    */
@@ -47,43 +33,10 @@ export function generateSlug(
     prefix = 'off'
   }
 
-  /** Prevents generating `_` symbol by nanoid. */
+  /* Prevents generating `_` symbol by nanoid. */
   const id = nanoid(8).replace(/_/g, '-')
 
   return `${prefix}_${id}`
-}
-
-/**
- * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
- * organizing player data based on the current player's ID.
- * 
- * - The `players` field is structured to have:
- *   - `current`: The player object whose ID matches the `currentPlayerId`.
- *   - `other`: The other player in the session.
- * 
- * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
- * @param {string} currentPlayerId - The ID of the current player to identify them in the session.
- * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
- */
-export function parseSchemaToClientSession(
-  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
-  currentPlayerId: string
-): ClientGameSession {
-  const filteredSession = pickFields(session, clientSessionKeys)
-
-  const players = {
-    current: filteredSession.players.find((player) => player.id === currentPlayerId)!,
-    other: filteredSession.players.find((player) => player.id !== currentPlayerId)
-  }
-
-  return {
-    ...filteredSession,
-    cards: pairSessionCardsWithCollection(session.cards, session.collection.cards),
-    players: {
-      current: parseSchemaToClientPlayer(players.current),
-      other: players.other ? parseSchemaToClientPlayer(players.other) : null
-    }
-  }
 }
 
 /**
@@ -113,35 +66,4 @@ export function getSessionSchemaIncludeFields() {
       }
     }
   } satisfies Prisma.GameSessionInclude
-}
-
-/**
- * Parses the provided session filter input to create a `Prisma.GameSessionWhereInput` object, 
- * which can be used to query game sessions using Prisma.
- * 
- * - Filters sessions by the owner's user ID and optionally by players and stats.
- * - If `players` are provided in the input, it checks whether any of the players in the session 
- *   have a matching tag from the input.
- * - Filters session stats if provided in the input.
- * 
- * @param {string} userId - The ID of the session owner to filter by.
- * @param {Object} filterInput - The filter input that includes optional player and stats filters.
- * 
- * @returns {Prisma.GameSessionWhereInput} - A Prisma query input for filtering game sessions.
- */
-export function parseSessionFilter(
-  userId: string,
-  filterInput: z.infer<typeof sessionFilterSchema>
-): Prisma.GameSessionWhereInput {
-  const { playerId, ...filter } = filterInput
-
-  return {
-    owner: { userId },
-    players: {
-      some: {
-        id: { equals: playerId }
-      }
-    },
-    ...filter
-  }
 }

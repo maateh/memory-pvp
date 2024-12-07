@@ -24,9 +24,11 @@ import {
 import {
   generateSessionCards,
   generateSlug,
-  getSessionSchemaIncludeFields,
-  parseSchemaToClientSession
+  getSessionSchemaIncludeFields
 } from "@/lib/helpers/session"
+
+// utils
+import { parseSchemaToClientSession } from "@/lib/utils/parser/session-parser"
 
 // constants
 import { offlinePlayerMetadata } from "@/constants/player"

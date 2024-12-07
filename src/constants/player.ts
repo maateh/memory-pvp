@@ -1,9 +1,3 @@
-/** Schema parser keys */
-export const clientPlayerKeys: (keyof ClientPlayer)[] = [
-  'id', 'tag', 'isActive', 'color', 'imageUrl', 'stats',
-  'createdAt', 'updatedAt'
-] as const
-
 /** Offline metadata */
 export const offlinePlayerMetadata: ClientPlayer = {
   color: '#ffffff',

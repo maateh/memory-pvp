@@ -10,7 +10,7 @@ import { protectedActionClient } from "@/server/actions"
 import { utapi } from "@/server/uploadthing"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
 
 // validations
 import {

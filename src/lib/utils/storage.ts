@@ -1,5 +1,5 @@
 // constants
-import { offlineSessionKeys } from "@/constants/session"
+import { offlineSessionKeys } from "@/lib/utils/parser/session-parser"
 
 // utils
 import { pickFields } from "@/lib/utils/parser"

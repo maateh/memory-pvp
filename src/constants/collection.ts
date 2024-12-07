@@ -6,16 +6,6 @@ import type { UploadRouter } from "@/server/uploadthing/core"
 // constants
 import { tableSizeMap } from "@/constants/game"
 
-/** Schema parser keys */
-export const clientCardCollectionKeys: (keyof ClientCardCollection)[] = [
-  'id', 'name', 'description', 'tableSize', 'cards',
-  'user', 'createdAt', 'updatedAt'
-] as const
-
-export const clientMemoryCardKeys: (keyof ClientMemoryCard)[] = [
-  'id', 'imageUrl'
-]
-
 /** `uploadthing` endpoints based on table size */
 export const collectionSizeEndpointMap: Record<TableSize, keyof UploadRouter> = {
   SMALL: "collectionSmall",

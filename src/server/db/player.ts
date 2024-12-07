@@ -10,7 +10,7 @@ import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
 
 // helpers
-import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
+import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
 
 /**
  * Retrieves the first found player profile associated with the signed-in user.

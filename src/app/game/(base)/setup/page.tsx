@@ -8,7 +8,7 @@ import { getPlayers } from "@/server/db/player"
 import { getRandomCollection } from "@/server/db/collection"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

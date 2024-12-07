@@ -8,7 +8,7 @@ import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
 
 // helpers
-import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
+import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
 
 // utils
 import { parseSortToOrderBy } from "@/lib/utils/parser"
@@ -56,7 +56,7 @@ export async function getCollection({ id, userProtected = true }: {
  * @param {z.infer<typeof getCollectionsSchema>} input - The input object containing filter, sort, and user inclusion options.
  * @returns {Promise<ClientCardCollection[]>} - A list of card collections matching the filter and sorting criteria.
  */
-export async function getCollections(
+export async function getCollections( // TODO: implement pagination
   input: z.infer<typeof getCollectionsSchema>
 ): Promise<ClientCardCollection[]> {
   const filter = parseCollectionFilter(input.filter)

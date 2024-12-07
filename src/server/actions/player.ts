@@ -7,7 +7,7 @@ import { ActionError } from "@/server/actions/_error"
 import { playerActionClient, protectedActionClient } from "@/server/actions"
 
 // helpers
-import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
+import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
 
 // validations
 import {

@@ -45,7 +45,7 @@ export function parseFilterParams<T extends { [key in keyof T]: string | number 
   .reduce((filter, key) => {
     let value: string | boolean | null = params.get(key)
 
-    /** Parses `true` and `false` string values to boolean */
+    /* Parses `true` and `false` string values to boolean */
     if (value === 'true' || value === 'false') {
       value = value === 'true'
     }

@@ -30,12 +30,6 @@ export function pairSessionCardsWithCollection(
   return cards
 }
 
-/** Server exports */
-export {
-  parseSchemaToClientCollection,
-  parseCollectionFilter
-} from "./server"
-
 /** Uploadthing exports */
 export {
   getCollectionImageSettings
