@@ -12,7 +12,7 @@ import {
   collectionMinSizeMap
 } from "@/config/collection-settings"
 
-/** Base schemas */
+/* Base schemas */
 const collectionNameSchema = z.string()
   .min(4, { message: 'Collection name is too short.' })
   .max(28, { message: 'Collection name is too long.' })
@@ -21,7 +21,7 @@ const collectionDescriptionSchema = z.string()
   .min(8, { message: 'Collection description is too short.' })
   .max(128, { message: 'Collection description is too long.' })
 
-const collectionCardImage = z.custom<File>()
+const collectionCardImageSchema = z.custom<File>()
   .refine((file: File) => file.size <= collectionMaxFileSizeInBytes, {
     message: `Maximum image size is ${collectionMaxFileSize}`
   })
@@ -29,31 +29,21 @@ const collectionCardImage = z.custom<File>()
     message: "Uploaded image file format is not supported."
   })
 
-const utImageSchema = z.object({
-  utKey: z.string(),
-  imageUrl: z.string().url({ message: "Card image URL is invalid." })
-})
-
-/** Query filters */
+/* Query filters */
 export const collectionFilterSchema = z.object({
   username: z.string(),
   name: z.string(),
-  tableSize: z.nativeEnum(TableSize)
+  tableSize: z.nativeEnum(TableSize),
+  includeUser: z.coerce.boolean().optional()
 }).partial().optional().default({})
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const collectionSortSchema = z.object({
   name: sortKeys,
   createdAt: sortKeys
-}).optional().default({})
+}).partial().optional().default({})
 
-export const getCollectionsSchema = z.object({
-  filter: collectionFilterSchema,
-  sort: collectionSortSchema,
-  includeUser: z.coerce.boolean().optional()
-}).optional().default({})
-
-/** Form / API validations */
+/* Form / API validations */
 export const createCollectionUtSchema = z.object({
   name: collectionNameSchema,
   description: collectionDescriptionSchema,
@@ -61,7 +51,12 @@ export const createCollectionUtSchema = z.object({
 })
 
 export const createCollectionSchema = createCollectionUtSchema.extend({
-  utImages: z.array(utImageSchema)
+  utImages: z.array(
+    z.object({
+      utKey: z.string(),
+      imageUrl: z.string().url({ message: "Card image URL is invalid." })
+    })
+  )
 })
 
 export const updateCollectionSchema = z.object({
@@ -74,9 +69,9 @@ export const deleteCollectionSchema = z.object({
   id: z.string()
 })
 
-/** Client side form validation */
+/* Client side form validation */
 export const createCollectionClientSchema = createCollectionUtSchema.extend({
-  images: z.array(collectionCardImage)
+  images: z.array(collectionCardImageSchema)
 }).superRefine((collection, ctx) => {
   const { tableSize, images } = collection
   

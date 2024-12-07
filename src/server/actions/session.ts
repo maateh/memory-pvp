@@ -3,7 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // server
-import { getRandomCollection } from "@/server/db/collection"
+import { getRandomCollection } from "@/server/db/queries/collection-query"
 import { updateSessionStatus } from "@/server/db/mutations/session-mutation"
 
 // actions

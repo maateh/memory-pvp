@@ -18,15 +18,11 @@ const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProp
     sort: CollectionSort
   }
 
-  const includeUser = filter.includeUser === undefined ? true : !!filter.includeUser
-  delete filter.includeUser
-
   return (
     <CollectionExplorerPopup
       renderer="router"
       filter={filter}
       sort={sort}
-      includeUser={includeUser}
     />
   )
 }

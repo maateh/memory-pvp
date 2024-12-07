@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
-import type { collectionSortSchema, getCollectionsSchema } from "@/lib/validations/collection-schema"
+import type { collectionFilterSchema, collectionSortSchema } from "@/lib/validations/collection-schema"
 
 // server
 import { db } from "@/server/db"
@@ -53,22 +53,23 @@ export async function getCollection({ id, userProtected = true }: {
  * - Sorts the results according to the specified `sort` parameter.
  * - Excludes collections created by the signed-in user if `includeUser` is `false`.
  * 
- * @param {z.infer<typeof getCollectionsSchema>} input - The input object containing filter, sort, and user inclusion options.
+ * @param {Object} input - The input object containing filter, sort, and pagination options.
  * @returns {Promise<ClientCardCollection[]>} - A list of card collections matching the filter and sorting criteria.
  */
-export async function getCollections( // TODO: implement pagination
-  input: z.infer<typeof getCollectionsSchema>
-): Promise<ClientCardCollection[]> {
-  const filter = parseCollectionFilter(input.filter)
-  const { sort, includeUser } = input
+export async function getCollections({ filter, sort }: {
+  filter: z.infer<typeof collectionFilterSchema>
+  sort: z.infer<typeof collectionSortSchema>
+  // pagination: z.infer<typeof paginationSchema> TODO: implement
+}): Promise<ClientCardCollection[]> {
+  const where = parseCollectionFilter(filter)
 
-  if (!includeUser) {
+  if (!filter.includeUser) {
     const user = await signedIn()
-    filter.NOT = { userId: user?.id }
+    where.NOT = { userId: user?.id }
   }
 
   const collections = await db.cardCollection.findMany({
-    where: filter,
+    where,
     orderBy: parseSortToOrderBy(sort) || {
       createdAt: 'desc'
     },
@@ -92,9 +93,9 @@ export async function getCollections( // TODO: implement pagination
  * @param {z.infer<typeof collectionSortSchema>} [sort={}] - The sorting criteria for ordering collections.
  * @returns {Promise<ClientCardCollection[]>} - An array of parsed collections, or an empty array if no user is signed in.
  */
-export async function getUserCollections(
-  sort: z.infer<typeof collectionSortSchema> = {}
-): Promise<ClientCardCollection[]> {
+export async function getUserCollections({ sort }: {
+  sort: z.infer<typeof collectionSortSchema>
+}): Promise<ClientCardCollection[]> {
   const user = await signedIn()
   if (!user) return []
 
