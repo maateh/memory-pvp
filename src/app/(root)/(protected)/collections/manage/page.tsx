@@ -5,7 +5,7 @@ import type { CollectionSort } from "@/components/collection/filter/types"
 import { getUserCollections } from "@/server/db/collection"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 // components
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"

@@ -11,7 +11,7 @@ import {
 } from "@/constants/game"
 
 // utils
-import { pickFields } from "@/lib/utils"
+import { pickFields } from "@/lib/utils/parser"
 import { formatTimer } from "@/lib/utils/game"
 
 // icons

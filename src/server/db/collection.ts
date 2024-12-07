@@ -11,7 +11,7 @@ import { signedIn } from "@/server/db/signed-in"
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/helpers/collection"
 
 // utils
-import { parseSortToOrderBy } from "@/lib/utils"
+import { parseSortToOrderBy } from "@/lib/utils/parser"
 
 /**
  * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.

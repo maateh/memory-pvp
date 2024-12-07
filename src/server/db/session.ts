@@ -15,7 +15,7 @@ import {
 } from "@/lib/helpers/session"
 
 // utils
-import { parseSortToOrderBy } from "@/lib/utils"
+import { parseSortToOrderBy } from "@/lib/utils/parser"
 
 /**
  * Retrieves a list of game sessions for the signed-in user, parsed into `ClientGameSession` instances.

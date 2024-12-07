@@ -9,7 +9,7 @@ import { parseSchemaToClientPlayer } from "@/lib/helpers/player"
 import { pairSessionCardsWithCollection } from "@/lib/helpers/collection"
 
 // utils
-import { pickFields } from "@/lib/utils"
+import { pickFields } from "@/lib/utils/parser"
 
 // constants
 import { clientSessionKeys } from "@/constants/session"

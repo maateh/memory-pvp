@@ -2,7 +2,7 @@
 import { offlineSessionKeys } from "@/constants/session"
 
 // utils
-import { pickFields } from "@/lib/utils"
+import { pickFields } from "@/lib/utils/parser"
 
 /** Local storage key for the active offline session. */
 const STORAGE_KEY = "CLIENT_GAME_SESSION"

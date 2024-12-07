@@ -10,7 +10,7 @@ import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
 import { playerSortOptions } from "@/components/player/filter/constants"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

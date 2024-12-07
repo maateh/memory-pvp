@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 export type FilterParamValue = string | number | boolean
 

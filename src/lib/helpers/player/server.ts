@@ -11,7 +11,7 @@ import { clientPlayerKeys } from "@/constants/player"
 import { calculateSessionScore } from "@/lib/helpers/session"
 
 // utils
-import { pickFields } from "@/lib/utils"
+import { pickFields } from "@/lib/utils/parser"
 
 /**
  * Parses the player schema into a client-safe `ClientPlayer` object, removing

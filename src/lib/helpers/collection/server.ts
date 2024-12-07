@@ -8,7 +8,7 @@ import { clientCardCollectionKeys, clientMemoryCardKeys } from "@/constants/coll
 import { clientUserKeys } from "@/constants/user"
 
 // utils
-import { pickFields } from "@/lib/utils"
+import { pickFields } from "@/lib/utils/parser"
 
 /**
  * Transforms a prisma schema object into a `ClientCardCollection` format, including only relevant fields for the client.

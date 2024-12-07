@@ -7,7 +7,7 @@ import type { SessionFilter, SessionSort } from "@/components/session/filter/typ
 import { getClientSessions } from "@/server/db/session"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

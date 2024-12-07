@@ -11,7 +11,8 @@ import { getCollections } from "@/server/db/collection"
 import { collectionSortOptions } from "@/components/collection/filter/constants"
 
 // utils
-import { cn, parseFilterParams } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 // icons
 import { ImageUp } from "lucide-react"

@@ -2,7 +2,7 @@
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // utils
-import { parseFilterParams } from "@/lib/utils"
+import { parseFilterParams } from "@/lib/utils/parser"
 
 // components
 import { CollectionExplorerPopup } from "@/components/collection/popup"
