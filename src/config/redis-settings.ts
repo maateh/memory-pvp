@@ -1,5 +1,3 @@
-import { Redis } from "@upstash/redis"
-
 /**
  * Vercel cron jobs are limited to run once in a day.
  * 
@@ -10,5 +8,3 @@ import { Redis } from "@upstash/redis"
  * okay to prevent any session data loss.
  */
 export const SESSION_STORE_TTL = 43200 + 60
-
-export const redis = Redis.fromEnv()

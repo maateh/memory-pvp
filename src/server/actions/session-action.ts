@@ -13,7 +13,7 @@ import { playerActionClient, protectedActionClient, sessionActionClient } from "
 // config
 import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
-import { SESSION_STORE_TTL } from "@/lib/redis"
+import { SESSION_STORE_TTL } from "@/config/redis-settings"
 
 // validations
 import { clientSessionSchema } from "@/lib/schema/session-schema"
