@@ -6,7 +6,7 @@ import { parseFilterParams } from "@/lib/utils/parser"
 
 export type FilterParamValue = string | number | boolean
 
-type UseFilterParamsReturn<T extends { [key in keyof T]: string | number | boolean }> = {
+type UseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
   filter: Filter<T>
   sort: Sort<T>
   addFilterParam: (key: keyof T, value: string) => void
@@ -26,7 +26,7 @@ type UseFilterParamsReturn<T extends { [key in keyof T]: string | number | boole
  * 
  * @returns {UseFilterParamsReturn<T>} - An object containing the parsed `filter`, `sort`, and functions to manipulate query parameters.
  */
-export function useFilterParams<T extends { [key in keyof T]: string | number | boolean }>(): UseFilterParamsReturn<T> {
+export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }>(): UseFilterParamsReturn<T> {
   const searchParams = useSearchParams()
 
   const router = useRouter()

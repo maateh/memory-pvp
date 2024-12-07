@@ -1,3 +1,6 @@
+// types
+import type { FilterParamValue } from "@/hooks/use-filter-params"
+
 /**
  * Selectively picks specified fields from an object.
  * 
@@ -19,7 +22,7 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
   return result
 }
 
-type ParseFilterParamsReturn<T extends { [key in keyof T]: string | number | boolean }> = {
+type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
   filter: Filter<T>
   sort: Sort<T>
 }
@@ -36,7 +39,7 @@ type ParseFilterParamsReturn<T extends { [key in keyof T]: string | number | boo
  * @param {URLSearchParams} params - The search parameters to parse.
  * @returns {ParseFilterParamsReturn<T>} - An object with `filter` and `sort` properties for filtered and sorted results.
  */
-export function parseFilterParams<T extends { [key in keyof T]: string | number | boolean }>(
+export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue }>(
   params: URLSearchParams
 ): ParseFilterParamsReturn<T> {
   const keys = Array.from(params.keys())
