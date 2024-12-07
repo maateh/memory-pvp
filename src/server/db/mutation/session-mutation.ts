@@ -5,7 +5,7 @@ import type { PlayerProfile } from "@prisma/client"
 import { db } from "@/server/db"
 
 // helpers
-import { calculatePlayerSessionScore } from "@/lib/helpers/session-helper"
+import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
 
 export async function updateSessionStatus({ session, sessionPlayers, player, action }: {
   session: Pick<ClientGameSession, 'slug' | 'type' | 'mode' | 'tableSize' | 'stats'>

@@ -1,5 +1,5 @@
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { CircleFadingArrowUp, Sigma, Trophy } from "lucide-react"

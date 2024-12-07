@@ -3,10 +3,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { deletePlayer } from "@/server/actions/player-action"
+import { deletePlayer } from "@/server/action/player-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useDeletePlayerAction = () => {
   const router = useRouter()

@@ -1,5 +1,5 @@
 // utils
-import { pickFields } from "@/lib/utils/parser"
+import { pickFields } from "@/lib/util/parser"
 
 /* Schema parser keys */
 export const clientPlayerKeys: (keyof ClientPlayer)[] = [

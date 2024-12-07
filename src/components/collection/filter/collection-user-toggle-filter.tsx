@@ -6,7 +6,7 @@ import { useMemo } from "react"
 import type { CollectionFilter } from "./types"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { UserRoundCheck, UserRoundMinus } from "lucide-react"

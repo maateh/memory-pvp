@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Circle } from "lucide-react"

@@ -2,7 +2,7 @@ import Link from "next/link"
 import dynamic from "next/dynamic"
 
 // server
-import { signedIn } from "@/server/actions/user-action"
+import { signedIn } from "@/server/action/user-action"
 
 // icons
 import { Home, LayoutDashboard } from "lucide-react"

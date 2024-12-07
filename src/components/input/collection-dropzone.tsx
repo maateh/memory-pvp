@@ -9,8 +9,8 @@ import type { ExpandedRouteConfig } from "uploadthing/types"
 import { generateClientDropzoneAccept, generatePermittedFileTypes } from "uploadthing/client"
 
 // utils
-import { cn } from "@/lib/utils"
-import { generateFileUrls } from "@/lib/utils/file"
+import { cn } from "@/lib/util"
+import { generateFileUrls } from "@/lib/util/file"
 
 // icons
 import { ImageUp } from "lucide-react"

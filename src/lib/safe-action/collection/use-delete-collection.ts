@@ -3,10 +3,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { deleteCollection } from "@/server/actions/collection-action"
+import { deleteCollection } from "@/server/action/collection-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useDeleteCollectionAction = () => {
   const router = useRouter()

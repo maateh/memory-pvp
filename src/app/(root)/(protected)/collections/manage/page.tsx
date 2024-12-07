@@ -2,10 +2,10 @@
 import type { CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getUserCollections } from "@/server/db/queries/collection-query"
+import { getUserCollections } from "@/server/db/query/collection-query"
 
 // utils
-import { parseFilterParams } from "@/lib/utils/parser"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // components
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"

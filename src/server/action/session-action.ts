@@ -3,12 +3,12 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // server
-import { getRandomCollection } from "@/server/db/queries/collection-query"
-import { updateSessionStatus } from "@/server/db/mutations/session-mutation"
+import { getRandomCollection } from "@/server/db/query/collection-query"
+import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
-import { ActionError } from "@/server/actions/_error"
-import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/actions"
+import { ActionError } from "@/server/action/_error"
+import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
 import { offlinePlayerMetadata } from "@/config/player-settings"
@@ -26,10 +26,10 @@ import {
 } from "@/lib/schema/validation/session-validation"
 
 // helpers
-import { generateSessionCards, generateSessionSlug } from "@/lib/helpers/session-helper"
+import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
-import { parseSchemaToClientSession } from "@/lib/utils/parser/session-parser"
+import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const getActiveSession = sessionActionClient
   .action(async ({ ctx }) => {

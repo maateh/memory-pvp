@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 
 // server
-import { getPlayer } from "@/server/db/queries/player-query"
+import { getPlayer } from "@/server/db/query/player-query"
 
 // utils
-import { getRendererPlayerStats } from "@/lib/utils/stats"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

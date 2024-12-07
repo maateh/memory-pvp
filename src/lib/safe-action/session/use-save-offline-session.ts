@@ -2,11 +2,11 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { saveOfflineSession } from "@/server/actions/session-action"
+import { saveOfflineSession } from "@/server/action/session-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
-import { clearSessionFromStorage } from "@/lib/utils/storage"
+import { handleServerError } from "@/lib/util/error"
+import { clearSessionFromStorage } from "@/lib/util/storage"
 
 export const useSaveOfflineSessionAction = () => useAction(saveOfflineSession, {
   onSuccess: () => {

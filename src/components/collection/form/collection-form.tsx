@@ -9,7 +9,7 @@ import type { z } from "zod"
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // utils
-import { logError } from "@/lib/utils/error"
+import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"

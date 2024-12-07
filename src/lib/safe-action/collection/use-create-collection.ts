@@ -6,14 +6,14 @@ import type { UseFormReturn } from "react-hook-form"
 import type { CollectionFormValues } from "@/components/collection/form/collection-form"
 
 // actions
-import { createCollection } from "@/server/actions/collection-action"
+import { createCollection } from "@/server/action/collection-action"
 
 // config
 import { collectionSizeEndpointMap } from "@/config/collection-settings"
 import { tableSizePlaceholders } from "@/config/game-settings"
 
 // utils
-import { handleServerError, logError } from "@/lib/utils/error"
+import { handleServerError, logError } from "@/lib/util/error"
 
 // hooks
 import { useUploadThing } from "@/hooks/use-upload-thing"

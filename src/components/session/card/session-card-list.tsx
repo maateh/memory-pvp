@@ -1,5 +1,5 @@
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // components
 import { CardItem, Warning } from "@/components/shared"

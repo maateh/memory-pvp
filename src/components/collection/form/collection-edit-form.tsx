@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import type { z } from "zod"
 
 // utils
-import { logError } from "@/lib/utils/error"
+import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"

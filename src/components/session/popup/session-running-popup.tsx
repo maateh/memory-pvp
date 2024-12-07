@@ -1,10 +1,10 @@
 import { Suspense } from "react"
 
 // actions
-import { getActiveSession } from "@/server/actions/session-action"
+import { getActiveSession } from "@/server/action/session-action"
 
 // utils
-import { getRendererSessionStats } from "@/lib/utils/stats"
+import { getRendererSessionStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

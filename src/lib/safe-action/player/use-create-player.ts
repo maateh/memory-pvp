@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { createPlayer } from "@/server/actions/player-action"
+import { createPlayer } from "@/server/action/player-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useCreatePlayerAction = () => useAction(createPlayer, {
   onSuccess({ data: player }) {

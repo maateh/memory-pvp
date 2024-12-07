@@ -6,10 +6,10 @@ import { toast } from "sonner"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
-import { createSession } from "@/server/actions/session-action"
+import { createSession } from "@/server/action/session-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"

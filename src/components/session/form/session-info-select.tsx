@@ -1,6 +1,6 @@
 // types
 import type { LucideIcon } from "lucide-react"
-import type { DropdownRadioSelectProps } from "@/components/inputs/dropdown-radio-select"
+import type { DropdownRadioSelectProps } from "@/components/input/dropdown-radio-select"
 
 // icons
 import { MousePointerClick } from "lucide-react"
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { DropdownRadioSelect } from "@/components/inputs"
+import { DropdownRadioSelect } from "@/components/input"
 
 type SessionInfoSelectProps = Pick<
   DropdownRadioSelectProps,

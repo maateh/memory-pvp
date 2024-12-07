@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { updatePlayer } from "@/server/actions/player-action"
+import { updatePlayer } from "@/server/action/player-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useUpdatePlayerAction = () => useAction(updatePlayer, {
   onSuccess({ data: player }) {

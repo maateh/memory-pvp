@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getCollections } from "@/server/db/queries/collection-query"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // constants
 import { collectionSortOptions } from "@/components/collection/filter/constants"

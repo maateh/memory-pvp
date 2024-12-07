@@ -3,8 +3,8 @@
 import { useMemo } from "react"
 
 // utils
-import { getRendererPlayerStats } from "@/lib/utils/stats"
-import { cn } from "@/lib/utils"
+import { getRendererPlayerStats } from "@/lib/util/stats"
+import { cn } from "@/lib/util"
 
 // icons
 import { ChevronRightCircle } from "lucide-react"

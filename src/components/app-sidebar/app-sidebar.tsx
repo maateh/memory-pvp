@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 // server
-import { getPlayers } from "@/server/db/queries/player-query"
+import { getPlayers } from "@/server/db/query/player-query"
 
 // icons
 import { Spade } from "lucide-react"

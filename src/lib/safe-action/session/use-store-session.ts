@@ -1,13 +1,13 @@
 import { useAction } from "next-safe-action/hooks"
 
 // actions
-import { storeSession } from "@/server/actions/session-action"
+import { storeSession } from "@/server/action/session-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useFinishSessionAction } from "./use-finish-session"
 
 export const useStoreSessionAction = () => {

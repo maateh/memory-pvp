@@ -3,14 +3,14 @@
 import { revalidatePath } from "next/cache"
 
 // actions
-import { ActionError } from "@/server/actions/_error"
-import { protectedActionClient } from "@/server/actions"
+import { ActionError } from "@/server/action/_error"
+import { protectedActionClient } from "@/server/action"
 
 // uploadthing
 import { utapi } from "@/server/uploadthing"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
+import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // validations
 import {

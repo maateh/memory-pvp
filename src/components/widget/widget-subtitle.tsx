@@ -1,5 +1,5 @@
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 const WidgetSubtitle = ({ children, className, ...props }: React.ComponentProps<"h4">) => {
   return (

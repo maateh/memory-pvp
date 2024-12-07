@@ -9,8 +9,8 @@ import { toast } from "sonner"
 import { offlineSessionMetadata } from "@/config/session-settings"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
-import { getRendererSessionStats } from "@/lib/utils/stats"
+import { getSessionFromStorage } from "@/lib/util/storage"
+import { getRendererSessionStats } from "@/lib/util/stats"
 
 // components
 import { SessionStatistics } from "@/components/session/summary"

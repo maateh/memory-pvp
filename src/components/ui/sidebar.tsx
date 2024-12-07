@@ -5,7 +5,7 @@ import { Slot } from "@radix-ui/react-slot"
 
 // utils
 import { VariantProps, cva } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { PanelLeft } from "lucide-react"

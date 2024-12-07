@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { finishSession } from "@/server/actions/session-action"
+import { finishSession } from "@/server/action/session-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useFinishSessionAction = () => useAction(finishSession, {
   onSuccess() {

@@ -5,14 +5,14 @@ import { Suspense } from "react"
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // server
-import { getCollections } from "@/server/db/queries/collection-query"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // constants
 import { collectionSortOptions } from "@/components/collection/filter/constants"
 
 // utils
-import { cn } from "@/lib/utils"
-import { parseFilterParams } from "@/lib/utils/parser"
+import { cn } from "@/lib/util"
+import { parseFilterParams } from "@/lib/util/parser"
 
 // icons
 import { ImageUp } from "lucide-react"

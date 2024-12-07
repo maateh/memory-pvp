@@ -6,7 +6,7 @@ import { forwardRef } from "react"
 import { useClerk } from "@clerk/nextjs"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { ChevronsUpDown, Hash } from "lucide-react"

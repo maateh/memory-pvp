@@ -4,11 +4,11 @@ import type { Prisma } from "@prisma/client"
 import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // helpers
-import { pairSessionCardsWithCollection } from "@/lib/helpers/session-helper"
+import { pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
 
 // utils
-import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
-import { pickFields } from "@/lib/utils/parser"
+import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
+import { pickFields } from "@/lib/util/parser"
 
 /* Schema parser keys */
 export const clientSessionKeys: (keyof ClientGameSession)[] = [

@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { ColorPicker } from "@/components/inputs"
+import { ColorPicker } from "@/components/input"
 
 type PlayerProfileFormFieldsProps = {
   form: UseFormReturn<PlayerProfileFormValues>

@@ -7,10 +7,10 @@ import type { Prisma } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/user-action"
+import { signedIn } from "@/server/action/user-action"
 
 // helpers
-import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
+import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 
 /**
  * Retrieves the first found player profile associated with the signed-in user.

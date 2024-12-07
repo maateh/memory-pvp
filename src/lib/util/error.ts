@@ -3,7 +3,7 @@ import { DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action"
 
 // types
 import type { UploadThingError } from "uploadthing/server"
-import type { ActionError } from "@/server/actions/_error"
+import type { ActionError } from "@/server/action/_error"
 
 export function handleServerError(
   error: ActionError | UploadThingError<any> | undefined,

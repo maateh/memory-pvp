@@ -9,9 +9,9 @@ import type { SessionFilter } from "@/components/session/filter/types"
 import { api } from "@/trpc/client"
 
 // utils
-import { cn } from "@/lib/utils"
-import { logError } from "@/lib/utils/error"
-import { getRendererPlayerStats } from "@/lib/utils/stats"
+import { cn } from "@/lib/util"
+import { logError } from "@/lib/util/error"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // icons
 import { CheckCircle2, EllipsisVertical, Hash, Loader2, XCircle } from "lucide-react"
@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { ColorPicker } from "@/components/inputs"
+import { ColorPicker } from "@/components/input"
 import { StatisticBadge } from "@/components/shared"
 import { PlayerVerified } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"

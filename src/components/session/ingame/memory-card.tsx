@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Card, CardContent } from "@/components/ui/card"

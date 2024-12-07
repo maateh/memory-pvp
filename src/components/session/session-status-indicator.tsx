@@ -3,7 +3,7 @@ import type { GameStatus } from "@prisma/client"
 import type { LucideProps } from "lucide-react"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Hash } from "lucide-react"

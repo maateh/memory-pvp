@@ -5,13 +5,13 @@ import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/user-action"
+import { signedIn } from "@/server/action/user-action"
 
 // helpers
-import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
+import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // utils
-import { parseSortToOrderBy } from "@/lib/utils/parser"
+import { parseSortToOrderBy } from "@/lib/util/parser"
 
 /**
  * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.

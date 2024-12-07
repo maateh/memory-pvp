@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic"
 
 // server
-import { getClientSession } from "@/server/db/queries/session-query"
+import { getClientSession } from "@/server/db/query/session-query"
 
 // utils
-import { getRendererSessionStats } from "@/lib/utils/stats"
-import { cn } from "@/lib/utils"
+import { getRendererSessionStats } from "@/lib/util/stats"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

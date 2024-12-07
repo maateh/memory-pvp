@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // server
-import { getPlayers } from "@/server/db/queries/player-query"
+import { getPlayers } from "@/server/db/query/player-query"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

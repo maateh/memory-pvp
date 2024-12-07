@@ -6,7 +6,7 @@ import dynamic from "next/dynamic"
 import { useClerk } from "@clerk/nextjs"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { SidebarMenuButton } from "@/components/ui/sidebar"

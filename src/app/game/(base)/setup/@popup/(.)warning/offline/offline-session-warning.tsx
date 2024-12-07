@@ -1,7 +1,7 @@
 "use client"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
+import { getSessionFromStorage } from "@/lib/util/storage"
 
 // components
 import { offlineSessionMetadata } from "@/config/session-settings"

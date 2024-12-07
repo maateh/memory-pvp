@@ -3,7 +3,7 @@ import type { LucideIcon, LucideProps } from "lucide-react"
 
 // utils
 import { formatDistance } from "date-fns"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 type CustomDateProps = {
   date: Date

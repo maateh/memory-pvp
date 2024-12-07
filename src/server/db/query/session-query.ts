@@ -4,14 +4,14 @@ import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/user-action"
+import { signedIn } from "@/server/action/user-action"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
-import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/utils/parser/session-parser"
-import { parseSortToOrderBy } from "@/lib/utils/parser"
+import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parser/session-parser"
+import { parseSortToOrderBy } from "@/lib/util/parser"
 
 /**
  * Retrieves a list of game sessions for the signed-in user, parsed into `ClientGameSession` instances.

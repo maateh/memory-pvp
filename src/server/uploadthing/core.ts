@@ -8,7 +8,7 @@ import { UploadThingError } from "uploadthing/server"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/user-action"
+import { signedIn } from "@/server/action/user-action"
 
 // config
 import { getCollectionImageSettings } from "@/config/collection-settings"

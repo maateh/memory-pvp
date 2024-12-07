@@ -7,7 +7,7 @@ import type { CollectionFilter, CollectionFilterFields } from "./types"
 import { tableSizePlaceholders } from "@/config/game-settings"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"

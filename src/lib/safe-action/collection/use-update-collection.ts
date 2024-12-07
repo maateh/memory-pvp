@@ -2,10 +2,10 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { updateCollection } from "@/server/actions/collection-action"
+import { updateCollection } from "@/server/action/collection-action"
 
 // utils
-import { handleServerError } from "@/lib/utils/error"
+import { handleServerError } from "@/lib/util/error"
 
 export const useUpdateCollectionAction = () => useAction(updateCollection, {
   onSuccess({ data: collection }) {

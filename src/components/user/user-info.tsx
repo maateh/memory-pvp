@@ -6,7 +6,7 @@ import { useState } from "react"
 import type { LucideIcon, LucideProps } from "lucide-react"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // icons
 import { Check, Copy, Slash } from "lucide-react"

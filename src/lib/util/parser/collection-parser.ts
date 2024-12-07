@@ -4,8 +4,8 @@ import type { Prisma } from "@prisma/client"
 import type { collectionFilterSchema } from "@/lib/schema/param/collection-param"
 
 // utils
-import { pickFields } from "@/lib/utils/parser"
-import { clientUserKeys } from "@/lib/utils/parser/user-parser"
+import { pickFields } from "@/lib/util/parser"
+import { clientUserKeys } from "@/lib/util/parser/user-parser"
 
 /* Schema parser keys */
 export const clientCardCollectionKeys: (keyof ClientCardCollection)[] = [

@@ -1,5 +1,5 @@
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"

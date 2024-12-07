@@ -4,7 +4,7 @@ import * as React from "react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CheckCircle } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 import { buttonVariants } from "./button";
 import { VariantProps } from "class-variance-authority";
 

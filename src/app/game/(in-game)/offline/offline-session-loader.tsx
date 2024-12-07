@@ -8,10 +8,10 @@ import { toast } from "sonner"
 import { offlineSessionMetadata } from "@/config/session-settings"
 
 // utils
-import { getSessionFromStorage } from "@/lib/utils/storage"
+import { getSessionFromStorage } from "@/lib/util/storage"
 
 // providers
-import { SessionStoreProvider } from "@/components/providers"
+import { SessionStoreProvider } from "@/components/provider"
 
 // components
 import { SessionLoader } from "@/components/session/ingame"

@@ -3,7 +3,7 @@ import { Josefin_Sans, Geologica } from "next/font/google"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider, TRPCProvider } from "@/components/providers"
+import { ThemeProvider, TRPCProvider } from "@/components/provider"
 import { Toaster } from "@/components/ui/sonner"
 
 // uploadthing
@@ -16,7 +16,7 @@ import { dark } from "@clerk/themes"
 import "@/app/globals.css"
 
 // utils
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/util"
 
 const josefin = Josefin_Sans({
   subsets: ["latin"],

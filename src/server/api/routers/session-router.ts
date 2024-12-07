@@ -5,7 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // utils
-import { parseSessionFilter } from "@/lib/utils/parser/session-parser"
+import { parseSessionFilter } from "@/lib/util/parser/session-parser"
 
 export const sessionRouter = createTRPCRouter({
   count: protectedProcedure

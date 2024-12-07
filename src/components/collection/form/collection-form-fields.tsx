@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 // components
-import { CollectionDropzone } from "@/components/inputs"
+import { CollectionDropzone } from "@/components/input"
 
 type CollectionFormFieldsProps = {
   form: UseFormReturn<CollectionFormValues>

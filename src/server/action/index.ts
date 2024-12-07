@@ -4,7 +4,7 @@ import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { ActionError } from "@/server/actions/_error"
+import { ActionError } from "@/server/action/_error"
 import { db } from "@/server/db"
 import { redis } from "@/server/redis"
 

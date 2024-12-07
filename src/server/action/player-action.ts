@@ -3,11 +3,11 @@
 import { revalidatePath } from "next/cache"
 
 // actions
-import { ActionError } from "@/server/actions/_error"
-import { playerActionClient, protectedActionClient } from "@/server/actions"
+import { ActionError } from "@/server/action/_error"
+import { playerActionClient, protectedActionClient } from "@/server/action"
 
 // helpers
-import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
+import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 
 // validations
 import { playerTagSchema } from "@/lib/schema/player-schema"

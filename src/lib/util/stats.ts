@@ -8,8 +8,8 @@ import {
 } from "@/config/game-settings"
 
 // utils
-import { pickFields } from "@/lib/utils/parser"
-import { formatTimer } from "@/lib/utils/game"
+import { pickFields } from "@/lib/util/parser"
+import { formatTimer } from "@/lib/util/game"
 
 // icons
 import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Timer } from "lucide-react"

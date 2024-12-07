@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 
 // hooks
-import { useSessionStore } from "@/components/providers/session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
 type UseGameHandlerProps = {
   onIngameUpdate?: () => void

@@ -1,10 +1,10 @@
 // helpers
-import { calculatePlayerSessionScore } from "@/lib/helpers/session-helper"
+import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
 
 // utils
-import { cn } from "@/lib/utils"
-import { formatTimer } from "@/lib/utils/game"
-import { getRendererPlayerStats } from "@/lib/utils/stats"
+import { cn } from "@/lib/util"
+import { formatTimer } from "@/lib/util/game"
+import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

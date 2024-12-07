@@ -3,12 +3,12 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/actions/user-action"
-import { getPlayers } from "@/server/db/queries/player-query"
-import { getRandomCollection } from "@/server/db/queries/collection-query"
+import { signedIn } from "@/server/action/user-action"
+import { getPlayers } from "@/server/db/query/player-query"
+import { getRandomCollection } from "@/server/db/query/collection-query"
 
 // helpers
-import { parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"
+import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

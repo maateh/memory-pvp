@@ -1,5 +1,5 @@
 // server
-import { getPlayer } from "@/server/db/queries/player-query"
+import { getPlayer } from "@/server/db/query/player-query"
 
 // components
 import AppPrefix from "./app-prefix"
