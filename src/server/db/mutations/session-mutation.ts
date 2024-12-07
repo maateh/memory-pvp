@@ -5,7 +5,7 @@ import type { PlayerProfile } from "@prisma/client"
 import { db } from "@/server/db"
 
 // helpers
-import { calculateSessionScore } from "@/lib/helpers/session-helper"
+import { calculatePlayerSessionScore } from "@/lib/helpers/session-helper"
 
 export async function updateSessionStatus({ session, sessionPlayers, player, action }: {
   session: Pick<ClientGameSession, 'slug' | 'type' | 'mode' | 'tableSize' | 'stats'>
@@ -21,7 +21,7 @@ export async function updateSessionStatus({ session, sessionPlayers, player, act
       where: { id: player.id },
       data: {
         stats: {
-          score: player.stats.score + (calculateSessionScore(session, player.id, action) || 0),
+          score: player.stats.score + (calculatePlayerSessionScore(session, player.id, action) || 0),
           timer: player.stats.timer + session.stats.timer,
           flips: player.stats.flips + session.stats.flips[player.id],
           matches: player.stats.matches + session.stats.matches[player.id],
@@ -48,7 +48,7 @@ export async function updateSessionStatus({ session, sessionPlayers, player, act
 
             // TODO: IF `session.mode === 'PVP' && action === 'abandon'`
             // -> only deducts points from the player who abandoned the session
-            score: calculateSessionScore(session, player.id, action)
+            score: calculatePlayerSessionScore(session, player.id, action)
           }))
         }
       }

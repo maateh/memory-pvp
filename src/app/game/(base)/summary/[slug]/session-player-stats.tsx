@@ -1,5 +1,5 @@
 // helpers
-import { calculateSessionScore } from "@/lib/helpers/session-helper"
+import { calculatePlayerSessionScore } from "@/lib/helpers/session-helper"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -20,7 +20,7 @@ type SessionPlayerStatsProps = {
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  const score = calculateSessionScore(
+  const score = calculatePlayerSessionScore(
     session,
     player.id,
     session.status === 'FINISHED' ? 'finish' : 'abandon'

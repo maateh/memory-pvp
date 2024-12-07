@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // helpers
-import { calculateSessionScore, getFreeFlips } from "@/lib/helpers/session-helper"
+import { calculatePlayerSessionScore, getFreeFlips } from "@/lib/helpers/session-helper"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -27,7 +27,7 @@ const SessionFooter = () => {
         player={currentPlayer}
         freeFlips={freeFlips}
         flips={session.stats.flips[currentPlayer.id]}
-        score={calculateSessionScore(session, currentPlayer.id)}
+        score={calculatePlayerSessionScore(session, currentPlayer.id)}
       />
 
       {session.mode !== 'SINGLE' && otherPlayer && (
@@ -44,7 +44,7 @@ const SessionFooter = () => {
             player={otherPlayer}
             freeFlips={freeFlips}
             flips={session.stats.flips[otherPlayer.id]}
-            score={calculateSessionScore(session, otherPlayer.id)}
+            score={calculatePlayerSessionScore(session, otherPlayer.id)}
             flipOrder
           />
         </>

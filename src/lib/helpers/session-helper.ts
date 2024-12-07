@@ -127,7 +127,7 @@ export function pairSessionCardsWithCollection(
  * 
  * @returns {number | null} - The player's calculated score, or `null` if scoring is not applicable.
  */
-export function calculateSessionScore(
+export function calculatePlayerSessionScore(
   session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
   playerId: string,
   action: 'finish' | 'abandon' = 'finish'
