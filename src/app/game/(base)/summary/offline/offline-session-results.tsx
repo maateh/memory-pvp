@@ -10,7 +10,7 @@ import { offlineSessionMetadata } from "@/constants/session"
 
 // utils
 import { getSessionFromStorage } from "@/lib/utils/storage"
-import { getSessionStatsMap } from "@/lib/utils/stats"
+import { getRendererSessionStats } from "@/lib/utils/stats"
 
 // components
 import { SessionStatistics } from "@/components/session/summary"
@@ -27,16 +27,12 @@ const OfflineSessionResults = () => {
     redirect('/game/setup')
   }
 
-  const stats = useMemo(() => getSessionStatsMap({
+  const stats = useMemo(() => getRendererSessionStats({
     ...session,
     ...offlineSessionMetadata
   }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt']), [session])
 
-  return (
-    <SessionStatistics
-      stats={stats}
-    />
-  )
+  return <SessionStatistics stats={stats} />
 }
 
 export default OfflineSessionResults

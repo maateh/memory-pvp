@@ -2,7 +2,6 @@ import { cva, VariantProps } from "class-variance-authority"
 
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
-import type { RenderableStatistic } from "@/lib/utils/stats"
 
 // utils
 import { cn } from "@/lib/utils"
@@ -38,7 +37,7 @@ const statVariants = cva(
 )
 
 type StatisticItemProps = {
-  statistic: RenderableStatistic | (Omit<RenderableStatistic, 'data'> & { data: React.ReactNode })
+  statistic: RendererStat | (Omit<RendererStat, 'data'> & { data: React.ReactNode })
   iconProps?: LucideProps
   labelProps?: React.ComponentProps<"p">
   dataProps?: React.ComponentProps<"div">
@@ -90,7 +89,7 @@ type StatisticBadgeProps = {
   dataProps?: React.ComponentProps<"span">
 } & Omit<React.ComponentProps<typeof Badge>, 'children'>
   & ({
-    statistic: RenderableStatistic
+    statistic: RendererStat
     Icon?: never
     children?: never
   } | {

@@ -17,21 +17,6 @@ import { formatTimer } from "@/lib/utils/game"
 // icons
 import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Timer } from "lucide-react"
 
-export type RenderableStatistic = {
-  Icon: LucideIcon
-  label: string
-  data: string | number
-}
-
-type RenderableStatsMap<K extends string> = {
-  [key in K]: {
-    key: key
-  } & RenderableStatistic
-}
-
-/** Session stats */
-type SessionStatsKeys = 'typeMode' | 'tableSize' | 'timer' | 'matches' | 'flips' | 'startedAt'
-
 /**
  * Generates a map of game session statistics, each stat paired with an icon, label, and formatted data for rendering.
  * 
@@ -40,17 +25,17 @@ type SessionStatsKeys = 'typeMode' | 'tableSize' | 'timer' | 'matches' | 'flips'
  * - If the `keys` argument is provided, only the corresponding session stats will be included in the result.
  * 
  * @param {ClientGameSession} session - The session whose statistics are being processed.
- * @param {SessionStatsKeys[]} [keys] - Optional list of specific stat keys to include in the result.
+ * @param {RendererSessionStatKeys[]} [keys] - Optional list of specific stat keys to include in the result.
  * 
- * @returns {RenderableStatsMap<SessionStatsKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
+ * @returns {RendererStatsMap<RendererSessionStatKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
-export function getSessionStatsMap(
+export function getRendererSessionStats(
   session: ClientGameSession,
-  keys?: SessionStatsKeys[]
-): RenderableStatsMap<SessionStatsKeys> {
+  keys?: RendererSessionStatKeys[]
+): RendererStatsMap<RendererSessionStatKeys> {
   const playerId = session.players.current.id
 
-  const stats: RenderableStatsMap<SessionStatsKeys> = {
+  const stats: RendererStatsMap<RendererSessionStatKeys> = {
     typeMode: {
       key: "typeMode",
       Icon: Gamepad2,
@@ -93,9 +78,6 @@ export function getSessionStatsMap(
   return pickFields(stats, keys)
 }
 
-/** Player stats */
-type PlayerStatsKeys = 'tag' | keyof ClientPlayer['stats']
-
 /**
  * Generates a map of player statistics, each stat paired with an icon, label, and formatted data for rendering.
  * 
@@ -104,15 +86,15 @@ type PlayerStatsKeys = 'tag' | keyof ClientPlayer['stats']
  * - If the `keys` argument is provided, only the corresponding stats will be included in the result.
  * 
  * @param {ClientPlayer} player - The player whose statistics are being processed.
- * @param {PlayerStatsKeys[]} [keys] - Optional list of specific stat keys to include in the result.
+ * @param {RendererPlayerStatKeys[]} [keys] - Optional list of specific stat keys to include in the result.
  * 
- * @returns {RenderableStatsMap<PlayerStatsKeys>} - A map of stats ready to be rendered with optional filtering by the provided keys.
+ * @returns {RendererStatsMap<RendererPlayerStatKeys>} - A map of stats ready to be rendered with optional filtering by the provided keys.
  */
-export function getPlayerStatsMap(
+export function getRendererPlayerStats(
   player: ClientPlayer,
-  keys?: PlayerStatsKeys[]
-): RenderableStatsMap<PlayerStatsKeys> {
-  const stats: RenderableStatsMap<PlayerStatsKeys> = {
+  keys?: RendererPlayerStatKeys[]
+): RendererStatsMap<RendererPlayerStatKeys> {
+  const stats: RendererStatsMap<RendererPlayerStatKeys> = {
     tag: {
       key: "tag",
       Icon: Hash,

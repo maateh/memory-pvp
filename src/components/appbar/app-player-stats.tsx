@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // utils
-import { getPlayerStatsMap } from "@/lib/utils/stats"
+import { getRendererPlayerStats } from "@/lib/utils/stats"
 import { cn } from "@/lib/utils"
 
 // icons
@@ -23,7 +23,7 @@ type AppPlayerStatsProps = {
 const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
   const { state, isMobile } = useSidebar()
 
-  const stats = useMemo(() => getPlayerStatsMap(activePlayer, [
+  const stats = useMemo(() => getRendererPlayerStats(activePlayer, [
     'score', 'sessions', 'timer', 'flips', 'matches'
   ]), [activePlayer])
 

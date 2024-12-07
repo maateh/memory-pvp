@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import { getClientSession } from "@/server/db/session"
 
 // utils
-import { getSessionStatsMap } from "@/lib/utils/stats"
+import { getRendererSessionStats } from "@/lib/utils/stats"
 import { cn } from "@/lib/utils"
 
 // shadcn
@@ -32,13 +32,11 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
     return <SessionNotFound />
   }
 
-  const stats = getSessionStatsMap(clientSession)
+  const stats = getRendererSessionStats(clientSession)
 
   return (
     <>
-     <SessionStatistics
-        stats={stats}
-      />
+     <SessionStatistics stats={stats} />
 
       <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 

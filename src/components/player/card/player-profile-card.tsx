@@ -10,7 +10,7 @@ import { api } from "@/trpc/client"
 
 // utils
 import { cn, logError } from "@/lib/utils"
-import { getPlayerStatsMap } from "@/lib/utils/stats"
+import { getRendererPlayerStats } from "@/lib/utils/stats"
 
 // icons
 import { CheckCircle2, EllipsisVertical, Hash, Loader2, XCircle } from "lucide-react"
@@ -52,7 +52,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     refetchOnWindowFocus: false
   })
 
-  const playerStats = useMemo(() => getPlayerStatsMap({
+  const playerStats = useMemo(() => getRendererPlayerStats({
     ...player,
     stats: stats || player.stats
   }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])

@@ -13,7 +13,7 @@ import type {
 } from "@prisma/client"
 
 declare global {
-  /** Theme types */
+  /* Theme types */
   declare type Theme = "light" | "dark"
 
   declare type UseThemeProps = {
@@ -24,7 +24,7 @@ declare global {
   /* Popups */
   declare type PopupRenderer = "trigger" | "router"
 
-  /** Filter types */
+  /* Filter types */
   declare type FilterService = "store" | "params" | "mixed"
 
   declare type Filter<T> = Partial<{ [key in keyof T]: T[key] }>
@@ -33,7 +33,7 @@ declare global {
     [K in keyof T]: T[K][]
   }
 
-  /** Sort types */
+  /* Sort types */
   declare type SortKey = "asc" | "desc"
 
   declare type Sort<T> = Partial<{ [key in keyof T]: SortKey }>
@@ -43,15 +43,31 @@ declare global {
     label: string
   }
 
-  export type SortOptions<T> = {
+  declare type SortOptions<T> = {
     [K in keyof T]: SortOption<T>
   }
 
-  /** User types */
+  /* Statistic types */
+  declare type RendererStat = {
+    Icon: LucideIcon
+    label: string
+    data: string | number
+  }
+  
+  declare type RendererStatsMap<K extends string> = {
+    [key in K]: {
+      key: key
+    } & RendererStat
+  }
+
+  declare type RendererSessionStatKeys = 'typeMode' | 'tableSize' | 'timer' | 'matches' | 'flips' | 'startedAt'
+  declare type RendererPlayerStatKeys = 'tag' | keyof ClientPlayer['stats']
+
+  /* User types */
   declare type ClerkUser = Omit<UserResource, 'username'> & { username: string }
   declare type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
 
-  /** Collection types */
+  /* Collection types */
   declare type ClientMemoryCard = Omit<MemoryCard, 'utKey' | 'collectionId'>
 
   declare type ClientCardCollection = Omit<CardCollection, 'userId'> & {
@@ -59,7 +75,7 @@ declare global {
     cards: ClientMemoryCard[]
   }
 
-  /** Session types */
+  /* Session types */
   declare type ClientGameSession = Omit<
     GameSession,
     'id' | 'ownerId' | 'playerIds' | 'cards' |
@@ -87,7 +103,7 @@ declare global {
     imageUrl: string
   }
 
-  /** Player types */
+  /* Player types */
   declare type ClientPlayer = Omit<
     PlayerProfile,
     'userId' | 'sessionIds'
@@ -95,7 +111,7 @@ declare global {
     imageUrl: string | null
   }
 
-  /** Prisma schemas */
+  /* Prisma schemas */
   declare type GameSessionWithPlayersWithAvatarWithCollectionWithCards = GameSession & {
     collection: CardCollectionWithCardsWithUser
     players: PlayerProfileWithUserAvatar[]
