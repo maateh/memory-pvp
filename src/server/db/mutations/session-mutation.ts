@@ -5,7 +5,6 @@ import type { PlayerProfile } from "@prisma/client"
 import { db } from "@/server/db"
 
 // helpers
-import { calculatePlayerStats } from "@/lib/helpers/player"
 import { calculateSessionScore } from "@/lib/helpers/session-helper"
 
 export async function updateSessionStatus({ session, sessionPlayers, player, action }: {
@@ -20,7 +19,15 @@ export async function updateSessionStatus({ session, sessionPlayers, player, act
   const operations = players.map(
     (player) => db.playerProfile.update({
       where: { id: player.id },
-      data: { stats: calculatePlayerStats(player, session, action) }
+      data: {
+        stats: {
+          score: player.stats.score + (calculateSessionScore(session, player.id, action) || 0),
+          timer: player.stats.timer + session.stats.timer,
+          flips: player.stats.flips + session.stats.flips[player.id],
+          matches: player.stats.matches + session.stats.matches[player.id],
+          sessions: ++player.stats.sessions
+        }
+      }
     })
   )
   await db.$transaction(operations)
