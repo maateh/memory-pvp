@@ -3,7 +3,7 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/actions/user-action"
 import { getPlayers } from "@/server/db/queries/player-query"
 import { getRandomCollection } from "@/server/db/queries/collection-query"
 

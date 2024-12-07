@@ -7,7 +7,7 @@ import type { Prisma } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/actions/user-action"
 
 // helpers
 import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"

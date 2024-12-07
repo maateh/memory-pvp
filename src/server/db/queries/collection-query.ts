@@ -5,7 +5,7 @@ import type { collectionFilterSchema, collectionSortSchema } from "@/lib/validat
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/actions/user-action"
 
 // helpers
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/utils/parser/collection-parser"

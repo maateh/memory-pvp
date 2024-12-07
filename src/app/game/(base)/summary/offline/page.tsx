@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 // server
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/actions/user-action"
 import { getPlayers } from "@/server/db/queries/player-query"
 
 // shadcn

@@ -4,7 +4,7 @@ import type { sessionFilterSchema, sessionSortSchema } from "@/lib/validations/s
 
 // server
 import { db } from "@/server/db"
-import { signedIn } from "@/server/db/signed-in"
+import { signedIn } from "@/server/actions/user-action"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
