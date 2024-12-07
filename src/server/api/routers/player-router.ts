@@ -6,7 +6,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 // validations
 import { z } from "zod"
 import { playerFilterSchema } from "@/lib/schema/param/player-param"
-import { sessionFilterSchema } from "@/lib/schema/session-schema"
+import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 export const playerProfileRouter = createTRPCRouter({
   getStats: protectedProcedure

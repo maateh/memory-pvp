@@ -16,14 +16,14 @@ import { sessionSchemaFields } from "@/config/session-settings"
 import { SESSION_STORE_TTL } from "@/lib/redis"
 
 // validations
+import { clientSessionSchema } from "@/lib/schema/session-schema"
 import {
   abandonSessionSchema,
-  clientSessionSchema,
   createSessionSchema,
   finishSessionSchema,
   saveOfflineGameSchema,
   saveSessionSchema
-} from "@/lib/schema/session-schema"
+} from "@/lib/schema/validation/session-validation"
 
 // helpers
 import { generateSessionCards, generateSessionSlug } from "@/lib/helpers/session-helper"

@@ -2,7 +2,7 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
 
 // validations
-import { sessionFilterSchema } from "@/lib/schema/session-schema"
+import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // utils
 import { parseSessionFilter } from "@/lib/utils/parser/session-parser"

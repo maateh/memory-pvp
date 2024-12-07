@@ -7,17 +7,17 @@ import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
 import { clientPlayerSchema } from "@/lib/schema/player-schema"
 
 /* Base schemas */
-const sessionCardMetadataSchema = z.object({
+export const sessionCardMetadataSchema = z.object({
   id: z.string(),
   key: z.coerce.number()
 })
 
-const sessionCardSchema = sessionCardMetadataSchema.extend({
+export const sessionCardSchema = sessionCardMetadataSchema.extend({
   flippedBy: z.string().nullable(),
   matchedBy: z.string().nullable()
 })
 
-const matchedCardsSchema = z.array(
+export const matchedCardsSchema = z.array(
   sessionCardSchema.merge(
     z.object({
       matchedBy: z.string()
@@ -25,7 +25,7 @@ const matchedCardsSchema = z.array(
   )
 )
 
-const sessionStatsSchema = z.object({
+export const sessionStatsSchema = z.object({
   timer: z.coerce.number(),
   flips: z.record(
     z.string(), z.coerce.number()
@@ -58,52 +58,3 @@ export const clientSessionSchema = z.object({
   continuedAt: z.coerce.date().optional().nullable(),
   closedAt: z.coerce.date().optional().nullable()
 })
-
-/* Query filters */
-export const sessionFilterSchema = clientSessionSchema
-  .extend({ playerId: z.string() })
-  .omit({
-    stats: true,
-    cards: true,
-    flipped: true,
-    players: true,
-    startedAt: true,
-    continuedAt: true,
-    closedAt: true
-  }).partial().optional().default({})
-
-const sortKeys = z.enum(['asc', 'desc']).optional()
-export const sessionSortSchema = z.object({
-  type: sortKeys,
-  mode: sortKeys,
-  tableSize: sortKeys,
-  status: sortKeys,
-  startedAt: sortKeys,
-  continuedAt: sortKeys,
-  closedAt: sortKeys
-}).partial().optional().default({})
-
-/* Forms / API validations */
-export const createSessionSchema = clientSessionSchema.pick({
-  type: true,
-  mode: true,
-  tableSize: true
-}).extend({
-  collectionId: z.string().optional(),
-  forceStart: z.coerce.boolean().optional()
-})
-
-export const saveSessionSchema = clientSessionSchema.omit({ players: true })
-
-export const finishSessionSchema = clientSessionSchema.extend({
-  cards: matchedCardsSchema
-}).omit({ status: true, players: true })
-
-export const abandonSessionSchema = clientSessionSchema
-  .omit({ status: true, players: true })
-  .optional()
-
-export const saveOfflineGameSchema = clientSessionSchema.extend({
-  playerId: z.string(),
-  cards: matchedCardsSchema
-}).omit({ slug: true, type: true, mode: true, status: true, players: true })

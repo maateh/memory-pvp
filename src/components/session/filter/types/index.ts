@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/session-schema"
+import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
 
 /* Filter types */
 export type SessionFilter = Required<z.infer<typeof sessionFilterSchema>>
