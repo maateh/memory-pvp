@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
-import type { collectionFilterSchema, collectionSortSchema } from "@/lib/validations/collection-schema"
+import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/param/collection-param"
 
 // server
 import { db } from "@/server/db"

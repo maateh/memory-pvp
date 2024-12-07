@@ -1,6 +1,6 @@
 // types
 import type { z } from "zod"
-import type { playerFilterSchema, playerSortSchema } from "@/lib/validations/player-schema"
+import type { playerFilterSchema, playerSortSchema } from "@/lib/schema/player-schema"
 
 // prisma
 import type { Prisma } from "@prisma/client"

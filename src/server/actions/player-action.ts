@@ -14,7 +14,7 @@ import {
   createPlayerSchema,
   playerTagSchema,
   updatePlayerSchema
-} from "@/lib/validations/player-schema"
+} from "@/lib/schema/player-schema"
 
 export const createPlayer = protectedActionClient
   .schema(createPlayerSchema)

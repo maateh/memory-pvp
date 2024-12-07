@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
-import type { collectionFilterSchema } from "@/lib/validations/collection-schema"
+import type { collectionFilterSchema } from "@/lib/schema/param/collection-param"
 
 // utils
 import { pickFields } from "@/lib/utils/parser"

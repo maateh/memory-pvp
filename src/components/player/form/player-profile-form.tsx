@@ -7,7 +7,7 @@ import type { z } from "zod"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createPlayerSchema } from "@/lib/validations/player-schema"
+import { createPlayerSchema } from "@/lib/schema/player-schema"
 
 // utils
 import { logError } from "@/lib/utils/error"

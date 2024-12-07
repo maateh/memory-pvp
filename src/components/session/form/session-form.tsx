@@ -12,7 +12,7 @@ import { useClerk } from "@clerk/nextjs"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createSessionSchema } from "@/lib/validations/session-schema"
+import { createSessionSchema } from "@/lib/schema/session-schema"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"

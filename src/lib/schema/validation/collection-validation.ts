@@ -1,47 +1,15 @@
 import { z } from "zod"
-
-// prisma
 import { TableSize } from "@prisma/client"
 
 // config
+import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
+
+// schemas
 import {
-  collectionAcceptedMimeTypes,
-  collectionMaxFileSize,
-  collectionMaxFileSizeInBytes,
-  collectionMaxSizeMap,
-  collectionMinSizeMap
-} from "@/config/collection-settings"
-
-/* Base schemas */
-const collectionNameSchema = z.string()
-  .min(4, { message: 'Collection name is too short.' })
-  .max(28, { message: 'Collection name is too long.' })
-
-const collectionDescriptionSchema = z.string()
-  .min(8, { message: 'Collection description is too short.' })
-  .max(128, { message: 'Collection description is too long.' })
-
-const collectionCardImageSchema = z.custom<File>()
-  .refine((file: File) => file.size <= collectionMaxFileSizeInBytes, {
-    message: `Maximum image size is ${collectionMaxFileSize}`
-  })
-  .refine((file: File) => collectionAcceptedMimeTypes.includes(file.type), {
-    message: "Uploaded image file format is not supported."
-  })
-
-/* Query filters */
-export const collectionFilterSchema = z.object({
-  username: z.string(),
-  name: z.string(),
-  tableSize: z.nativeEnum(TableSize),
-  includeUser: z.coerce.boolean().optional()
-}).partial().optional().default({})
-
-const sortKeys = z.enum(['asc', 'desc']).optional()
-export const collectionSortSchema = z.object({
-  name: sortKeys,
-  createdAt: sortKeys
-}).partial().optional().default({})
+  collectionCardImageSchema,
+  collectionDescriptionSchema,
+  collectionNameSchema
+} from "@/lib/schema/collection-schema"
 
 /* Form / API validations */
 export const createCollectionUtSchema = z.object({

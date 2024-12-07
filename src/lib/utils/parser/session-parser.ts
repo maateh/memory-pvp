@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
-import type { sessionFilterSchema } from "@/lib/validations/session-schema"
+import type { sessionFilterSchema } from "@/lib/schema/session-schema"
 
 // helpers
 import { pairSessionCardsWithCollection } from "@/lib/helpers/session-helper"

@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import type { collectionFilterSchema, collectionSortSchema } from "@/lib/validations/collection-schema"
+import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/param/collection-param"
 
 /* Filter types */
 export type CollectionFilterFields = Required<z.infer<typeof collectionFilterSchema>>

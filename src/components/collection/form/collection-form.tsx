@@ -13,7 +13,7 @@ import { logError } from "@/lib/utils/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createCollectionClientSchema } from "@/lib/validations/collection-schema"
+import { createCollectionClientSchema } from "@/lib/schema/validation/collection-validation"
 
 // components
 import { Form } from "@/components/shared"

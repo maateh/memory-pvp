@@ -14,7 +14,7 @@ import { signedIn } from "@/server/actions/user-action"
 import { getCollectionImageSettings } from "@/config/collection-settings"
 
 // validations
-import { createCollectionUtSchema } from "@/lib/validations/collection-schema"
+import { createCollectionUtSchema } from "@/lib/schema/validation/collection-validation"
 
 /** Middleware to limit the number of card collections that can be created by users. */
 async function collectionLimitMiddleware({ input }: { input: z.infer<typeof createCollectionUtSchema> }) {

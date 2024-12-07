@@ -17,7 +17,7 @@ import {
   createCollectionSchema,
   deleteCollectionSchema,
   updateCollectionSchema
-} from "@/lib/validations/collection-schema"
+} from "@/lib/schema/validation/collection-validation"
 
 export const createCollection = protectedActionClient
   .schema(createCollectionSchema)

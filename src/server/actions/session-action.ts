@@ -23,7 +23,7 @@ import {
   finishSessionSchema,
   saveOfflineGameSchema,
   saveSessionSchema
-} from "@/lib/validations/session-schema"
+} from "@/lib/schema/session-schema"
 
 // helpers
 import { generateSessionCards, generateSessionSlug } from "@/lib/helpers/session-helper"

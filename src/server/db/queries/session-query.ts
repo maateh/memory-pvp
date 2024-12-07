@@ -1,6 +1,6 @@
 // types
 import type { z } from "zod"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/validations/session-schema"
+import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/session-schema"
 
 // server
 import { db } from "@/server/db"

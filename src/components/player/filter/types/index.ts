@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import type { playerFilterSchema, playerSortSchema } from "@/lib/validations/player-schema"
+import type { playerFilterSchema, playerSortSchema } from "@/lib/schema/player-schema"
 
 /* Filter types */
 export type PlayerFilterFields = Required<z.infer<typeof playerFilterSchema>>
