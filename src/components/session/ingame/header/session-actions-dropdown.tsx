@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
-// constants
+// config
 import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/constants/game"
+} from "@/config/game-settings"
 
 // utils
 import { clearSessionFromStorage } from "@/lib/utils/storage"

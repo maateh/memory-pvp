@@ -3,8 +3,12 @@ import Link from "next/link"
 // types
 import type { ColumnDef } from "@tanstack/react-table"
 
-// constants
-import { gameModePlaceholders, gameTypePlaceholders, tableSizePlaceholders } from "@/constants/game"
+// config
+import {
+  gameModePlaceholders,
+  gameTypePlaceholders,
+  tableSizePlaceholders
+} from "@/config/game-settings"
 
 // icons
 import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, Minus, StepForward } from "lucide-react"

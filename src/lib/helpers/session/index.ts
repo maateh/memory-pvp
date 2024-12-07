@@ -1,5 +1,5 @@
-// constants
-import { freeFlipsMultiplier, tableSizeMap } from "@/constants/game"
+// config
+import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"
 
 /**
  * Calculates the number of free flips available in the game session based on the session's type, mode, and table size.

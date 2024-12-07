@@ -1,14 +1,11 @@
 import { formatDistance } from "date-fns"
 
-// types
-import type { LucideIcon } from "lucide-react"
-
-// constants
+// config
 import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/constants/game"
+} from "@/config/game-settings"
 
 // utils
 import { pickFields } from "@/lib/utils/parser"

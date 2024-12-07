@@ -3,8 +3,8 @@
 // types
 import type { CollectionFilter, CollectionFilterFields } from "./types"
 
-// constants
-import { tableSizePlaceholders } from "@/constants/game"
+// config
+import { tableSizePlaceholders } from "@/config/game-settings"
 
 // utils
 import { cn } from "@/lib/utils"

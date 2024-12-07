@@ -5,8 +5,8 @@ import type { UseFormReturn } from "react-hook-form"
 import type { ExpandedRouteConfig } from "uploadthing/types"
 import type { CollectionFormValues } from "@/components/collection/form/collection-form"
 
-// constants
-import { tableSizePlaceholders } from "@/constants/game"
+// config
+import { tableSizePlaceholders } from "@/config/game-settings"
 
 // icons
 import { ImagePlus, Loader2 } from "lucide-react"

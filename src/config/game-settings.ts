@@ -1,8 +1,18 @@
 // prisma
 import type { GameMode, GameType, TableSize } from "@prisma/client"
+import type { LucideIcon } from "lucide-react"
 
 // icons
-import { Dice4, Dice5, Dice6, Gamepad2, Sword, Swords, UserRound, UsersRound, type LucideIcon } from "lucide-react"
+import {
+  Dice4,
+  Dice5,
+  Dice6,
+  Gamepad2,
+  Sword,
+  Swords,
+  UserRound,
+  UsersRound
+} from "lucide-react"
 
 type GamePlaceholderMap<K extends GameType | GameMode | TableSize, O extends Object = {}> = Record<K, {
   key: K
@@ -10,7 +20,7 @@ type GamePlaceholderMap<K extends GameType | GameMode | TableSize, O extends Obj
   Icon: LucideIcon
 } & O>
 
-export const gameTypePlaceholders: GamePlaceholderMap<GameType> = {
+export const gameTypePlaceholders = {
   CASUAL: {
     key: "CASUAL",
     label: "Casual",
@@ -21,9 +31,9 @@ export const gameTypePlaceholders: GamePlaceholderMap<GameType> = {
     label: "Competitive",
     Icon: Sword
   }
-} as const
+} satisfies GamePlaceholderMap<GameType>
 
-export const gameModePlaceholders: GamePlaceholderMap<GameMode> = {
+export const gameModePlaceholders = {
   SINGLE: {
     key: "SINGLE",
     label: "Single",
@@ -39,9 +49,9 @@ export const gameModePlaceholders: GamePlaceholderMap<GameMode> = {
     label: "Co-Op",
     Icon: UsersRound
   }
-} as const
+} satisfies GamePlaceholderMap<GameMode>
 
-export const tableSizePlaceholders: GamePlaceholderMap<TableSize, { size: string }> = {
+export const tableSizePlaceholders = {
   SMALL: {
     key: "SMALL",
     label: "Small",
@@ -60,23 +70,16 @@ export const tableSizePlaceholders: GamePlaceholderMap<TableSize, { size: string
     size: "36 cards",
     Icon: Dice6
   }
-} as const
+} satisfies GamePlaceholderMap<TableSize, { size: string }>
 
-export const tableSizeMap: Record<TableSize, number> = {
+export const tableSizeMap = {
   SMALL: 16,
   MEDIUM: 24,
   LARGE: 32
-} as const
+} satisfies Record<TableSize, number>
 
 /**
  * Multiplier to calculate the amount of the "free flips"
  * in 'Competitive - Single or Co-Op' sessions.
  */
 export const freeFlipsMultiplier = 0.75
-
-/**
- * Note: These image placeholders is used only for testing purposes.
- * In the future, there will be an option for users to upload
- * their custom image sets for memory card placeholders.
- */
-export const baseCardUrl = "https://picsum.photos/id"

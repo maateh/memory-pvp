@@ -3,8 +3,8 @@ import type { TableSize } from "@prisma/client"
 import type { FileRouterInputKey } from "@uploadthing/shared"
 import type { UploadRouter } from "@/server/uploadthing/core"
 
-// constants
-import { tableSizeMap } from "@/constants/game"
+// config
+import { tableSizeMap } from "@/config/game-settings"
 
 /** `uploadthing` endpoints based on table size */
 export const collectionSizeEndpointMap: Record<TableSize, keyof UploadRouter> = {
