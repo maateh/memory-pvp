@@ -2,7 +2,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { selectPlayerAsActive } from "@/server/actions/player"
+import { selectPlayerAsActive } from "@/server/actions/player-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"

@@ -1,7 +1,7 @@
 import { useAction } from "next-safe-action/hooks"
 
 // actions
-import { storeSession } from "@/server/actions/session"
+import { storeSession } from "@/server/actions/session-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"

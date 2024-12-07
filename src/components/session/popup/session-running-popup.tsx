@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // actions
-import { getActiveSession } from "@/server/actions/session"
+import { getActiveSession } from "@/server/actions/session-action"
 
 // utils
 import { getRendererSessionStats } from "@/lib/utils/stats"

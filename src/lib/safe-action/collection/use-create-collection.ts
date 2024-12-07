@@ -6,7 +6,7 @@ import type { UseFormReturn } from "react-hook-form"
 import type { CollectionFormValues } from "@/components/collection/form/collection-form"
 
 // actions
-import { createCollection } from "@/server/actions/collection"
+import { createCollection } from "@/server/actions/collection-action"
 
 // config
 import { collectionSizeEndpointMap } from "@/config/collection-settings"

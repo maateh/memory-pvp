@@ -2,7 +2,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { updatePlayer } from "@/server/actions/player"
+import { updatePlayer } from "@/server/actions/player-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"

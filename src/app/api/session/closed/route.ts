@@ -1,5 +1,5 @@
 // actions
-import { saveSession } from "@/server/actions/session"
+import { saveSession } from "@/server/actions/session-action"
 
 export async function POST(req: Request) {
   try {

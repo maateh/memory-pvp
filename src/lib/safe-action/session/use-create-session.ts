@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
-import { createSession } from "@/server/actions/session"
+import { createSession } from "@/server/actions/session-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"

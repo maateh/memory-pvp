@@ -2,7 +2,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { finishSession } from "@/server/actions/session"
+import { finishSession } from "@/server/actions/session-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"

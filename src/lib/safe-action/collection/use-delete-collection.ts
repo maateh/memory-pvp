@@ -3,7 +3,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { deleteCollection } from "@/server/actions/collection"
+import { deleteCollection } from "@/server/actions/collection-action"
 
 // utils
 import { handleServerError } from "@/lib/utils/error"
