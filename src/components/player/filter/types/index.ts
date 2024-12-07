@@ -1,11 +1,12 @@
-import type { PlayerProfile } from "@prisma/client"
+import type { z } from "zod"
+import type { playerFilterSchema, playerSortSchema } from "@/lib/validations/player-schema"
 
 /* Filter types */
-export type PlayerFilterFields = Pick<PlayerProfile, 'tag'>
+export type PlayerFilterFields = Required<z.infer<typeof playerFilterSchema>>
 
 export type PlayerFilter = Filter<PlayerFilterFields>
 
 /* Sort types */
-export type PlayerSortFields = Pick<PlayerProfile, 'tag' | 'createdAt'>
+export type PlayerSortFields = Required<z.infer<typeof playerSortSchema>>
 
 export type PlayerSort = Sort<PlayerSortFields>

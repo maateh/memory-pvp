@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 // server
-import { getPlayers } from "@/server/db/player"
+import { getPlayers } from "@/server/db/queries/player-query"
 
 // icons
 import { Spade } from "lucide-react"
@@ -26,7 +26,7 @@ import FooterUser from "./footer-user"
 import FooterTheme from "./footer-theme"
 
 const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  const players = await getPlayers({}, true)
+  const players = await getPlayers({ withAvatar: true })
 
   return (
     <Sidebar collapsible="icon" {...props}>

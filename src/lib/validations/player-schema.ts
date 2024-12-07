@@ -1,11 +1,11 @@
 import { z } from "zod"
 
-/** Base schemas */
+/* Base schemas */
 export const playerTagSchema = z.string()
   .min(4, { message: 'Too short.' })
   .max(16, { message: 'Too long.' })
 
-export const playerColorSchema = z.string()
+const playerColorSchema = z.string()
   .length(7, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
   .regex(/^#/, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
 
@@ -32,6 +32,7 @@ export const clientPlayerSchema = z.object({
 export const playerFilterSchema = clientPlayerSchema.omit({
   stats: true,
   imageUrl: true,
+  createdAt: true,
   updatedAt: true
 }).partial().optional().default({})
 
@@ -40,14 +41,9 @@ export const playerSortSchema = z.object({
   tag: sortKeys,
   createdAt: sortKeys
   // TODO: extend with stats?
-}).optional().default({})
+}).partial().optional().default({})
 
-export const getPlayersSchema = z.object({
-  filter: playerFilterSchema.optional(),
-  sort: playerSortSchema.optional()
-}).optional().default({})
-
-/** Forms / API validations */
+/* Form / API validations */
 export const createPlayerSchema = z.object({
   tag: playerTagSchema,
   color: playerColorSchema

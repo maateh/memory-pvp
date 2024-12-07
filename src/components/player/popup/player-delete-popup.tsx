@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // server
-import { getPlayer } from "@/server/db/player"
+import { getPlayer } from "@/server/db/queries/player-query"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/utils/stats"
@@ -47,7 +47,7 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
 
         {renderer === 'router' && (
           <Suspense fallback={<PlayerDeletePopupSkeleton />}>
-            <Await promise={getPlayer({ tag: playerTag })}>
+            <Await promise={getPlayer({ filter: { tag: playerTag } })}>
               {(player) => player ? (
                 <PlayerDeletePopupContent player={player} />
               ) : (

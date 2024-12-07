@@ -1,5 +1,5 @@
 // server
-import { getPlayer } from "@/server/db/player"
+import { getPlayer } from "@/server/db/queries/player-query"
 
 // icons
 import { Gamepad2 } from "lucide-react"
@@ -20,7 +20,7 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import { CardItem, Warning } from "@/components/shared"
 
 const PlayerProfilesWidgetCard = async () => {
-  const activePlayer = await getPlayer({ isActive: true })
+  const activePlayer = await getPlayer({ filter: { isActive: true } })
 
   return (
     <WidgetCard

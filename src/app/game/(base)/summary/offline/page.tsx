@@ -2,7 +2,7 @@ import dynamic from "next/dynamic"
 
 // server
 import { signedIn } from "@/server/db/signed-in"
-import { getPlayers } from "@/server/db/player"
+import { getPlayers } from "@/server/db/queries/player-query"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

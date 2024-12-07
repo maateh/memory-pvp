@@ -4,7 +4,7 @@ import type { GameMode, GameType, TableSize } from "@prisma/client"
 // server
 import { db } from "@/server/db"
 import { signedIn } from "@/server/db/signed-in"
-import { getPlayers } from "@/server/db/player"
+import { getPlayers } from "@/server/db/queries/player-query"
 import { getRandomCollection } from "@/server/db/queries/collection-query"
 
 // helpers
@@ -29,7 +29,7 @@ type BaseGameSetupPageProps = {
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
-  const players = await getPlayers({}, true)
+  const players = await getPlayers({ withAvatar: true })
 
   let clientCollection: ClientCardCollection | null = null
   if (searchParams.collection) {

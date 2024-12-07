@@ -1,9 +1,9 @@
 // types
 import type { z } from "zod"
-import type { getPlayersSchema } from "@/lib/validations/player-schema"
+import type { playerFilterSchema, playerSortSchema } from "@/lib/validations/player-schema"
 
 // prisma
-import type { PlayerProfile, Prisma } from "@prisma/client"
+import type { Prisma } from "@prisma/client"
 
 // server
 import { db } from "@/server/db"
@@ -25,14 +25,14 @@ import { parseSchemaToClientPlayer } from "@/lib/utils/parser/player-parser"
  * 
  * @returns {Promise<ClientPlayer | null>} - The player's profile with the associated avatar (optional), or `null` if no match is found.
  */
-export async function getPlayer(
-  filter: Pick<Partial<PlayerProfile>, 'id' | 'tag' | 'isActive'>,
-  withAvatar: boolean = false
-): Promise<ClientPlayer | null> {
+export async function getPlayer({ filter, withAvatar = false }: Partial<{
+  filter: z.infer<typeof playerFilterSchema>
+  withAvatar: boolean
+}>): Promise<ClientPlayer | null> {
   const user = await signedIn()
   if (!user) return null
 
-  /** Optionally includes user avatar */
+  /* Optionally includes user avatar */
   let include: Prisma.PlayerProfileInclude | null = null
   if (withAvatar) {
     include = {
@@ -68,16 +68,15 @@ export async function getPlayer(
  * 
  * @returns {Promise<ClientPlayer[]>} - A list of player profiles associated with the user.
  */
-export async function getPlayers(
-  filterInput: z.infer<typeof getPlayersSchema> = {},
-  withAvatar: boolean = false
-): Promise<ClientPlayer[]> {
-  const { filter, sort } = filterInput
-
+export async function getPlayers({ filter, sort, withAvatar = false }: Partial<{
+  filter: z.infer<typeof playerFilterSchema>
+  sort: z.infer<typeof playerSortSchema>
+  withAvatar: boolean
+}> = {}): Promise<ClientPlayer[]> {
   const user = await signedIn()
   if (!user) return []
 
-  /** Optionally includes user avatar */
+  /* Optionally includes user avatar */
   let include: Prisma.PlayerProfileInclude | null = null
   if (withAvatar) {
     include = {
