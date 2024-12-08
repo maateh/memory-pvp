@@ -58,6 +58,7 @@ export function paginationWrapper<T>(data: T[], total: number, params: Paginatio
 type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
   filter: Filter<T>
   sort: Sort<T>
+  pagination: PaginationParams
 }
 
 /**
@@ -77,21 +78,23 @@ export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue
 ): ParseFilterParamsReturn<T> {
   const keys = Array.from(params.keys())
 
-  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc')
-  .reduce((filter, key) => {
-    let value: string | boolean | null = params.get(key)
+  /* Filter parser */
+  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc' && key !== 'page' && key !== 'limit')
+    .reduce((filter, key) => {
+      let value: string | boolean | null = params.get(key)
 
-    /* Parses `true` and `false` string values to boolean */
-    if (value === 'true' || value === 'false') {
-      value = value === 'true'
-    }
+      /* Parses `true` and `false` string values to boolean */
+      if (value === 'true' || value === 'false') {
+        value = value === 'true'
+      }
 
-    return {
-      ...filter,
-      [key]: value
-    }
-  }, {} as Filter<T>)
+      return {
+        ...filter,
+        [key]: value
+      }
+    }, {} as Filter<T>)
   
+  /* Sort parser */
   const sortAscValue = params.get('asc')
   const sortDescValue = params.get('desc')
 
@@ -106,7 +109,16 @@ export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue
     sort = { [sortDescValue]: 'desc' } as Sort<T>
   }
 
-  return { filter, sort }
+  /* Pagination parser */
+  const pageValue = params.get('page')
+  const limitValue = params.get('limit')
+
+  const pagination: PaginationParams = {
+    page: pageValue ? parseInt(pageValue) : undefined,
+    limit: limitValue ? parseInt(limitValue) : undefined
+  }
+
+  return { filter, sort, pagination }
 }
 
 /**
