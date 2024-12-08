@@ -23,11 +23,8 @@ type SessionsPageProps = {
 }
 
 const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
-  const params = new URLSearchParams(searchParams)
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
-    filter: SessionFilter
-    sort: SessionSort
-  }
+  const params = new URLSearchParams(searchParams as {})
+  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
 
   return (
     <div className="page-wrapper">
@@ -47,8 +44,8 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
       <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />
 
       <Suspense fallback={<SessionCardListSkeleton />}>
-        <Await promise={getClientSessions({ filter, sort })}>
-          {(sessions) => (
+        <Await promise={getClientSessions({ filter, sort, pagination })}>
+          {({ data: sessions }) => (
             <>
               <div className="block xl:hidden">
                 <SessionCardList sessions={sessions} />

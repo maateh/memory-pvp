@@ -2,7 +2,8 @@ import type { z } from "zod"
 import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
 
 /* Filter types */
-export type SessionFilter = Required<z.infer<typeof sessionFilterSchema>>
+export type SessionFilterFields = Required<z.infer<typeof sessionFilterSchema>>
+export type SessionFilter = Filter<SessionFilterFields>
 
 export type SessionSettingsFilterFields = Pick<SessionFilter, 'type' | 'mode' | 'tableSize'>
 export type SessionSettingsFilter = Filter<SessionSettingsFilterFields>
