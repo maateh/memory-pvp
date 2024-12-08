@@ -1,6 +1,9 @@
 // types
 import type { FilterParamValue } from "@/hooks/use-filter-params"
 
+// config
+import { getFixedPaginationParams } from "@/config/pagination-settings"
+
 /**
  * Selectively picks specified fields from an object.
  * 
@@ -20,6 +23,36 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
     }
   })
   return result
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param param
+ * @returns 
+ */
+export function paginate(params: PaginationParams): { skip: number; take: number } {
+  const { page, limit } = getFixedPaginationParams(params)
+
+  return {
+    skip: (page - 1) * limit,
+    take: limit
+  }
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param param
+ * @returns 
+ */
+export function paginationWrapper<T>(data: T[], total: number, params: PaginationParams): Pagination<T> {
+  const { page, limit } = getFixedPaginationParams(params)
+
+  const totalPage = Math.ceil(total / limit)
+  const nextPage = page < totalPage ? page + 1 : null
+
+  return { data, totalPage, nextPage, ...params }
 }
 
 type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
