@@ -13,16 +13,16 @@ import { parseFilterParams } from "@/lib/util/parser"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardList, SessionCardListSkeleton } from "@/components/session/card"
+import { SessionCardListSkeleton } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { Await } from "@/components/shared"
+import { Await, PaginationHandler } from "@/components/shared"
 import SessionsTable from "./sessions-table"
 
 type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
 }
 
-const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
+const SessionsPage = ({ searchParams }: SessionsPageProps) => {
   const params = new URLSearchParams(searchParams as {})
   const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
 
@@ -45,15 +45,16 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
 
       <Suspense fallback={<SessionCardListSkeleton />}>
         <Await promise={getClientSessions({ filter, sort, pagination })}>
-          {({ data: sessions }) => (
+          {({ data: sessions, ...pagination }) => (
             <>
-              <div className="block xl:hidden">
-                <SessionCardList sessions={sessions} />
-              </div>
+              <SessionsTable sessions={sessions} />
 
-              <div className="hidden xl:block">
-                <SessionsTable sessions={sessions} />
-              </div>
+              <PaginationHandler className="py-3"
+                pathname="/dashboard/sessions"
+                searchParams={searchParams as {}}
+                pagination={pagination}
+                showIndicator
+              />
             </>
           )}
         </Await>

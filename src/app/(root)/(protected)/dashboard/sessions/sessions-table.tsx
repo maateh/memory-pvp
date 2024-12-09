@@ -11,8 +11,11 @@ import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/rea
 // constants
 import { columns } from "./columns"
 
-// components
+// shadcn
 import { DataTable } from "@/components/ui/data-table"
+
+// components
+import { SessionCardList } from "@/components/session/card"
 
 type SessionsTableProps = {
   sessions: ClientGameSession[]
@@ -29,12 +32,20 @@ const SessionsTable = ({ sessions }: SessionsTableProps) => {
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting, columnVisibility
-    }
+    state: { sorting, columnVisibility }
   })
   
-  return <DataTable table={table} />
+  return (
+    <>
+      <div className="block xl:hidden">
+        <SessionCardList sessions={sessions} />
+      </div>
+
+      <div className="hidden xl:block">
+        <DataTable table={table} />
+      </div>
+    </>
+  )
 }
 
 export default SessionsTable
