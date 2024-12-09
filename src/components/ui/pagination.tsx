@@ -62,6 +62,7 @@ const PaginationLink = ({
     <Link className={cn({ "cursor-not-allowed pointer-events-none opacity-50": disabled })}
       aria-disabled={disabled}
       tabIndex={disabled ? -1 : undefined}
+      scroll={false}
       {...props}
     />
   </Button>
