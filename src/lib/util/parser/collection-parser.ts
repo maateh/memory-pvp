@@ -1,7 +1,9 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
-import type { collectionFilterSchema } from "@/lib/schema/param/collection-param"
+
+// schemas
+import { collectionFilterSchema } from "@/lib/schema/param/collection-param"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
@@ -50,14 +52,14 @@ export function parseSchemaToClientCollection(
  * - Constructs a `Prisma.CardCollectionWhereInput` object to match collections based on the given username, name, and table size.
  * - Supports partial matches for the `username` and `name` fields.
  * 
- * @param {Object} filterInput - An input object based on `collectionFilterSchema`, containing filter criteria for collections.
+ * @param {z.infer<typeof collectionFilterSchema>} filterInput - An input object based on `collectionFilterSchema`, containing filter criteria for collections.
  * 
  * @returns {Prisma.CardCollectionWhereInput} - A Prisma filter object for querying card collections by username, name, and table size.
  */
 export function parseCollectionFilter(
   filterInput: z.infer<typeof collectionFilterSchema>
 ): Prisma.CardCollectionWhereInput {
-  const { username, name, tableSize } = filterInput
+  const { username, name, tableSize } = collectionFilterSchema.parse(filterInput)
 
   return {
     user: {
