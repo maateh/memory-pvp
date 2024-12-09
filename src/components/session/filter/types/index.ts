@@ -5,10 +5,10 @@ import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/
 export type SessionFilterFields = Required<z.infer<typeof sessionFilterSchema>>
 export type SessionFilter = Filter<SessionFilterFields>
 
-export type SessionSettingsFilterFields = Pick<SessionFilter, 'type' | 'mode' | 'tableSize'>
+export type SessionSettingsFilterFields = Pick<SessionFilterFields, 'type' | 'mode' | 'tableSize'>
 export type SessionSettingsFilter = Filter<SessionSettingsFilterFields>
 
-export type SessionStatusFilterFields = Pick<SessionFilter, 'status'>
+export type SessionStatusFilterFields = Pick<SessionFilterFields, 'status'>
 export type SessionStatusFilter = Filter<SessionStatusFilterFields>
 
 /* Sort types */
