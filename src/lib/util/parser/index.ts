@@ -50,9 +50,9 @@ export function paginationWrapper<T>(data: T[], total: number, params: Paginatio
   const { page, limit } = getFixedPaginationParams(params)
 
   const totalPage = Math.ceil(total / limit)
-  const nextPage = page < totalPage ? page + 1 : null
+  const hasNextPage = page < totalPage
 
-  return { data, totalPage, nextPage, ...params }
+  return { data, totalPage, hasNextPage, page, limit }
 }
 
 type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {

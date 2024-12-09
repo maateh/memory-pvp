@@ -53,11 +53,13 @@ declare global {
     limit: number
   }>
 
-  declare type Pagination<T> = PaginationParams & {
+  declare type Pagination<T> = Required<PaginationParams> & {
     data: T[]
     totalPage: number
-    nextPage?: number | null
+    hasNextPage: boolean
   }
+
+  declare type PaginationWithoutData = Omit<Pagination<unknown>, 'data'>
 
   /* Statistic types */
   declare type RendererStat = {
