@@ -1,5 +1,6 @@
 export { default as Await } from "./await"
 export { default as RedirectFallback } from "./redirect-fallback"
+export { default as PaginationHandler } from "./pagination-handler"
 export { default as ThemeToggle, ThemeToggleSkeleton } from "./theme-toggle"
 export { StatisticBadge, StatisticItem, StatisticList } from "./statistics"
 export { default as Warning } from "./warning"
