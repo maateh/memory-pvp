@@ -10,11 +10,8 @@ import { signedIn } from "@/server/action/user-action"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
-import {
-  paginate,
-  paginationWrapper,
-  parseSortToOrderBy
-} from "@/lib/util/parser"
+import { parseSortToOrderBy } from "@/lib/util/parser"
+import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
 import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parser/session-parser"
 
 /**

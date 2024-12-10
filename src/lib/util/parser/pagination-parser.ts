@@ -1,3 +1,36 @@
+// config
+import { getFixedPaginationParams } from "@/config/pagination-settings"
+
+/**
+ * TODO: write doc
+ * 
+ * @param param
+ * @returns 
+ */
+export function paginate(params: PaginationParams): { skip: number; take: number } {
+  const { page, limit } = getFixedPaginationParams(params)
+
+  return {
+    skip: (page - 1) * limit,
+    take: limit
+  }
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param param
+ * @returns 
+ */
+export function paginationWrapper<T>(data: T[], total: number, params: PaginationParams): Pagination<T> {
+  const { page, limit } = getFixedPaginationParams(params)
+
+  const totalPage = Math.ceil(total / limit)
+  const hasNextPage = page < totalPage
+
+  return { data, totalPage, hasNextPage, page, limit }
+}
+
 /**
  * TODO: write doc
  * Note: Pagination handler logic generated with v0.
