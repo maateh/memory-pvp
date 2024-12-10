@@ -16,9 +16,9 @@ import CollectionActions from "./collection-actions"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
   {
-    id: "Uploader",
+    id: "Owner",
     accessorKey: "user",
-    header: "Uploader",
+    header: "Owner",
     enableHiding: true,
     cell({ getValue }) {
       const user = getValue<ClientCardCollection['user']>()
@@ -34,13 +34,13 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
   },
   {
-    id: "Collection",
+    id: "Collection name",
     accessorKey: "name",
     enableHiding: false,
     header() {
       return (
         <DataTableColumnSortingHeader
-          header="Collection"
+          header="Collection name"
           sortValueKey="name"
         />
       )

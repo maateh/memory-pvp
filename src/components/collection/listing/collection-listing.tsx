@@ -30,7 +30,7 @@ type CollectionListingProps = {
 const CollectionListing = ({ collections, metadata, imageSize }: CollectionListingProps) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    "Uploaded by": metadata.type === "listing",
+    "Owner": metadata.type === "listing",
     "Updated at": false
   })
 
