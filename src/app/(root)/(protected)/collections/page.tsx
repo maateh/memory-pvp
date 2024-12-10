@@ -22,8 +22,13 @@ import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection/explorer"
-import { CollectionNameFilter, CollectionSizeFilter, CollectionUserToggleFilter } from "@/components/collection/filter"
+import { CollectionExplorerSkeleton } from "@/components/collection/explorer"
+import {
+  CollectionNameFilter,
+  CollectionSizeFilter,
+  CollectionUserToggleFilter
+} from "@/components/collection/filter"
+import { CollectionListing } from "@/components/collection/listing"
 import { Await, SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
@@ -41,12 +46,16 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <SortDropdownButton options={collectionSortOptions} />
+            <SortDropdownButton className="xl:hidden"
+              options={collectionSortOptions}
+            />
+
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />
           </div>
         </div>
 
+        {/* TODO: redesign + replace with button */}
         <Link className={cn(buttonVariants({
           className: "ml-auto gap-x-3 rounded-2xl font-medium tracking-wide",
           variant: "secondary",
@@ -64,9 +73,16 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
 
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
+      {/* TODO: redesign skeleton fallback */}
       <Suspense fallback={<CollectionExplorerSkeleton />}>
         <Await promise={getCollections({ filter, sort })}>
-          {(collections) => <CollectionExplorer collections={collections} />}
+          {(collections) => (
+            <CollectionListing
+              collections={collections}
+              metadata={{ type: "listing" }}
+              imageSize={38}
+            />
+          )}
         </Await>
       </Suspense>
     </>
