@@ -9,7 +9,7 @@ import { parseFilterParams } from "@/lib/util/parser"
 
 // components
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"
-import CollectionsManageTable from "./collections-manage-table"
+import { CollectionListing } from "@/components/collection/listing"
 
 type CollectionsManagePageProps = {
   searchParams: CollectionSort
@@ -26,7 +26,10 @@ const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProp
       <CollectionUploadWidgetCard className="w-full h-max max-w-xl mx-auto col-span-9 xl:order-2 xl:col-span-4 2xl:col-span-3" />
 
       <div className="w-full col-span-9 xl:col-span-5 2xl:col-span-6">
-        <CollectionsManageTable collections={userCollections} />
+        <CollectionListing
+          collections={userCollections}
+          metadata={{ type: "manage" }}
+        />
       </div>
     </div>
   )

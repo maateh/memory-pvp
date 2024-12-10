@@ -2,33 +2,42 @@ import { formatDistance } from "date-fns"
 
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-
-// icons
-import { EllipsisVertical } from "lucide-react"
+import type { CollectionListingMetadata } from "./collection-listing"
 
 // shadcn
-import { Button } from "@/components/ui/button"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
+import { UserAvatar } from "@/components/user"
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
-import CollectionActionsDropdown from "./collection-actions-dropdown"
+import CollectionActions from "./collection-actions"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
   {
-    id: "Name",
+    id: "Uploader",
+    accessorKey: "user",
+    header: "Uploader",
+    enableHiding: true,
+    cell({ getValue }) {
+      const user = getValue<ClientCardCollection['user']>()
+
+      return <UserAvatar user={user} />
+    },
+  },
+  {
+    id: "Collection",
     accessorKey: "name",
     enableHiding: false,
     header() {
       return (
         <DataTableColumnSortingHeader
-          header="Name"
+          header="Collection"
           sortValueKey="name"
         />
       )
     },
     cell({ getValue }) {
-      const name = getValue() as ClientCardCollection['name']
+      const name = getValue<ClientCardCollection['name']>()
 
       return (
         <span className="max-sm:break-all">
@@ -43,7 +52,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header: "Description",
     enableHiding: true,
     cell({ getValue }) {
-      const description = getValue() as ClientCardCollection['description']
+      const description = getValue<ClientCardCollection['description']>()
 
       return (
         <span className="break-all">
@@ -58,7 +67,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header: "Card images",
     enableHiding: true,
     cell({ getValue }) {
-      const cards = getValue() as ClientCardCollection['cards']
+      const cards = getValue<ClientCardCollection['cards']>()
 
       return (
         <CollectionPreviewList className="pl-1.5 justify-start" dense>
@@ -87,7 +96,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
       )
     },
     cell({ getValue }) {
-      const date = getValue() as ClientCardCollection['createdAt']
+      const date = getValue<ClientCardCollection['createdAt']>()
       const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
 
       return <div>{formattedDate}</div>
@@ -106,7 +115,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
       )
     },
     cell({ getValue }) {
-      const date = getValue() as ClientCardCollection['updatedAt']
+      const date = getValue<ClientCardCollection['updatedAt']>()
       const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
 
       return <div>{formattedDate}</div>
@@ -118,19 +127,13 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header({ table }) {
       return <DataTableColumnToggle table={table} />
     },
-    cell({ row }) {
-      const collection = row.original
-
+    cell({ row, table }) {
       return (
-        <CollectionActionsDropdown collection={collection}>
-          <Button className="p-1.5"
-            variant="ghost"
-            size="icon"
-          >
-            <EllipsisVertical className="size-4 sm:size-5" />
-          </Button>
-        </CollectionActionsDropdown>
+        <CollectionActions
+          collection={row.original}
+          metadata={table.options.meta as CollectionListingMetadata}
+        />
       )
-    },
+    }
   }
 ]
