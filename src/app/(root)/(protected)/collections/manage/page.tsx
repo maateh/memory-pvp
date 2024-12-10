@@ -23,12 +23,13 @@ const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProp
 
   return (
     <div className="grid grid-cols-9 gap-x-8 gap-y-16">
-      <CollectionUploadWidgetCard className="w-full h-max max-w-xl mx-auto col-span-9 xl:order-2 xl:col-span-4 2xl:col-span-3" />
+      <CollectionUploadWidgetCard className="w-full h-max max-w-2xl mx-auto col-span-9 xl:order-2 xl:col-span-4 2xl:col-span-3" />
 
       <div className="w-full col-span-9 xl:col-span-5 2xl:col-span-6">
         <CollectionListing
           collections={userCollections}
           metadata={{ type: "manage" }}
+          imageSize={32}
         />
       </div>
     </div>

@@ -48,7 +48,7 @@ const CollectionQuickSetupLink = forwardRef<
         /* Note: Close popup first */
         onClick={pathname === '/collections/explorer' ? router.back : undefined}
       >
-        <ImagePlay className="size-4 sm:size-[1.325rem]"
+        <ImagePlay className="size-5 sm:size-[1.325rem]"
           strokeWidth={2.5}
         />
       </Link>

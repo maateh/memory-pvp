@@ -44,19 +44,19 @@ const CollectionCard = ({
 }: CollectionCardProps) => {
   return (
     <Card className={cn("h-full max-w-xl mx-auto bg-primary/95", className)} {...props}>
-      <CardHeader className="pb-0 flex-row justify-between items-center">
+      <CardHeader className="pb-0 flex-row justify-between items-center gap-x-4">
         <div className="space-y-1">
           <div className="flex items-center gap-x-3">
             <Separator className="w-2 h-5 bg-accent rounded-full sm:h-6"
               orientation="vertical"
             />
 
-            <CardTitle className="mt-1 text-xl sm:text-xl font-heading tracking-wide text-start break-all">
+            <CardTitle className="mt-1 text-lg sm:text-xl font-heading tracking-wide text-start line-clamp-1">
               {collection.name}
             </CardTitle>
           </div>
 
-          <CardDescription className="w-fit font-extralight text-sm text-start break-all">
+          <CardDescription className="w-fit font-extralight text-sm text-start line-clamp-2">
             {collection.description}
           </CardDescription>
         </div>

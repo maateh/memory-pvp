@@ -80,7 +80,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
             <CollectionListing
               collections={collections}
               metadata={{ type: "listing" }}
-              imageSize={38}
+              imageSize={36}
             />
           )}
         </Await>

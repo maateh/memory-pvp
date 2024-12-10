@@ -64,7 +64,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
       const description = getValue<ClientCardCollection['description']>()
 
       return (
-        <span className="text-xs text-muted-foreground break-all">
+        <span className="text-xs text-muted-foreground break-all line-clamp-3">
           {description}
         </span>
       )

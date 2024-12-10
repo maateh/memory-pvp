@@ -11,11 +11,17 @@ import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/rea
 // constants
 import { columns } from "./table-columns"
 
+// utils
+import { cn } from "@/lib/util"
+
 // shadcn
 import { DataTable } from "@/components/ui/data-table"
 
 // components
 import { CollectionCard } from "@/components/collection/listing"
+
+// hooks
+import { useSidebar } from "@/components/ui/sidebar"
 
 type CollectionListingMetadata = {
   type: "listing" | "manage"
@@ -28,6 +34,8 @@ type CollectionListingProps = {
 }
 
 const CollectionListing = ({ collections, metadata, imageSize }: CollectionListingProps) => {
+  const { open: sidebarOpen } = useSidebar()
+
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     "Owner": metadata.type === "listing",
@@ -52,9 +60,12 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
   
   return (
     <>
-      <ul className="grid xl:hidden gap-x-10 gap-y-8 ">
+      <ul className={cn("flex flex-wrap gap-8 md:hidden lg:hidden xl:hidden", {
+        "md:flex 2xl:hidden": sidebarOpen,
+        "xl:flex": sidebarOpen && metadata.type === "manage",
+      })}>
         {collections.map((collection) => (
-          <li key={collection.id}>
+          <li className="flex-1 min-w-52 md:min-w-80" key={collection.id}>
             <CollectionCard
               collection={collection}
               metadata={metadata}
@@ -66,7 +77,10 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
         ))}
       </ul>
 
-      <div className="hidden xl:block">
+      <div className={cn("hidden md:block lg:block xl:block", {
+        "md:hidden 2xl:block": sidebarOpen,
+        "xl:hidden": sidebarOpen && metadata.type === "manage",
+      })}>
         <DataTable table={table} />
       </div>
     </>
