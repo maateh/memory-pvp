@@ -14,6 +14,9 @@ import { columns } from "./table-columns"
 // shadcn
 import { DataTable } from "@/components/ui/data-table"
 
+// components
+import CollectionCard from "./collection-card"
+
 type CollectionListingMetadata = {
   type: "listing" | "manage"
 }
@@ -21,9 +24,10 @@ type CollectionListingMetadata = {
 type CollectionListingProps = {
   collections: ClientCardCollection[]
   metadata: CollectionListingMetadata
+  imageSize?: number
 }
 
-const CollectionListing = ({ collections, metadata }: CollectionListingProps) => {
+const CollectionListing = ({ collections, metadata, imageSize }: CollectionListingProps) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     "Uploaded by": metadata.type === "listing",
@@ -48,9 +52,19 @@ const CollectionListing = ({ collections, metadata }: CollectionListingProps) =>
   
   return (
     <>
-      <div className="block xl:hidden">
-        {/* TODO: add `Collection(Explorer)Card` -> needs to be refactored (!) */}
-      </div>
+      <ul className="grid xl:hidden gap-x-10 gap-y-8 ">
+        {collections.map((collection) => (
+          <li key={collection.id}>
+            <CollectionCard
+              collection={collection}
+              metadata={metadata}
+              imageSize={imageSize}
+              key={collection.id}
+              showActions
+            />
+          </li>
+        ))}
+      </ul>
 
       <div className="hidden xl:block">
         <DataTable table={table} />
