@@ -3,11 +3,14 @@ import { formatDistance } from "date-fns"
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
 
+// config
+import { tableSizePlaceholders } from "@/config/game-settings"
+
 // utils
 import { cn } from "@/lib/util"
 
 // icons
-import { CalendarCheck } from "lucide-react"
+import { CalendarCheck, Dices } from "lucide-react"
 
 // shadcn
 import {
@@ -20,11 +23,12 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { UserAvatar } from "@/components/user"
 import {
   CollectionPreviewItem,
   CollectionPreviewList
 } from "@/components/collection/collection-preview-listing"
+import { SessionInfoBadge } from "@/components/session"
+import { UserAvatar } from "@/components/user"
 import CollectionActions from "./collection-actions"
 
 type CollectionCardProps = {
@@ -55,6 +59,13 @@ const CollectionCard = ({
               {collection.name}
             </CardTitle>
           </div>
+
+          <SessionInfoBadge className="px-2 py-0 text-xs"
+            iconProps={{ className: "size-3.5" }}
+            Icon={Dices}
+            label={tableSizePlaceholders[collection.tableSize].label}
+            subLabel={tableSizePlaceholders[collection.tableSize].size}
+          />
 
           <CardDescription className="w-fit font-extralight text-sm text-start line-clamp-2">
             {collection.description}

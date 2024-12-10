@@ -39,6 +39,7 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     "Owner": metadata.type === "listing",
+    "Created at": metadata.type === "manage",
     "Updated at": false
   })
 

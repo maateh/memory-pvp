@@ -2,15 +2,19 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { CollectionListingMetadata } from "./collection-listing"
 
+// config
+import { tableSizePlaceholders } from "@/config/game-settings"
+
 // icons
-import { CalendarCheck, CalendarCheck2 } from "lucide-react"
+import { CalendarCheck, CalendarCheck2, Dices } from "lucide-react"
 
 // shadcn
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
-import { UserAvatar } from "@/components/user"
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
+import { SessionInfoBadge } from "@/components/session"
+import { UserAvatar } from "@/components/user"
 import { CustomDate } from "@/components/shared"
 import CollectionActions from "./collection-actions"
 
@@ -52,6 +56,30 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
         <span className="max-sm:break-all">
           {name}
         </span>
+      )
+    },
+  },
+  {
+    id: "Size",
+    accessorKey: "tableSize",
+    header() {
+      return (
+        <DataTableColumnSortingHeader
+          header="Size"
+          sortValueKey="tableSize"
+        />
+      )
+    },
+    cell({ getValue }) {
+      const tableSize = getValue<ClientCardCollection['tableSize']>()
+
+      return (
+        <SessionInfoBadge className="px-2 py-0 text-xs"
+          iconProps={{ className: "size-3.5" }}
+          Icon={Dices}
+          label={tableSizePlaceholders[tableSize].label}
+          subLabel={tableSizePlaceholders[tableSize].size}
+        />
       )
     },
   },
