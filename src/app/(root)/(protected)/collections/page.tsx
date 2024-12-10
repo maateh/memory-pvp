@@ -19,9 +19,9 @@ import { ImageUp } from "lucide-react"
 // shadcn
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { TableSkeleton } from "@/components/ui/table"
 
 // components
-import { CollectionExplorerSkeleton } from "@/components/collection/explorer"
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
@@ -67,8 +67,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
 
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
-      {/* TODO: redesign skeleton fallback */}
-      <Suspense fallback={<CollectionExplorerSkeleton />}>
+      <Suspense fallback={<TableSkeleton rows={7} />}>
         <Await promise={getCollections({ filter, sort })}>
           {(collections) => (
             <CollectionListing
