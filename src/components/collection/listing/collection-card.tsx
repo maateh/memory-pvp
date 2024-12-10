@@ -83,9 +83,9 @@ const CollectionCard = ({
 
         <Separator className="my-2.5 bg-border/20" />
 
-        <div className="flex justify-between items-center gap-x-4">
+        <div className="flex flex-wrap justify-between items-center gap-x-6 gap-y-4">
           <div className="flex items-center gap-x-1.5">
-            <CalendarCheck className="size-3.5 shrink-0 text-muted-foreground" />
+            <CalendarCheck className="size-3.5 shrink-0 text-foreground/80" />
             <p className="text-muted-foreground text-xs font-light">
               Uploaded <span className="text-foreground/80 font-normal tracking-wide">
                 {formatDistance(collection.createdAt, Date.now(), { addSuffix: true })}
@@ -93,7 +93,7 @@ const CollectionCard = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-x-2">
+          <div className="ml-auto flex items-center gap-x-2">
             <p className="text-muted-foreground text-xs">
               Uploaded by <span className="text-foreground/80 font-medium tracking-wide">
                 {collection.user.username}

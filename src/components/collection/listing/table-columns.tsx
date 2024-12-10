@@ -1,8 +1,9 @@
-import { formatDistance } from "date-fns"
-
 // types
 import type { ColumnDef } from "@tanstack/react-table"
 import type { CollectionListingMetadata } from "./collection-listing"
+
+// icons
+import { CalendarCheck, CalendarCheck2 } from "lucide-react"
 
 // shadcn
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
@@ -10,6 +11,7 @@ import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/component
 // components
 import { UserAvatar } from "@/components/user"
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
+import { CustomDate } from "@/components/shared"
 import CollectionActions from "./collection-actions"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
@@ -21,7 +23,14 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     cell({ getValue }) {
       const user = getValue<ClientCardCollection['user']>()
 
-      return <UserAvatar user={user} />
+      return (
+        <div className="flex items-center gap-x-2">
+          <UserAvatar user={user} />
+          <span className="text-muted-foreground text-sm font-medium">
+            {user.username}
+          </span>
+        </div>
+      )
     },
   },
   {
@@ -55,7 +64,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
       const description = getValue<ClientCardCollection['description']>()
 
       return (
-        <span className="break-all">
+        <span className="text-xs text-muted-foreground break-all">
           {description}
         </span>
       )
@@ -97,9 +106,13 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
     cell({ getValue }) {
       const date = getValue<ClientCardCollection['createdAt']>()
-      const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
 
-      return <div>{formattedDate}</div>
+      return (
+        <CustomDate
+          date={date}
+          Icon={CalendarCheck}
+        />
+      )
     },
   },
   {
@@ -116,9 +129,13 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     },
     cell({ getValue }) {
       const date = getValue<ClientCardCollection['updatedAt']>()
-      const formattedDate = formatDistance(date, Date.now(), { addSuffix: true })
 
-      return <div>{formattedDate}</div>
+      return (
+        <CustomDate
+          date={date}
+          Icon={CalendarCheck2}
+        />
+      )
     },
   },
   {
