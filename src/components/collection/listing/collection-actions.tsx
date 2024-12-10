@@ -3,8 +3,11 @@ import Link from "next/link"
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
 
+// utils
+import { cn } from "@/lib/util"
+
 // icons
-import { Edit3, EllipsisVertical, ImageMinus, StepForward } from "lucide-react"
+import { Edit3, EllipsisVertical, ImageMinus } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -15,36 +18,41 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
+// components
+import { CollectionQuickSetupLink } from "@/components/collection"
+
 type CollectionActionsProps = {
   collection: ClientCardCollection
   metadata: CollectionListingMetadata
-}
+} & React.ComponentProps<typeof Button>
 
-const CollectionActions = ({ collection, metadata }: CollectionActionsProps) => {
+const CollectionActions = ({
+  collection,
+  metadata,
+  className,
+  variant = "ghost",
+  size = "icon",
+  ...props
+}: CollectionActionsProps) => {
   if (metadata.type === "listing") {
     return (
-      <Button className="p-1.5"
-        tooltip="Start game with this collection"
-        variant="ghost"
-        size="icon"
-        asChild
-      >
-        <Link href="/game/single">
-          <StepForward className="size-4 sm:size-5 shrink-0 text-accent"
-            strokeWidth={2.5}
-          />
-        </Link>
-      </Button>
+      <CollectionQuickSetupLink className={cn("text-foreground/75 hover:text-foreground/85", className)}
+        collectionId={collection.id}
+        variant={variant}
+        size={size}
+        {...props}
+      />
     )
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="p-1.5"
+        <Button className={cn("p-1.5", className)}
           tooltip="Show actions"
-          variant="ghost"
-          size="icon"
+          variant={variant}
+          size={size}
+          {...props}
         >
           <EllipsisVertical className="size-4 sm:size-5" />
         </Button>

@@ -31,7 +31,7 @@ const CollectionQuickSetupLink = forwardRef<
   const pathname = usePathname()
 
   return (
-    <Button className={cn("text-accent-foreground bg-accent/90 hover:bg-background dark:hover:bg-foreground/85 transition duration-200 hover:scale-110", className)}
+    <Button className={cn("transition duration-200 hover:scale-110", className)}
       tooltip={{
         children: "Start game with this collection",
         side: "bottom",
@@ -48,7 +48,9 @@ const CollectionQuickSetupLink = forwardRef<
         /* Note: Close popup first */
         onClick={pathname === '/collections/explorer' ? router.back : undefined}
       >
-        <ImagePlay className="size-4 sm:size-5" />
+        <ImagePlay className="size-4 sm:size-[1.325rem]"
+          strokeWidth={2.5}
+        />
       </Link>
     </Button>
   )
