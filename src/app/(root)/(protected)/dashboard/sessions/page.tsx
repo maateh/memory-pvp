@@ -53,7 +53,6 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
                 pathname="/dashboard/sessions"
                 searchParams={searchParams as {}}
                 pagination={pagination}
-                showIndicator
               />
             </>
           )}

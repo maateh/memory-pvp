@@ -1,14 +1,16 @@
 // utils
-import { cn } from "@/lib/util"
+import { getPageNumbers } from "@/lib/util/parser/pagination-parser"
 
 // shadcn
 import { Badge } from "@/components/ui/badge"
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationFirst,
   PaginationItem,
   PaginationLast,
+  PaginationLink,
   PaginationNext,
   PaginationPrevious
 } from "@/components/ui/pagination"
@@ -17,69 +19,69 @@ type PaginationHandlerProps = {
   pathname: string
   searchParams?: Record<string, string>
   pagination: PaginationWithoutData
-  showIndicator?: boolean
-  indicatorProps?: React.ComponentProps<typeof Badge>
 } & React.ComponentProps<typeof Pagination>
 
 const PaginationHandler = ({
   pathname,
   searchParams = {},
   pagination,
-  showIndicator = false,
-  indicatorProps,
   ...props
 }: PaginationHandlerProps) => {
+  const buildHref = (pageNumber: number | string) => {
+    const query = new URLSearchParams(searchParams)
+    query.set('page', pageNumber.toString())
+    return `${pathname}?${query.toString()}`
+  }
+
   return (
     <Pagination {...props}>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationFirst
-            href={{
-              pathname,
-              query: { ...searchParams, page: 1 }
-            }}
-            disabled={pagination.page <= 1}
-          />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationPrevious
-            href={{
-              pathname,
-              query: { ...searchParams, page: pagination.page - 1 }
-            }}
-            disabled={pagination.page <= 1}
-          />
-        </PaginationItem>
-
-        {showIndicator && (
-          <PaginationItem className="px-1">
-            <Badge {...indicatorProps}
-              className={cn("px-2.5 py-1 font-semibold rounded-lg", indicatorProps?.className)}
-              variant={indicatorProps?.variant || "muted"}
-            >
-              Page {pagination.page}/{pagination.totalPage}
-            </Badge>
+      <PaginationContent className="flex-wrap justify-center gap-2">
+        <div className="flex items-center gap-x-1.5">
+          <PaginationItem>
+            <PaginationFirst
+              href={buildHref(1)}
+              disabled={pagination.page <= 1}
+            />
           </PaginationItem>
-        )}
+          <PaginationItem>
+            <PaginationPrevious
+              href={buildHref(pagination.page - 1)}
+              disabled={pagination.page <= 1}
+            />
+          </PaginationItem>
+        </div>
 
-        <PaginationItem>
-          <PaginationNext
-            href={{
-              pathname,
-              query: { ...searchParams, page: pagination.page + 1 }
-            }}
-            disabled={!pagination.hasNextPage}
-          />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLast
-            href={{
-              pathname,
-              query: { ...searchParams, page: pagination.totalPage }
-            }}
-            disabled={!pagination.hasNextPage}
-          />
-        </PaginationItem>
+        <div className="flex flex-wrap items-center justify-center gap-x-1.5">
+          {getPageNumbers(pagination).map((pageNumber, index) => (
+            <PaginationItem key={index}>
+              {pageNumber === '...' ? (
+                <PaginationEllipsis />
+              ) : (
+                <PaginationLink
+                  href={buildHref(pageNumber)}
+                  isActive={pagination.page === pageNumber}
+                >
+                  {pageNumber}
+                </PaginationLink>
+              )}
+            </PaginationItem>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-x-1.5">
+          <PaginationItem>
+            <PaginationNext
+              href={buildHref(pagination.page + 1)}
+              disabled={!pagination.hasNextPage}
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLast
+              href={buildHref(pagination.totalPage)}
+              disabled={!pagination.hasNextPage}
+            />
+          </PaginationItem>
+        </div>
       </PaginationContent>
     </Pagination>
   )
