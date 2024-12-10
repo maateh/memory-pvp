@@ -15,7 +15,7 @@ import { columns } from "./table-columns"
 import { DataTable } from "@/components/ui/data-table"
 
 // components
-import CollectionCard from "./collection-card"
+import { CollectionCard } from "@/components/collection/listing"
 
 type CollectionListingMetadata = {
   type: "listing" | "manage"
