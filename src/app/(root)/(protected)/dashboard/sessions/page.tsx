@@ -6,6 +6,9 @@ import type { SessionFilter, SessionSort } from "@/components/session/filter/typ
 // server
 import { getClientSessions } from "@/server/db/query/session-query"
 
+// config
+import { sessionSortOptions } from "@/components/session/filter/constants"
+
 // utils
 import { parseFilterParams } from "@/lib/util/parser"
 
@@ -15,7 +18,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import { SessionListing, SessionListingSkeleton } from "@/components/session/listing"
-import { Await, PaginationHandler } from "@/components/shared"
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
@@ -37,7 +40,10 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
         </div>
 
         <SessionStatusFilter filterKey="history" />
-        <SessionSettingsFilter filterKey="history" />
+        <div className="flex items-center gap-x-2">
+          <SortDropdownButton options={sessionSortOptions} />
+          <SessionSettingsFilter filterKey="history" />
+        </div>
       </div>
 
       <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />

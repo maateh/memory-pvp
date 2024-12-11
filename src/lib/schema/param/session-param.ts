@@ -18,6 +18,7 @@ export const sessionFilterSchema = clientSessionSchema
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const sessionSortSchema = z.object({
+  slug: sortKeys,
   type: sortKeys,
   mode: sortKeys,
   tableSize: sortKeys,
