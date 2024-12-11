@@ -1,30 +1,34 @@
 // utils
 import { cn } from "@/lib/util"
 
+// icons
+import { UserX2 } from "lucide-react"
+
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { CardItem, Warning } from "@/components/shared"
+import { CardItem, NoListingData } from "@/components/shared"
 import PlayerProfileCard from "./player-profile-card"
 
-type PlayerProfileCardListProps = {
+type PlayerProfileListingProps = {
   players: ClientPlayer[]
 } & React.ComponentProps<"ul">
 
-const PlayerProfileCardList = ({ players, className, ...props }: PlayerProfileCardListProps) => {
+const PlayerProfileListing = ({ players, className, ...props }: PlayerProfileListingProps) => {
   if (players.length === 0) {
     return (
-      <CardItem className="py-3.5 justify-center">
-        <Warning message="No players found." />
-      </CardItem>
+      <NoListingData
+        Icon={UserX2}
+        message="No player found."
+      />
     )
   }
 
   return (
-    <ul className={cn("space-y-2", className)} {...props}>
+    <ul className={cn("space-y-3", className)} {...props}>
       {players.map((player) => (
-        <CardItem key={player.tag}>
+        <CardItem className="rounded-2xl" key={player.tag}>
           <PlayerProfileCard key={player.tag} player={player} />
         </CardItem>
       ))}
@@ -32,10 +36,10 @@ const PlayerProfileCardList = ({ players, className, ...props }: PlayerProfileCa
   )
 }
 
-const PlayerProfileCardListSkeleton = ({ className, ...props }: React.ComponentProps<"ul">) => {
+const PlayerProfileListingSkeleton = ({ className, ...props }: React.ComponentProps<"ul">) => {
   return (
     <ul className={cn("space-y-3 px-2 sm:px-4", className)} {...props}>
-      {Array(3).fill('').map((_, index) => (
+      {Array.from({ length: 3 }).fill('').map((_, index) => (
         <CardItem className="p-0" key={index}>
           <Skeleton className="w-full h-28 bg-muted/75 rounded-xl" />
         </CardItem>
@@ -44,5 +48,5 @@ const PlayerProfileCardListSkeleton = ({ className, ...props }: React.ComponentP
   )
 }
 
-export default PlayerProfileCardList
-export { PlayerProfileCardListSkeleton }
+export default PlayerProfileListing
+export { PlayerProfileListingSkeleton }
