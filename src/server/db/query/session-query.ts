@@ -1,6 +1,9 @@
 // types
 import type { z } from "zod"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
+import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
+
+// schema
+import { sessionSortSchema } from "@/lib/schema/param/session-param"
 
 // server
 import { db } from "@/server/db"
@@ -41,7 +44,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
   const sessions = await db.gameSession.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort),
+    orderBy: parseSortToOrderBy(sort, sessionSortSchema, { closedAt: "desc" }),
     include: sessionSchemaFields
   })
 

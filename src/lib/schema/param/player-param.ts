@@ -2,6 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { clientPlayerSchema } from "@/lib/schema/player-schema"
+import { sortKeys } from "@/lib/schema"
 
 /* Query filters */
 export const playerFilterSchema = clientPlayerSchema.omit({
@@ -9,11 +10,10 @@ export const playerFilterSchema = clientPlayerSchema.omit({
   imageUrl: true,
   createdAt: true,
   updatedAt: true
-}).partial().optional().default({})
+}).partial()
 
-const sortKeys = z.enum(['asc', 'desc']).optional()
 export const playerSortSchema = z.object({
   tag: sortKeys,
   createdAt: sortKeys
   // TODO: extend with stats?
-}).partial().optional().default({})
+}).partial()

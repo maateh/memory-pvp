@@ -60,7 +60,7 @@ function SortDropdownButton<T extends { [key in keyof T]: string | number | bool
   
                 <p className="font-light dark:font-extralight">
                   Sort by <span className={cn("lowercase text-accent font-medium", { "text-destructive": sortKey === 'desc' })}>
-                    {sortValueKey ? options[sortValueKey].label : 'default'}
+                    {sortValueKey ? options[sortValueKey]?.label : 'default'}
                   </span>
                 </p>
               </div>

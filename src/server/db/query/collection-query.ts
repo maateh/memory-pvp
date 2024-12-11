@@ -1,7 +1,10 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
-import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/param/collection-param"
+import type { collectionFilterSchema } from "@/lib/schema/param/collection-param"
+
+// schema
+import { collectionSortSchema } from "@/lib/schema/param/collection-param"
 
 // server
 import { db } from "@/server/db"
@@ -11,8 +14,8 @@ import { signedIn } from "@/server/action/user-action"
 import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // utils
-import { parseSortToOrderBy } from "@/lib/util/parser"
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
+import { parseSortToOrderBy } from "@/lib/util/parser"
 
 /**
  * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.
@@ -73,7 +76,7 @@ export async function getCollections({ filter, sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort),
+    orderBy: parseSortToOrderBy(sort, collectionSortSchema, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true
@@ -106,7 +109,7 @@ export async function getUserCollections({ sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where: { userId: user.id },
-    orderBy: parseSortToOrderBy(sort),
+    orderBy: parseSortToOrderBy(sort, collectionSortSchema, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true

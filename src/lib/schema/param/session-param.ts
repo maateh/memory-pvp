@@ -2,6 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { clientSessionSchema } from "@/lib/schema/session-schema"
+import { sortKeys } from "@/lib/schema"
 
 /* Query filters */
 export const sessionFilterSchema = clientSessionSchema
@@ -14,9 +15,8 @@ export const sessionFilterSchema = clientSessionSchema
     startedAt: true,
     continuedAt: true,
     closedAt: true
-  }).partial().optional().default({})
+  }).partial()
 
-const sortKeys = z.enum(['asc', 'desc']).optional()
 export const sessionSortSchema = z.object({
   slug: sortKeys,
   type: sortKeys,
@@ -26,4 +26,4 @@ export const sessionSortSchema = z.object({
   startedAt: sortKeys,
   continuedAt: sortKeys,
   closedAt: sortKeys
-}).partial().optional().default({})
+}).partial()
