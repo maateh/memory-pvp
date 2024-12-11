@@ -2,7 +2,6 @@
 import { getPageNumbers } from "@/lib/util/parser/pagination-parser"
 
 // shadcn
-import { Badge } from "@/components/ui/badge"
 import {
   Pagination,
   PaginationContent,
