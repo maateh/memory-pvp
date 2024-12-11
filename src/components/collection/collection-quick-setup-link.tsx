@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { forwardRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
@@ -30,6 +29,21 @@ const CollectionQuickSetupLink = forwardRef<
   const router = useRouter()
   const pathname = usePathname()
 
+  const handleNavigate = () => {
+    const url = `/game/setup?collection=${collectionId}`
+
+    /*
+     * Note: In this case, a full page reload is needed to make sure closing the popup.
+     * Yeah, this is a disgusting solution, but I couldn't find a better approach.
+     */
+    if (pathname === "/collections/explorer") {
+      router.back()
+      window.location.replace(url)
+    }
+
+    router.push(url)
+  }
+
   return (
     <Button className={cn("transition duration-200 hover:scale-110", className)}
       tooltip={{
@@ -39,19 +53,13 @@ const CollectionQuickSetupLink = forwardRef<
       }}
       variant={variant}
       size={size}
+      onClick={handleNavigate}
       ref={ref}
-      asChild
       {...props}
     >
-      <Link
-        href={`/game/setup?collection=${collectionId}`}
-        /* Note: Close popup first */
-        onClick={pathname === '/collections/explorer' ? router.back : undefined}
-      >
-        <ImagePlay className="size-5 sm:size-[1.325rem]"
-          strokeWidth={2.5}
-        />
-      </Link>
+      <ImagePlay className="size-5 sm:size-[1.325rem]"
+        strokeWidth={2.5}
+      />
     </Button>
   )
 })
