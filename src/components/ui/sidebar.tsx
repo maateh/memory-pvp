@@ -33,6 +33,16 @@ const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
+const CONTEXT_FALLBACK: SidebarContext = {
+  state: "collapsed",
+  open: false,
+  setOpen: () => {},
+  openMobile: false,
+  setOpenMobile: () => {},
+  isMobile: false,
+  toggleSidebar: () => {}
+}
+
 type SidebarContext = {
   state: "expanded" | "collapsed"
   open: boolean
@@ -45,9 +55,15 @@ type SidebarContext = {
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
 
-function useSidebar() {
+function useSidebar({ provideFallback = false }: { provideFallback?: boolean } = {}) {
   const context = React.useContext(SidebarContext)
+
   if (!context) {
+    /* Note: makes `useSidebar` callable outside of a `SidebarProvider` without throwing an error. */
+    if (provideFallback) {
+      return CONTEXT_FALLBACK
+    }
+
     throw new Error("useSidebar must be used within a SidebarProvider.")
   }
 

@@ -34,7 +34,7 @@ type CollectionListingProps = {
 }
 
 const CollectionListing = ({ collections, metadata, imageSize }: CollectionListingProps) => {
-  const { open: sidebarOpen } = useSidebar()
+  const { open: sidebarOpen } = useSidebar({ provideFallback: true })
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -63,7 +63,7 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
     <>
       <ul className={cn("flex flex-wrap gap-8 md:hidden lg:hidden xl:hidden", {
         "md:flex 2xl:hidden": sidebarOpen,
-        "xl:flex": sidebarOpen && metadata.type === "manage",
+        "xl:flex": sidebarOpen && metadata.type === "manage"
       })}>
         {collections.map((collection) => (
           <li className="flex-1 min-w-52 md:min-w-80" key={collection.id}>
@@ -80,7 +80,7 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
 
       <div className={cn("hidden md:block lg:block xl:block", {
         "md:hidden 2xl:block": sidebarOpen,
-        "xl:hidden": sidebarOpen && metadata.type === "manage",
+        "xl:hidden": sidebarOpen && metadata.type === "manage"
       })}>
         <DataTable table={table} />
       </div>
