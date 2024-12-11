@@ -20,7 +20,7 @@ import { TableSkeleton } from "@/components/ui/table"
 
 // components
 import { SessionCard, SessionCardSkeleton } from "@/components/session/listing"
-import { CardItem } from "@/components/shared"
+import { CardItem, NoListingData } from "@/components/shared"
 
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
@@ -46,8 +46,11 @@ const SessionListing = ({ sessions }: SessionListingProps) => {
   })
 
   if (sessions.length === 0) {
-    // TODO: create a generally reusable `NoData` component
-    return "No data to display."
+    return (
+      <NoListingData className="mt-44"
+        message="No session found."
+      />
+    )
   }
   
   return (

@@ -14,11 +14,15 @@ import { columns } from "./table-columns"
 // utils
 import { cn } from "@/lib/util"
 
+// icons
+import { ImageOff } from "lucide-react"
+
 // shadcn
 import { DataTable } from "@/components/ui/data-table"
 
 // components
 import { CollectionCard } from "@/components/collection/listing"
+import { NoListingData } from "@/components/shared"
 
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
@@ -55,8 +59,12 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
   })
 
   if (collections.length === 0) {
-    // TODO: create a generally reusable `NoData` component
-    return "No data to display."
+    return (
+      <NoListingData className="mt-44"
+        Icon={ImageOff}
+        message="No collection found."
+      />
+    )
   }
   
   return (
