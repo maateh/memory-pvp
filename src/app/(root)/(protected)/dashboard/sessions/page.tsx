@@ -13,10 +13,9 @@ import { parseFilterParams } from "@/lib/util/parser"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardListSkeleton } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
+import { SessionListing, SessionListingSkeleton } from "@/components/session/listing"
 import { Await, PaginationHandler } from "@/components/shared"
-import SessionsTable from "./sessions-table"
 
 type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
@@ -43,13 +42,13 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
 
       <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />
 
-      <Suspense fallback={<SessionCardListSkeleton />}>
+      <Suspense fallback={<SessionListingSkeleton />}>
         <Await promise={getClientSessions({ filter, sort, pagination })}>
           {({ data: sessions, ...pagination }) => (
             <>
-              <SessionsTable sessions={sessions} />
+              <SessionListing sessions={sessions} />
 
-              <PaginationHandler className="py-3"
+              <PaginationHandler className="py-5"
                 pathname="/dashboard/sessions"
                 searchParams={searchParams as {}}
                 pagination={pagination}
