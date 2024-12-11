@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { CollectionExplorerCard } from "@/components/collection/explorer"
+import { CollectionCard } from "@/components/collection/listing"
 import {
   Popup,
   PopupContent,
@@ -45,9 +45,10 @@ const CollectionDeletePopup = ({ renderer, collection, collectionId, ...props }:
 
         {renderer === "trigger" && (
           <div className="px-4">
-            <CollectionExplorerCard className="h-fit w-full max-w-sm sm:max-w-lg"
-              imageSize={32}
+            <CollectionCard className="h-fit w-full max-w-sm sm:max-w-lg"
               collection={collection}
+              metadata={{ type: "listing" }}
+              imageSize={28}
             />
 
             <Separator className="bg-border/15 md:mt-2" />
@@ -63,9 +64,10 @@ const CollectionDeletePopup = ({ renderer, collection, collectionId, ...props }:
             <Await promise={getCollection({ id: collectionId })}>
               {(collection) => collection ? (
                 <div className="px-4">
-                  <CollectionExplorerCard className="h-fit w-full max-w-sm sm:max-w-lg"
-                    imageSize={32}
+                  <CollectionCard className="h-fit w-full max-w-sm sm:max-w-lg"
                     collection={collection}
+                    metadata={{ type: "listing" }}
+                    imageSize={28}
                     key={collection.id}
                   />
 

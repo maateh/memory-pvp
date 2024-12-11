@@ -12,22 +12,27 @@ import { collectionSortOptions } from "@/components/collection/filter/constants"
 // shadcn
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { TableSkeleton } from "@/components/ui/table"
 
 // components
-import { CollectionExplorer, CollectionExplorerSkeleton } from "@/components/collection/explorer"
 import { CollectionNameFilter, CollectionSizeFilter, CollectionUserToggleFilter } from "@/components/collection/filter"
-import { Popup, PopupContent, PopupHeader, PopupTrigger } from "@/components/popup"
-import { Await, SortDropdownButton } from "@/components/shared"
+import { CollectionListing } from "@/components/collection/listing"
+import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type CollectionExplorerPopupProps = ({
   renderer: "trigger"
   collections: ClientCardCollection[]
   filter?: never
   sort?: never
+  pagination?: never
+  searchParams?: never
 } | {
   renderer: "router"
   filter: CollectionFilter
   sort: CollectionSort
+  pagination: PaginationParams
+  searchParams?: Record<string, string>
   collections?: never
 }) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
 
@@ -36,6 +41,8 @@ const CollectionExplorerPopup = ({
   collections,
   filter,
   sort,
+  pagination,
+  searchParams,
   ...props
 }: CollectionExplorerPopupProps) => {
   return (
@@ -54,36 +61,53 @@ const CollectionExplorerPopup = ({
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
             <SortDropdownButton options={collectionSortOptions} />
             <CollectionSizeFilter />
-            <CollectionUserToggleFilter includeByDefault />
+            <CollectionUserToggleFilter />
           </div>
         </div>
 
         <Separator className="w-11/12 mx-auto my-5 md:my-2.5 bg-border/25" />
 
-        <ScrollArea className="h-auto px-3 mb-4 overflow-y-auto md:pl-0 md:max-h-96">
-          {renderer === "trigger" && (
-            <CollectionExplorer className="md:grid-cols-2 2xl:grid-cols-2"
-              cardProps={{ imageSize: 36 }}
-              collections={collections}
-            />
-          )}
+        {renderer === "trigger" && (
+          <CollectionExplorerPopupContent collections={collections} />
+        )}
 
-          {renderer === "router" && (
-            <Suspense fallback={<CollectionExplorerSkeleton />}>
-            <Await promise={getCollections({ filter, sort })}>
-              {(collections) => (
-                <CollectionExplorer className="md:grid-cols-2 2xl:grid-cols-2"
-                  cardProps={{ imageSize: 36 }}
-                  collections={collections}
-                />
+        {renderer === "router" && (
+          <Suspense fallback={<TableSkeleton rows={4} />}>
+            <Await promise={getCollections({
+              filter, sort,
+              pagination: { ...pagination, limit: 6 }
+            })}>
+              {({ data: collections, ...pagination }) => (
+                <>
+                  <CollectionExplorerPopupContent collections={collections} />
+
+                  {pagination.totalPage > 1 && (
+                    <PopupFooter className="pt-0">
+                      <PaginationHandler
+                        pathname="/collections/explorer"
+                        searchParams={searchParams as {}}
+                        pagination={pagination}
+                      />
+                    </PopupFooter>
+                  )}
+                </>
               )}
             </Await>
           </Suspense>
-          )}
-        </ScrollArea>
+        )}
       </PopupContent>
     </Popup>
   )
 }
+
+const CollectionExplorerPopupContent = ({ collections }: { collections: ClientCardCollection[] }) => (
+  <ScrollArea className="h-auto px-3 mb-4 overflow-y-auto md:pl-0 md:max-h-96">
+    <CollectionListing
+      collections={collections}
+      metadata={{ type: "listing" }}
+      imageSize={36}
+    />
+  </ScrollArea>
+)
 
 export default CollectionExplorerPopup

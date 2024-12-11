@@ -6,6 +6,9 @@ import type { SessionFilter, SessionSort } from "@/components/session/filter/typ
 // server
 import { getClientSessions } from "@/server/db/query/session-query"
 
+// config
+import { sessionSortOptions } from "@/components/session/filter/constants"
+
 // utils
 import { parseFilterParams } from "@/lib/util/parser"
 
@@ -13,21 +16,17 @@ import { parseFilterParams } from "@/lib/util/parser"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { SessionCardList, SessionCardListSkeleton } from "@/components/session/card"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { Await } from "@/components/shared"
-import SessionsTable from "./sessions-table"
+import { SessionListing, SessionListingSkeleton } from "@/components/session/listing"
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
 }
 
-const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
-  const params = new URLSearchParams(searchParams)
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
-    filter: SessionFilter
-    sort: SessionSort
-  }
+const SessionsPage = ({ searchParams }: SessionsPageProps) => {
+  const params = new URLSearchParams(searchParams as {})
+  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
 
   return (
     <div className="page-wrapper">
@@ -41,22 +40,25 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
         </div>
 
         <SessionStatusFilter filterKey="history" />
-        <SessionSettingsFilter filterKey="history" />
+        <div className="flex items-center gap-x-2">
+          <SortDropdownButton options={sessionSortOptions} />
+          <SessionSettingsFilter filterKey="history" />
+        </div>
       </div>
 
       <Separator className="h-0.5 my-5 bg-border/30 rounded-full" />
 
-      <Suspense fallback={<SessionCardListSkeleton />}>
-        <Await promise={getClientSessions({ filter, sort })}>
-          {(sessions) => (
+      <Suspense fallback={<SessionListingSkeleton />}>
+        <Await promise={getClientSessions({ filter, sort, pagination })}>
+          {({ data: sessions, ...pagination }) => (
             <>
-              <div className="block xl:hidden">
-                <SessionCardList sessions={sessions} />
-              </div>
+              <SessionListing sessions={sessions} />
 
-              <div className="hidden xl:block">
-                <SessionsTable sessions={sessions} />
-              </div>
+              <PaginationHandler className="py-5"
+                pathname="/dashboard/sessions"
+                searchParams={searchParams as {}}
+                pagination={pagination}
+              />
             </>
           )}
         </Await>

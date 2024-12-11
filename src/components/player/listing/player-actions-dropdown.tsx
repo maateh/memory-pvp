@@ -1,11 +1,12 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 // icons
-import { Loader2, PenOff, ShieldPlus, Trash2, UserPen } from "lucide-react"
+import { EllipsisVertical, Loader2, PenOff, ShieldPlus, Trash2, UserPen } from "lucide-react"
 
 // shadcn
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,16 +22,21 @@ type PlayerActionsDropdownProps = {
   player: ClientPlayer
   editing: boolean
   toggleEditing: () => void
-} & React.ComponentProps<typeof DropdownMenuTrigger>
+}
 
-const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: PlayerActionsDropdownProps) => {
-  const router = useRouter()
-
+const PlayerActionsDropdown = ({ player, editing, toggleEditing }: PlayerActionsDropdownProps) => {
   const { execute: executeSelectAsActive, status: selectAsActiveStatus } = useSelectAsActiveAction()
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild {...props} />
+      <DropdownMenuTrigger asChild>
+        <Button className="p-1 sm:p-1.5"
+          variant="ghost"
+          size="icon"
+        >
+          <EllipsisVertical className="size-3.5 sm:size-4 shrink-0" />
+        </Button>
+      </DropdownMenuTrigger>
 
       <DropdownMenuContent>
         <DropdownMenuItem
@@ -67,12 +73,11 @@ const PlayerActionsDropdown = ({ player, editing, toggleEditing, ...props }: Pla
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => router.push(`/players/${player.tag}/delete`)}
-            >
-              <Trash2 className="size-4 shrink-0" />
-              <span>Delete player</span>
+            <DropdownMenuItem variant="destructive" asChild>
+              <Link href={`/players/${player.tag}/delete`}>
+                <Trash2 className="size-4 shrink-0" />
+                <span>Delete player</span>
+              </Link>
             </DropdownMenuItem>
           </>
         )}

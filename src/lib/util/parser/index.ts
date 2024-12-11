@@ -1,4 +1,5 @@
 // types
+import type { z } from "zod"
 import type { FilterParamValue } from "@/hooks/use-filter-params"
 
 /**
@@ -25,6 +26,7 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
 type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
   filter: Filter<T>
   sort: Sort<T>
+  pagination: PaginationParams
 }
 
 /**
@@ -44,21 +46,23 @@ export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue
 ): ParseFilterParamsReturn<T> {
   const keys = Array.from(params.keys())
 
-  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc')
-  .reduce((filter, key) => {
-    let value: string | boolean | null = params.get(key)
+  /* Filter parser */
+  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc' && key !== 'page' && key !== 'limit')
+    .reduce((filter, key) => {
+      let value: string | boolean | null = params.get(key)
 
-    /* Parses `true` and `false` string values to boolean */
-    if (value === 'true' || value === 'false') {
-      value = value === 'true'
-    }
+      /* Parses `true` and `false` string values to boolean */
+      if (value === 'true' || value === 'false') {
+        value = value === 'true'
+      }
 
-    return {
-      ...filter,
-      [key]: value
-    }
-  }, {} as Filter<T>)
+      return {
+        ...filter,
+        [key]: value
+      }
+    }, {} as Filter<T>)
   
+  /* Sort parser */
   const sortAscValue = params.get('asc')
   const sortDescValue = params.get('desc')
 
@@ -73,25 +77,42 @@ export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue
     sort = { [sortDescValue]: 'desc' } as Sort<T>
   }
 
-  return { filter, sort }
+  /* Pagination parser */
+  const pageValue = params.get('page')
+  const limitValue = params.get('limit')
+
+  const pagination: PaginationParams = {
+    page: pageValue ? parseInt(pageValue) : undefined,
+    limit: limitValue ? parseInt(limitValue) : undefined
+  }
+
+  return { filter, sort, pagination }
 }
 
 /**
- * Converts a `sort` object into a single-field `orderBy` object for Prisma queries.
+ * Validates and converts a `sort` object into a single-field `orderBy` object for Prisma queries.
  *
- * This function returns the first defined sorting field in `{ field: direction }` format,
- * or `undefined` if no sorting fields are provided.
- * 
- * @param sort - An object with sorting options, where each key is a field name 
- *               and the value is "asc" or "desc".
- * @returns An object with one sorting field for Prisma's `orderBy`, or `undefined`.
+ * This function validates the `sort` input using the provided Zod schema. If validation passes,
+ * it converts the `sort` object into a single `{ field: direction }` format for Prisma queries,
+ * using the first defined sorting field. If validation fails or the `sort` object is empty,
+ * it returns the fallback value.
+ *
+ * @template T - A record type where keys are field names and values are "asc" or "desc".
+ * @param sortInput - The input object to validate and parse into an `orderBy` object.
+ * @param sortSchema - The Zod schema to validate the `sortInput` object.
+ * @param fallback - A fallback object to return if validation fails or no sorting fields are provided.
+ * @returns {Partial<T> | undefined} An object with one sorting field for Prisma's `orderBy`, or the fallback if validation fails or is empty.
  */
-export function parseSortToOrderBy<T extends { [K in keyof T]: SortKey }>(
-  sort: Partial<T>
+export function parseSortToOrderBy<T extends Record<string, SortKey>>(
+  sortInput: T,
+  sortSchema: z.ZodSchema<T>,
+  fallback?: Partial<T>
 ): Partial<T> | undefined {
-  const entries = Object.entries(sort)
+  const { success, data: sort } = sortSchema.safeParse(sortInput)
+  if (!success) return fallback
 
-  if (entries.length === 0) return undefined
+  const entries = Object.entries(sort)
+  if (entries.length === 0) return fallback
 
   const [valueKey, sortKey] = entries[0]
   return { [valueKey]: sortKey } as Partial<T>

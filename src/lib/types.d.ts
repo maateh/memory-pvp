@@ -47,6 +47,20 @@ declare global {
     [K in keyof T]: SortOption<T>
   }
 
+  /* Pagination types */
+  declare type PaginationParams = Partial<{
+    page: number
+    limit: number
+  }>
+
+  declare type Pagination<T> = Required<PaginationParams> & {
+    data: T[]
+    totalPage: number
+    hasNextPage: boolean
+  }
+
+  declare type PaginationWithoutData = Omit<Pagination<unknown>, 'data'>
+
   /* Statistic types */
   declare type RendererStat = {
     Icon: LucideIcon

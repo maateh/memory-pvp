@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/util"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -105,6 +106,53 @@ const TableCaption = React.forwardRef<
 ))
 TableCaption.displayName = "TableCaption"
 
+type TableSkeletonProps = {
+  rows?: number
+  columns?: number
+  showFooter?: boolean
+}
+
+const TableSkeleton = ({ rows = 5, columns = 4, showFooter = false }: TableSkeletonProps) => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          {Array.from({ length: columns }).map((_, index) => (
+            <TableHead className={cn({ "hidden sm:table-cell": index > 1 })} key={index}>
+              <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {Array.from({ length: rows }).map((_, rowIndex) => (
+          <TableRow key={rowIndex}>
+            {Array.from({ length: columns }).map((_, colIndex) => (
+              <TableCell className={cn({ "hidden sm:table-cell": colIndex > 1 })} key={colIndex}>
+                <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+
+      {showFooter && (
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3} className="sm:hidden">
+              <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+            </TableCell>
+            <TableCell colSpan={columns} className="hidden sm:table-cell">
+              <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      )}
+    </Table>
+  )
+}
+
 export {
   Table,
   TableHeader,
@@ -114,4 +162,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableSkeleton
 }

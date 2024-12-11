@@ -6,8 +6,16 @@ export const collectionSortOptions: SortOptions<CollectionSort> = {
     sortValueKey: 'name',
     label: 'Name'
   },
+  tableSize: {
+    sortValueKey: 'tableSize',
+    label: 'Size'
+  },
   createdAt: {
     sortValueKey: 'createdAt',
     label: 'Created at'
+  },
+  updatedAt: {
+    sortValueKey: 'updatedAt',
+    label: 'Updated at'
   }
 }

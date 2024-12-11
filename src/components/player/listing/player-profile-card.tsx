@@ -14,7 +14,7 @@ import { logError } from "@/lib/util/error"
 import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // icons
-import { CheckCircle2, EllipsisVertical, Hash, Loader2, XCircle } from "lucide-react"
+import { CheckCircle2, Hash, Loader2, XCircle } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -81,7 +81,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
   return (
     <>
-      <div className="flex gap-x-3 items-center">
+      <div className="py-1 flex gap-x-3 items-center">
         <ColorPicker className={cn("border border-border/5 disabled:opacity-100", {
           "bg-foreground/5 border-2 border-border/20": editing
         })}
@@ -95,7 +95,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           />
         </ColorPicker>
 
-        <div className="leading-relaxed">
+        <div className="space-y-1">
           <div className="flex items-center gap-x-2">
             <Separator className="w-1 h-4 rounded-full"
               style={{ backgroundColor: updatedPlayer.color }}
@@ -131,7 +131,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-x-2.5">
+      <div className="ml-2.5 sm:ml-6 flex items-center gap-x-2.5">
         <div className={cn("flex gap-x-1", { "hidden": !editing })}>
           <Button className="p-1"
             tooltip="Save changes"
@@ -162,14 +162,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
           player={player}
           editing={editing}
           toggleEditing={handleToggleEditing}
-        >
-          <Button className="p-1 sm:p-1.5"
-            variant="ghost"
-            size="icon"
-          >
-            <EllipsisVertical className="size-3.5 sm:size-4 shrink-0" />
-          </Button>
-        </PlayerActionsDropdown>
+        />
       </div>
     </>
   )

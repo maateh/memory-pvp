@@ -16,7 +16,7 @@ import { parseFilterParams } from "@/lib/util/parser"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { PlayerProfileCardList, PlayerProfileCardListSkeleton } from "@/components/player/card"
+import { PlayerProfileListing, PlayerProfileListingSkeleton } from "@/components/player/listing"
 import { PlayerTagFilter } from "@/components/player/filter"
 import { PlayerCreateWidgetCard } from "@/components/player/widget"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
@@ -68,9 +68,9 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
 
         <Separator className="my-5 bg-border/20 rounded-full" />
 
-        <Suspense fallback={<PlayerProfileCardListSkeleton />}>
+        <Suspense fallback={<PlayerProfileListingSkeleton />}>
           <Await promise={getPlayers({ filter, sort })}>
-            {(players) => <PlayerProfileCardList players={players} />}
+            {(players) => <PlayerProfileListing players={players} />}
           </Await>
         </Suspense>
       </div>

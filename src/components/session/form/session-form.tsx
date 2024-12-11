@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button"
 
 // components
 import { CardItem, Form } from "@/components/shared"
-import { CollectionExplorerCard } from "@/components/collection/explorer"
+import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
@@ -84,9 +84,10 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
         >
           <Link href={collection ? "/collections/explorer" : "/collections/manage"} scroll={false}>
             {collection ? (
-              <CollectionExplorerCard className="h-fit w-full bg-background/50"
+              <CollectionCard className="h-fit w-full bg-background/50"
+                metadata={{ type: "listing" }}
                 collection={collection}
-                imageSize={28}
+                imageSize={32}
               />
             ) : (
               <CardItem className="justify-center text-center bg-destructive/85 text-destructive-foreground">

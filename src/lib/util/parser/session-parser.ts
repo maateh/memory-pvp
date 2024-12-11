@@ -1,7 +1,9 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
-import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
+
+// schemas
+import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // helpers
 import { pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
@@ -70,7 +72,7 @@ export function parseSchemaToClientSession(
  * - Filters session stats if provided in the input.
  * 
  * @param {string} userId - The ID of the session owner to filter by.
- * @param {Object} filterInput - The filter input that includes optional player and stats filters.
+ * @param {z.infer<typeof sessionFilterSchema>} filterInput - The filter input that includes optional player and stats filters.
  * 
  * @returns {Prisma.GameSessionWhereInput} - A Prisma query input for filtering game sessions.
  */
@@ -78,13 +80,16 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const { playerId, ...filter } = filterInput
+  const where: Prisma.GameSessionWhereInput = { owner: { userId } }
+
+  const { success, data: filter } = sessionFilterSchema.safeParse(filterInput)
+  if (!success) return where
 
   return {
-    owner: { userId },
+    ...where,
     players: {
       some: {
-        id: { equals: playerId }
+        id: { equals: filter.playerId }
       }
     },
     ...filter

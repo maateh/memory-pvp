@@ -1,6 +1,9 @@
 // types
 import type { z } from "zod"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
+import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
+
+// schema
+import { sessionSortSchema } from "@/lib/schema/param/session-param"
 
 // server
 import { db } from "@/server/db"
@@ -10,8 +13,9 @@ import { signedIn } from "@/server/action/user-action"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
-import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parser/session-parser"
 import { parseSortToOrderBy } from "@/lib/util/parser"
+import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
+import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parser/session-parser"
 
 /**
  * Retrieves a list of game sessions for the signed-in user, parsed into `ClientGameSession` instances.
@@ -26,21 +30,26 @@ import { parseSortToOrderBy } from "@/lib/util/parser"
  * @param {Object} input - The filter and sort criteria for retrieving sessions.
  * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
-export async function getClientSessions({ filter, sort }: {
+export async function getClientSessions({ filter, sort, pagination }: {
   filter: z.infer<typeof sessionFilterSchema>
   sort: z.infer<typeof sessionSortSchema>
-  // pagination: z.infer<typeof paginationSchema> TODO: implement
-}): Promise<ClientGameSession[]> {
+  pagination: PaginationParams
+}): Promise<Pagination<ClientGameSession>> {
   const user = await signedIn()
-  if (!user) return []
+  if (!user) return paginationWrapper([], 0, pagination)
 
+  const where = parseSessionFilter(user.id, filter)
+
+  const total = await db.gameSession.count({ where })
   const sessions = await db.gameSession.findMany({
-    where: parseSessionFilter(user.id, filter),
-    orderBy: parseSortToOrderBy(sort),
+    ...paginate(pagination),
+    where,
+    orderBy: parseSortToOrderBy(sort, sessionSortSchema, { closedAt: "desc" }),
     include: sessionSchemaFields
   })
 
-  return sessions.map((session) => parseSchemaToClientSession(session, session.owner.id))
+  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session, session.owner.id))
+  return paginationWrapper(clientSessions, total, pagination)
 }
 
 /**

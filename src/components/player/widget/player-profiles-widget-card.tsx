@@ -8,7 +8,7 @@ import { Gamepad2 } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { PlayerProfileCard } from "@/components/player/card"
+import { PlayerProfileCard } from "@/components/player/listing"
 import {
   WidgetActionWrapper,
   WidgetCard,
