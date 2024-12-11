@@ -80,13 +80,16 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const { playerId, ...filter } = sessionFilterSchema.parse(filterInput)
+  const where: Prisma.GameSessionWhereInput = { owner: { userId } }
+
+  const { success, data: filter } = sessionFilterSchema.safeParse(filterInput)
+  if (!success) return where
 
   return {
-    owner: { userId },
+    ...where,
     players: {
       some: {
-        id: { equals: playerId }
+        id: { equals: filter.playerId }
       }
     },
     ...filter

@@ -59,7 +59,10 @@ export function parseSchemaToClientCollection(
 export function parseCollectionFilter(
   filterInput: z.infer<typeof collectionFilterSchema>
 ): Prisma.CardCollectionWhereInput {
-  const { username, name, tableSize } = collectionFilterSchema.parse(filterInput)
+  const { success, data: filter } = collectionFilterSchema.safeParse(filterInput)
+
+  if (!success) return {}
+  const { username, name, tableSize } = filter
 
   return {
     user: {
