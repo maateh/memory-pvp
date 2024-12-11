@@ -64,8 +64,7 @@ export async function getCollections({ filter, sort, pagination }: {
 }): Promise<Pagination<ClientCardCollection>> {
   const where = parseCollectionFilter(filter)
 
-  // TODO: this is unintuitive, especially for the user.
-  if (!filter.includeUser) {
+  if (filter.excludeUser) {
     const user = await signedIn()
     where.NOT = { userId: user?.id }
   }
@@ -74,9 +73,7 @@ export async function getCollections({ filter, sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort) || {
-      createdAt: 'desc'
-    },
+    orderBy: parseSortToOrderBy(sort),
     include: {
       user: true,
       cards: true
@@ -109,9 +106,7 @@ export async function getUserCollections({ sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where: { userId: user.id },
-    orderBy: parseSortToOrderBy(sort) || {
-      createdAt: 'desc'
-    },
+    orderBy: parseSortToOrderBy(sort),
     include: {
       user: true,
       cards: true

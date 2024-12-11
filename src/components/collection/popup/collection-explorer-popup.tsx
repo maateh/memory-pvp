@@ -61,7 +61,7 @@ const CollectionExplorerPopup = ({
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
             <SortDropdownButton options={collectionSortOptions} />
             <CollectionSizeFilter />
-            <CollectionUserToggleFilter includeByDefault />
+            <CollectionUserToggleFilter />
           </div>
         </div>
 

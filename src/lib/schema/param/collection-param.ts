@@ -6,7 +6,7 @@ export const collectionFilterSchema = z.object({
   username: z.string(),
   name: z.string(),
   tableSize: z.nativeEnum(TableSize),
-  includeUser: z.coerce.boolean().optional()
+  excludeUser: z.coerce.boolean().optional()
 }).partial().optional().default({})
 
 const sortKeys = z.enum(['asc', 'desc']).optional()
