@@ -12,5 +12,7 @@ export const collectionFilterSchema = z.object({
 const sortKeys = z.enum(['asc', 'desc']).optional()
 export const collectionSortSchema = z.object({
   name: sortKeys,
-  createdAt: sortKeys
+  tableSize: sortKeys,
+  createdAt: sortKeys,
+  updatedAt: sortKeys
 }).partial().optional().default({})
