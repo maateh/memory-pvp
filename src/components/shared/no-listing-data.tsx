@@ -19,6 +19,7 @@ type NoListingDataProps = {
   Icon?: LucideIcon
   iconProps?: LucideProps
   message?: string
+  messageProps?: React.ComponentProps<"p">
   clearFilterMessage?: string
   hideClearFilter?: boolean
 } & React.ComponentProps<"div">
@@ -27,6 +28,7 @@ const NoListingData = ({
   Icon = OctagonX,
   iconProps,
   message = "No data found.",
+  messageProps,
   clearFilterMessage = "If you have specified any filter, try clearing it.",
   hideClearFilter = false,
   className,
@@ -42,7 +44,9 @@ const NoListingData = ({
           strokeWidth={iconProps?.strokeWidth || 1.5}
         />
 
-        <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground/80 font-normal">
+        <p {...messageProps}
+          className={cn("text-lg sm:text-xl md:text-2xl text-muted-foreground/80 font-normal", messageProps?.className)}
+        >
           {message}
         </p>
       </div>

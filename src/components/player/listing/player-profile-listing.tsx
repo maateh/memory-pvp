@@ -1,15 +1,12 @@
 // utils
 import { cn } from "@/lib/util"
 
-// icons
-import { UserX2 } from "lucide-react"
-
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
+import { PlayerProfileCard } from "@/components/player/listing"
 import { CardItem, NoListingData } from "@/components/shared"
-import PlayerProfileCard from "./player-profile-card"
 
 type PlayerProfileListingProps = {
   players: ClientPlayer[]
@@ -19,8 +16,10 @@ const PlayerProfileListing = ({ players, className, ...props }: PlayerProfileLis
   if (players.length === 0) {
     return (
       <NoListingData
-        Icon={UserX2}
+        iconProps={{ className: "sm:size-10 md:size-10" }}
+        messageProps={{ className: "md:text-xl" }}
         message="No player found."
+        hideClearFilter
       />
     )
   }
