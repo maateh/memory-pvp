@@ -37,8 +37,8 @@ const NoListingData = ({
   const { clearFilterParams } = useFilterParams()
 
   return (
-    <div className={cn("px-4 space-y-5 place-items-center text-center", className)} {...props}>
-      <div className="space-y-2.5 place-items-center">
+    <div className={cn("px-4 space-y-5 flex flex-col items-center justify-center text-center", className)} {...props}>
+      <div className="space-y-2.5 flex flex-col items-center justify-center">
         <Icon {...iconProps}
           className={cn("size-10 sm:size-12 md:size-14 shrink-0 text-muted-foreground", iconProps?.className)}
           strokeWidth={iconProps?.strokeWidth || 1.5}
@@ -52,7 +52,7 @@ const NoListingData = ({
       </div>
 
       {!hideClearFilter && (
-        <div className="space-y-2 place-items-center">
+        <div className="space-y-2 flex flex-col items-center justify-center">
           <p className="text-sm text-muted-foreground/80 font-light">
             If you have specified any filter, try clearing it.
           </p>
