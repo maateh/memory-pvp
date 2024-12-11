@@ -28,7 +28,7 @@ import {
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
 import { CollectionListing } from "@/components/collection/listing"
-import { Await, SortDropdownButton } from "@/components/shared"
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
   searchParams: CollectionFilter & CollectionSort
@@ -36,7 +36,7 @@ type CollectionsPageProps = {
 
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
   const params = new URLSearchParams(searchParams as {})
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params)
+  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
 
   return (
     <>
@@ -67,14 +67,24 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
 
       <Separator className="w-11/12 my-5 mx-auto bg-border/15" />
 
-      <Suspense fallback={<TableSkeleton rows={7} />}>
-        <Await promise={getCollections({ filter, sort })}>
-          {(collections) => (
-            <CollectionListing
-              collections={collections}
-              metadata={{ type: "listing" }}
-              imageSize={36}
-            />
+      <Suspense fallback={<TableSkeleton columns={6} rows={7} />}>
+        <Await promise={getCollections({ filter, sort, pagination })}>
+          {({ data: collections, ...pagination }) => (
+            <>
+              <CollectionListing
+                collections={collections}
+                metadata={{ type: "listing" }}
+                imageSize={36}
+              />
+
+              {pagination.totalPage > 1 && (
+                <PaginationHandler className="pt-5"
+                  pathname="/collections"
+                  searchParams={searchParams as {}}
+                  pagination={pagination}
+                />
+              )}
+            </>
           )}
         </Await>
       </Suspense>

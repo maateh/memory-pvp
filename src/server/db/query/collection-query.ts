@@ -12,6 +12,7 @@ import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/util
 
 // utils
 import { parseSortToOrderBy } from "@/lib/util/parser"
+import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
 
 /**
  * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.
@@ -54,21 +55,24 @@ export async function getCollection({ id, userProtected = true }: {
  * - Excludes collections created by the signed-in user if `includeUser` is `false`.
  * 
  * @param {Object} input - The input object containing filter, sort, and pagination options.
- * @returns {Promise<ClientCardCollection[]>} - A list of card collections matching the filter and sorting criteria.
+ * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
-export async function getCollections({ filter, sort }: {
+export async function getCollections({ filter, sort, pagination }: {
   filter: z.infer<typeof collectionFilterSchema>
   sort: z.infer<typeof collectionSortSchema>
-  // pagination: z.infer<typeof paginationSchema> TODO: implement
-}): Promise<ClientCardCollection[]> {
+  pagination: PaginationParams
+}): Promise<Pagination<ClientCardCollection>> {
   const where = parseCollectionFilter(filter)
 
+  // TODO: this is unintuitive, especially for the user.
   if (!filter.includeUser) {
     const user = await signedIn()
     where.NOT = { userId: user?.id }
   }
 
+  const total = await db.cardCollection.count({ where })
   const collections = await db.cardCollection.findMany({
+    ...paginate(pagination),
     where,
     orderBy: parseSortToOrderBy(sort) || {
       createdAt: 'desc'
@@ -79,7 +83,8 @@ export async function getCollections({ filter, sort }: {
     }
   })
 
-  return collections.map((collection) => parseSchemaToClientCollection(collection))
+  const clientCollections = collections.map((collection) => parseSchemaToClientCollection(collection))
+  return paginationWrapper(clientCollections, total, pagination)
 }
 
 /**
@@ -91,18 +96,19 @@ export async function getCollections({ filter, sort }: {
  * - Includes user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
  * 
  * @param {z.infer<typeof collectionSortSchema>} [sort={}] - The sorting criteria for ordering collections.
- * @returns {Promise<ClientCardCollection[]>} - An array of parsed collections, or an empty array if no user is signed in.
+ * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
-export async function getUserCollections({ sort }: {
+export async function getUserCollections({ sort, pagination }: {
   sort: z.infer<typeof collectionSortSchema>
-}): Promise<ClientCardCollection[]> {
+  pagination: PaginationParams
+}): Promise<Pagination<ClientCardCollection>> {
   const user = await signedIn()
-  if (!user) return []
+  if (!user) return paginationWrapper([], 0, pagination)
 
+  const total = await db.cardCollection.count({ where: { userId: user.id } })
   const collections = await db.cardCollection.findMany({
-    where: {
-      userId: user.id
-    },
+    ...paginate(pagination),
+    where: { userId: user.id },
     orderBy: parseSortToOrderBy(sort) || {
       createdAt: 'desc'
     },
@@ -112,7 +118,8 @@ export async function getUserCollections({ sort }: {
     }
   })
 
-  return collections.map((collection) => parseSchemaToClientCollection(collection))
+  const clientCollections = collections.map((collection) => parseSchemaToClientCollection(collection))
+  return paginationWrapper(clientCollections, total, pagination)
 }
 
 /**

@@ -13,16 +13,15 @@ type CollectionsExplorerPopupProps = {
 
 const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProps) => {
   const params = new URLSearchParams(searchParams as {})
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
-    filter: CollectionFilter
-    sort: CollectionSort
-  }
+  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
 
   return (
     <CollectionExplorerPopup
       renderer="router"
       filter={filter}
       sort={sort}
+      pagination={pagination}
+      searchParams={searchParams as {}}
     />
   )
 }
