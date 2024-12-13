@@ -1,6 +1,8 @@
+// server
+import { ApiError } from "@/server/_error"
+
 // trpc
 import { TRPCError } from "@trpc/server"
-import { TRPCApiError } from "@/server/trpc/_error"
 import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
@@ -21,7 +23,7 @@ export const playerProfileRouter = createTRPCRouter({
       if (!playerId) {
         throw new TRPCError({
           code: 'CONFLICT',
-          cause: new TRPCApiError({
+          cause: new ApiError({
             key: 'PLAYER_PROFILE_NOT_FOUND',
             message: 'Missing player ID.',
             description: 'Player filter params must include the ID of the player.'

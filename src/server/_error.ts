@@ -12,31 +12,31 @@ export type CAUSE_KEYS =
   'COLLECTION_NOT_FOUND' |
   'COLLECTION_ACCESS_DENIED'
 
-type ActionErrorOpts = {
+type ApiErrorOpts = {
   key: CAUSE_KEYS
   message: string
   description?: string | undefined
 }
 
-export class ActionError {
+export class ApiError {
   public readonly key?: CAUSE_KEYS
   public readonly message: string
   public readonly description?: string | undefined
   public readonly data?: unknown
 
-  public readonly name: 'ActionError'
+  public readonly name: 'ApiError'
 
-  constructor(opts: ActionErrorOpts) {
+  constructor(opts: ApiErrorOpts) {
     this.key = opts.key || 'UNKNOWN'
     this.message = opts.message
     this.description = opts.description
 
-    this.name = 'ActionError'
+    this.name = 'ApiError'
   }
 
-  static throw(error: ActionErrorOpts, message?: string): never {
+  static throw(error: ApiErrorOpts, message?: string): never {
     throw new Error(message, {
-      cause: new ActionError(error)
+      cause: new ApiError(error)
     })
   }
 }

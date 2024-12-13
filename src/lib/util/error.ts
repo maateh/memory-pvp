@@ -3,13 +3,13 @@ import { DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action"
 
 // types
 import type { UploadThingError } from "uploadthing/server"
-import type { ActionError } from "@/server/action/_error"
+import type { ApiError } from "@/server/_error"
 
 export function handleServerError(
-  error: ActionError | UploadThingError<any> | undefined,
+  error: ApiError | UploadThingError<any> | undefined,
   fallbackDescription?: string
 ) {
-  if (error?.name === 'ActionError') {
+  if (error?.name === 'ApiError') {
     toast.error(error.message, { description: error.description })
     return
   }
