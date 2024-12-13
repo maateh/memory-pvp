@@ -1,17 +1,10 @@
 "use client"
 
-import { useMemo, useState } from "react"
-
-// types
-import type { SessionFilter } from "@/components/session/filter/types"
-
-// trpc
-import { trpc } from "@/server/trpc/client"
+import { useState } from "react"
 
 // utils
 import { cn } from "@/lib/util"
 import { logError } from "@/lib/util/error"
-import { getRendererPlayerStats } from "@/lib/util/stats"
 
 // icons
 import { CheckCircle2, Hash, Loader2, XCircle } from "lucide-react"
@@ -20,16 +13,13 @@ import { CheckCircle2, Hash, Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { ColorPicker } from "@/components/input"
-import { StatisticBadge } from "@/components/shared"
-import { PlayerVerified } from "@/components/player"
+import { PlayerStatsRenderer, PlayerVerified } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"
 
 // hooks
-import { useFilterStore } from "@/hooks/store/use-filter-store"
 import { useUpdatePlayerAction } from "@/lib/safe-action/player"
 
 type PlayerProfileCardProps = {
@@ -42,21 +32,6 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
     tag: player.tag,
     color: player.color
   })
-
-  const filter = useFilterStore<SessionFilter>((state) => state.statistics)
-
-  const { data: stats, isFetching: isStatsFetching } = trpc.player.getStats.useQuery({
-    playerFilter: { id: player.id },
-    sessionFilter: filter
-  }, {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false
-  })
-
-  const playerStats = useMemo(() => getRendererPlayerStats({
-    ...player,
-    stats: stats || player.stats
-  }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])
 
   const { executeAsync: executeUpdatePlayer, status: updatePlayerStatus } = useUpdatePlayerAction()
 
@@ -115,19 +90,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             {player.isActive && <PlayerVerified showTooltip />}
           </div>
 
-          <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-            {!isStatsFetching ? Object.values(playerStats).map((stat) => (
-              <li key={stat.key}>
-                <StatisticBadge className="px-1.5 dark:font-light bg-muted/50 text-foreground/80 hover:bg-muted/65 hover:text-foreground/90 rounded-xl"
-                  statistic={stat}
-                />
-              </li>
-            )) : Array(5).fill('').map((_, index) => (
-              <li key={index}>
-                <Skeleton className="h-6 w-20 bg-muted/80 rounded-xl" />
-              </li>
-            ))}
-          </ul>
+          <PlayerStatsRenderer player={player} />
         </div>
       </div>
 
