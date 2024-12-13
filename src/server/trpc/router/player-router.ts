@@ -1,7 +1,7 @@
 // trpc
 import { TRPCError } from "@trpc/server"
-import { TRPCApiError } from "@/trpc/error"
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc"
+import { TRPCApiError } from "@/server/trpc/_error"
+import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
 import { z } from "zod"

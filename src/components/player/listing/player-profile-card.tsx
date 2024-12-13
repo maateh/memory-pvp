@@ -6,7 +6,7 @@ import { useMemo, useState } from "react"
 import type { SessionFilter } from "@/components/session/filter/types"
 
 // trpc
-import { api } from "@/trpc/client"
+import { trpc } from "@/server/trpc/client"
 
 // utils
 import { cn } from "@/lib/util"
@@ -45,7 +45,7 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
 
   const filter = useFilterStore<SessionFilter>((state) => state.statistics)
 
-  const { data: stats, isFetching: isStatsFetching } = api.player.getStats.useQuery({
+  const { data: stats, isFetching: isStatsFetching } = trpc.player.getStats.useQuery({
     playerFilter: { id: player.id },
     sessionFilter: filter
   }, {

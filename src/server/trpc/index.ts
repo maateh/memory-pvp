@@ -7,7 +7,7 @@ import { auth } from '@clerk/nextjs/server'
 
 // trpc
 import { initTRPC, TRPCError } from '@trpc/server'
-import { TRPCApiError } from '@/trpc/error'
+import { TRPCApiError } from '@/server/trpc/_error'
 
 // server
 import { db } from '@/server/db'
