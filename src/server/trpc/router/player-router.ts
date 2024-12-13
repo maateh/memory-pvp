@@ -16,30 +16,30 @@ export const playerProfileRouter = createTRPCRouter({
       playerFilter: playerFilterSchema,
       sessionFilter: sessionFilterSchema
     }))
-    .query(async ({ ctx, input }): Promise<PrismaJson.PlayerStats> => {
+    .query(async ({ ctx, input }) => {
       const { playerFilter, sessionFilter } = input
-
       const playerId = playerFilter.id
+
       if (!playerId) {
         throw new TRPCError({
-          code: 'CONFLICT',
+          code: "NOT_FOUND",
           cause: new ApiError({
-            key: 'PLAYER_PROFILE_NOT_FOUND',
-            message: 'Missing player ID.',
-            description: 'Player filter params must include the ID of the player.'
+            key: "PLAYER_PROFILE_NOT_FOUND",
+            message: "Missing player ID.",
+            description: "Player filter params must include the ID of the player."
           })
         })
       }
 
       const sessions = await ctx.db.gameSession.findMany({
         where: {
+          ...sessionFilter,
           players: {
             some: {
               userId: ctx.user.id,
               ...playerFilter
             }
-          },
-          ...sessionFilter
+          }
         },
         select: {
           stats: true,
@@ -50,14 +50,12 @@ export const playerProfileRouter = createTRPCRouter({
                 ...playerFilter
               }
             },
-            include: {
-              player: true
-            }
+            include: { player: true }
           }
         }
       })
     
-      const stats = sessions.reduce((sum, { stats, results }) => {
+      return sessions.reduce((sum, { stats, results }) => {
         const result = results.find((result) => result.player.id === playerId)
         const score = result?.score || 0
 
@@ -74,8 +72,6 @@ export const playerProfileRouter = createTRPCRouter({
         timer: 0,
         flips: 0,
         matches: 0
-      } as PrismaJson.PlayerStats)
-
-      return stats
+      } satisfies PrismaJson.PlayerStats)
     })
 })
