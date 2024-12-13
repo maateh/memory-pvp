@@ -1,10 +1,10 @@
-"use client"
+import { Suspense } from "react"
 
-// types
-import type { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter/types"
+// server
+import { getPlayer } from "@/server/db/query/player-query"
 
 // trpc
-import { api } from "@/trpc/client"
+import { trpc, HydrateClient } from "@/server/trpc/server"
 
 // icons
 import { Loader2, SquareSigma } from "lucide-react"
@@ -13,21 +13,11 @@ import { Loader2, SquareSigma } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { SessionCount } from "@/components/session"
 import { Warning } from "@/components/shared"
 
-// hooks
-import { useFilterStore } from "@/hooks/store/use-filter-store"
-
-type SessionFilter = SessionSettingsFilter & SessionStatusFilter
-
-type SessionCounterProps = {
-  player: Pick<ClientPlayer, 'id' | 'tag'> | null
-}
-
-const SessionCounter = ({ player }: SessionCounterProps) => {
-  const filter = useFilterStore<SessionFilter>((state) => state.history)
-
-  const { data: amount, isFetching } = api.session.count.useQuery({ ...filter, playerId: player?.id })
+const SessionCounter = async () => {
+  const player = await getPlayer({ filter: { isActive: true } })
 
   if (!player) {
     return (
@@ -38,6 +28,8 @@ const SessionCounter = ({ player }: SessionCounterProps) => {
       />
     )
   }
+
+  void trpc.session.count.prefetch({})
 
   return (
     <div className="mt-5 pt-3 flex gap-x-2 border-t border-border/50">
@@ -50,17 +42,11 @@ const SessionCounter = ({ player }: SessionCounterProps) => {
 
         <Separator className="w-1 h-3 mx-0.5 bg-border/50 rounded-full" />
 
-        {!isFetching ? (
-          <>
-            <span className="text-accent font-semibold">
-              {amount}
-            </span> total
-          </>
-        ) : (
-          <Loader2 className="size-3.5 shrink-0 text-muted-foreground animate-spin"
-            strokeWidth={4}
-          />
-        )}
+        <HydrateClient>
+          <Suspense fallback={<Loader2 className="size-3.5 shrink-0 text-muted-foreground animate-spin" strokeWidth={4} />}>
+            <SessionCount />
+          </Suspense>
+        </HydrateClient>
       </div>
     </div>
   )

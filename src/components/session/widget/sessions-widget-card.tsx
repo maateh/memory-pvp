@@ -1,6 +1,3 @@
-// server
-import { getPlayer } from "@/server/db/query/player-query"
-
 // icons
 import { History } from "lucide-react"
 
@@ -14,8 +11,7 @@ import {
   WidgetSubtitle
 } from "@/components/widget"
 
-const SessionsWidgetCard = async () => {
-  const player = await getPlayer({ filter: { isActive: true } })
+const SessionsWidgetCard = () => {
 
   return (
     <WidgetCard
@@ -43,7 +39,7 @@ const SessionsWidgetCard = async () => {
         />
       </div>
 
-      <SessionCounter player={player} />
+      <SessionCounter />
     </WidgetCard>
   )
 }
