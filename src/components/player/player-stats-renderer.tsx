@@ -28,8 +28,7 @@ type PlayerStatsRendererProps = {
 const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
   const filter = useFilterStore<SessionFilter>((state) => state.statistics)
 
-  // TODO: use suspense query instead (player editing needs to be refactored)
-  const { data: stats, fetchStatus } = trpc.player.getStats.useQuery({
+  const [stats] = trpc.player.getStats.useSuspenseQuery({
     playerFilter: { id: player.id },
     sessionFilter: filter
   })
@@ -38,10 +37,6 @@ const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
     ...player,
     stats: stats || player.stats
   }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])
-
-  if (fetchStatus === "fetching") {
-    return <PlayerStatsRendererSkeleton />
-  }
 
   return (
     <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">

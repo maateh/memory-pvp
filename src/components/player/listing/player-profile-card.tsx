@@ -1,3 +1,10 @@
+"use server"
+
+import { Suspense } from "react"
+
+// trpc
+import { HydrateClient, trpc } from "@/server/trpc/server"
+
 // icons
 import { Hash } from "lucide-react"
 
@@ -5,7 +12,7 @@ import { Hash } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { PlayerStatsRenderer, PlayerVerified } from "@/components/player"
+import { PlayerStatsRenderer, PlayerStatsRendererSkeleton, PlayerVerified } from "@/components/player"
 import PlayerActionsDropdown from "./player-actions-dropdown"
 
 type PlayerProfileCardProps = {
@@ -13,6 +20,11 @@ type PlayerProfileCardProps = {
 }
 
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
+  void trpc.player.getStats.prefetch({
+    playerFilter: { id: player.id },
+    sessionFilter: {}
+  })
+
   return (
     <>
       <div className="py-1 flex gap-x-3 items-center">
@@ -33,7 +45,11 @@ const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
             {player.isActive && <PlayerVerified showTooltip />}
           </div>
 
-          <PlayerStatsRenderer player={player} />
+          <HydrateClient>
+            <Suspense fallback={<PlayerStatsRendererSkeleton />}>
+              <PlayerStatsRenderer player={player} />
+            </Suspense>
+          </HydrateClient>
         </div>
       </div>
 
