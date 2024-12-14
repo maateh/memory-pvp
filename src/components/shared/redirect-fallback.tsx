@@ -24,6 +24,8 @@ const RedirectFallback = ({
 
   useEffect(() => {
     if (!hasRedirected.current) {
+      hasRedirected.current = true
+
       if (message) {
         /* Note: prevent re-render by adding a custom id. */
         toast.warning(message, { description, id: '_' })
