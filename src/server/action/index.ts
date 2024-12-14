@@ -4,7 +4,7 @@ import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { ActionError } from "@/server/action/_error"
+import { ApiError } from "@/server/_error"
 import { db } from "@/server/db"
 import { redis } from "@/server/redis"
 
@@ -19,15 +19,15 @@ import { sessionSchemaFields } from "@/config/session-settings"
  */
 export const actionClient = createSafeActionClient({
   handleServerError(err) {
-    if (err.cause instanceof ActionError) {
+    if (err.cause instanceof ApiError) {
       return { ...err.cause }
     }
 
     return {
-      name: 'ActionError',
+      name: 'ApiError',
       key: 'UNKNOWN',
       message: DEFAULT_SERVER_ERROR_MESSAGE
-    } satisfies ActionError
+    } satisfies ApiError
   }
 }).use(async ({ next }) => next({ ctx: { db, redis } }))
 
@@ -42,7 +42,7 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {
-    ActionError.throw({
+    ApiError.throw({
       key: 'CLERK_UNAUTHORIZED',
       message: 'You are not signed in to your account.'
     })
@@ -51,7 +51,7 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const user = await ctx.db.user.findUnique({ where: { clerkId } })
 
   if (!user) {
-    ActionError.throw({
+    ApiError.throw({
       key: 'USER_NOT_FOUND',
       message: "No user data found in the database.",
       description: "Please try to remove your Clerk account and repeat the registration process."
@@ -76,7 +76,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
   })
 
   if (!player) {
-    ActionError.throw({
+    ApiError.throw({
       key: 'PLAYER_PROFILE_NOT_FOUND',
       message: 'Active player profile not found.'
     })
@@ -106,7 +106,7 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
   })
 
   if (!activeSession) {
-    ActionError.throw({
+    ApiError.throw({
       key: 'SESSION_NOT_FOUND',
       message: 'Game session not found.',
       description: "You are currently not participating in any game session."
@@ -115,7 +115,7 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
 
   const hasAccess = activeSession.players.some((player) => player.userId === ctx.user.id)
   if (!hasAccess) {
-    ActionError.throw({
+    ApiError.throw({
       key: 'SESSION_ACCESS_DENIED',
       message: "Game session access denied.",
       description: "You don't have access to this game session."

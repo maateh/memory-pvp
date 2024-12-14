@@ -2,7 +2,7 @@
 import { WebhookEvent } from "@clerk/nextjs/server"
 
 // api
-import { userCreated, userDeleted, userUpdated, verifyWebhook } from "@/server/api/webhooks/clerk"
+import { userCreated, userDeleted, userUpdated, verifyWebhook } from "@/server/webhook/clerk"
 
 export async function POST(req: Request) {
   let evt: WebhookEvent

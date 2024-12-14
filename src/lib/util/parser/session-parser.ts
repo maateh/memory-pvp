@@ -87,11 +87,11 @@ export function parseSessionFilter(
 
   return {
     ...where,
+    ...filter,
     players: {
       some: {
         id: { equals: filter.playerId }
       }
-    },
-    ...filter
+    }
   }
 }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache"
 
 // actions
-import { ActionError } from "@/server/action/_error"
+import { ApiError } from "@/server/_error"
 import { protectedActionClient } from "@/server/action"
 
 // uploadthing
@@ -53,7 +53,7 @@ export const createCollection = protectedActionClient
       const fileKeys = utImages.map(({ utKey }) => utKey)
       await utapi.deleteFiles(fileKeys)
 
-      ActionError.throw({
+      ApiError.throw({
         key: 'UNKNOWN',
         message: "Failed to create card collection.",
         description: "Something unexpected happened and we cannot create the card collection. Please try again later."
@@ -74,7 +74,7 @@ export const updateCollection = protectedActionClient
     })
 
     if (!collection) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'COLLECTION_ACCESS_DENIED',
         message: 'Collection cannot be updated.',
         description: "No collection found or cannot be accessed with the specified ID."
@@ -113,7 +113,7 @@ export const deleteCollection = protectedActionClient
     })
 
     if (!collection) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'COLLECTION_ACCESS_DENIED',
         message: 'Collection cannot be deleted.',
         description: "No collection found or cannot be accessed with the specified ID."
@@ -124,7 +124,7 @@ export const deleteCollection = protectedActionClient
       const fileKeys = collection.cards.map(({ utKey }) => utKey)
       await utapi.deleteFiles(fileKeys)
     } catch (_err) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'UNKNOWN',
         message: "Failed to delete card collection.",
         description: "Something unexpected happened and we cannot delete your card collection. Please try again later."

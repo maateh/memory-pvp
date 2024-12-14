@@ -1,5 +1,4 @@
 import type { UserResource } from "@clerk/types"
-import type { AppRouter } from "@/server/api/_app"
 import type {
   CardCollection,
   GameMode,

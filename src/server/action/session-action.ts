@@ -7,7 +7,7 @@ import { getRandomCollection } from "@/server/db/query/collection-query"
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
-import { ActionError } from "@/server/action/_error"
+import { ApiError } from "@/server/_error"
 import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
@@ -48,7 +48,7 @@ export const createSession = playerActionClient
     // TODO: implement "PVP" & "COOP" game modes
     // Note: Socket.io implementation required
     if (sessionValues.mode !== 'SINGLE') {
-      ActionError.throw({
+      ApiError.throw({
         key: 'UNKNOWN',
         message: 'Sorry, but currently you can only play in Single.',
         description: 'This feature is still work in progress. Please, try again later.'
@@ -67,7 +67,7 @@ export const createSession = playerActionClient
 
     /* Throws a custom 'ACTIVE_SESSION' action error if active session found */
     if (activeSession && !forceStart) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'ACTIVE_SESSION',
         message: 'Active game session found.',
         description: 'Would you like to continue the ongoing session or start a new one?'
@@ -98,7 +98,7 @@ export const createSession = playerActionClient
     }
 
     if (!collection) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'COLLECTION_NOT_FOUND',
         message: 'Sorry, but we cannot find card collection for your session.',
         description: 'Please, try select another card collection or try again later.'
@@ -153,7 +153,7 @@ export const storeSession = sessionActionClient
     )
 
     if (response !== 'OK') {
-      ActionError.throw({
+      ApiError.throw({
         key: 'UNKNOWN',
         message: 'Failed to store game session.',
         description: 'Cache server probably not available.'
@@ -206,7 +206,7 @@ export const abandonSession = sessionActionClient
       const validation = await abandonSessionSchema.safeParseAsync(ctx.activeSession)
 
       if (!validation.success) {
-        ActionError.throw({
+        ApiError.throw({
           key: 'UNKNOWN',
           message: 'Something went wrong.',
           description: 'Session data appears to be corrupted because it failed to be parsed.'
@@ -244,7 +244,7 @@ export const saveOfflineSession = protectedActionClient
     })
 
     if (playerAmount === 0) {
-      ActionError.throw({
+      ApiError.throw({
         key: 'PLAYER_PROFILE_NOT_FOUND',
         message: 'Player profile not found.',
         description: "Select or create a new player to save your offline session."
