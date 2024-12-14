@@ -35,7 +35,7 @@ const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
 
   const playerStats = useMemo(() => getRendererPlayerStats({
     ...player,
-    stats: stats || player.stats
+    stats
   }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])
 
   return (
