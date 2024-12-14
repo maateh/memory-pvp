@@ -8,9 +8,7 @@ import { createPlayer } from "@/server/action/player-action"
 import { handleServerError } from "@/lib/util/error"
 
 export const useCreatePlayerAction = () => useAction(createPlayer, {
-  onSuccess({ data: player }) {
-    if (!player) return
-
+  onSuccess({ input: player }) {
     toast.success('Player created!', {
       description: `You have created a new player: ${player.tag}`
     })
