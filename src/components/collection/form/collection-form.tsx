@@ -1,6 +1,7 @@
 "use client"
 
 import { useForm } from "react-hook-form"
+import { UploadThingError } from "uploadthing/server"
 
 // types
 import type { z } from "zod"
@@ -9,7 +10,7 @@ import type { z } from "zod"
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // utils
-import { logError } from "@/lib/util/error"
+import { handleServerError, logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -35,23 +36,45 @@ const CollectionForm = () => {
     }
   })
 
+  const tableSize = form.watch('tableSize')
+  const images = form.watch('images')
+
   const {
     startUpload,
     routeConfig,
     isUploading,
+    executeAsync: executeCreateCollection,
     status: createCollectionStatus
-  } = useCreateCollectionAction({ form })
+  } = useCreateCollectionAction({ tableSize })
 
   const handleExecute = async ({ images, ...values }: CollectionFormValues) => {
     try {
-      await startUpload(images, values)
+      const files = await startUpload(images, values)
+      
+      if (!files) {
+        throw new UploadThingError({
+          code: "UPLOAD_FAILED",
+          message: "Failed to create card collection."
+        })
+      }
+
+      await executeCreateCollection({
+        ...values,
+        utImages: files.map(({ key, url }) => ({
+          utKey: key,
+          imageUrl: url
+        }))
+      })
+
+      form.reset()
     } catch (err) {
+      if (err instanceof UploadThingError) {
+        handleServerError(err, "Something unexpected happened while uploading the files. Please try again later.")
+      }
+
       logError(err)
     }
   }
-
-  const tableSize = form.watch('tableSize')
-  const images = form.watch('images')
 
   return (
     <Form<CollectionFormValues>

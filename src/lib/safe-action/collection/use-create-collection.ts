@@ -2,8 +2,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
-import type { UseFormReturn } from "react-hook-form"
-import type { CollectionFormValues } from "@/components/collection/form/collection-form"
+import type { TableSize } from "@prisma/client"
 
 // actions
 import { createCollection } from "@/server/action/collection-action"
@@ -13,22 +12,18 @@ import { collectionSizeEndpointMap } from "@/config/collection-settings"
 import { tableSizePlaceholders } from "@/config/game-settings"
 
 // utils
-import { handleServerError, logError } from "@/lib/util/error"
+import { handleServerError } from "@/lib/util/error"
 
 // hooks
 import { useUploadThing } from "@/hooks/use-upload-thing"
 
 type UseCreateCollectionActionParams = {
-  form: UseFormReturn<CollectionFormValues>
+  tableSize: TableSize
 }
 
-export const useCreateCollectionAction = ({ form }: UseCreateCollectionActionParams) => {
-  const tableSize = form.watch('tableSize')
-
+export const useCreateCollectionAction = ({ tableSize }: UseCreateCollectionActionParams) => {
   const createCollectionAction = useAction(createCollection, {
-    onSuccess({ data: collection }) {
-      if (!collection) return
-  
+    onSuccess({ input: collection }) {
       const placeholder = tableSizePlaceholders[collection.tableSize]
       toast.success('Card collection created!', {
         description: `You have created a new card collection! (${placeholder.label} / ${placeholder.size})`
@@ -40,24 +35,10 @@ export const useCreateCollectionAction = ({ form }: UseCreateCollectionActionPar
   })
 
   const upload = useUploadThing(collectionSizeEndpointMap[tableSize], {
-    onClientUploadComplete: async (files) => {
+    onClientUploadComplete: () => {
       toast.info("Card images uploaded!", {
         description: "Now we are going to create the card collection..."
       })
-
-      try {
-        await createCollectionAction.executeAsync({
-          ...form.getValues(),
-          utImages: files.map(({ key, url }) => ({
-            utKey: key,
-            imageUrl: url
-          }))
-        })
-
-        form.reset() 
-      } catch (err) {
-        logError(err)
-      }
     },
     onUploadError: (err) => {
       let description = "Failed to create card collection. Please try again later."
