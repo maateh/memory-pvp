@@ -12,16 +12,29 @@ import { LogIn, UserRound } from "lucide-react"
 // shadcn
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
+// components
+import { CustomTooltip } from "@/components/shared"
+
 type UserAvatarProps = {
   user: Pick<ClientUser, 'imageUrl' | 'username'> | null
   imageSize?: number
   imageProps?: React.ComponentProps<typeof AvatarImage>
   fallbackProps?: React.ComponentProps<typeof AvatarFallback>
   fallbackIconProps?: LucideProps
+  showTooltip?: boolean
 } & React.ComponentProps<typeof Avatar>
 
-const UserAvatar = ({ user, className, imageSize = 32, imageProps, fallbackProps, fallbackIconProps, ...props }: UserAvatarProps) => {
-  return (
+const UserAvatar = ({
+  user,
+  imageSize = 32,
+  imageProps,
+  fallbackProps,
+  fallbackIconProps,
+  showTooltip = false,
+  className,
+  ...props
+}: UserAvatarProps) => {
+  const avatar = (
     <Avatar className={cn("size-6 img-wrapper", className)} {...props}>
       <AvatarImage {...imageProps}
         className={cn("rounded-full", imageProps?.className)}
@@ -50,6 +63,13 @@ const UserAvatar = ({ user, className, imageSize = 32, imageProps, fallbackProps
         )}
       </AvatarFallback>
     </Avatar>
+  )
+
+  if (!showTooltip || !user) return avatar
+  return (
+    <CustomTooltip tooltip={user.username}>
+      {avatar}
+    </CustomTooltip>
   )
 }
 

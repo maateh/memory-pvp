@@ -54,6 +54,7 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
         {showUserAvatar && (
           <UserAvatar
             user={user as ClerkUser}
+            showTooltip
             {...avatarProps}
           />
         )}
