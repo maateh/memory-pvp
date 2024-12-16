@@ -1,12 +1,13 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 // types
 import type { ExpandedRouteConfig } from "uploadthing/types"
 
 // uploadthing
 import { generateClientDropzoneAccept, generatePermittedFileTypes } from "uploadthing/client"
+import { useDropzone } from "@uploadthing/react"
 
 // utils
 import { cn } from "@/lib/util"
@@ -18,9 +19,6 @@ import { ImageUp } from "lucide-react"
 // copmponents
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 
-// hooks
-import { useDropzone } from "@uploadthing/react"
-
 type CollectionDropzoneProps = {
   files: File[]
   setFiles: (files: File[]) => void
@@ -31,15 +29,7 @@ type CollectionDropzoneProps = {
 
 const CollectionDropzone = ({ files, setFiles, routeConfig, hidePreview = false, className }: CollectionDropzoneProps) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([])
-
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (!hidePreview) {
-      const urls = await generateFileUrls(acceptedFiles)
-      setPreviewUrls(urls)
-    }
-
-    setFiles(acceptedFiles)
-  }, [setFiles, hidePreview])
+  const onDrop = useCallback(setFiles, [setFiles])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -47,6 +37,15 @@ const CollectionDropzone = ({ files, setFiles, routeConfig, hidePreview = false,
       generatePermittedFileTypes(routeConfig).fileTypes
     )
   })
+
+  useEffect(() => {
+    if (hidePreview) return 
+
+    (async () => {
+      const urls = await generateFileUrls(files)
+      setPreviewUrls(urls)
+    })()
+  }, [hidePreview, files, setPreviewUrls])
 
   const maxFileSize = routeConfig?.image?.maxFileSize
   const minFileCount = routeConfig?.image?.minFileCount
@@ -78,10 +77,11 @@ const CollectionDropzone = ({ files, setFiles, routeConfig, hidePreview = false,
       </div>
 
       {!hidePreview && (
-        <CollectionPreviewList className={cn({ "mt-4": files.length > 0 })} dense>
+        <CollectionPreviewList className={cn("justify-center", { "mt-4": files.length > 0 })} dense>
           {previewUrls.map((url) => (
-            <CollectionPreviewItem
+            <CollectionPreviewItem className="-ml-2 first:-ml-2"
               imageUrl={url}
+              imageSize={36}
               key={url}
               dense
             />
