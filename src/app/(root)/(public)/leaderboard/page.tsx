@@ -1,3 +1,6 @@
+// icons
+import { Wrench } from "lucide-react"
+
 // components
 import { NoListingData } from "@/components/shared"
 
@@ -10,6 +13,7 @@ const LeaderboardPage = () => {
 
   return (
     <NoListingData className="mt-44"
+      Icon={Wrench}
       message="Leaderboard has not been implemented yet."
       hideClearFilter
     />

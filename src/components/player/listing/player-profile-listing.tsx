@@ -1,6 +1,9 @@
 // utils
 import { cn } from "@/lib/util"
 
+// icons
+import { UserRoundX } from "lucide-react"
+
 // shadcn
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -16,6 +19,7 @@ const PlayerProfileListing = ({ players, className, ...props }: PlayerProfileLis
   if (players.length === 0) {
     return (
       <NoListingData
+        Icon={UserRoundX}
         iconProps={{ className: "sm:size-10 md:size-10" }}
         messageProps={{ className: "md:text-xl" }}
         message="No player found."

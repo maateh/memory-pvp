@@ -1,6 +1,7 @@
-"use client"
+import Link from "next/link"
 
 // types
+import type { UrlObject } from "url"
 import type { LucideIcon, LucideProps } from "lucide-react"
 
 // utils
@@ -12,9 +13,6 @@ import { FilterX, OctagonX } from "lucide-react"
 // shadcn
 import { Button } from "@/components/ui/button"
 
-// hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
-
 type NoListingDataProps = {
   Icon?: LucideIcon
   iconProps?: LucideProps
@@ -22,6 +20,7 @@ type NoListingDataProps = {
   messageProps?: React.ComponentProps<"p">
   clearFilterMessage?: string
   hideClearFilter?: boolean
+  queryToReset?: UrlObject['query']
 } & React.ComponentProps<"div">
 
 const NoListingData = ({
@@ -31,11 +30,10 @@ const NoListingData = ({
   messageProps,
   clearFilterMessage = "If you have specified any filter, try clearing it.",
   hideClearFilter = false,
+  queryToReset = { page: 1 },
   className,
   ...props
 }: NoListingDataProps) => {
-  const { clearFilterParams } = useFilterParams()
-
   return (
     <div className={cn("px-4 space-y-5 flex flex-col items-center justify-center text-center", className)} {...props}>
       <div className="space-y-2.5 flex flex-col items-center justify-center">
@@ -59,10 +57,12 @@ const NoListingData = ({
   
           <Button className="gap-x-2 text-primary-foreground/65 font-light"
             size="sm"
-            onClick={() => clearFilterParams("reset")}
+            asChild
           >
-            <FilterX className="size-4" />
-            <span>Clear filter</span>
+            <Link href={{ query: queryToReset }}>
+              <FilterX className="size-4" />
+              <span>Clear filter</span>
+            </Link>
           </Button>
         </div>
       )}
