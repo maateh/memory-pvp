@@ -4,7 +4,10 @@ import Image from "next/image"
 import { cn } from "@/lib/util"
 
 // icons
-import { Circle } from "lucide-react"
+import { CircleSlash } from "lucide-react"
+
+// components
+import { CustomTooltip } from "@/components/shared"
 
 type MemoryCardImageProps = {
   imageUrl: string | null
@@ -15,9 +18,14 @@ type MemoryCardImageProps = {
 const MemoryCardImage = ({ imageUrl, imageSize = 48, className }: MemoryCardImageProps) => {
   if (!imageUrl) {
     return (
-      <Circle className={cn("p-1.5 text-muted-foreground bg-muted-foreground rounded-2xl transition-shadow img-wrapper hover:shadow-md", className)}
-        size={imageSize}
-      />
+      <CustomTooltip
+        tooltipProps={{ className: "text-xs text-muted-foreground border-border/40" }}
+        tooltip="Unable to load."
+      >
+        <CircleSlash className={cn("p-1.5 text-muted-foreground/25 bg-muted rounded-2xl transition-shadow img-wrapper hover:shadow-md", className)}
+          size={imageSize}
+        />
+      </CustomTooltip>
     )
   }
 
