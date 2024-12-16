@@ -1,12 +1,11 @@
 // components
-import { Warning } from "@/components/shared"
+import { NoListingData } from "@/components/shared"
 
 const WaitingRoomsPage = () => {
   return (
-    <Warning className="mt-32 mx-auto text-lg lg:text-xl font-heading"
-      messageProps={{ className: "mt-1" }}
-      iconProps={{ className: "lg:size-6" }}
+    <NoListingData className="mt-44"
       message="Waiting rooms have not been implemented yet."
+      hideClearFilter
     />
   )
 }

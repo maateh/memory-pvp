@@ -2,9 +2,6 @@
 
 import { Suspense } from "react"
 
-// server
-import { getPlayer } from "@/server/db/query/player-query"
-
 // trpc
 import { trpc, HydrateClient } from "@/server/trpc/server"
 
@@ -16,21 +13,8 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { SessionCount } from "@/components/session"
-import { Warning } from "@/components/shared"
 
-const SessionCounter = async () => {
-  const player = await getPlayer({ filter: { isActive: true } })
-
-  if (!player) {
-    return (
-      <Warning className="w-full mt-5 pt-2.5 justify-start border-t border-border/50 font-heading"
-        messageProps={{ className: "mt-1" }}
-        iconProps={{ className: "size-4" }}
-        message="You have played 0 sessions."
-      />
-    )
-  }
-
+const SessionCounter = ({ player }: { player: ClientPlayer }) => {
   void trpc.session.count.prefetch({})
 
   return (

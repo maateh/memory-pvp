@@ -33,7 +33,7 @@ const WidgetCard = ({
   ...props
 }: WidgetCardProps) => {
   return (
-    <Card className={cn("relative pt-4 bg-primary/20", className)} {...props}>
+    <Card className={cn("relative flex flex-col pt-4 bg-primary/20", className)} {...props}>
       <CardHeader>
         <div className="flex-1 flex gap-x-3 sm:gap-x-4">
           <Icon className="size-5 sm:size-6 shrink-none" />
@@ -50,7 +50,9 @@ const WidgetCard = ({
 
       <Separator className="w-4/5 mx-auto mt-1 mb-4 bg-border/15" />
 
-      <CardContent {...contentProps}>
+      <CardContent {...contentProps}
+        className={cn("flex-1 flex flex-col", contentProps?.className)}
+      >
         {children}
       </CardContent>
     </Card>

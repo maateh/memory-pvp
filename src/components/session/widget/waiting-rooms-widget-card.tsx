@@ -1,5 +1,5 @@
 // icons
-import { Swords } from "lucide-react"
+import { Swords, Wrench } from "lucide-react"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -12,9 +12,11 @@ import {
   WidgetLink,
   WidgetSubtitle
 } from "@/components/widget"
-import { Warning } from "@/components/shared"
+import { CardItem } from "@/components/shared"
 
 const WaitingRoomsWidgetCard = () => {
+  const rooms = [] // Mocked array of waiting rooms
+
   return (
     <WidgetCard
       title="Waiting Rooms (WIP)"
@@ -25,21 +27,27 @@ const WaitingRoomsWidgetCard = () => {
         <WidgetLink href="/dashboard/rooms" />
       </WidgetActionWrapper>
 
-      <WidgetSubtitle>
-        Room Settings
-      </WidgetSubtitle>
+      {rooms.length > 0 && (
+        <>
+          <WidgetSubtitle>
+            Room Settings
+          </WidgetSubtitle>
 
-      <SessionSettingsFilter
-        filterService="store"
-        filterKey="rooms"
-      />
+          <SessionSettingsFilter
+            filterService="store"
+            filterKey="rooms"
+          />
 
-      <Separator className="w-2/3 mx-auto my-4 bg-border/10" />
+          <Separator className="w-2/3 mx-auto my-4 bg-border/10" />
+        </>
+      )}
 
-      <Warning className="h-auto mt-6 mx-auto text-base font-heading"
-        messageProps={{ className: "mt-1" }}
-        message="Waiting rooms have not been implemented yet."
-      />
+      <CardItem className="flex-1 p-3 justify-center flex-wrap gap-x-2.5 gap-y-1.5 text-center text-sm sm:text-base text-muted-foreground font-heading">
+        <Wrench className="size-4 sm:size-5" />
+        <span className="mt-1">
+          Waiting rooms have not been implemented yet.
+        </span>
+      </CardItem>
     </WidgetCard>
   )
 }
