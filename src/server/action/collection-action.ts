@@ -31,14 +31,10 @@ export const createCollection = protectedActionClient
           description,
           tableSize,
           cards: {
-            createMany: {
-              data: utImages
-            }
+            createMany: { data: utImages }
           },
           user: {
-            connect: {
-              id: ctx.user.id
-            }
+            connect: { id: ctx.user.id }
           }
         },
         include: {
@@ -66,14 +62,11 @@ export const updateCollection = protectedActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { id, name, description } = parsedInput
 
-    const collection = await ctx.db.cardCollection.findFirst({
-      where: {
-        id,
-        userId: ctx.user.id
-      }
+    const hasAccess = await ctx.db.cardCollection.count({
+      where: { id, userId: ctx.user.id }
     })
 
-    if (!collection) {
+    if (!hasAccess) {
       ApiError.throw({
         key: 'COLLECTION_ACCESS_DENIED',
         message: 'Collection cannot be updated.',
@@ -82,10 +75,7 @@ export const updateCollection = protectedActionClient
     }
 
     const updatedCollection = await ctx.db.cardCollection.update({
-      where: {
-        id,
-        userId: ctx.user.id
-      },
+      where: { id, userId: ctx.user.id },
       include: {
         user: true,
         cards: true
@@ -102,17 +92,11 @@ export const deleteCollection = protectedActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { id } = parsedInput
 
-    const collection = await ctx.db.cardCollection.findFirst({
-      where: {
-        id,
-        userId: ctx.user.id
-      },
-      include: {
-        cards: true
-      }
+    const hasAccess = await ctx.db.cardCollection.count({
+      where: { id, userId: ctx.user.id }
     })
 
-    if (!collection) {
+    if (!hasAccess) {
       ApiError.throw({
         key: 'COLLECTION_ACCESS_DENIED',
         message: 'Collection cannot be deleted.',
@@ -121,8 +105,19 @@ export const deleteCollection = protectedActionClient
     }
 
     try {
-      const fileKeys = collection.cards.map(({ utKey }) => utKey)
+      const deletedCollection = await ctx.db.cardCollection.delete({
+        where: { id, userId: ctx.user.id },
+        include: {
+          user: true,
+          cards: true
+        }
+      })
+
+      const fileKeys = deletedCollection.cards.map(({ utKey }) => utKey)
       await utapi.deleteFiles(fileKeys)
+
+      revalidatePath('/collections/manage')
+      return parseSchemaToClientCollection(deletedCollection)
     } catch (_err) {
       ApiError.throw({
         key: 'UNKNOWN',
@@ -130,19 +125,4 @@ export const deleteCollection = protectedActionClient
         description: "Something unexpected happened and we cannot delete your card collection. Please try again later."
       })
     }
-
-    // FIXME: relation between `CardCollection` and `GameSession`
-    const deletedCollection = await ctx.db.cardCollection.delete({
-      where: {
-        id,
-        userId: ctx.user.id
-      },
-      include: {
-        user: true,
-        cards: true
-      }
-    })
-
-    revalidatePath('/collections/manage')
-    return parseSchemaToClientCollection(deletedCollection)
   })

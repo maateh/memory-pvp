@@ -5,6 +5,9 @@ import type { Prisma } from "@prisma/client"
 // schemas
 import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
+// config
+import { getFallbackCollection } from "@/config/collection-settings"
+
 // helpers
 import { pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
 
@@ -52,9 +55,12 @@ export function parseSchemaToClientSession(
     other: filteredSession.players.find((player) => player.id !== currentPlayerId)
   }
 
+  const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
+
   return {
     ...filteredSession,
-    cards: pairSessionCardsWithCollection(session.cards, session.collection.cards),
+    collectionId: sessionCollection.id,
+    cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),
     players: {
       current: parseSchemaToClientPlayer(players.current),
       other: players.other ? parseSchemaToClientPlayer(players.other) : null

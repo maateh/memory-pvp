@@ -67,8 +67,8 @@ model GameSession {
   /// [SessionCardMetadata]
   flipped Json[]
 
-  collection CardCollection @relation(fields: [collectionId], references: [id])
-  collectionId String @db.ObjectId
+  collection CardCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  collectionId String? @db.ObjectId
 
   owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id])
   ownerId String        @db.ObjectId

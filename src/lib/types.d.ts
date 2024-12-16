@@ -91,7 +91,7 @@ declare global {
   /* Session types */
   declare type ClientGameSession = Omit<
     GameSession,
-    'id' | 'ownerId' | 'playerIds' | 'cards' |
+    'id' | 'collectionId' | 'ownerId' | 'playerIds' | 'cards' |
     'continuedAt' | 'closedAt' | 'updatedAt'
   > & {
     players: {
@@ -99,6 +99,7 @@ declare global {
       other?: ClientPlayer | null
     }
 
+    collectionId: string
     cards: ClientSessionCard[]
 
     continuedAt?: Date | null
@@ -126,7 +127,7 @@ declare global {
 
   /* Prisma schemas */
   declare type GameSessionWithPlayersWithAvatarWithCollectionWithCards = GameSession & {
-    collection: CardCollectionWithCardsWithUser
+    collection: CardCollectionWithCardsWithUser | null
     players: PlayerProfileWithUserAvatar[]
   }
 

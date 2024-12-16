@@ -72,3 +72,32 @@ export function getCollectionImageSettings(tableSize: TableSize): GetCollectionI
     maxFileCount: collectionMaxSizeMap[tableSize]
   }
 }
+
+/**
+ * Generates a fallback collection that can be used if the original collection has been deleted.
+ * 
+ * @param {TableSize} tableSize - The size of the card collection, which determines the required image counts.
+ * 
+ * @returns {CardCollectionWithCardsWithUser} - Object containing the fallback card collection data with fake cards and user.
+ */
+export function getFallbackCollection(tableSize: TableSize): CardCollectionWithCardsWithUser {
+  return {
+    tableSize,
+    id: "_fake",
+    userId: "_fakeUserId",
+    user: {
+      id: "_fakeUserId",
+      clerkId: "_fakeClerkId",
+      username: "Admin",
+      email: "admin@memory-pvp.com",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      imageUrl: null
+    },
+    cards: [],
+    name: "Unknown collection",
+    description: "Collection has been removed.",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+}
