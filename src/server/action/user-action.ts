@@ -13,7 +13,6 @@ type SignedInParams = {
   redirectToSignIn?: boolean
 }
 
-// TODO: this can be moved back to `/db/queries` after removing trpc completely
 /**
  * Checks if the current user is signed in and retrieves their user details from the database.
  * 
