@@ -96,11 +96,10 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
       status: 'RUNNING',
-      players: {
-        some: {
-          id: ctx.player.id
-        }
-      }
+      OR: [
+        { ownerId: ctx.player.id },
+        { guestId: ctx.player.id }
+      ]
     },
     include: sessionSchemaFields
   })
@@ -110,15 +109,6 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
       key: 'SESSION_NOT_FOUND',
       message: 'Game session not found.',
       description: "You are currently not participating in any game session."
-    })
-  }
-
-  const hasAccess = activeSession.players.some((player) => player.userId === ctx.user.id)
-  if (!hasAccess) {
-    ApiError.throw({
-      key: 'SESSION_ACCESS_DENIED',
-      message: "Game session access denied.",
-      description: "You don't have access to this game session."
     })
   }
 
