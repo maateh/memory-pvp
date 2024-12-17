@@ -67,7 +67,7 @@ const UserAvatar = ({
 
   if (!showTooltip || !user) return avatar
   return (
-    <CustomTooltip tooltip={user.username}>
+    <CustomTooltip tooltip={user.username} asChild>
       {avatar}
     </CustomTooltip>
   )
