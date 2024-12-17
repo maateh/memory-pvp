@@ -48,7 +48,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
     include: sessionSchemaFields
   })
 
-  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session, session.owner.id))
+  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session, session.owner?.id))
   return paginationWrapper(clientSessions, total, pagination)
 }
 
@@ -74,15 +74,19 @@ export async function getClientSession({ id, slug }: {
   if (!user) return null
 
   const session = await db.gameSession.findUnique({
-    where: { id, slug },
+    where: {
+      id,
+      slug,
+      OR: [
+        { owner: { userId: user.id } },
+        { guest: { userId: user.id } }
+      ]
+    },
     include: sessionSchemaFields
   })
 
   if (!session) return null
 
-  const hasAccess = session.players.some((player) => player.userId === user.id)
-  if (!hasAccess) return null
-
-  const player = session.players.find((player) => player.userId === user.id)
-  return parseSchemaToClientSession(session, player!.id)
+  const player = session.owner?.userId === user.id ? session.owner : session.guest
+  return parseSchemaToClientSession(session, player?.id)
 }
