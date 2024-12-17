@@ -7,7 +7,7 @@ import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // config
 import { getFallbackCollection } from "@/config/collection-settings"
-import { offlinePlayerMetadata } from "@/config/player-settings"
+import { deletedPlayerPlaceholder } from "@/config/player-settings"
 
 // helpers
 import { pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
@@ -58,7 +58,7 @@ export function parseSchemaToClientSession(
   if (session.mode === 'SINGLE') {
     currentClientPlayer = session.owner
       ? parseSchemaToClientPlayer(session.owner)
-      : offlinePlayerMetadata
+      : deletedPlayerPlaceholder
   } else {
     const currentPlayer = session.owner?.id === currentPlayerId
       ? session.owner
@@ -68,8 +68,8 @@ export function parseSchemaToClientSession(
       ? session.owner
       : session.guest
 
-    currentClientPlayer = currentPlayer ? parseSchemaToClientPlayer(currentPlayer) : offlinePlayerMetadata
-    otherClientPlayer = otherPlayer ? parseSchemaToClientPlayer(otherPlayer) : offlinePlayerMetadata
+    currentClientPlayer = currentPlayer ? parseSchemaToClientPlayer(currentPlayer) : deletedPlayerPlaceholder
+    otherClientPlayer = otherPlayer ? parseSchemaToClientPlayer(otherPlayer) : deletedPlayerPlaceholder
   }
 
   return {
