@@ -59,9 +59,10 @@ export const createSession = playerActionClient
     const activeSession = await ctx.db.gameSession.findFirst({
       where: {
         status: 'RUNNING',
-        players: {
-          some: { id: ctx.player.id }
-        }
+        OR: [
+          { ownerId: ctx.player.id },
+          { guestId: ctx.player.id }
+        ]
       }
     })
 
@@ -128,8 +129,8 @@ export const createSession = playerActionClient
         owner: {
           connect: { id: ctx.player.id }
         },
-        players: { // TODO: connect guest (update validation schema)
-          connect: [{ id: ctx.player.id }]
+        guest: { // TODO: connect guest (update validation schema)
+          // connect: { id: sessionValues.guestId }
         }
       }
     })
@@ -277,9 +278,6 @@ export const saveOfflineSession = protectedActionClient
           connect: { id: collectionId }
         },
         owner: {
-          connect: { id: playerId }
-        },
-        players: {
           connect: { id: playerId }
         }
       }

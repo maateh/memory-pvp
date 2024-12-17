@@ -34,12 +34,10 @@ export const playerProfileRouter = createTRPCRouter({
       const sessions = await ctx.db.gameSession.findMany({
         where: {
           ...sessionFilter,
-          players: {
-            some: {
-              userId: ctx.user.id,
-              ...playerFilter
-            }
-          }
+          OR: [
+            { owner: { userId: ctx.user.id, ...playerFilter } },
+            { guest: { userId: ctx.user.id, ...playerFilter } }
+          ]
         },
         select: {
           stats: true,

@@ -7,6 +7,7 @@ import { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // config
 import { getFallbackCollection } from "@/config/collection-settings"
+import { deletedPlayerPlaceholder } from "@/config/player-settings"
 
 // helpers
 import { pairSessionCardsWithCollection } from "@/lib/helper/session-helper"
@@ -18,17 +19,15 @@ import { pickFields } from "@/lib/util/parser"
 /* Schema parser keys */
 export const clientSessionKeys: (keyof ClientGameSession)[] = [
   'slug', 'collectionId',
+  'players',
   'type', 'mode', 'tableSize', 'status',
-  'players', 'stats',
-  'flipped', 'cards',
-  'startedAt', 'continuedAt', 'closedAt', 'updatedAt'
+  'stats', 'flipped', 'cards',
+  'startedAt', 'continuedAt', 'closedAt'
 ] as const
 
 export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
-  'collectionId',
-  'tableSize',
-  'players', 'stats',
-  'flipped', 'cards',
+  'collectionId', 'players', 'tableSize',
+  'stats', 'flipped', 'cards',
   'startedAt', 'continuedAt'
 ] as const
 
@@ -46,25 +45,41 @@ export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
-  currentPlayerId: string
+  currentPlayerId: string = deletedPlayerPlaceholder.id
 ): ClientGameSession {
-  const filteredSession = pickFields(session, clientSessionKeys)
-
-  const players = {
-    current: filteredSession.players.find((player) => player.id === currentPlayerId)!,
-    other: filteredSession.players.find((player) => player.id !== currentPlayerId)
-  }
+  const parserKeys = clientSessionKeys.filter((key) => key !== 'players')
+  const filteredSession = pickFields(session, parserKeys)
 
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
+
+  let currentClientPlayer: ClientPlayer
+  let otherClientPlayer: ClientPlayer | null | undefined
+
+  if (session.mode === 'SINGLE') {
+    currentClientPlayer = session.owner
+      ? parseSchemaToClientPlayer(session.owner)
+      : deletedPlayerPlaceholder
+  } else {
+    const currentPlayer = session.owner?.id === currentPlayerId
+      ? session.owner
+      : session.guest
+    
+    const otherPlayer = session.guest?.id === currentPlayerId
+      ? session.owner
+      : session.guest
+
+    currentClientPlayer = currentPlayer ? parseSchemaToClientPlayer(currentPlayer) : deletedPlayerPlaceholder
+    otherClientPlayer = otherPlayer ? parseSchemaToClientPlayer(otherPlayer) : deletedPlayerPlaceholder
+  }
 
   return {
     ...filteredSession,
     collectionId: sessionCollection.id,
-    cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),
     players: {
-      current: parseSchemaToClientPlayer(players.current),
-      other: players.other ? parseSchemaToClientPlayer(players.other) : null
-    }
+      current: currentClientPlayer,
+      other: otherClientPlayer
+    },
+    cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards)
   }
 }
 
@@ -86,18 +101,23 @@ export function parseSessionFilter(
   userId: string,
   filterInput: z.infer<typeof sessionFilterSchema>
 ): Prisma.GameSessionWhereInput {
-  const where: Prisma.GameSessionWhereInput = { owner: { userId } }
+  const where: Prisma.GameSessionWhereInput = {
+    OR: [
+      { owner: { userId } },
+      { guest: { userId } }
+    ]
+  }
 
   const { success, data: filter } = sessionFilterSchema.safeParse(filterInput)
   if (!success) return where
 
-  return {
-    ...where,
-    ...filter,
-    players: {
-      some: {
-        id: { equals: filter.playerId }
-      }
-    }
+  if (filter.playerId) {
+    where.OR = [
+      { ownerId: filter.playerId },
+      { guestId: filter.playerId }
+    ]
+    delete filter.playerId
   }
+
+  return { ...where, ...filter }
 }

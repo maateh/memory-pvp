@@ -21,7 +21,7 @@ model User {
   imageUrl String?
 
   playerProfiles PlayerProfile[]
-  collections CardCollection[]
+  collections    CardCollection[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,14 +36,12 @@ model PlayerProfile {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @db.ObjectId
 
-  sessions   GameSession[] @relation(fields: [sessionIds], references: [id])
-  sessionIds String[]      @db.ObjectId
-
-  startedSessions GameSession[] @relation("SessionOwner")
+  sessions      GameSession[] @relation("SessionOwner")
+  guestSessions GameSession[] @relation("SessionGuest")
 
   results Result[]
   /// [PlayerStats]
-  stats Json @default("{ \"score\": 0, \"timer\": 0, \"flips\": 0, \"matches\": 0, \"sessions\": 0 }")
+  stats   Json     @default("{ \"score\": 0, \"timer\": 0, \"flips\": 0, \"matches\": 0, \"sessions\": 0 }")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -63,18 +61,18 @@ model GameSession {
   stats Json
 
   /// [SessionCard]
-  cards        Json[]
+  cards   Json[]
   /// [SessionCardMetadata]
   flipped Json[]
 
-  collection CardCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
-  collectionId String? @db.ObjectId
+  collection   CardCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  collectionId String?         @db.ObjectId
 
-  owner   PlayerProfile @relation("SessionOwner", fields: [ownerId], references: [id])
-  ownerId String        @db.ObjectId
+  owner   PlayerProfile? @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String?        @db.ObjectId
 
-  players   PlayerProfile[] @relation(fields: [playerIds], references: [id])
-  playerIds String[]        @db.ObjectId
+  guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: SetNull)
+  guestId String?        @db.ObjectId
 
   results Result[]
 
@@ -95,7 +93,7 @@ model Result {
   player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId String        @db.ObjectId
 
-  session   GameSession @relation(fields: [sessionId], references: [id])
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String      @db.ObjectId
 
   createdAt DateTime @default(now())
@@ -103,23 +101,23 @@ model Result {
 }
 
 model MemoryCard {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
   utKey String @unique
 
   imageUrl String
 
-  collection CardCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  collectionId String @db.ObjectId
+  collection   CardCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String         @db.ObjectId
 }
 
 model CardCollection {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name String
+  name        String
   description String
-  tableSize TableSize
+  tableSize   TableSize
 
-  cards MemoryCard[]
+  cards    MemoryCard[]
   sessions GameSession[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
