@@ -10,18 +10,24 @@ export const offlineSessionMetadata = {
 } satisfies Omit<ClientGameSession, keyof UnsignedClientGameSession>
 
 export const sessionSchemaFields = {
-  owner: true,
-  collection: {
-    include: {
-      user: true,
-      cards: true
-    }
-  },
-  players: {
+  owner: {
     include: {
       user: {
         select: { imageUrl: true }
       }
+    }
+  },
+  guest: {
+    include: {
+      user: {
+        select: { imageUrl: true }
+      }
+    }
+  },
+  collection: {
+    include: {
+      user: true,
+      cards: true
     }
   }
 } satisfies Prisma.GameSessionInclude
