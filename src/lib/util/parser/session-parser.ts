@@ -45,7 +45,7 @@ export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
-  currentPlayerId: string | null | undefined
+  currentPlayerId: string = deletedPlayerPlaceholder.id
 ): ClientGameSession {
   const parserKeys = clientSessionKeys.filter((key) => key !== 'players')
   const filteredSession = pickFields(session, parserKeys)
