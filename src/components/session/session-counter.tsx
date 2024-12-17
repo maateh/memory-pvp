@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator"
 import { SessionCount } from "@/components/session"
 
 const SessionCounter = ({ player }: { player: ClientPlayer }) => {
-  void trpc.session.count.prefetch({})
+  void trpc.session.count.prefetch({ playerId: player.id })
 
   return (
     <div className="mt-5 pt-3 flex gap-x-2 border-t border-border/50">
@@ -30,7 +30,7 @@ const SessionCounter = ({ player }: { player: ClientPlayer }) => {
 
         <HydrateClient>
           <Suspense fallback={<Loader2 className="size-3.5 shrink-0 text-muted-foreground animate-spin" strokeWidth={4} />}>
-            <SessionCount />
+            <SessionCount playerId={player.id} />
           </Suspense>
         </HydrateClient>
       </div>
