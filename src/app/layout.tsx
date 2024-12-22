@@ -3,7 +3,7 @@ import { Josefin_Sans, Geologica } from "next/font/google"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider, TRPCProvider } from "@/components/provider"
+import { SocketServiceProvider, ThemeProvider, TRPCProvider } from "@/components/provider"
 import { Toaster } from "@/components/ui/sonner"
 
 // uploadthing
@@ -51,17 +51,19 @@ const BaseLayout = ({ children, popup }: BaseLayoutProps) => {
           <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
 
           <TRPCProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              storageKey="memory-theme"
-              enableSystem
-            >
-              <Toaster />
+            <SocketServiceProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                storageKey="memory-theme"
+                enableSystem
+              >
+                <Toaster />
 
-              {popup}
-              {children}
-            </ThemeProvider>
+                {popup}
+                {children}
+              </ThemeProvider>
+            </SocketServiceProvider>
           </TRPCProvider>
         </body>
       </html>
