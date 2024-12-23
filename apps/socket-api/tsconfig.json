@@ -1,21 +1,17 @@
 {
+  "extends": "@repo/ts-config/base.json",
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "bundler",
     "rootDir": "./src",
     "outDir": "./dist",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
     "noEmit": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "forceConsistentCasingInFileNames": true,  
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

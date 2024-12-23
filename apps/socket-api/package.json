@@ -18,6 +18,7 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "@repo/ts-config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
     "tsx": "^4.19.2",

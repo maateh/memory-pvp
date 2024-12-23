@@ -72,6 +72,9 @@ importers:
       '@repo/redis':
         specifier: workspace:*
         version: link:../../packages/redis
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../../packages/ts-config
       '@tanstack/react-query':
         specifier: ^5.52.3
         version: 5.52.3(react@18.3.1)
@@ -212,6 +215,9 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1
     devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../../packages/ts-config
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
@@ -230,6 +236,14 @@ importers:
       '@upstash/redis':
         specifier: ^1.34.3
         version: 1.34.3
+
+  packages/schema:
+    dependencies:
+      '@upstash/redis':
+        specifier: ^1.34.3
+        version: 1.34.3
+
+  packages/ts-config: {}
 
 packages:
 
