@@ -201,6 +201,9 @@ importers:
 
   apps/socket-api:
     dependencies:
+      '@repo/redis':
+        specifier: workspace:*
+        version: link:../../packages/redis
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -208,9 +211,6 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1
     devDependencies:
-      '@repo/redis':
-        specifier: workspace:*
-        version: link:../../packages/redis
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
@@ -220,6 +220,9 @@ importers:
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
+      typescript:
+        specifier: ^5
+        version: 5.6.2
 
   packages/redis:
     dependencies:

@@ -1,23 +1,26 @@
 {
   "name": "memory-socket",
+  "author": "maateh",
   "version": "1.0.0",
   "description": "A socket server designed for memory-pvp.",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "node --import=tsx --env-file=.env --watch-path=./src src/server.ts",
+    "build": "tsc",
+    "start": "node --env-file=.env dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
     "check-types": "tsc --noEmit"
   },
-  "author": "maateh",
-  "license": "ISC",
   "dependencies": {
+    "@repo/redis": "workspace:*",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "@repo/redis": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5"
   }
 }
