@@ -26,8 +26,9 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
-import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateSessionAction } from "@/lib/safe-action/session"
+import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
+import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
 type SessionFormValues = z.infer<typeof createSessionSchema>
 
@@ -59,6 +60,16 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     status: createSessionStatus
   } = useCreateSessionAction()
   const { execute: createOfflineSession } = useCreateOfflineSession()
+  const { execute: createWaitingRoom } = useCreateWaitingRoom()
+
+  const handleSubmit = (values: SessionFormValues) => {
+    if (mode === "SINGLE") {
+      executeCreateSession(values)
+      return
+    }
+
+    createWaitingRoom(values)
+  }
 
   const type = form.watch('type')
   const mode = form.watch('mode')
@@ -70,7 +81,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     <Form<SessionFormValues>
       className="h-full flex flex-col gap-y-8"
       form={form}
-      onSubmit={executeCreateSession}
+      onSubmit={handleSubmit}
     >
       <SessionFormFields form={form} />
 
