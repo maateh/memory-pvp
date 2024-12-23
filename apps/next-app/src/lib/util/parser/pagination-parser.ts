@@ -1,3 +1,6 @@
+// types
+import type { Pagination, PaginationWithoutData, PaginationParams } from "@/lib/types/query"
+
 // config
 import { getFixedPaginationParams } from "@/config/pagination-settings"
 

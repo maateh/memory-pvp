@@ -1,3 +1,7 @@
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+import type { PlayerProfileWithUserAvatar } from "@/lib/types/prisma"
+
 // utils
 import { pickFields } from "@/lib/util/parser"
 

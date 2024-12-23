@@ -1,3 +1,6 @@
+// types
+import type { ClientGameSession } from "@/lib/types/client"
+
 // actions
 import { saveSession } from "@/server/action/session-action"
 

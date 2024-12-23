@@ -2,6 +2,7 @@ import { nanoid } from "nanoid"
 
 // types
 import type { MemoryCard } from "@prisma/client"
+import type { ClientCardCollection, ClientGameSession, ClientSessionCard } from "@/lib/types/client"
 
 // config
 import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"

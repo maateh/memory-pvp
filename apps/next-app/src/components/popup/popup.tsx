@@ -10,7 +10,7 @@ import { Dialog } from "@/components/ui/dialog"
 import { useIsMobile } from "@/hooks/use-is-mobile"
 
 type PopupProps = {
-  renderer: PopupRenderer
+  renderer: "trigger" | "router"
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: ((open: boolean) => void)

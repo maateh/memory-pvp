@@ -2,6 +2,7 @@ import Image from "next/image"
 
 // types
 import type { LucideProps } from "lucide-react"
+import type { ClientUser } from "@/lib/types/client"
 
 // utils
 import { cn } from "@/lib/util"

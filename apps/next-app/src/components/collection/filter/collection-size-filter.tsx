@@ -1,6 +1,7 @@
 "use client"
 
 // types
+import type { FilterOptions } from "@/lib/types/query"
 import type { CollectionFilter, CollectionFilterFields } from "./types"
 
 // config

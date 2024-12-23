@@ -4,6 +4,7 @@ import { useMemo } from "react"
 
 // types
 import type { GameMode, GameType, TableSize } from "@prisma/client"
+import type { FilterService, FilterOptions } from "@/lib/types/query"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 import type {
   SessionSettingsFilter as TSessionSettingsFilter,

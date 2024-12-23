@@ -1,5 +1,6 @@
 // types
 import type { VariantProps } from "class-variance-authority"
+import type { ClientPlayer } from "@/lib/types/client"
 
 // utils
 import { cva } from "class-variance-authority"

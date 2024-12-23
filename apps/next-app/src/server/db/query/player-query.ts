@@ -1,9 +1,8 @@
 // types
 import type { z } from "zod"
-import type { playerFilterSchema, playerSortSchema } from "@/lib/schema/param/player-param"
-
-// prisma
 import type { Prisma } from "@prisma/client"
+import type { ClientPlayer } from "@/lib/types/client"
+import type { playerFilterSchema, playerSortSchema } from "@/lib/schema/param/player-param"
 
 // server
 import { db } from "@/server/db"

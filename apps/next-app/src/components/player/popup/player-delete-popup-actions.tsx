@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation"
 
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+
 // shadcn
 import { Button } from "@/components/ui/button"
 import { useDeletePlayerAction } from "@/lib/safe-action/player"

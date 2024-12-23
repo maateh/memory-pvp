@@ -2,6 +2,7 @@ import Link from "next/link"
 
 // types
 import type { ColumnDef } from "@tanstack/react-table"
+import type { ClientGameSession } from "@/lib/types/client"
 
 // config
 import {

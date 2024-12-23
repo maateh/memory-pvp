@@ -1,5 +1,8 @@
 import Link from "next/link"
 
+// types
+import type { ClientGameSession } from "@/lib/types/client"
+
 // config
 import {
   gameModePlaceholders,

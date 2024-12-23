@@ -1,3 +1,6 @@
+// types
+import type { ClientGameSession, ClientSessionCard } from "@/lib/types/client"
+
 // utils
 import { cn } from "@/lib/util"
 

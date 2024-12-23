@@ -1,3 +1,6 @@
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+
 /* Offline player metadata */
 export const offlinePlayerMetadata = {
   color: '#ffffff',

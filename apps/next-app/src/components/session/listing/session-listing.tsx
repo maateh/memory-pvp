@@ -4,6 +4,7 @@ import { useState } from "react"
 
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
+import type { ClientGameSession } from "@/lib/types/client"
 
 // react-table
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"

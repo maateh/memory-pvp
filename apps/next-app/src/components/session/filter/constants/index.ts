@@ -1,4 +1,5 @@
 // types
+import type { SortOptions } from "@/lib/types/query"
 import type { SessionSort } from "../types"
 
 export const sessionSortOptions: SortOptions<SessionSort> = {

@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
+// types
+import type { UseThemeProps } from "@/lib/types/theme"
+
 // config
 import {
   gameModePlaceholders,

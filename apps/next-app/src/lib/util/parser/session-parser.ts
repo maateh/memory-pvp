@@ -1,6 +1,8 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
+import type { ClientGameSession, UnsignedClientGameSession, ClientPlayer } from "@/lib/types/client"
+import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 
 // schemas
 import { sessionFilterSchema } from "@/lib/schema/param/session-param"

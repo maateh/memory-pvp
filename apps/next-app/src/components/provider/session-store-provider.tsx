@@ -1,5 +1,8 @@
 "use client"
 
+// types
+import type { ClientGameSession, ClientSessionCard } from "@/lib/types/client"
+
 import { createContext, useContext, useState } from "react"
 import { createStore, useStore } from "zustand"
 

@@ -1,5 +1,6 @@
 // types
 import type { PlayerProfile } from "@prisma/client"
+import type { ClientGameSession } from "@/lib/types/client"
 
 // server
 import { db } from "@/server/db"

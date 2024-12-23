@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 
 // types
+import type { SortKey, SortOption, SortOptions } from "@/lib/types/query"
 import type { LucideProps } from "lucide-react"
 
 // utils

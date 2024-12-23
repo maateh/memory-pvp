@@ -1,5 +1,6 @@
 // prisma
 import type { GameMode, GameType, TableSize } from "@prisma/client"
+import type { ClientCardCollection } from "@/lib/types/client"
 
 // server
 import { db } from "@/server/db"

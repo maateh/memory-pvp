@@ -8,7 +8,7 @@ import { DialogTrigger } from "@/components/ui/dialog"
 import { useIsMobile } from "@/hooks/use-is-mobile"
 
 type PopupTriggerProps = {
-  renderer: PopupRenderer
+  renderer: "trigger" | "router"
 } & React.ComponentProps<typeof DrawerTrigger> & React.ComponentProps<typeof DialogTrigger>
 
 const PopupTrigger = ({ renderer, ...props }: PopupTriggerProps) => {

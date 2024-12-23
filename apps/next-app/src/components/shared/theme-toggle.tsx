@@ -3,6 +3,9 @@
 import { forwardRef } from "react"
 import { useTheme } from "next-themes"
 
+// types
+import type { UseThemeProps } from "@/lib/types/theme"
+
 // utils
 import { cn } from "@/lib/util"
 

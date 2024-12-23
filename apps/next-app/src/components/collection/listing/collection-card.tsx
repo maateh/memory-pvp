@@ -2,6 +2,7 @@ import { formatDistance } from "date-fns"
 
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
+import type { ClientCardCollection } from "@/lib/types/client"
 
 // config
 import { tableSizePlaceholders } from "@/config/game-settings"

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 // types
 import type { z } from "zod"
 import type { DefaultValues } from "react-hook-form"
+import type { ClientCardCollection } from "@/lib/types/client"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"

@@ -1,5 +1,6 @@
 // types
 import type { Prisma } from "@prisma/client"
+import type { ClientGameSession, UnsignedClientGameSession } from "@/lib/types/client"
 
 /* Offline session metadata */
 export const offlineSessionMetadata = {

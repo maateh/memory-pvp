@@ -1,6 +1,7 @@
 // types
 import type { TableSize } from "@prisma/client"
 import type { FileRouterInputKey } from "@uploadthing/shared"
+import type { CardCollectionWithCardsWithUser } from "@/lib/types/prisma"
 import type { UploadRouter } from "@/server/uploadthing/core"
 
 // config

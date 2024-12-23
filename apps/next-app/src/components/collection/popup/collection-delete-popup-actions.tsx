@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation"
 
+// types
+import type { ClientCardCollection } from "@/lib/types/client"
+
 // utils
 import { logError } from "@/lib/util/error"
 

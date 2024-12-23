@@ -2,6 +2,9 @@
 
 import { redirect, RedirectType } from "next/navigation"
 
+// types
+import type { ClientCardCollection, ClientGameSession } from "@/lib/types/client"
+
 // server
 import { getRandomCollection } from "@/server/db/query/collection-query"
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"

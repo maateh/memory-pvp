@@ -1,4 +1,5 @@
 import type { z } from "zod"
+import type { Filter, Sort } from "@/lib/types/query"
 import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
 
 /* Filter types */

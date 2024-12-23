@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 
 // types
+import type { ClientCardCollection } from "@/lib/types/client"
+import type { PaginationParams } from "@/lib/types/query"
 import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
 
 // server

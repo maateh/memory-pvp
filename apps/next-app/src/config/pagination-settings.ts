@@ -1,3 +1,6 @@
+// types
+import type { PaginationParams } from "@/lib/types/query"
+
 /** Maximum item limit of pagination queries */
 export const MAX_PAGINATION_LIMIT = 20
 

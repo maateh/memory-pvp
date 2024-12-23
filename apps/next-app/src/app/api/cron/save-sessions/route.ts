@@ -1,3 +1,6 @@
+// types
+import type { ClientGameSession } from "@/lib/types/client"
+
 // server
 import { redis } from "@repo/redis"
 import { db } from "@/server/db"

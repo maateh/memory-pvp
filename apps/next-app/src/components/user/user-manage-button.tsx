@@ -2,6 +2,9 @@
 
 import { forwardRef } from "react"
 
+// types
+import type { ClerkUser } from "@/lib/types/client"
+
 // clerk
 import { SignInButton, useClerk } from "@clerk/nextjs"
 

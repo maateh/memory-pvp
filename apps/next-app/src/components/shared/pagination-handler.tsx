@@ -1,3 +1,6 @@
+// types
+import type { PaginationWithoutData } from "@/lib/types/query"
+
 // utils
 import { getPageNumbers } from "@/lib/util/parser/pagination-parser"
 

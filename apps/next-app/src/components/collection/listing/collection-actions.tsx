@@ -2,6 +2,7 @@ import Link from "next/link"
 
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
+import type { ClientCardCollection } from "@/lib/types/client"
 
 // utils
 import { cn } from "@/lib/util"

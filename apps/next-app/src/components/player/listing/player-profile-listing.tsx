@@ -1,3 +1,6 @@
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+
 // utils
 import { cn } from "@/lib/util"
 

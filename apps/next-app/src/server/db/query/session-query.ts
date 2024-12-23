@@ -1,5 +1,7 @@
 // types
 import type { z } from "zod"
+import type { ClientGameSession } from "@/lib/types/client"
+import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
 
 // schema

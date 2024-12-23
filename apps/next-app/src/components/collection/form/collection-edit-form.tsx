@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { z } from "zod"
+import type { ClientCardCollection } from "@/lib/types/client"
 
 // utils
 import { logError } from "@/lib/util/error"

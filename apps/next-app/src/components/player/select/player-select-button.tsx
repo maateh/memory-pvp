@@ -2,6 +2,9 @@
 
 import { forwardRef } from "react"
 
+// types
+import type { ClerkUser, ClientPlayer } from "@/lib/types/client"
+
 // clerk
 import { useClerk } from "@clerk/nextjs"
 

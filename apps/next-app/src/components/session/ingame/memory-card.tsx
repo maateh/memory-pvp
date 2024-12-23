@@ -1,5 +1,8 @@
 import Image from "next/image"
 
+// types
+import type { ClientSessionCard } from "@/lib/types/client"
+
 // utils
 import { cn } from "@/lib/util"
 

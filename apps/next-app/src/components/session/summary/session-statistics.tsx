@@ -1,3 +1,6 @@
+// types
+import type { RendererStatsMap, RendererSessionStatKeys } from "@/lib/types/statistic"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"

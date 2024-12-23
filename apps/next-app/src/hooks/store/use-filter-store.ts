@@ -1,10 +1,13 @@
 import { create } from "zustand"
 
-/** Filter store keys */
+// types
+import type { Filter } from "@/lib/types/query"
+
+/* Filter store keys */
 export type FilterStoreKey = "statistics" | "rooms" | "history"
 
-/** Store types */
-type FilterStore<T extends Filter<T>> = {
+/* Store types */
+type FilterStore<T> = {
   [K in FilterStoreKey]: Filter<T>
 }
 
@@ -15,11 +18,11 @@ const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
   history: {}
 }))
 
-export const useFilterStore = <T extends Filter<T>>(
+export const useFilterStore = <T>(
   selector: (state: FilterStore<T>) => FilterStore<T>[FilterStoreKey]
 ) => useFilterStoreImpl(selector)
 
-export const setFilterStore = useFilterStoreImpl.setState as <T extends Filter<T>>(
+export const setFilterStore = useFilterStoreImpl.setState as <T>(
   partial: (state: FilterStore<T>) => Partial<FilterStore<T>>,
   replace?: boolean
 ) => void

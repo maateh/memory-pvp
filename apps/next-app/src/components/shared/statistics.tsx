@@ -2,6 +2,7 @@ import { cva, VariantProps } from "class-variance-authority"
 
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
+import type { RendererStat } from "@/lib/types/statistic"
 
 // utils
 import { cn } from "@/lib/util"

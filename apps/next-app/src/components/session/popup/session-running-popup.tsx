@@ -1,5 +1,8 @@
 import { Suspense } from "react"
 
+// types
+import type { ClientGameSession } from "@/lib/types/client"
+
 // actions
 import { getActiveSession } from "@/server/action/session-action"
 

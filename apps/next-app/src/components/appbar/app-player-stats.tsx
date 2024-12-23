@@ -2,6 +2,9 @@
 
 import { useMemo } from "react"
 
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"
 import { cn } from "@/lib/util"

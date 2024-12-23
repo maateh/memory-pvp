@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 
 // types
+import type { ClientPlayer } from "@/lib/types/client"
 import type { SessionFilter } from "@/components/session/filter/types"
 
 // trpc

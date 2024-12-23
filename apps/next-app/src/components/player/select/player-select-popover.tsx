@@ -1,3 +1,6 @@
+// types
+import type { ClientPlayer } from "@/lib/types/client"
+
 // shadcn
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 

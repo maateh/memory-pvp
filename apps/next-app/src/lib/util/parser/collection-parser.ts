@@ -1,6 +1,8 @@
 // types
 import type { z } from "zod"
 import type { Prisma } from "@prisma/client"
+import type { ClientMemoryCard, ClientCardCollection } from "@/lib/types/client"
+import type { CardCollectionWithCardsWithUser } from "@/lib/types/prisma"
 
 // schemas
 import { collectionFilterSchema } from "@/lib/schema/param/collection-param"

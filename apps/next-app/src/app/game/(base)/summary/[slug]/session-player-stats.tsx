@@ -1,3 +1,7 @@
+// types
+import type { ClientGameSession, ClientPlayer } from "@/lib/types/client"
+import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
+
 // helpers
 import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
 
