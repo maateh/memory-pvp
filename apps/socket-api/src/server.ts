@@ -2,11 +2,10 @@ import express from "express"
 import http from "http"
 
 import { Server } from "socket.io"
-import { Redis } from "@upstash/redis"
+import { redis } from "@repo/redis"
 
 const app = express()
 const server = http.createServer(app)
-const redis = Redis.fromEnv()
 
 const io = new Server(server, {
   cors: {

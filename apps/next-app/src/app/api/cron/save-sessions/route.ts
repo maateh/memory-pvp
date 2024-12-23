@@ -1,5 +1,5 @@
 // server
-import { redis } from "@/server/redis"
+import { redis } from "@repo/redis"
 import { db } from "@/server/db"
 
 const ROUTE_PREFIX = '[API | GET - /cron/save-sessions]'

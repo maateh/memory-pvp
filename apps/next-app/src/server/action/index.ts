@@ -6,7 +6,7 @@ import { auth } from "@clerk/nextjs/server"
 // server
 import { ApiError } from "@/server/_error"
 import { db } from "@/server/db"
-import { redis } from "@/server/redis"
+import { redis } from "@repo/redis"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
