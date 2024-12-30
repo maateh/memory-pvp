@@ -2,10 +2,10 @@
 import type { z } from "zod"
 import type { ClientGameSession } from "@/lib/types/client"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
-import type { sessionFilterSchema } from "@/lib/schema/param/session-param"
+import type { sessionFilterSchema } from "@/lib/schema/query/session-query"
 
 // schema
-import { sessionSortSchema } from "@/lib/schema/param/session-param"
+import { sessionSortSchema } from "@/lib/schema/query/session-query"
 
 // server
 import { db } from "@/server/db"

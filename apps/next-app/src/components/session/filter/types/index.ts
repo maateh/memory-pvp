@@ -1,6 +1,6 @@
 import type { z } from "zod"
 import type { Filter, Sort } from "@/lib/types/query"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/param/session-param"
+import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/query/session-query"
 
 /* Filter types */
 export type SessionFilterFields = Required<z.infer<typeof sessionFilterSchema>>

@@ -3,10 +3,10 @@ import type { z } from "zod"
 import type { TableSize } from "@prisma/client"
 import type { ClientCardCollection } from "@/lib/types/client"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
-import type { collectionFilterSchema } from "@/lib/schema/param/collection-param"
+import type { collectionFilterSchema } from "@/lib/schema/query/collection-query"
 
 // schema
-import { collectionSortSchema } from "@/lib/schema/param/collection-param"
+import { collectionSortSchema } from "@/lib/schema/query/collection-query"
 
 // server
 import { db } from "@/server/db"

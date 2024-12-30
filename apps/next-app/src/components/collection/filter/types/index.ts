@@ -1,6 +1,6 @@
 import type { z } from "zod"
 import type { Filter, Sort } from "@/lib/types/query"
-import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/param/collection-param"
+import type { collectionFilterSchema, collectionSortSchema } from "@/lib/schema/query/collection-query"
 
 /* Filter types */
 export type CollectionFilterFields = Required<z.infer<typeof collectionFilterSchema>>

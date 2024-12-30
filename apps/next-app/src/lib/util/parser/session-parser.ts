@@ -5,7 +5,7 @@ import type { ClientGameSession, UnsignedClientGameSession, ClientPlayer } from 
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 
 // schemas
-import { sessionFilterSchema } from "@/lib/schema/param/session-param"
+import { sessionFilterSchema } from "@/lib/schema/query/session-query"
 
 // config
 import { getFallbackCollection } from "@/config/collection-settings"

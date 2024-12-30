@@ -5,7 +5,7 @@ import type { ClientMemoryCard, ClientCardCollection } from "@/lib/types/client"
 import type { CardCollectionWithCardsWithUser } from "@/lib/types/prisma"
 
 // schemas
-import { collectionFilterSchema } from "@/lib/schema/param/collection-param"
+import { collectionFilterSchema } from "@/lib/schema/query/collection-query"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
