@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // schemas
-import { clientSessionSchema, matchedCardsSchema } from "@/lib/schema/session-schema"
+import { clientSessionSchema, matchedCardSchema } from "@/lib/schema/session-schema"
 
 /* Forms / API validations */
 export const createSessionSchema = clientSessionSchema.pick({
@@ -16,28 +16,24 @@ export const createSessionSchema = clientSessionSchema.pick({
 export const saveSessionSchema = clientSessionSchema.omit({ players: true })
 
 export const finishSessionSchema = clientSessionSchema.extend({
-  cards: matchedCardsSchema
+  cards: z.array(matchedCardSchema)
 }).omit({
   status: true,
   players: true
 })
 
-export const abandonSessionSchema = clientSessionSchema
-  .omit({
-    status: true,
-    players: true
-  })
-  .optional()
+export const abandonSessionSchema = clientSessionSchema.omit({
+  status: true,
+  players: true
+}).optional()
 
-export const saveOfflineGameSchema = clientSessionSchema
-  .extend({
-    playerId: z.string(),
-    cards: matchedCardsSchema
-  })
-  .omit({
-    slug: true,
-    type: true,
-    mode: true,
-    status: true,
-    players: true
-  })
+export const saveOfflineGameSchema = clientSessionSchema.extend({
+  playerId: z.string(),
+  cards: z.array(matchedCardSchema)
+}).omit({
+  slug: true,
+  type: true,
+  mode: true,
+  status: true,
+  players: true
+})

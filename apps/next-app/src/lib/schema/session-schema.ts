@@ -13,17 +13,14 @@ export const sessionCardMetadataSchema = z.object({
 })
 
 export const sessionCardSchema = sessionCardMetadataSchema.extend({
-  flippedBy: z.string().nullable(),
+  flippedBy: z.string().nullable(), // TODO: remove `flippedBy` -> track flipped cards only inside the `flipped` array
   matchedBy: z.string().nullable()
 })
 
-export const matchedCardsSchema = z.array(
-  sessionCardSchema.merge(
-    z.object({
-      matchedBy: z.string()
-    })
-  )
-)
+export const matchedCardSchema = sessionCardMetadataSchema.extend({
+  flippedBy: z.string().nullable(), // TODO: remove `flippedBy` -> track flipped cards only inside the `flipped` array
+  matchedBy: z.string()
+})
 
 export const sessionStatsSchema = z.object({
   timer: z.coerce.number(),
@@ -35,15 +32,18 @@ export const sessionStatsSchema = z.object({
   )
 })
 
+/* Client base schemas */
+export const clientSessionCardSchema = sessionCardSchema.extend({
+  imageUrl: z.string()
+})
+
 export const clientSessionSchema = z.object({
   slug: z.string(),
   collectionId: z.string(),
-
+  status: z.nativeEnum(GameStatus),
   type: z.nativeEnum(GameType),
   mode: z.nativeEnum(GameMode),
   tableSize: z.nativeEnum(TableSize),
-
-  status: z.nativeEnum(GameStatus),
 
   players: z.object({
     current: clientPlayerSchema,
@@ -51,10 +51,19 @@ export const clientSessionSchema = z.object({
   }),
   stats: sessionStatsSchema,
 
-  cards: z.array(sessionCardSchema),
+  cards: z.array(clientSessionCardSchema),
   flipped: z.array(sessionCardMetadataSchema),
 
   startedAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   continuedAt: z.coerce.date().optional().nullable(),
   closedAt: z.coerce.date().optional().nullable()
+})
+
+export const unsignedClientSessionSchema = clientSessionSchema.omit({
+  slug: true,
+  type: true,
+  mode: true,
+  status: true,
+  closedAt: true
 })

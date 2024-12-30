@@ -237,12 +237,6 @@ importers:
         specifier: ^1.34.3
         version: 1.34.3
 
-  packages/schema:
-    dependencies:
-      '@upstash/redis':
-        specifier: ^1.34.3
-        version: 1.34.3
-
   packages/ts-config: {}
 
 packages:

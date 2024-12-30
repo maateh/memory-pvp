@@ -1,21 +1,21 @@
 import { z } from "zod"
-import { TableSize } from "@prisma/client"
 
 // config
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // schemas
 import {
+  clientCollectionSchema,
   collectionCardImageSchema,
   collectionDescriptionSchema,
   collectionNameSchema
 } from "@/lib/schema/collection-schema"
 
 /* Form / API validations */
-export const createCollectionUtSchema = z.object({
-  name: collectionNameSchema,
-  description: collectionDescriptionSchema,
-  tableSize: z.nativeEnum(TableSize)
+export const createCollectionUtSchema = clientCollectionSchema.pick({
+  name: true,
+  description: true,
+  tableSize: true
 })
 
 export const createCollectionSchema = createCollectionUtSchema.extend({

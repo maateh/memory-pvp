@@ -17,6 +17,7 @@ export const playerStatsSchema = z.object({
   sessions: z.coerce.number()
 })
 
+/* Client base schemas */
 export const clientPlayerSchema = z.object({
   id: z.string(),
   tag: playerTagSchema,
@@ -25,5 +26,5 @@ export const clientPlayerSchema = z.object({
   imageUrl: z.string().nullable().optional(),
   stats: playerStatsSchema,
   createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date()
 })

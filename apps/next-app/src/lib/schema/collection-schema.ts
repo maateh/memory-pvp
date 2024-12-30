@@ -1,11 +1,17 @@
 import { z } from "zod"
 
+// prisma
+import { TableSize } from "@prisma/client"
+
 // config
 import {
   collectionAcceptedMimeTypes,
   collectionMaxFileSize,
   collectionMaxFileSizeInBytes
 } from "@/config/collection-settings"
+
+// schemas
+import { clientUserSchema } from "@/lib/schema/user-schema"
 
 /* Base schemas */
 export const collectionNameSchema = z.string()
@@ -23,3 +29,21 @@ export const collectionCardImageSchema = z.custom<File>()
   .refine((file: File) => collectionAcceptedMimeTypes.includes(file.type), {
     message: "Uploaded image file format is not supported."
   })
+
+/* Client base schemas */
+export const clientMemoryCardSchema = z.object({
+  id: z.string(),
+  imageUrl: z.string()
+})
+
+export const clientCollectionSchema = z.object({
+  id: z.string(),
+  name: collectionNameSchema,
+  description: collectionDescriptionSchema,
+  tableSize: z.nativeEnum(TableSize),
+  user: clientUserSchema,
+  cards: z.array(clientMemoryCardSchema),
+
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date()
+})

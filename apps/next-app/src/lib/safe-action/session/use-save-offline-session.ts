@@ -17,6 +17,7 @@ export const useSaveOfflineSessionAction = () => useAction(saveOfflineSession, {
     })
   },
   onError: ({ error }) => {
+    console.log({error})
     handleServerError(error.serverError, "Offline game session could not be saved.")
   }
 })

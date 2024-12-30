@@ -1,14 +1,15 @@
 import { z } from "zod"
-import { TableSize } from "@prisma/client"
 
 // schemas
 import { sortKeys } from "@/lib/schema"
+import { clientCollectionSchema } from "@/lib/schema/collection-schema"
 
 /* Query filters */
-export const collectionFilterSchema = z.object({
+export const collectionFilterSchema = clientCollectionSchema.pick({
+  name: true,
+  tableSize: true
+}).extend({
   username: z.string(),
-  name: z.string(),
-  tableSize: z.nativeEnum(TableSize),
   excludeUser: z.coerce.boolean().optional()
 }).partial()
 

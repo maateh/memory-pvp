@@ -41,8 +41,7 @@ const UserManagePopover = ({ ...props }: React.ComponentProps<typeof PopoverTrig
             info={user.username || email.split('@')[0]}
             user={{
               username: user.username!,
-              imageUrl: user.imageUrl,
-              createdAt: user.createdAt || new Date()
+              imageUrl: user.imageUrl
             }}
             showUserAvatarAsIcon
           />

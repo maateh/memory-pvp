@@ -61,6 +61,7 @@ export const useCreateOfflineSession = () => {
     saveSessionToStorage({
       tableSize: sessionValues.tableSize,
       startedAt: new Date(),
+      updatedAt: new Date(),
       flipped: [],
       cards: pairSessionCardsWithCollection(
         generateSessionCards(collection),

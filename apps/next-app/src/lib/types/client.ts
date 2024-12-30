@@ -1,61 +1,25 @@
+import type { z } from "zod"
 import type { UserResource } from "@clerk/types"
-import type {
-  CardCollection,
-  GameMode,
-  GameSession,
-  GameStatus,
-  GameType,
-  MemoryCard,
-  PlayerProfile,
-  TableSize,
-  User
-} from "@prisma/client"
+import type { clientCollectionSchema, clientMemoryCardSchema } from "@/lib/schema/collection-schema"
+import type { clientPlayerSchema } from "@/lib/schema/player-schema"
+import type { clientSessionCardSchema, clientSessionSchema, unsignedClientSessionSchema } from "@/lib/schema/session-schema"
+import type { clientUserSchema } from "@/lib/schema/user-schema"
 
 /* User types */
 export type ClerkUser = Omit<UserResource, 'username'> & { username: string }
-export type ClientUser = Omit<User, 'id' | 'clerkId' | 'email' | 'updatedAt'>
+export type ClientUser = z.infer<typeof clientUserSchema>
 
 /* Collection types */
-export type ClientMemoryCard = Omit<MemoryCard, 'utKey' | 'collectionId'>
+export type ClientMemoryCard = z.infer<typeof clientMemoryCardSchema>
 
-export type ClientCardCollection = Omit<CardCollection, 'userId'> & {
-  user: ClientUser
-  cards: ClientMemoryCard[]
-}
+export type ClientCardCollection = z.infer<typeof clientCollectionSchema>
 
 /* Session types */
-export type ClientGameSession = Omit<
-  GameSession,
-  'id' | 'collectionId' | 'ownerId' | 'guestId' | 'cards' |
-  'continuedAt' | 'closedAt' | 'updatedAt'
-> & {
-  players: {
-    current: ClientPlayer
-    other?: ClientPlayer | null
-  }
+export type ClientGameSession = z.infer<typeof clientSessionSchema>
 
-  collectionId: string
-  cards: ClientSessionCard[]
+export type UnsignedClientGameSession = z.infer<typeof unsignedClientSessionSchema>
 
-  continuedAt?: Date | null
-  closedAt?: Date | null
-  updatedAt?: Date | null
-}
-
-export type UnsignedClientGameSession = Omit<
-  ClientGameSession,
-  'slug' | 'type' | 'mode' | 'status' |
-  'closedAt' | 'updatedAt'
->
-
-export type ClientSessionCard = PrismaJson.SessionCard & {
-  imageUrl: string
-}
+export type ClientSessionCard = z.infer<typeof clientSessionCardSchema>
 
 /* Player types */
-export type ClientPlayer = Omit<
-  PlayerProfile,
-  'userId' | 'sessionIds'
-> & {
-  imageUrl: string | null
-}
+export type ClientPlayer = z.infer<typeof clientPlayerSchema>

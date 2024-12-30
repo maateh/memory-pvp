@@ -1,29 +1,15 @@
-export {}
+import type { z } from "zod"
+import type { sessionCardMetadataSchema, sessionCardSchema, sessionStatsSchema } from "@/lib/schema/session-schema"
+import type { playerStatsSchema } from "@/lib/schema/player-schema"
 
 declare global {
   namespace PrismaJson {
-    type SessionCardMetadata = {
-      id: string
-      key: number
-    }
+    type SessionCardMetadata = z.infer<typeof sessionCardMetadataSchema>
 
-    type SessionCard = SessionCardMetadata & {
-      flippedBy: string | null
-      matchedBy: string | null
-    }
+    type SessionCard = z.infer<typeof sessionCardSchema>
 
-    type SessionStats = {
-      timer: number
-      matches: Record<string, number>
-      flips: Record<string, number>
-    }
+    type SessionStats = z.infer<typeof sessionStatsSchema>
 
-    type PlayerStats = {
-      score: number
-      timer: number
-      flips: number
-      matches: number
-      sessions: number
-    }
+    type PlayerStats = z.infer<typeof playerStatsSchema>
   }
 }

@@ -24,7 +24,7 @@ type UserInfoProps = {
   hideInfo?: boolean
 } & ({
   showUserAvatarAsIcon: boolean
-  user: ClientUser
+  user: Pick<ClientUser, 'imageUrl' | 'username'>
 } | {
   showUserAvatarAsIcon?: never
   user?: never
