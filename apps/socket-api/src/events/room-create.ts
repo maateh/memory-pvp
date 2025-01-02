@@ -6,32 +6,50 @@ type RoomCreateData = {
   settings: SessionFormValues
 }
 
+type SocketPlayerConnection = ClientPlayer & {
+  socketId: string
+  roomSlug: string
+  createdAt: Date
+}
+
+type WaitingRoom = {
+  slug: string
+  status: "waiting"
+  owner: ClientPlayer & { socketId: string }
+  settings: SessionFormValues
+  createdAt: Date
+}
+
 export const roomCreate: SocketEventHandler<
   RoomCreateData,
-  SessionRoom
+  WaitingRoom
 > = (socket) => async (data, response) => {
+  console.info("DEBUG - room:create -> ", socket.id)
   const { owner, settings } = data
+  // TODO: validate settings with zod (schema needs to be exported)
 
-  console.info("room:create -> ")
+  const room: WaitingRoom = {
+    slug: "TODO: generate session slug",
+    status: "waiting",
+    owner: { ...owner, socketId: socket.id },
+    settings,
+    createdAt: new Date()
+  }
 
-  // TODO: create proper `SessionRoom`
-  const room: SessionRoom = {
-    id: socket.id,
-    status: "starting",
-    owner,
-    guest: owner,
-    session: {
-      ...settings,
-      slug: ""
-    }
+  const connection: SocketPlayerConnection = {
+    ...owner,
+    socketId: socket.id,
+    roomSlug: room.slug,
+    createdAt: room.createdAt
   }
 
   try {
-    // TODO: setup redis data structure properly
+    await Promise.all([
+      redis.hset(`memory:connections:${socket.id}`, connection),
+      redis.hset(`memory:session_rooms:${room.slug}`, room)
+    ])
 
-    await redis.set<SessionRoom>(`waiting_room:${room.id}`, room)
-    socket.join(room.id)
-  
+    socket.join(room.owner.socketId)
     response({
       success: true,
       message: "Waiting for another user to join...",
