@@ -2,7 +2,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
-import type { TableSize } from "@prisma/client"
+import type { TableSize } from "@repo/db"
 
 // actions
 import { createCollection } from "@/server/action/collection-action"

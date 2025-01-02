@@ -1,0 +1,20 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0",
+    "prisma-json-types-generator": "^3.1.1"
+  }
+}

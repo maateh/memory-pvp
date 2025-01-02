@@ -1,5 +1,5 @@
 // types
-import type { GameStatus } from "@prisma/client"
+import type { GameStatus } from "@repo/db"
 import type { LucideProps } from "lucide-react"
 
 // utils

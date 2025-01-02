@@ -1,5 +1,5 @@
 // prisma
-import type { GameMode, GameType, TableSize } from "@prisma/client"
+import type { GameMode, GameType, TableSize } from "@repo/db"
 import type { LucideIcon } from "lucide-react"
 
 // icons

@@ -1,7 +1,7 @@
 "use server"
 
 // prisma
-import type { User } from "@prisma/client"
+import type { User } from "@repo/db"
 
 // clerk
 import { auth } from "@clerk/nextjs/server"

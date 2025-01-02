@@ -1,5 +1,5 @@
 // prisma
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@repo/db"
 
 declare global {
   var prisma: PrismaClient | undefined

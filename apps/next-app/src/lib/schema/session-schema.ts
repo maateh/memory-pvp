@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // prisma
-import { GameMode, GameStatus, GameType, TableSize } from "@prisma/client"
+import { GameMode, GameStatus, GameType, TableSize } from "@repo/db"
 
 // validations
 import { clientPlayerSchema } from "@/lib/schema/player-schema"
