@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/ts-config/base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

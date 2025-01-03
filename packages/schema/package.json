@@ -1,0 +1,16 @@
+{
+  "name": "@repo/schema",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": {
+    "./session": "./src/session-schema.ts",
+    "./player": "./src/player-schema.ts",
+    "./session-validation": "./src/validation/session-validation.ts"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*"
+  }
+}

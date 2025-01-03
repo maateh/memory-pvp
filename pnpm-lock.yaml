@@ -72,6 +72,9 @@ importers:
       '@repo/redis':
         specifier: workspace:*
         version: link:../../packages/redis
+      '@repo/schema':
+        specifier: workspace:*
+        version: link:../../packages/schema
       '@repo/ts-config':
         specifier: workspace:*
         version: link:../../packages/ts-config
@@ -250,7 +253,15 @@ importers:
         specifier: ^1.34.3
         version: 1.34.3
 
-  packages/shared: {}
+  packages/schema:
+    dependencies:
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../database
+    devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
 
   packages/ts-config: {}
 
@@ -4454,21 +4465,21 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
 
   '@types/cookie@0.4.1': {}
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
 
   '@types/express-serve-static-core@5.0.2':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
       '@types/qs': 6.9.17
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -4516,12 +4527,12 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
       '@types/send': 0.17.4
 
   '@types/webidl-conversions@7.0.3': {}
@@ -5011,7 +5022,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 22.10.2
+      '@types/node': 22.10.4
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2

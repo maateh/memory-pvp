@@ -4,15 +4,6 @@ import { z } from "zod"
 import { clientSessionSchema, matchedCardSchema } from "@/lib/schema/session-schema"
 
 /* Forms / API validations */
-export const createSessionSchema = clientSessionSchema.pick({
-  type: true,
-  mode: true,
-  tableSize: true
-}).extend({
-  collectionId: z.string().optional(),
-  forceStart: z.coerce.boolean().optional()
-})
-
 export const saveSessionSchema = clientSessionSchema.omit({ players: true })
 
 export const finishSessionSchema = clientSessionSchema.extend({
@@ -37,3 +28,5 @@ export const saveOfflineGameSchema = clientSessionSchema.extend({
   status: true,
   players: true
 })
+
+export * from "@repo/schema/session-validation"
