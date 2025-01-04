@@ -9,6 +9,7 @@
       "@/*": ["./src/*"]
     }
   },
+  "references": [{ "path": "../../packages/schema" }],
   "include": [
     "**/*.ts",
     "**/*.d.ts"

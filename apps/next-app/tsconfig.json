@@ -6,6 +6,7 @@
       "@/*": ["./src/*"]
     }
   },
+  "references": [{ "path": "../../packages/schema" }],
   "include": [
     "next-env.d.ts",
     "next.config.js",
