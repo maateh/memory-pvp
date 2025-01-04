@@ -4,7 +4,7 @@ import { z } from "zod"
 import { GameMode, GameStatus, GameType, TableSize } from "@repo/db"
 
 // validations
-import { clientPlayerSchema } from "@/player-schema"
+import { clientPlayerSchema } from "./player-schema"
 
 /* Base schemas */
 export const sessionCardMetadataSchema = z.object({

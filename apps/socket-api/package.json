@@ -6,7 +6,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "node --import=tsx --env-file=.env --watch-path=./src src/server.ts",
-    "build": "tsc",
+    "build": "tsc --build tsconfig.json",
     "start": "node --env-file=.env dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@repo/redis": "workspace:*",
+    "@repo/schema": "workspace:*",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },

@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // schemas
-import { clientSessionSchema } from "@/session-schema"
+import { clientSessionSchema } from "../session-schema"
 
 /* Forms / API validations */
 export const createSessionSchema = clientSessionSchema.pick({

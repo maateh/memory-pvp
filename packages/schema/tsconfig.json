@@ -3,13 +3,12 @@
   "compilerOptions": {
     "incremental": true,
     "composite": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "rootDir": "./",
+    "outDir": "./dist"
   },
   "include": [
     "**/*.ts",
     "**/*.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
