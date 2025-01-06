@@ -3,8 +3,8 @@
 import { useForm } from "react-hook-form"
 
 // types
-import type { z } from "zod"
 import type { DefaultValues } from "react-hook-form"
+import type { CreatePlayerValidation } from "@/lib/schema/validation/player-validation"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -27,18 +27,16 @@ import PlayerProfileFormFields from "./player-profile-form-fields"
 // hooks
 import { useCreatePlayerAction, useUpdatePlayerAction } from "@/lib/safe-action/player"
 
-type PlayerProfileFormValues = z.infer<typeof createPlayerSchema>
-
 type PlayerProfileFormProps = ({
   type?: "create"
-  defaultValues?: DefaultValues<PlayerProfileFormValues>
+  defaultValues?: DefaultValues<CreatePlayerValidation>
 } | {
   type?: "edit"
-  defaultValues: Required<DefaultValues<PlayerProfileFormValues>>
+  defaultValues: Required<DefaultValues<CreatePlayerValidation>>
 }) & Omit<React.ComponentProps<typeof Form>, "form" | "onSubmit">
 
 const PlayerProfileForm = ({ type = "create", defaultValues, className, ...props }: PlayerProfileFormProps) => {
-  const form = useForm<PlayerProfileFormValues>({
+  const form = useForm<CreatePlayerValidation>({
     resolver: zodResolver(createPlayerSchema),
     defaultValues: {
       tag: defaultValues?.tag ?? '',
@@ -56,7 +54,7 @@ const PlayerProfileForm = ({ type = "create", defaultValues, className, ...props
     status: updatePlayerStatus
   } = useUpdatePlayerAction()
 
-  const handleExecute = async (values: PlayerProfileFormValues) => {
+  const handleExecute = async (values: CreatePlayerValidation) => {
     try {
       if (type === "create") {
         await executeCreatePlayer(values)
@@ -104,4 +102,3 @@ const PlayerProfileForm = ({ type = "create", defaultValues, className, ...props
 }
 
 export default PlayerProfileForm
-export type { PlayerProfileFormValues }

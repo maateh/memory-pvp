@@ -1,8 +1,7 @@
 // types
-import type { z } from "zod"
-import type { ClientGameSession } from "@/lib/types/client"
+import type { ClientGameSession } from "@/lib/schema/session-schema"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
-import type { sessionFilterSchema } from "@/lib/schema/query/session-query"
+import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 
 // schema
 import { sessionSortSchema } from "@/lib/schema/query/session-query"
@@ -33,8 +32,8 @@ import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parse
  * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
 export async function getClientSessions({ filter, sort, pagination }: {
-  filter: z.infer<typeof sessionFilterSchema>
-  sort: z.infer<typeof sessionSortSchema>
+  filter: SessionFilterQuery
+  sort: SessionSortQuery
   pagination: PaginationParams
 }): Promise<Pagination<ClientGameSession>> {
   const user = await signedIn()

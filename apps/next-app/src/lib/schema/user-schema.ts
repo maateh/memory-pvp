@@ -7,3 +7,5 @@ export const clientUserSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 })
+
+export type ClientUser = z.infer<typeof clientUserSchema>

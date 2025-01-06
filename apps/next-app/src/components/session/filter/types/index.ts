@@ -1,9 +1,8 @@
-import type { z } from "zod"
 import type { Filter, Sort } from "@/lib/types/query"
-import type { sessionFilterSchema, sessionSortSchema } from "@/lib/schema/query/session-query"
+import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 
 /* Filter types */
-export type SessionFilterFields = Required<z.infer<typeof sessionFilterSchema>>
+export type SessionFilterFields = Required<SessionFilterQuery>
 export type SessionFilter = Filter<SessionFilterFields>
 
 export type SessionSettingsFilterFields = Pick<SessionFilterFields, 'type' | 'mode' | 'tableSize'>
@@ -13,5 +12,5 @@ export type SessionStatusFilterFields = Pick<SessionFilterFields, 'status'>
 export type SessionStatusFilter = Filter<SessionStatusFilterFields>
 
 /* Sort types */
-export type SessionSortFields = Required<z.infer<typeof sessionSortSchema>>
+export type SessionSortFields = Required<SessionSortQuery>
 export type SessionSort = Sort<SessionSortFields>

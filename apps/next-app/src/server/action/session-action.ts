@@ -3,7 +3,8 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { ClientCardCollection, ClientGameSession } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientGameSession } from "@/lib/schema/session-schema"
 
 // server
 import { getRandomCollection } from "@/server/db/query/collection-query"

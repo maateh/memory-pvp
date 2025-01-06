@@ -3,7 +3,7 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
 import type { ExpandedRouteConfig } from "uploadthing/types"
-import type { CollectionFormValues } from "@/components/collection/form/collection-form"
+import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // config
 import { tableSizePlaceholders } from "@/config/game-settings"
@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { CollectionDropzone } from "@/components/input"
 
 type CollectionFormFieldsProps = {
-  form: UseFormReturn<CollectionFormValues>
+  form: UseFormReturn<CreateClientCardCollectionValidation>
   routeConfig?: ExpandedRouteConfig
   isPending: boolean
   disabled?: boolean

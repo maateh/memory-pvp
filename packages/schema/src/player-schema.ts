@@ -28,3 +28,8 @@ export const clientPlayerSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 })
+
+export type PlayerTag = z.infer<typeof playerTagSchema>
+export type PlayerColor = z.infer<typeof playerColorSchema>
+export type PlayerStats = z.infer<typeof playerStatsSchema>
+export type ClientPlayer = z.infer<typeof clientPlayerSchema>

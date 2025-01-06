@@ -4,9 +4,9 @@ import Link from "next/link"
 import { useForm } from "react-hook-form"
 
 // types
-import type { z } from "zod"
 import type { DefaultValues } from "react-hook-form"
-import type { ClientCardCollection } from "@/lib/types/client"
+import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -31,22 +31,20 @@ import { useCreateSessionAction } from "@/lib/safe-action/session"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
-type SessionFormValues = z.infer<typeof createSessionSchema>
-
 type SessionFormValuesCache = {
-  sessionValues: SessionFormValues
+  sessionValues: CreateSessionValidation
   collection: ClientCardCollection | null
 }
 
 type SessionFormProps = {
-  defaultValues?: DefaultValues<SessionFormValues>
+  defaultValues?: DefaultValues<CreateSessionValidation>
   collection: ClientCardCollection | null
 }
 
 const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const { user: clerkUser } = useClerk()
 
-  const form = useForm<SessionFormValues>({
+  const form = useForm<CreateSessionValidation>({
     resolver: zodResolver(createSessionSchema),
     defaultValues: {
       type: defaultValues?.type || 'CASUAL',
@@ -63,7 +61,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const { execute: createOfflineSession } = useCreateOfflineSession()
   const { execute: createWaitingRoom } = useCreateWaitingRoom()
 
-  const handleSubmit = (values: SessionFormValues) => {
+  const handleSubmit = (values: CreateSessionValidation) => {
     if (mode === "SINGLE") {
       executeCreateSession(values)
       return
@@ -79,7 +77,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const SubmitIcon = mode === 'SINGLE' ? SquarePlay : CircleFadingPlus
 
   return (
-    <Form<SessionFormValues>
+    <Form<CreateSessionValidation>
       className="h-full flex flex-col gap-y-8"
       form={form}
       onSubmit={handleSubmit}
@@ -158,4 +156,4 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
 }
 
 export default SessionForm
-export type { SessionFormValues, SessionFormValuesCache }
+export type { SessionFormValuesCache }

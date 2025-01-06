@@ -24,3 +24,6 @@ export const sessionSortSchema = z.object({
   continuedAt: sortKeys,
   closedAt: sortKeys
 }).partial()
+
+export type SessionFilterQuery = z.infer<typeof sessionFilterSchema>
+export type SessionSortQuery = z.infer<typeof sessionSortSchema>

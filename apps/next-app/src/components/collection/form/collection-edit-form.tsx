@@ -3,8 +3,8 @@
 import { useForm } from "react-hook-form"
 
 // types
-import type { z } from "zod"
-import type { ClientCardCollection } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { UpdateCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
@@ -26,14 +26,12 @@ import CollectionEditFormFields from "./collection-edit-form-fields"
 // hooks
 import { useUpdateCollectionAction } from "@/lib/safe-action/collection"
 
-type CollectionEditFormValues = z.infer<typeof updateCollectionSchema>
-
 type CollectionEditFormProps = {
   collection: ClientCardCollection
 }
 
 const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
-  const form = useForm<CollectionEditFormValues>({
+  const form = useForm<UpdateCardCollectionValidation>({
     resolver: zodResolver(updateCollectionSchema),
     defaultValues: collection
   })
@@ -43,7 +41,7 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
     status: updateCollectionStatus
   } = useUpdateCollectionAction()
 
-  const handleExecute = async (values: CollectionEditFormValues) => {
+  const handleExecute = async (values: UpdateCardCollectionValidation) => {
     if (
       values.name === collection.name &&
       values.description === collection.description
@@ -61,7 +59,7 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
   }
 
   return (
-    <Form<CollectionEditFormValues>
+    <Form<UpdateCardCollectionValidation>
       className="mt-5"
       form={form}
       onSubmit={handleExecute}
@@ -87,4 +85,3 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
 }
 
 export default CollectionEditForm
-export type { CollectionEditFormValues }

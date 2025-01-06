@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 
 // types
-import type { ClientPlayer } from "@/lib/types/client"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 
 // shadcn
 import { Button } from "@/components/ui/button"

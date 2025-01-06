@@ -4,7 +4,7 @@ import { useState } from "react"
 
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
-import type { ClientUser } from "@/lib/types/client"
+import type { ClientUser } from "@/lib/schema/user-schema"
 
 // utils
 import { cn } from "@/lib/util"

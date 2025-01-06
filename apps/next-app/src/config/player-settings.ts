@@ -1,5 +1,5 @@
 // types
-import type { ClientPlayer } from "@/lib/types/client"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 
 /* Offline player metadata */
 export const offlinePlayerMetadata = {

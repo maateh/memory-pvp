@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 
 // types
-import type { ClientPlayer } from "@/lib/types/client"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 
 // helpers
 import { validateCardMatches } from "@/lib/helper/session-helper"

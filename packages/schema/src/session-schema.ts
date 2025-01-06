@@ -54,3 +54,9 @@ export const clientSessionSchema = z.object({
   continuedAt: z.coerce.date().optional().nullable(),
   closedAt: z.coerce.date().optional().nullable()
 })
+
+export type SessionCardMetadata = z.infer<typeof sessionCardMetadataSchema>
+export type SessionCard = z.infer<typeof sessionCardSchema>
+export type SessionStats = z.infer<typeof sessionStatsSchema>
+export type ClientSessionCard = z.infer<typeof clientSessionCardSchema>
+export type ClientGameSession = z.infer<typeof clientSessionSchema>

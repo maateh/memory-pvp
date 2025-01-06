@@ -18,4 +18,9 @@ export const unsignedClientSessionSchema = clientSessionSchema.omit({
   closedAt: true
 })
 
+export type MatchedCard = z.infer<typeof matchedCardSchema>
+export type UnsignedClientGameSession = z.infer<typeof unsignedClientSessionSchema>
+
+/* Shared re-exports */
 export * from "@repo/schema/session"
+export type * from "@repo/schema/session"

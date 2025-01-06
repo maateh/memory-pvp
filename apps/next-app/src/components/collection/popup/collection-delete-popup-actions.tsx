@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 
 // types
-import type { ClientCardCollection } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // utils
 import { logError } from "@/lib/util/error"

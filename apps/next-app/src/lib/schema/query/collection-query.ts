@@ -19,3 +19,6 @@ export const collectionSortSchema = z.object({
   createdAt: sortKeys,
   updatedAt: sortKeys
 }).partial()
+
+export type CollectionFilterQuery = z.infer<typeof collectionFilterSchema>
+export type CollectionSortQuery = z.infer<typeof collectionSortSchema>

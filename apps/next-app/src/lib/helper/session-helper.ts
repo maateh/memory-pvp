@@ -2,7 +2,8 @@ import { nanoid } from "nanoid"
 
 // types
 import type { MemoryCard } from "@repo/db"
-import type { ClientCardCollection, ClientGameSession, ClientSessionCard } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientGameSession, ClientSessionCard } from "@/lib/schema/session-schema"
 
 // config
 import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"

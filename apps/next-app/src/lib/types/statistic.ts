@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react"
-import type { ClientPlayer } from "@/lib/types/client"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 
 export type RendererStat = {
   Icon: LucideIcon

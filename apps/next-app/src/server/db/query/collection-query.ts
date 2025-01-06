@@ -1,9 +1,9 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
-import type { collectionFilterSchema } from "@/lib/schema/query/collection-query"
+import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/query/collection-query"
 
 // schema
 import { collectionSortSchema } from "@/lib/schema/query/collection-query"
@@ -63,8 +63,8 @@ export async function getCollection({ id, userProtected = true }: {
  * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
 export async function getCollections({ filter, sort, pagination }: {
-  filter: z.infer<typeof collectionFilterSchema>
-  sort: z.infer<typeof collectionSortSchema>
+  filter: CollectionFilterQuery
+  sort: CollectionSortQuery
   pagination: PaginationParams
 }): Promise<Pagination<ClientCardCollection>> {
   const where = parseCollectionFilter(filter)
@@ -97,11 +97,11 @@ export async function getCollections({ filter, sort, pagination }: {
  * - Orders collections by the specified `sort` criteria or by creation date in descending order if no sort criteria are provided.
  * - Includes user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
  * 
- * @param {z.infer<typeof collectionSortSchema>} [sort={}] - The sorting criteria for ordering collections.
+ * @param {CollectionSortQuery} [sort={}] - The sorting criteria for ordering collections.
  * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
 export async function getUserCollections({ sort, pagination }: {
-  sort: z.infer<typeof collectionSortSchema>
+  sort: CollectionSortQuery
   pagination: PaginationParams
 }): Promise<Pagination<ClientCardCollection>> {
   const user = await signedIn()

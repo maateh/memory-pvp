@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { ClientCardCollection } from "@/lib/types/client"
+import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // server
 import { getCollection } from "@/server/db/query/collection-query"

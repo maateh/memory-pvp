@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { SessionFormValues } from "@/components/session/form/session-form"
+import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
 
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
@@ -16,7 +16,7 @@ export function useCreateWaitingRoom() {
     room: {} // TODO: create `SessionRoom` type
   }, 'set'>((state) => state.set)
 
-  const execute = async (values: SessionFormValues) => {
+  const execute = async (values: CreateSessionValidation) => {
     toast.info("Creating room...")
 
     try {

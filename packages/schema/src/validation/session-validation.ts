@@ -12,3 +12,5 @@ export const createSessionSchema = clientSessionSchema.pick({
   collectionId: z.string().optional(),
   forceStart: z.coerce.boolean().optional()
 })
+
+export type CreateSessionValidation = z.infer<typeof createSessionSchema>

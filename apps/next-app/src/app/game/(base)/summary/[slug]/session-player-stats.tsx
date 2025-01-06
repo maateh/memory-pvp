@@ -1,5 +1,6 @@
 // types
-import type { ClientGameSession, ClientPlayer } from "@/lib/types/client"
+import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
 // helpers

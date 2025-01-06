@@ -3,7 +3,7 @@
 import { forwardRef } from "react"
 
 // types
-import type { ClerkUser } from "@/lib/types/client"
+import type { ClerkUser } from "@/lib/types/clerk"
 
 // clerk
 import { SignInButton, useClerk } from "@clerk/nextjs"

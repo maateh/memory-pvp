@@ -29,4 +29,11 @@ export const saveOfflineGameSchema = clientSessionSchema.extend({
   players: true
 })
 
+export type SaveSessionValidation = z.infer<typeof saveSessionSchema>
+export type FinishSessionValidation = z.infer<typeof finishSessionSchema>
+export type AbandonSessionValidation = z.infer<typeof abandonSessionSchema>
+export type SaveOfflineGameValidation = z.infer<typeof saveOfflineGameSchema>
+
+/* Shared re-exports */
 export * from "@repo/schema/session-validation"
+export type * from "@repo/schema/session-validation"

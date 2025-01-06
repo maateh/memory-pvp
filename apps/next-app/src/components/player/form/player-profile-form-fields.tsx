@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { PlayerProfileFormValues } from "./player-profile-form"
+import type { CreatePlayerValidation } from "@/lib/schema/validation/player-validation"
 
 // icons
 import { Hash } from "lucide-react"
@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { ColorPicker } from "@/components/input"
 
 type PlayerProfileFormFieldsProps = {
-  form: UseFormReturn<PlayerProfileFormValues>
+  form: UseFormReturn<CreatePlayerValidation>
 }
 
 const PlayerProfileFormFields = ({ form }: PlayerProfileFormFieldsProps) => {

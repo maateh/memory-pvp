@@ -38,7 +38,7 @@ export const deleteCollectionSchema = z.object({
 })
 
 /* Client side form validation */
-export const createCollectionClientSchema = createCollectionUtSchema.extend({
+export const createClientCollectionSchema = createCollectionUtSchema.extend({
   images: z.array(collectionCardImageSchema)
 }).superRefine((collection, ctx) => {
   const { tableSize, images } = collection
@@ -62,3 +62,9 @@ export const createCollectionClientSchema = createCollectionUtSchema.extend({
     })
   }
 })
+
+export type CreateCardCollectionUtValidation = z.infer<typeof createCollectionUtSchema>
+export type CreateCardCollectionValidation = z.infer<typeof createCollectionSchema>
+export type UpdateCardCollectionValidation = z.infer<typeof updateCollectionSchema>
+export type DeleteCardCollectionValidation = z.infer<typeof deleteCollectionSchema>
+export type CreateClientCardCollectionValidation = z.infer<typeof createClientCollectionSchema>

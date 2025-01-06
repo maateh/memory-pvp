@@ -1,7 +1,8 @@
 import { formatDistance } from "date-fns"
 
 // types
-import type { ClientGameSession, ClientPlayer } from "@/lib/types/client"
+import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientPlayer } from "@/lib/schema/player-schema"
 import type { RendererStatsMap, RendererSessionStatKeys, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
 // config

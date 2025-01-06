@@ -47,3 +47,9 @@ export const clientCollectionSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 })
+
+export type CollectionName = z.infer<typeof collectionNameSchema>
+export type CollectionDescription = z.infer<typeof collectionDescriptionSchema>
+export type CollectionCardImage = z.infer<typeof collectionCardImageSchema>
+export type ClientMemoryCard = z.infer<typeof clientMemoryCardSchema>
+export type ClientCardCollection = z.infer<typeof clientCollectionSchema>

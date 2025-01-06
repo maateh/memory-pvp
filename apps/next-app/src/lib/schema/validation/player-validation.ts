@@ -14,3 +14,6 @@ export const updatePlayerSchema = z.object({
   tag: playerTagSchema.optional(),
   color: playerColorSchema.optional()
 })
+
+export type CreatePlayerValidation = z.infer<typeof createPlayerSchema>
+export type UpdatePlayerValidation = z.infer<typeof updatePlayerSchema>

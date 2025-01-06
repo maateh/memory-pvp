@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { UploadThingError } from "uploadthing/server"
 
 // types
-import type { z } from "zod"
+import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // config
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
@@ -14,7 +14,7 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createCollectionClientSchema } from "@/lib/schema/validation/collection-validation"
+import { createClientCollectionSchema } from "@/lib/schema/validation/collection-validation"
 
 // components
 import { Form } from "@/components/shared"
@@ -23,11 +23,9 @@ import CollectionFormFields from "./collection-form-fields"
 // hooks
 import { useCreateCollectionAction } from "@/lib/safe-action/collection"
 
-type CollectionFormValues = z.infer<typeof createCollectionClientSchema>
-
 const CollectionForm = () => {
-  const form = useForm<CollectionFormValues>({
-    resolver: zodResolver(createCollectionClientSchema),
+  const form = useForm<CreateClientCardCollectionValidation>({
+    resolver: zodResolver(createClientCollectionSchema),
     defaultValues: {
       name: '',
       description: '',
@@ -47,7 +45,7 @@ const CollectionForm = () => {
     status: createCollectionStatus
   } = useCreateCollectionAction({ tableSize })
 
-  const handleExecute = async ({ images, ...values }: CollectionFormValues) => {
+  const handleExecute = async ({ images, ...values }: CreateClientCardCollectionValidation) => {
     try {
       const files = await startUpload(images, values)
       
@@ -77,7 +75,7 @@ const CollectionForm = () => {
   }
 
   return (
-    <Form<CollectionFormValues>
+    <Form<CreateClientCardCollectionValidation>
       className="mt-5"
       form={form}
       onSubmit={handleExecute}
@@ -98,4 +96,3 @@ const CollectionForm = () => {
 }
 
 export default CollectionForm
-export type { CollectionFormValues }

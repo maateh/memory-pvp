@@ -17,3 +17,6 @@ export const playerSortSchema = z.object({
   createdAt: sortKeys
   // TODO: extend with stats?
 }).partial()
+
+export type PlayerFilterQuery = z.infer<typeof playerFilterSchema>
+export type PlayerSortQuery = z.infer<typeof playerSortSchema>
