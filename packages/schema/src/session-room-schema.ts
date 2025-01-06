@@ -1,0 +1,34 @@
+import { z } from "zod"
+
+// schemas
+import { clientPlayerSchema } from "./player-schema"
+import { clientSessionSchema } from "./session-schema"
+import { createSessionSchema } from "./validation/session-validation"
+
+/* Base schemas */
+export const sessionRoomStatusSchema = z.enum(["waiting", "starting", "running", "finished"])
+
+export const sessionRoomSchema = z.object({
+  slug: z.string(),
+  status: sessionRoomStatusSchema,
+  owner: clientPlayerSchema,
+  guest: clientPlayerSchema,
+  session: clientSessionSchema,
+  createdAt: z.coerce.date()
+})
+
+/* Custom room types based on room status */
+export const waitingRoomSchema = sessionRoomSchema
+  .omit({
+    status: true,
+    guest: true,
+    session: true
+  })
+  .extend({
+    status: z.literal("waiting"),
+    settings: createSessionSchema
+  })
+
+export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
+export type SessionRoom = z.infer<typeof sessionRoomSchema>
+export type WaitingRoom = z.infer<typeof waitingRoomSchema>

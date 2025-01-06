@@ -1,15 +1,12 @@
-import z from "zod"
-
 // types
-import type { ClientPlayer } from "@repo/schema/player"
-import type { CreateSessionValidation } from "@repo/schema/session-validation"
+import type { WaitingRoom } from "@repo/schema/session-room"
+import type { CreateSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // redis
 import { redis } from "@repo/redis"
 
 // schema
-import { clientPlayerSchema } from "@repo/schema/player"
-import { createSessionSchema } from "@repo/schema/session-validation"
+import { createSessionRoomSchema } from "@repo/schema/session-room-validation"
 
 // error
 import { SocketError } from "@/error/socket-error"
@@ -17,47 +14,34 @@ import { SocketError } from "@/error/socket-error"
 // utils
 import { validate } from "@/utils/validate"
 
-const createRoomSchema = z.object({ // TODO: move this to `@repo/schema` package
-  owner: clientPlayerSchema,
-  settings: createSessionSchema
-})
-
-type RoomCreateValidation = z.infer<typeof createRoomSchema> // TODO: move this to `@repo/schema` package
-
-type SocketPlayerConnection = ClientPlayer & { // TODO: move this type into a shared `@repo/types` package
+type SocketPlayerConnection = {
   socketId: string
+  playerId: string
   roomSlug: string
   createdAt: Date
 }
 
-type WaitingRoom = { // TODO: move this type into a shared `@repo/types` package
-  slug: string
-  status: "waiting"
-  owner: ClientPlayer & { socketId: string }
-  settings: CreateSessionValidation
-  createdAt: Date
-}
-
 export const roomCreate: SocketEventHandler<
-  RoomCreateValidation,
+  CreateSessionRoomValidation,
   WaitingRoom
 > = (socket) => async (input, response) => {
   console.info("DEBUG - room:create -> ", socket.id)
 
   try {
-    const { owner, settings } = validate(createRoomSchema, input)
+    const { owner, settings } = validate(createSessionRoomSchema, input)
+    const slug = "session_slug" // TODO: move `generateSessionSlug()` helper to a shared package
 
     const room: WaitingRoom = {
-      slug: "TODO: generate session slug",
       status: "waiting",
-      owner: { ...owner, socketId: socket.id },
-      settings: settings,
+      slug,
+      owner,
+      settings,
       createdAt: new Date()
     }
   
     const connection: SocketPlayerConnection = {
-      ...owner,
       socketId: socket.id,
+      playerId: owner.id,
       roomSlug: room.slug,
       createdAt: room.createdAt
     }
@@ -67,7 +51,7 @@ export const roomCreate: SocketEventHandler<
       redis.hset(`memory:session_rooms:${room.slug}`, room)
     ])
 
-    socket.join(room.owner.socketId)
+    socket.join(room.slug)
     response({
       success: true,
       message: "Waiting for another user to join...",

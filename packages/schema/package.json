@@ -4,8 +4,10 @@
   "license": "MIT",
   "exports": {
     "./session": "./src/session-schema.ts",
+    "./session-room": "./src/session-room-schema.ts",
     "./player": "./src/player-schema.ts",
-    "./session-validation": "./src/validation/session-validation.ts"
+    "./session-validation": "./src/validation/session-validation.ts",
+    "./session-room-validation": "./src/validation/session-room-validation.ts"
   },
   "dependencies": {
     "@repo/db": "workspace:*"
