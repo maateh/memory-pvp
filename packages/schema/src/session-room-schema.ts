@@ -43,7 +43,19 @@ export const joinedRoomSchema = sessionRoomSchema
     settings: createSessionSchema
   })
 
+export const readiedRoomSchema = joinedRoomSchema
+  .omit({ status: true })
+  .extend({
+    status: z.enum([
+      sessionRoomStatusSchema.enum.joined,
+      sessionRoomStatusSchema.enum.ready
+    ]),
+    owner: clientPlayerSchema.extend({ ready: z.coerce.boolean() }),
+    guest: clientPlayerSchema.extend({ ready: z.coerce.boolean() })
+  })
+
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
 export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
+export type ReadiedRoom = z.infer<typeof readiedRoomSchema>

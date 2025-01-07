@@ -15,5 +15,10 @@ export const joinSessionRoomSchema = z.object({
   guest: clientPlayerSchema
 })
 
+export const readyRoomValidation = z.object({
+  roomSlug: z.string()
+})
+
 export type CreateSessionRoomValidation = z.infer<typeof createSessionRoomSchema>
 export type JoinSessionRoomValidation = z.infer<typeof joinSessionRoomSchema>
+export type ReadyRoomValidation = z.infer<typeof readyRoomValidation>

@@ -2,6 +2,7 @@ export type CAUSE_KEYS =
   'UNKNOWN' |
   'VALIDATION_FAILED' |
   'ROOM_NOT_FOUND' |
+  'PLAYER_CONNECTION_NOT_FOUND' |
   'SESSION_ALREADY_STARTED'
 
 type SocketErrorOpts = {
