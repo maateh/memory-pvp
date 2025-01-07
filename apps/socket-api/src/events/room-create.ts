@@ -12,50 +12,37 @@ import { createSessionRoomSchema } from "@repo/schema/session-room-validation"
 import { SocketError } from "@/error/socket-error"
 
 // utils
+import { socketPlayerConnection } from "@/utils/socket-player-connection"
 import { validate } from "@/utils/validate"
-
-type SocketPlayerConnection = {
-  socketId: string
-  playerId: string
-  roomSlug: string
-  createdAt: Date
-}
 
 export const roomCreate: SocketEventHandler<
   CreateSessionRoomValidation,
   WaitingRoom
 > = (socket) => async (input, response) => {
-  console.info("DEBUG - room:create -> ", socket.id)
+  console.log("DEBUG - room:create -> ", socket.id)
 
   try {
     const { owner, settings } = validate(createSessionRoomSchema, input)
     const slug = "session_slug" // TODO: move `generateSessionSlug()` helper to a shared package
 
-    const room: WaitingRoom = {
+    const waitingRoom: WaitingRoom = {
       status: "waiting",
       slug,
       owner,
       settings,
       createdAt: new Date()
     }
-  
-    const connection: SocketPlayerConnection = {
-      socketId: socket.id,
-      playerId: owner.id,
-      roomSlug: room.slug,
-      createdAt: room.createdAt
-    }
 
     await Promise.all([
-      redis.hset(`memory:connections:${socket.id}`, connection),
-      redis.hset(`memory:session_rooms:${room.slug}`, room)
+      redis.hset(`memory:connections:${socket.id}`, socketPlayerConnection(socket.id, owner.id, slug)),
+      redis.hset(`memory:session_rooms:${waitingRoom.slug}`, waitingRoom)
     ])
 
-    socket.join(room.slug)
+    socket.join(waitingRoom.slug)
     response({
       success: true,
       message: "Waiting for another user to join...",
-      data: room
+      data: waitingRoom
     })
   } catch (err) {
     console.error(err)

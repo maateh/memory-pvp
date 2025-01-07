@@ -1,6 +1,8 @@
 export type CAUSE_KEYS =
   'UNKNOWN' |
-  'VALIDATION_FAILED'
+  'VALIDATION_FAILED' |
+  'ROOM_NOT_FOUND' |
+  'SESSION_ALREADY_STARTED'
 
 type SocketErrorOpts = {
   key: CAUSE_KEYS

@@ -6,7 +6,7 @@ import { clientSessionSchema } from "./session-schema"
 import { createSessionSchema } from "./validation/session-validation"
 
 /* Base schemas */
-export const sessionRoomStatusSchema = z.enum(["waiting", "starting", "running", "finished"])
+export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
 
 export const sessionRoomSchema = z.object({
   slug: z.string(),
@@ -25,10 +25,25 @@ export const waitingRoomSchema = sessionRoomSchema
     session: true
   })
   .extend({
-    status: z.literal("waiting"),
+    status: z.literal(sessionRoomStatusSchema.enum.waiting),
+    settings: createSessionSchema
+  })
+
+export const joinedRoomSchema = sessionRoomSchema
+  .omit({
+    status: true,
+    owner: true,
+    guest: true,
+    session: true
+  })
+  .extend({
+    status: z.literal(sessionRoomStatusSchema.enum.joined),
+    owner: clientPlayerSchema.extend({ ready: z.literal(false) }),
+    guest: clientPlayerSchema.extend({ ready: z.literal(false) }),
     settings: createSessionSchema
   })
 
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
 export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
+export type JoinedRoom = z.infer<typeof joinedRoomSchema>
