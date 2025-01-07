@@ -8,6 +8,9 @@ import { redis } from "@repo/redis"
 // schema
 import { joinSessionRoomSchema } from "@repo/schema/session-room-validation"
 
+// server
+import { io } from "@/server"
+
 // error
 import { SocketError } from "@/error/socket-error"
 
@@ -50,17 +53,18 @@ export const roomReady: SocketEventHandler<
     room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
     await redis.hset(`memory:session_rooms:${roomSlug}`, room)
 
-    const readyMessage = "Session room is ready. Game will start soon..."
-
-    socket.broadcast.to(roomSlug).emit("room:readied", {
-      message: room.status === "ready" ? readyMessage : "Waiting for you to be ready...",
+    const unreadyPlayer = room.owner.ready ? room.guest.tag : room.owner.tag
+    io.to(roomSlug).emit("room:readied", {
+      message: room.status === "ready"
+        ? "Session room is ready. Game will start soon..."
+        : `Waiting for ${unreadyPlayer} to be ready...`,
       data: room
     })
 
     response({
       success: true,
-      message: room.status === "ready" ? readyMessage : "Waiting for the other player to be ready...",
-      data: room
+      message: "Your status has been successfully set to ready.",
+      data: null
     })
   } catch (err) {
     console.error(err)
