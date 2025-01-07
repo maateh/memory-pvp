@@ -28,7 +28,7 @@ export const roomCreate: SocketEventHandler<
     const waitingRoom: WaitingRoom = {
       status: "waiting",
       slug,
-      owner,
+      owner: { ...owner, ready: false },
       settings,
       createdAt: new Date()
     }

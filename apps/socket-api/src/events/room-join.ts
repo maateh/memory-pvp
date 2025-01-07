@@ -44,7 +44,6 @@ export const roomJoin: SocketEventHandler<
     const joinedRoom: JoinedRoom = {
       ...waitingRoom,
       status: "joined",
-      owner: { ...waitingRoom.owner, ready: false },
       guest: { ...guest, ready: false }
     }
     

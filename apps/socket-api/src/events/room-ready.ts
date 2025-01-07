@@ -1,6 +1,6 @@
 // types
 import type { ReadyRoomValidation } from "@repo/schema/session-room-validation"
-import type { ReadiedRoom } from "@repo/schema/session-room"
+import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@repo/redis"
@@ -16,7 +16,7 @@ import { validate } from "@/utils/validate"
 
 export const roomReady: SocketEventHandler<
   ReadyRoomValidation,
-  ReadiedRoom
+  JoinedRoom
 > = (socket) => async (input, response) => {
   console.log("DEBUG - room:ready -> ", socket.id)
 
@@ -34,8 +34,10 @@ export const roomReady: SocketEventHandler<
       })
     }
 
-    const readiedRoom = await redis.hgetall<ReadiedRoom>(`memory:session_rooms:${roomSlug}`)
-    if (!readiedRoom) {
+    const room = await redis.hgetall<JoinedRoom>(`memory:session_rooms:${roomSlug}`)
+    if (!room) {
+      // TODO: remove player(s) connection data
+
       SocketError.throw({
         key: "ROOM_NOT_FOUND",
         message: "Session room not found.",
@@ -43,22 +45,22 @@ export const roomReady: SocketEventHandler<
       })
     }
     
-    readiedRoom.owner.ready = readiedRoom.owner.id === playerId
-    readiedRoom.guest.ready = readiedRoom.guest.id === playerId
-    readiedRoom.status = readiedRoom.owner.ready && readiedRoom.guest.ready ? "ready" : "joined"
-    await redis.hset(`memory:session_rooms:${roomSlug}`, readiedRoom)
+    room.owner.ready = room.owner.id === playerId
+    room.guest.ready = room.guest.id === playerId
+    room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
+    await redis.hset(`memory:session_rooms:${roomSlug}`, room)
 
     const readyMessage = "Session room is ready. Game will start soon..."
 
     socket.broadcast.to(roomSlug).emit("room:readied", {
-      message: readiedRoom.status === "ready" ? readyMessage : "Waiting for you to be ready...",
-      data: readiedRoom
+      message: room.status === "ready" ? readyMessage : "Waiting for you to be ready...",
+      data: room
     })
 
     response({
       success: true,
-      message: readiedRoom.status === "ready" ? readyMessage : "Waiting for the other player to be ready...",
-      data: readiedRoom
+      message: room.status === "ready" ? readyMessage : "Waiting for the other player to be ready...",
+      data: room
     })
   } catch (err) {
     console.error(err)
