@@ -4,7 +4,7 @@ import { z } from "zod"
 import { clientSessionSchema, matchedCardSchema } from "@/lib/schema/session-schema"
 
 /* Forms / API validations */
-export const saveSessionSchema = clientSessionSchema.omit({ players: true })
+export const saveSessionValidation = clientSessionSchema.omit({ players: true })
 
 export const finishSessionSchema = clientSessionSchema.extend({
   cards: z.array(matchedCardSchema)
@@ -13,12 +13,12 @@ export const finishSessionSchema = clientSessionSchema.extend({
   players: true
 })
 
-export const abandonSessionSchema = clientSessionSchema.omit({
+export const abandonSessionValidation = clientSessionSchema.omit({
   status: true,
   players: true
 }).optional()
 
-export const saveOfflineGameSchema = clientSessionSchema.extend({
+export const saveOfflineGameValidation = clientSessionSchema.extend({
   playerId: z.string(),
   cards: z.array(matchedCardSchema)
 }).omit({
@@ -29,10 +29,10 @@ export const saveOfflineGameSchema = clientSessionSchema.extend({
   players: true
 })
 
-export type SaveSessionValidation = z.infer<typeof saveSessionSchema>
+export type SaveSessionValidation = z.infer<typeof saveSessionValidation>
 export type FinishSessionValidation = z.infer<typeof finishSessionSchema>
-export type AbandonSessionValidation = z.infer<typeof abandonSessionSchema>
-export type SaveOfflineGameValidation = z.infer<typeof saveOfflineGameSchema>
+export type AbandonSessionValidation = z.infer<typeof abandonSessionValidation>
+export type SaveOfflineGameValidation = z.infer<typeof saveOfflineGameValidation>
 
 /* Shared re-exports */
 export * from "@repo/schema/session-validation"

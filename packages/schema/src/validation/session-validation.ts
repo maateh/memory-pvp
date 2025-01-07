@@ -4,7 +4,7 @@ import { z } from "zod"
 import { clientSessionSchema } from "../session-schema"
 
 /* Forms / API validations */
-export const createSessionSchema = clientSessionSchema.pick({
+export const createSessionValidation = clientSessionSchema.pick({
   type: true,
   mode: true,
   tableSize: true
@@ -13,4 +13,4 @@ export const createSessionSchema = clientSessionSchema.pick({
   forceStart: z.coerce.boolean().optional()
 })
 
-export type CreateSessionValidation = z.infer<typeof createSessionSchema>
+export type CreateSessionValidation = z.infer<typeof createSessionValidation>

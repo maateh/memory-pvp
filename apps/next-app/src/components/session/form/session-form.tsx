@@ -13,7 +13,7 @@ import { useClerk } from "@clerk/nextjs"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createSessionSchema } from "@/lib/schema/validation/session-validation"
+import { createSessionValidation } from "@/lib/schema/validation/session-validation"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"
@@ -45,7 +45,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const { user: clerkUser } = useClerk()
 
   const form = useForm<CreateSessionValidation>({
-    resolver: zodResolver(createSessionSchema),
+    resolver: zodResolver(createSessionValidation),
     defaultValues: {
       type: defaultValues?.type || 'CASUAL',
       mode: defaultValues?.mode || 'SINGLE',

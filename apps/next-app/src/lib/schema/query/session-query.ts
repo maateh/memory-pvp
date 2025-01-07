@@ -5,7 +5,7 @@ import { sortKeys } from "@/lib/schema"
 import { clientSessionSchema } from "@/lib/schema/session-schema"
 
 /* Query filters */
-export const sessionFilterSchema = clientSessionSchema.pick({
+export const sessionFilterQuery = clientSessionSchema.pick({
   slug: true,
   collectionId: true,
   status: true,
@@ -14,7 +14,7 @@ export const sessionFilterSchema = clientSessionSchema.pick({
   tableSize: true
 }).extend({ playerId: z.string() }).partial()
 
-export const sessionSortSchema = z.object({
+export const sessionSortQuery = z.object({
   slug: sortKeys,
   type: sortKeys,
   mode: sortKeys,
@@ -25,5 +25,5 @@ export const sessionSortSchema = z.object({
   closedAt: sortKeys
 }).partial()
 
-export type SessionFilterQuery = z.infer<typeof sessionFilterSchema>
-export type SessionSortQuery = z.infer<typeof sessionSortSchema>
+export type SessionFilterQuery = z.infer<typeof sessionFilterQuery>
+export type SessionSortQuery = z.infer<typeof sessionSortQuery>

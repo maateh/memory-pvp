@@ -22,11 +22,11 @@ import { SESSION_STORE_TTL } from "@/config/redis-settings"
 // validations
 import { clientSessionSchema } from "@/lib/schema/session-schema"
 import {
-  abandonSessionSchema,
-  createSessionSchema,
+  abandonSessionValidation,
+  createSessionValidation,
   finishSessionSchema,
-  saveOfflineGameSchema,
-  saveSessionSchema
+  saveOfflineGameValidation,
+  saveSessionValidation
 } from "@/lib/schema/validation/session-validation"
 
 // helpers
@@ -45,7 +45,7 @@ export const getActiveSession = sessionActionClient
   })
 
 export const createSession = playerActionClient
-  .schema(createSessionSchema)
+  .schema(createSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { collectionId, forceStart, ...sessionValues } = parsedInput
 
@@ -169,7 +169,7 @@ export const storeSession = sessionActionClient
   })
 
 export const saveSession = sessionActionClient
-  .schema(saveSessionSchema)
+  .schema(saveSessionValidation)
   .action(async ({ ctx, parsedInput: clientSession }) => {
     await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
@@ -203,12 +203,12 @@ export const finishSession = sessionActionClient
   })
 
 export const abandonSession = sessionActionClient
-  .schema(abandonSessionSchema)
+  .schema(abandonSessionValidation)
   .action(async ({ ctx, parsedInput: session }) => {
     await ctx.redis.del(`session:${ctx.activeSession.slug}`)
 
     if (!session) {
-      const validation = await abandonSessionSchema.safeParseAsync(ctx.activeSession)
+      const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
 
       if (!validation.success) {
         ApiError.throw({
@@ -237,7 +237,7 @@ export const abandonSession = sessionActionClient
   })
 
 export const saveOfflineSession = protectedActionClient
-  .schema(saveOfflineGameSchema)
+  .schema(saveOfflineGameValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { playerId, collectionId, ...session } = parsedInput
 

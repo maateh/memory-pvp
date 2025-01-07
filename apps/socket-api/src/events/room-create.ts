@@ -6,7 +6,7 @@ import type { CreateSessionRoomValidation } from "@repo/schema/session-room-vali
 import { redis } from "@repo/redis"
 
 // schema
-import { createSessionRoomSchema } from "@repo/schema/session-room-validation"
+import { createSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // error
 import { SocketError } from "@/error/socket-error"
@@ -22,7 +22,7 @@ export const roomCreate: SocketEventHandler<
   console.log("DEBUG - room:create -> ", socket.id)
 
   try {
-    const { owner, settings } = validate(createSessionRoomSchema, input)
+    const { owner, settings } = validate(createSessionRoomValidation, input)
     const slug = "session_slug" // TODO: move `generateSessionSlug()` helper to a shared package
 
     const waitingRoom: WaitingRoom = {

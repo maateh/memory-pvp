@@ -15,7 +15,7 @@ import { signedIn } from "@/server/action/user-action"
 import { getCollectionImageSettings } from "@/config/collection-settings"
 
 // validations
-import { createCollectionUtSchema } from "@/lib/schema/validation/collection-validation"
+import { createCollectionUtValidation } from "@/lib/schema/validation/collection-validation"
 
 /** Middleware to limit the number of card collections that can be created by users. */
 async function collectionLimitMiddleware({ input }: { input: CreateCardCollectionUtValidation }) {
@@ -47,7 +47,7 @@ const f = createUploadthing()
 
 export const uploadRouter = {
   collectionSmall: f({ image: getCollectionImageSettings('SMALL') })
-    .input(createCollectionUtSchema)
+    .input(createCollectionUtValidation)
     .middleware(collectionLimitMiddleware)
     .onUploadComplete(({ metadata }) => {
       const { user, input } = metadata
@@ -55,7 +55,7 @@ export const uploadRouter = {
     }),
 
   collectionMedium: f({ image: getCollectionImageSettings('MEDIUM') })
-    .input(createCollectionUtSchema)
+    .input(createCollectionUtValidation)
     .middleware(collectionLimitMiddleware)
     .onUploadComplete(({ metadata }) => {
       const { user, input } = metadata
@@ -63,7 +63,7 @@ export const uploadRouter = {
     }),
 
   collectionLarge: f({ image: getCollectionImageSettings('LARGE') })
-    .input(createCollectionUtSchema)
+    .input(createCollectionUtValidation)
     .middleware(collectionLimitMiddleware)
     .onUploadComplete(({ metadata }) => {
       const { user, input } = metadata

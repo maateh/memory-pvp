@@ -5,7 +5,7 @@ import { sortKeys } from "@/lib/schema"
 import { clientCollectionSchema } from "@/lib/schema/collection-schema"
 
 /* Query filters */
-export const collectionFilterSchema = clientCollectionSchema.pick({
+export const collectionFilterQuery = clientCollectionSchema.pick({
   name: true,
   tableSize: true
 }).extend({
@@ -13,12 +13,12 @@ export const collectionFilterSchema = clientCollectionSchema.pick({
   excludeUser: z.coerce.boolean().optional()
 }).partial()
 
-export const collectionSortSchema = z.object({
+export const collectionSortQuery = z.object({
   name: sortKeys,
   tableSize: sortKeys,
   createdAt: sortKeys,
   updatedAt: sortKeys
 }).partial()
 
-export type CollectionFilterQuery = z.infer<typeof collectionFilterSchema>
-export type CollectionSortQuery = z.infer<typeof collectionSortSchema>
+export type CollectionFilterQuery = z.infer<typeof collectionFilterQuery>
+export type CollectionSortQuery = z.infer<typeof collectionSortQuery>

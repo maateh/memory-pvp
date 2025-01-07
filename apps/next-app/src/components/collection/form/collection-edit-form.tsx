@@ -11,7 +11,7 @@ import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { updateCollectionSchema } from "@/lib/schema/validation/collection-validation"
+import { updateCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // icons
 import { Edit3, Loader2 } from "lucide-react"
@@ -32,7 +32,7 @@ type CollectionEditFormProps = {
 
 const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
   const form = useForm<UpdateCardCollectionValidation>({
-    resolver: zodResolver(updateCollectionSchema),
+    resolver: zodResolver(updateCollectionValidation),
     defaultValues: collection
   })
 

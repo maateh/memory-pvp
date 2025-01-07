@@ -12,13 +12,13 @@ import {
 } from "@/lib/schema/collection-schema"
 
 /* Form / API validations */
-export const createCollectionUtSchema = clientCollectionSchema.pick({
+export const createCollectionUtValidation = clientCollectionSchema.pick({
   name: true,
   description: true,
   tableSize: true
 })
 
-export const createCollectionSchema = createCollectionUtSchema.extend({
+export const createCollectionValidation = createCollectionUtValidation.extend({
   utImages: z.array(
     z.object({
       utKey: z.string(),
@@ -27,7 +27,7 @@ export const createCollectionSchema = createCollectionUtSchema.extend({
   )
 })
 
-export const updateCollectionSchema = z.object({
+export const updateCollectionValidation = z.object({
   id: z.string(),
   name: collectionNameSchema.optional(),
   description: collectionDescriptionSchema.optional()
@@ -38,7 +38,7 @@ export const deleteCollectionSchema = z.object({
 })
 
 /* Client side form validation */
-export const createClientCollectionSchema = createCollectionUtSchema.extend({
+export const createClientCollectionValidation = createCollectionUtValidation.extend({
   images: z.array(collectionCardImageSchema)
 }).superRefine((collection, ctx) => {
   const { tableSize, images } = collection
@@ -63,8 +63,8 @@ export const createClientCollectionSchema = createCollectionUtSchema.extend({
   }
 })
 
-export type CreateCardCollectionUtValidation = z.infer<typeof createCollectionUtSchema>
-export type CreateCardCollectionValidation = z.infer<typeof createCollectionSchema>
-export type UpdateCardCollectionValidation = z.infer<typeof updateCollectionSchema>
+export type CreateCardCollectionUtValidation = z.infer<typeof createCollectionUtValidation>
+export type CreateCardCollectionValidation = z.infer<typeof createCollectionValidation>
+export type UpdateCardCollectionValidation = z.infer<typeof updateCollectionValidation>
 export type DeleteCardCollectionValidation = z.infer<typeof deleteCollectionSchema>
-export type CreateClientCardCollectionValidation = z.infer<typeof createClientCollectionSchema>
+export type CreateClientCardCollectionValidation = z.infer<typeof createClientCollectionValidation>

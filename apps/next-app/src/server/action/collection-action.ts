@@ -14,13 +14,13 @@ import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-pars
 
 // validations
 import {
-  createCollectionSchema,
+  createCollectionValidation,
   deleteCollectionSchema,
-  updateCollectionSchema
+  updateCollectionValidation
 } from "@/lib/schema/validation/collection-validation"
 
 export const createCollection = protectedActionClient
-  .schema(createCollectionSchema)
+  .schema(createCollectionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { name, description, tableSize, utImages } = parsedInput
 
@@ -58,7 +58,7 @@ export const createCollection = protectedActionClient
   })
 
 export const updateCollection = protectedActionClient
-  .schema(updateCollectionSchema)
+  .schema(updateCollectionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { id, name, description } = parsedInput
 

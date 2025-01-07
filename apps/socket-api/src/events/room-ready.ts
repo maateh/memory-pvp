@@ -6,7 +6,7 @@ import type { JoinedRoom } from "@repo/schema/session-room"
 import { redis } from "@repo/redis"
 
 // schema
-import { joinSessionRoomSchema } from "@repo/schema/session-room-validation"
+import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // server
 import { io } from "@/server"
@@ -24,7 +24,7 @@ export const roomReady: SocketEventHandler<
   console.log("DEBUG - room:ready -> ", socket.id)
 
   try {
-    const { roomSlug } = validate(joinSessionRoomSchema, input)
+    const { roomSlug } = validate(joinSessionRoomValidation, input)
 
     const playerId = await redis.hget(`memory:connections:${socket.id}`, 'playerId')
     if (!playerId) {

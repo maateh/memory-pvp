@@ -12,12 +12,12 @@ import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 // validations
 import { playerTagSchema } from "@/lib/schema/player-schema"
 import {
-  createPlayerSchema,
-  updatePlayerSchema
+  createPlayerValidation,
+  updatePlayerValidation
 } from "@/lib/schema/validation/player-validation"
 
 export const createPlayer = protectedActionClient
-  .schema(createPlayerSchema)
+  .schema(createPlayerValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { tag, color } = parsedInput
 
@@ -92,7 +92,7 @@ export const selectPlayerAsActive = playerActionClient
   })
 
 export const updatePlayer = playerActionClient
-  .schema(updatePlayerSchema)
+  .schema(updatePlayerValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { previousTag, tag, color } = parsedInput
 

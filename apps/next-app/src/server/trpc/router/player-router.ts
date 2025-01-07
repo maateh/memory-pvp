@@ -7,14 +7,14 @@ import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
 import { z } from "zod"
-import { playerFilterSchema } from "@/lib/schema/query/player-query"
-import { sessionFilterSchema } from "@/lib/schema/query/session-query"
+import { playerFilterQuery } from "@/lib/schema/query/player-query"
+import { sessionFilterQuery } from "@/lib/schema/query/session-query"
 
 export const playerProfileRouter = createTRPCRouter({
   getStats: protectedProcedure
     .input(z.object({
-      playerFilter: playerFilterSchema,
-      sessionFilter: sessionFilterSchema
+      playerFilter: playerFilterQuery,
+      sessionFilter: sessionFilterQuery
     }))
     .query(async ({ ctx, input }) => {
       const { playerFilter, sessionFilter } = input

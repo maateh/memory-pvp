@@ -6,7 +6,7 @@ import type { SessionFilterQuery } from "@/lib/schema/query/session-query"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 
 // schemas
-import { sessionFilterSchema } from "@/lib/schema/query/session-query"
+import { sessionFilterQuery } from "@/lib/schema/query/session-query"
 
 // config
 import { getFallbackCollection } from "@/config/collection-settings"
@@ -111,7 +111,7 @@ export function parseSessionFilter(
     ]
   }
 
-  const { success, data: filter } = sessionFilterSchema.safeParse(filterInput)
+  const { success, data: filter } = sessionFilterQuery.safeParse(filterInput)
   if (!success) return where
 
   if (filter.playerId) {

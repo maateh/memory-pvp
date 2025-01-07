@@ -14,7 +14,7 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createClientCollectionSchema } from "@/lib/schema/validation/collection-validation"
+import { createClientCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // components
 import { Form } from "@/components/shared"
@@ -25,7 +25,7 @@ import { useCreateCollectionAction } from "@/lib/safe-action/collection"
 
 const CollectionForm = () => {
   const form = useForm<CreateClientCardCollectionValidation>({
-    resolver: zodResolver(createClientCollectionSchema),
+    resolver: zodResolver(createClientCollectionValidation),
     defaultValues: {
       name: '',
       description: '',

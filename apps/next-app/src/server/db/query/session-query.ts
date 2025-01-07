@@ -4,7 +4,7 @@ import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 
 // schema
-import { sessionSortSchema } from "@/lib/schema/query/session-query"
+import { sessionSortQuery } from "@/lib/schema/query/session-query"
 
 // server
 import { db } from "@/server/db"
@@ -45,7 +45,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
   const sessions = await db.gameSession.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort, sessionSortSchema, { closedAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, sessionSortQuery, { closedAt: "desc" }),
     include: sessionSchemaFields
   })
 

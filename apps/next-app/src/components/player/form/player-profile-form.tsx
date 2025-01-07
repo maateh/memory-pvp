@@ -8,7 +8,7 @@ import type { CreatePlayerValidation } from "@/lib/schema/validation/player-vali
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createPlayerSchema } from "@/lib/schema/validation/player-validation"
+import { createPlayerValidation } from "@/lib/schema/validation/player-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
@@ -37,7 +37,7 @@ type PlayerProfileFormProps = ({
 
 const PlayerProfileForm = ({ type = "create", defaultValues, className, ...props }: PlayerProfileFormProps) => {
   const form = useForm<CreatePlayerValidation>({
-    resolver: zodResolver(createPlayerSchema),
+    resolver: zodResolver(createPlayerValidation),
     defaultValues: {
       tag: defaultValues?.tag ?? '',
       color: defaultValues?.color ?? '#82aa82'

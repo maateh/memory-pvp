@@ -6,7 +6,7 @@ import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/query/collection-query"
 
 // schema
-import { collectionSortSchema } from "@/lib/schema/query/collection-query"
+import { collectionSortQuery } from "@/lib/schema/query/collection-query"
 
 // server
 import { db } from "@/server/db"
@@ -78,7 +78,7 @@ export async function getCollections({ filter, sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort, collectionSortSchema, { createdAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true
@@ -111,7 +111,7 @@ export async function getUserCollections({ sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where: { userId: user.id },
-    orderBy: parseSortToOrderBy(sort, collectionSortSchema, { createdAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true

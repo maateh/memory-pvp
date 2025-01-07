@@ -5,7 +5,7 @@ import type { CardCollectionWithCardsWithUser } from "@/lib/types/prisma"
 import type { CollectionFilterQuery } from "@/lib/schema/query/collection-query"
 
 // schemas
-import { collectionFilterSchema } from "@/lib/schema/query/collection-query"
+import { collectionFilterQuery } from "@/lib/schema/query/collection-query"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
@@ -61,7 +61,7 @@ export function parseSchemaToClientCollection(
 export function parseCollectionFilter(
   filterInput: CollectionFilterQuery
 ): Prisma.CardCollectionWhereInput {
-  const { success, data: filter } = collectionFilterSchema.safeParse(filterInput)
+  const { success, data: filter } = collectionFilterQuery.safeParse(filterInput)
 
   if (!success) return {}
   const { username, name, tableSize } = filter
