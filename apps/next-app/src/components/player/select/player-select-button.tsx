@@ -3,7 +3,7 @@
 import { forwardRef } from "react"
 
 // types
-import type { ClerkUser } from "@/lib/schema/user-schema"
+import type { ClerkUser } from "@/lib/types/clerk"
 import type { ClientPlayer } from "@/lib/schema/player-schema"
 
 // clerk
