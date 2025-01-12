@@ -208,6 +208,9 @@ importers:
       '@repo/schema':
         specifier: workspace:*
         version: link:../../packages/schema
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -264,6 +267,12 @@ importers:
         version: link:../ts-config
 
   packages/ts-config: {}
+
+  packages/types:
+    devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
 
 packages:
 

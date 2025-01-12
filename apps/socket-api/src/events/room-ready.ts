@@ -12,7 +12,7 @@ import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
 import { io } from "@/server"
 
 // error
-import { SocketError } from "@/error/socket-error"
+import { SocketError } from "@repo/types/socket-api-error"
 
 // utils
 import { validate } from "@/utils/validate"

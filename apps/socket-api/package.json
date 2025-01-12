@@ -3,7 +3,7 @@
   "author": "maateh",
   "version": "1.0.0",
   "description": "A socket server designed for memory-pvp.",
-  "main": "src/server.ts",
+  "main": "./src/server.ts",
   "scripts": {
     "dev": "node --import=tsx --env-file=.env --watch-path=./src src/server.ts",
     "build": "tsc --build tsconfig.json",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@repo/redis": "workspace:*",
     "@repo/schema": "workspace:*",
+    "@repo/types": "workspace:*",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },

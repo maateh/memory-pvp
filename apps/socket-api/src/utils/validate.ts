@@ -2,7 +2,7 @@
 import type { ZodSchema } from "zod"
 
 // error
-import { SocketError } from "@/error/socket-error"
+import { SocketError } from "@repo/types/socket-api-error"
 
 export const validate = <T>(schema: ZodSchema<T>, input: T) => {
   const { success, data } = schema.safeParse(input)

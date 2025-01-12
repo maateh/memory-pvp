@@ -1,0 +1,12 @@
+{
+  "name": "@repo/types",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": {
+    "./socket-api": "./src/socket-api/types.ts",
+    "./socket-api-error": "./src/socket-api/error.ts"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*"
+  }
+}

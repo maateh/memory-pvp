@@ -9,7 +9,7 @@ import { redis } from "@repo/redis"
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // error
-import { SocketError } from "@/error/socket-error"
+import { SocketError } from "@repo/types/socket-api-error"
 
 // utils
 import { socketPlayerConnection } from "@/utils/socket-player-connection"
