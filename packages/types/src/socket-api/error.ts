@@ -27,14 +27,18 @@ export class SocketError {
     this.name = 'SocketError'
   }
 
-  static throw(error: SocketErrorOpts, message?: string): never {
-    throw new Error(message, {
-      cause: new SocketError(error)
-    })
+  static throw(error: SocketErrorOpts): never {
+    throw new SocketError(error)
   }
 
   static parser(error: SocketError | unknown): SocketError {
-    if (error instanceof this) return error
+    if (error instanceof SocketError) {
+      return error
+    }
+
+    if (error && (error as SocketError).name === "SocketError") {
+      return error as SocketError
+    }
 
     return new SocketError({
       key: "UNKNOWN",
