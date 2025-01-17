@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { DefaultValues } from "react-hook-form"
+import type { ClientPlayer } from "@repo/schema/player"
 import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
@@ -39,9 +40,10 @@ type SessionFormValuesCache = {
 type SessionFormProps = {
   defaultValues?: DefaultValues<CreateSessionValidation>
   collection: ClientCardCollection | null
+  activePlayer: ClientPlayer
 }
 
-const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
+const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormProps) => {
   const { user: clerkUser } = useClerk()
 
   const form = useForm<CreateSessionValidation>({
@@ -67,7 +69,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
       return
     }
 
-    createWaitingRoom(values)
+    createWaitingRoom(values, activePlayer)
   }
 
   const type = form.watch('type')

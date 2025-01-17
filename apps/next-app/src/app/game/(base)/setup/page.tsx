@@ -31,6 +31,7 @@ type BaseGameSetupPageProps = {
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
   const players = await getPlayers({ withAvatar: true })
+  const activePlayer = players.find((player) => player.isActive)!
 
   let clientCollection: ClientCardCollection | null = null
   if (searchParams.collection) {
@@ -81,6 +82,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
         <SessionForm
           defaultValues={{ ...searchParams, collectionId: clientCollection?.id }}
           collection={clientCollection}
+          activePlayer={activePlayer}
         />
       </main>
     </>

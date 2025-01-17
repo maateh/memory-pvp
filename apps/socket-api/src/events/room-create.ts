@@ -45,7 +45,6 @@ export const roomCreate: SocketEventHandler<
       data: waitingRoom
     })
   } catch (err) {
-    console.error(err)
     response({
       success: false,
       message: "Failed to create waiting room.",
