@@ -5,10 +5,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
-    "./types": {
-      "default": "./src/types.ts",
-      "types": "./src/types.ts"
-    }
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "db:generate": "prisma generate",
