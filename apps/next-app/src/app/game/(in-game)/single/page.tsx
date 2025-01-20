@@ -17,7 +17,7 @@ const SingleGamePage = () => {
       <Await promise={getActiveSession()}>
         {(session) => session?.data ? (
           <SessionStoreProvider session={session.data}>
-            <SessionHeader session={session.data} />
+            <SessionHeader />
 
             <SingleGameHandler />
 

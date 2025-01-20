@@ -1,6 +1,3 @@
-// types
-import type { ClientGameSession } from "@/lib/schema/session-schema"
-
 // config
 import {
   gameModePlaceholders,
@@ -20,11 +17,12 @@ import SessionActionsDropdown from "./session-actions-dropdown"
 import SessionSyncMarker from "./session-sync-marker"
 import SessionTimer from "./session-timer"
 
-type SessionHeaderProps = {
-  session: ClientGameSession
-}
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
-const SessionHeader = ({ session }: SessionHeaderProps) => {
+const SessionHeader = () => {
+  const session = useSessionStore((state) => state.session)
+
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
