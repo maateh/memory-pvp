@@ -1,8 +1,15 @@
 "use client"
 
-import { createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+
+// types
+import type { JoinedRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { SocketResponse } from "@repo/types/socket-api"
+
+// utils
+import { handleServerError } from "@/lib/util/error"
 
 // providers
 import { SessionStoreProvider } from "@/components/provider"
@@ -11,13 +18,13 @@ import { SessionStoreProvider } from "@/components/provider"
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
 type TSessionRoomContext = {
-  room: {} // TODO: add `SessionRoom` type
+  room: WaitingRoom | JoinedRoom | SessionRoom
 }
 
 const SessionRoomContext = createContext<TSessionRoomContext | null>(null)
 
 type SessionRoomProviderProps = {
-  initialRoom: {} // TODO: add `SessionRoom` type
+  initialRoom: WaitingRoom | JoinedRoom | SessionRoom
   children: React.ReactNode
 }
 
@@ -26,7 +33,6 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
   const { socket } = useSocketService()
 
   const [room, setRoom] = useState(initialRoom)
-  const [session, setSession] = useState()
 
   useEffect(() => {
     if (!socket?.active) {
@@ -38,38 +44,43 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
       return
     }
 
-    const roomJoined = ({  }: {  }) => {
-      // TODO: update room status to 'READY'
-      // TODO: create session then emit created session
-      console.info("SOCKET -> roomJoined")
-    }
+    const roomJoined = ({ data: room, message, error }: SocketResponse<JoinedRoom>) => {
+      if (!error && room) {
+        setRoom(room)
+        toast.success(message)
+        return
+      }
 
-    const startSession = ({  }: {  }) => {
-      // TODO: load session to the session store
-      // TODO: redirect to `/game/multiplayer`
-      console.info("SOCKET -> startSession")
+      handleServerError(error)
     }
 
     socket.on("room:joined", roomJoined)
-    socket.on("session:start", startSession)
 
     return () => {
       socket.off("room:joined", roomJoined)
-      socket.off("session:start", startSession)
     }
   }, [router, socket])
 
   return (
     <SessionRoomContext.Provider value={{ room }}>
-      {session ? (
-        <SessionStoreProvider session={session}>
+      {room.status === "running" ? (
+        <SessionStoreProvider session={room.session}>
           {children}
         </SessionStoreProvider>
-      ) : (
-        <div>Waiting for another player to join...</div> // TODO: fallback
-      )}
+      ) : children}
     </SessionRoomContext.Provider>
   )
 }
 
+function useSessionRoom() {
+  const context = useContext(SessionRoomContext)
+
+  if (!context) {
+    throw new Error('Session room context must be used within its provider.')
+  }
+
+  return context
+}
+
 export default SessionRoomProvider
+export { useSessionRoom }

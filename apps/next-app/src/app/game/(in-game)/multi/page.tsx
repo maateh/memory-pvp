@@ -1,20 +1,18 @@
+// types
+import type { WaitingRoom } from "@repo/schema/session-room"
+
 // providers
 import { SessionRoomProvider } from "@/components/provider"
 
 // components
-import { SessionFooter, SessionHeader } from "@/components/session/ingame"
-import MultiGameHandler from "./multi-game-handler"
+import RoomStatusHandler from "./room-status-handler"
 
-const MultiGamePage = () => {
+const MultiGamePage = async () => {
+  const room = {} as WaitingRoom // TODO: await getWaitingRoom()
+
   return (
-    // TODO: get `room` from redis cache
-    <SessionRoomProvider initialRoom={{}}>
-      {/* TODO: use useSessionStore() instead of passing props */}
-      {/* <SessionHeader session={session} /> */}
-
-      <MultiGameHandler />
-
-      <SessionFooter />
+    <SessionRoomProvider initialRoom={room}>
+      <RoomStatusHandler />
     </SessionRoomProvider>
   )
 }

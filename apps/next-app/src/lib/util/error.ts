@@ -7,7 +7,7 @@ import type { ApiError } from "@/server/_error"
 import type { SocketError } from "@repo/types/socket-api-error"
 
 export function handleServerError(
-  error: ApiError | SocketError | UploadThingError<any> | undefined,
+  error: ApiError | SocketError | UploadThingError<any> | undefined | null,
   fallbackDescription?: string
 ) {
   if (error?.name === 'ApiError') {
