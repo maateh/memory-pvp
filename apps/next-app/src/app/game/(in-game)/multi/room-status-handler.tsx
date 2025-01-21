@@ -1,6 +1,7 @@
 "use client"
 
 // components
+import { RedirectFallback } from "@/components/shared"
 import { SessionFooter, SessionHeader } from "@/components/session/ingame"
 import {
   FinishedRoomScreen,
@@ -31,6 +32,14 @@ const RoomStatusHandler = () => {
         </>
       )
       case "finished": return <FinishedRoomScreen />
+      default: return (
+        <RedirectFallback
+          message="Unexpected room status."
+          description="Session room data looks to be corrupted. Please try creating or joining another room."
+          redirect="/game/setup"
+          type="replace"
+        />
+      )
     }
   }
 
