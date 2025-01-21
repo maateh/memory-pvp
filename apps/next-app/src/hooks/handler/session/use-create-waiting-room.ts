@@ -38,7 +38,7 @@ export function useCreateWaitingRoom() {
       }
 
       setCache({ room })
-      router.push("/game/multi")
+      router.push(`/game/${room.slug}`)
       toast.success("Waiting room created!", {
         description: "You will be redirected to the room page."
       })
