@@ -15,6 +15,7 @@
   "dependencies": {
     "@repo/redis": "workspace:*",
     "@repo/schema": "workspace:*",
+    "@repo/helper": "workspace:*",
     "@repo/types": "workspace:*",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"

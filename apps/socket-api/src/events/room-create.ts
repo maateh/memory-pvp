@@ -11,6 +11,9 @@ import { createSessionRoomValidation } from "@repo/schema/session-room-validatio
 // error
 import { SocketError } from "@repo/types/socket-api-error"
 
+// helpers
+import { generateSessionSlug } from "@repo/helper/session"
+
 // utils
 import { socketPlayerConnection } from "@/utils/socket-player-connection"
 import { validate } from "@/utils/validate"
@@ -23,7 +26,7 @@ export const roomCreate: SocketEventHandler<
 
   try {
     const { owner, settings } = validate(createSessionRoomValidation, input)
-    const slug = "session_slug" // TODO: move `generateSessionSlug()` helper to a shared package
+    const slug = generateSessionSlug({ type: settings.type, mode: settings.mode })
 
     const waitingRoom: WaitingRoom = {
       status: "waiting",

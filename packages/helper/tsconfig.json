@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/ts-config/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "rootDir": "./",
+    "outDir": "./dist"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

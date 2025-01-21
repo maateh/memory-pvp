@@ -30,7 +30,8 @@ import {
 } from "@/lib/schema/validation/session-validation"
 
 // helpers
-import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
+import { generateSessionSlug } from "@repo/helper/session"
+import { generateSessionCards } from "@/lib/helper/session-helper"
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
