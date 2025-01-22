@@ -45,6 +45,7 @@ export const joinedRoomSchema = sessionRoomSchema
   })
 
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
+export type SessionRoomPlayer = z.infer<typeof sessionRoomPlayer>
 export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
