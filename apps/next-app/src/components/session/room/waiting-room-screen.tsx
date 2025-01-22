@@ -14,10 +14,12 @@ import { CustomTooltip } from "@/components/shared"
 import { WaitingPlayer } from "./custom"
 
 // hooks
+import { useCopy } from "@/hooks/use-copy"
 import { useSessionRoom } from "@/components/provider/session-room-provider"
 
 const WaitingRoomScreen = () => {
-  const { room } = useSessionRoom() as { room: WaitingRoom}
+  const { room } = useSessionRoom() as { room: WaitingRoom }
+  const { handleCopy } = useCopy({ showToast: true })
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-y-12">
@@ -39,8 +41,9 @@ const WaitingRoomScreen = () => {
       >
         <Share2 className="size-4 sm:size-5 text-muted-foreground" strokeWidth={2.25} />
 
-        <p className="mt-0.5 text-base text-muted-foreground font-heading">
-          {/* TODO: create useCopy() custom hook */}
+        <p className="mt-0.5 text-base text-muted-foreground font-heading"
+          onClick={() => handleCopy(room.slug)}
+        >
           Click to copy invite code
         </p>
       </CustomTooltip>

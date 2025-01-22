@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 // types
 import type { LucideIcon, LucideProps } from "lucide-react"
 import type { ClientUser } from "@/lib/schema/user-schema"
@@ -14,6 +12,9 @@ import { Check, Copy, Slash } from "lucide-react"
 
 // components
 import { UserAvatar } from "@/components/user"
+
+// hooks
+import { useCopy } from "@/hooks/use-copy"
 
 type UserInfoProps = {
   label: string
@@ -40,14 +41,7 @@ const UserInfo = ({
   showUserAvatarAsIcon = false,
   avatarProps
 }: UserInfoProps) => {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(info)
-    setCopied(true)
-
-    setTimeout(() => setCopied(false), 2000);
-  }
+  const { copied, handleCopy } = useCopy({ showToast: true })
 
   return (
     <div className="flex items-center gap-x-2.5">
@@ -73,7 +67,7 @@ const UserInfo = ({
           <span className={cn("cursor-pointer break-all", {
             "blur-sm hover:blur-none transition": hideInfo && !copied
           })}
-            onClick={handleCopy}
+            onClick={() => handleCopy(info)}
           >
             {info}
           </span>
@@ -84,14 +78,14 @@ const UserInfo = ({
             "rotate-0 scale-100": !copied,
             "-rotate-90 scale-0": copied
           })}
-            onClick={handleCopy}
+            onClick={() => handleCopy(info)}
           />
 
           <Check className={cn("size-3 shrink-0 cursor-pointer transition-all duration-200 absolute right-0 top-0", {
             "rotate-0 scale-100": copied,
             "-rotate-90 scale-0": !copied
           })}
-            onClick={handleCopy}
+            onClick={() => handleCopy(info)}
           />
         </div>
       </div>
