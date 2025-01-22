@@ -17,8 +17,8 @@ import { SessionStoreProvider } from "@/components/provider"
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
-type TSessionRoomContext = {
-  room: WaitingRoom | JoinedRoom | SessionRoom
+type TSessionRoomContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
+  room: T
 }
 
 const SessionRoomContext = createContext<TSessionRoomContext | null>(null)
@@ -72,8 +72,8 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
   )
 }
 
-function useSessionRoom() {
-  const context = useContext(SessionRoomContext)
+function useSessionRoom<T extends WaitingRoom | JoinedRoom | SessionRoom>() {
+  const context = useContext(SessionRoomContext) as TSessionRoomContext<T> | null
 
   if (!context) {
     throw new Error('Session room context must be used within its provider.')

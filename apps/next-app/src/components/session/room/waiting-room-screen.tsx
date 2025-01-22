@@ -18,7 +18,7 @@ import { useCopy } from "@/hooks/use-copy"
 import { useSessionRoom } from "@/components/provider/session-room-provider"
 
 const WaitingRoomScreen = () => {
-  const { room } = useSessionRoom() as { room: WaitingRoom }
+  const { room } = useSessionRoom<WaitingRoom>()
   const { handleCopy } = useCopy({ showToast: true })
 
   return (
