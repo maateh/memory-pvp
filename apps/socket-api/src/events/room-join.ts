@@ -44,7 +44,11 @@ export const roomJoin: SocketEventHandler<
     const joinedRoom: JoinedRoom = {
       ...waitingRoom,
       status: "joined",
-      guest: { ...guest, ready: false }
+      guest: {
+        ...guest,
+        socketId: socket.id,
+        ready: false
+      }
     }
     
     await Promise.all([

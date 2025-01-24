@@ -7,7 +7,10 @@ import { createSessionValidation } from "./validation/session-validation"
 
 /* Base schemas */
 export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
-export const sessionRoomPlayer = clientPlayerSchema.extend({ ready: z.coerce.boolean() })
+export const sessionRoomPlayer = clientPlayerSchema.extend({
+  socketId: z.string(),
+  ready: z.coerce.boolean()
+})
 
 export const sessionRoomSchema = z.object({
   slug: z.string(),
