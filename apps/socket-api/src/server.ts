@@ -9,6 +9,9 @@ import {
   disconnect,
   roomCreate,
   roomJoin,
+  roomReady,
+  roomLeave,
+  roomClose,
   sessionCreated,
   sessionUpdate
 } from "@/events"
@@ -27,6 +30,9 @@ io.on("connection", (socket) => {
 
   socket.on("room:create", roomCreate(socket))
   socket.on("room:join", roomJoin(socket))
+  socket.on("room:ready", roomReady(socket))
+  socket.on("room:leave", roomLeave(socket))
+  socket.on("room:close", roomClose(socket))
 
   socket.on("session:created", sessionCreated(socket))
   socket.on("session:update", sessionUpdate(socket))
