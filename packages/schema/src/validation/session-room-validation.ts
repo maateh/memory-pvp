@@ -3,6 +3,7 @@ import { z } from "zod"
 // schemas
 import { createSessionValidation } from "./session-validation"
 import { clientPlayerSchema } from "../player-schema"
+import { clientSessionSchema } from "../session-schema"
 
 /* Forms / API validations */
 export const createSessionRoomValidation = z.object({
@@ -15,10 +16,9 @@ export const joinSessionRoomValidation = z.object({
   guest: clientPlayerSchema
 })
 
-export const readyRoomValidation = z.object({
-  roomSlug: z.string()
+export const sessionCreatedValidation = z.object({
+  session: clientSessionSchema
 })
 
 export type CreateSessionRoomValidation = z.infer<typeof createSessionRoomValidation>
 export type JoinSessionRoomValidation = z.infer<typeof joinSessionRoomValidation>
-export type ReadyRoomValidation = z.infer<typeof readyRoomValidation>

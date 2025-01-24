@@ -1,12 +1,8 @@
 // types
-import type { ReadyRoomValidation } from "@repo/schema/session-room-validation"
 import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@repo/redis"
-
-// schema
-import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // server
 import { io } from "@/server"
@@ -14,20 +10,15 @@ import { io } from "@/server"
 // error
 import { SocketError } from "@repo/types/socket-api-error"
 
-// utils
-import { validate } from "@/utils/validate"
-
 export const roomReady: SocketEventHandler<
-  ReadyRoomValidation,
+  any,
   JoinedRoom
-> = (socket) => async (input, response) => {
+> = (socket) => async (_, response) => {
   console.log("DEBUG - room:ready -> ", socket.id)
 
   try {
-    const { roomSlug } = validate(joinSessionRoomValidation, input)
-
-    const playerId = await redis.hget(`memory:connections:${socket.id}`, 'playerId')
-    if (!playerId) {
+    const connection = await redis.hgetall<SocketPlayerConnection>(`memory:connections:${socket.id}`)
+    if (!connection) {
       // TODO: force close session
 
       SocketError.throw({
@@ -37,7 +28,7 @@ export const roomReady: SocketEventHandler<
       })
     }
 
-    const room = await redis.hgetall<JoinedRoom>(`memory:session_rooms:${roomSlug}`)
+    const room = await redis.hgetall<JoinedRoom>(`memory:session_rooms:${connection.roomSlug}`)
     if (!room) {
       // TODO: remove player(s) connection data
 
@@ -48,13 +39,13 @@ export const roomReady: SocketEventHandler<
       })
     }
     
-    room.owner.ready = room.owner.id === playerId
-    room.guest.ready = room.guest.id === playerId
+    room.owner.ready = room.owner.id === connection.playerId
+    room.guest.ready = room.guest.id === connection.playerId
     room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
-    await redis.hset(`memory:session_rooms:${roomSlug}`, room)
+    await redis.hset(`memory:session_rooms:${connection.roomSlug}`, room)
 
     const unreadyPlayer = room.owner.ready ? room.guest.tag : room.owner.tag
-    io.to(roomSlug).emit("room:readied", {
+    io.to(connection.roomSlug).emit("room:readied", {
       message: room.status === "ready"
         ? "Session room is ready. Game will start soon..."
         : `Waiting for ${unreadyPlayer} to be ready...`,
