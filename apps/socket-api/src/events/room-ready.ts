@@ -3,6 +3,9 @@ import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@repo/redis"
+import { roomKey } from "@repo/redis/keys"
+import { getPlayerConnection } from "@/commands/connection-commands"
+import { getSessionRoom } from "@/commands/room-commands"
 
 // server
 import { io } from "@/server"
@@ -17,35 +20,16 @@ export const roomReady: SocketEventHandler<
   console.log("DEBUG - room:ready -> ", socket.id)
 
   try {
-    const connection = await redis.hgetall<SocketPlayerConnection>(`memory:connections:${socket.id}`)
-    if (!connection) {
-      // TODO: force close session
-
-      SocketError.throw({
-        key: "PLAYER_CONNECTION_NOT_FOUND",
-        message: "Player connection data not found.",
-        description: "Something went wrong because your connection data has been lost. The session will be closed without point losses."
-      })
-    }
-
-    const room = await redis.hgetall<JoinedRoom>(`memory:session_rooms:${connection.roomSlug}`)
-    if (!room) {
-      // TODO: remove player(s) connection data
-
-      SocketError.throw({
-        key: "ROOM_NOT_FOUND",
-        message: "Session room not found.",
-        description: "Sorry, but the room you are trying to join has been closed."
-      })
-    }
+    const { roomSlug, playerId } = await getPlayerConnection(socket.id)
+    const room = await getSessionRoom<JoinedRoom>(roomSlug)
     
-    room.owner.ready = room.owner.id === connection.playerId
-    room.guest.ready = room.guest.id === connection.playerId
+    room.owner.ready = room.owner.id === playerId
+    room.guest.ready = room.guest.id === playerId
     room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
-    await redis.hset(`memory:session_rooms:${connection.roomSlug}`, room)
+    await redis.hset(roomKey(roomSlug), room)
 
     const unreadyPlayer = room.owner.ready ? room.guest.tag : room.owner.tag
-    io.to(connection.roomSlug).emit("room:readied", {
+    io.to(roomSlug).emit("room:readied", {
       message: room.status === "ready"
         ? "Session room is ready. Game will start soon..."
         : `Waiting for ${unreadyPlayer} to be ready...`,

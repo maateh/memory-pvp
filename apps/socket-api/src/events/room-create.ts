@@ -4,6 +4,7 @@ import type { CreateSessionRoomValidation } from "@repo/schema/session-room-vali
 
 // redis
 import { redis } from "@repo/redis"
+import { connectionKey, roomKey } from "@repo/redis/keys"
 
 // schema
 import { createSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -41,11 +42,11 @@ export const roomCreate: SocketEventHandler<
     }
 
     await Promise.all([
-      redis.hset(`memory:connections:${socket.id}`, socketPlayerConnection(socket.id, owner.id, slug)),
-      redis.hset(`memory:session_rooms:${waitingRoom.slug}`, waitingRoom)
+      redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, owner.id, slug)),
+      redis.hset(roomKey(slug), waitingRoom)
     ])
 
-    socket.join(waitingRoom.slug)
+    socket.join(slug)
     response({
       success: true,
       message: "Waiting for another user to join...",

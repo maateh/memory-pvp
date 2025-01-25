@@ -4,6 +4,8 @@ import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@repo/redis"
+import { connectionKey, roomKey } from "@repo/redis/keys"
+import { getSessionRoom } from "@/commands/room-commands"
 
 // schema
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -23,15 +25,7 @@ export const roomJoin: SocketEventHandler<
 
   try {
     const { roomSlug, guest } = validate(joinSessionRoomValidation, input)
-    const waitingRoom = await redis.hgetall<WaitingRoom>(`memory:session_rooms:${roomSlug}`)
-
-    if (!waitingRoom) {
-      SocketError.throw({
-        key: "ROOM_NOT_FOUND",
-        message: "Session room not found.",
-        description: "Sorry, but the room you are trying to join has been closed."
-      })
-    }
+    const waitingRoom = await getSessionRoom<WaitingRoom>(roomSlug)
 
     if (waitingRoom.status !== "waiting") {
       SocketError.throw({
@@ -52,8 +46,8 @@ export const roomJoin: SocketEventHandler<
     }
     
     await Promise.all([
-      redis.hset(`memory:connections:${socket.id}`, socketPlayerConnection(socket.id, guest.id, roomSlug)),
-      redis.hset(`memory:session_rooms:${roomSlug}`, joinedRoom)
+      redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, guest.id, roomSlug)),
+      redis.hset(roomKey(roomSlug), joinedRoom)
     ])
   
     socket.join(roomSlug)
