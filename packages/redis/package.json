@@ -1,7 +1,8 @@
 {
   "name": "@repo/redis",
   "exports": {
-    ".": "./redis.ts"
+    ".": "./src/redis.ts",
+    "./keys": "./src/keys.ts"
   },
   "dependencies": {
     "@upstash/redis": "^1.34.3"
