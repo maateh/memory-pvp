@@ -1,23 +1,37 @@
+// types
+import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
+
 // redis
 import { redis } from "@repo/redis"
+import { connectionKey, roomKey } from "@repo/redis/keys"
+import { getPlayerConnectionByField } from "@/commands/connection-commands"
+import { getSessionRoom } from "@/commands/room-commands"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
-
-// utils
-import { socketPlayerConnection } from "@/utils/socket-player-connection"
 
 export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:close -> ", socket.id)
 
   try {
-    // TODO:
-    // - get socket player connection from redis by socket id (to access `roomSlug`)
-    // - get session room for the other player info -> FIXME: add `socketId` to `sessionRoomPlayer` schema
-    // - remove player connections from redis
-    // - remove session room from redis
+    const roomSlug = await getPlayerConnectionByField<string>(socket.id, 'roomSlug')
+    const room = await getSessionRoom<WaitingRoom | JoinedRoom>(roomSlug)
+    
+    await Promise.all([
+      redis.hdel(roomKey(roomSlug)),
+      redis.hdel(connectionKey(room.owner.socketId)),
+      room.status !== "waiting" ? redis.hdel(connectionKey(room.guest.socketId)) : null
+    ])
 
-    // socket.leave(roomSlug)
+    if (room.status !== "waiting") {
+      socket.broadcast.to(roomSlug).emit("room:closed", {
+        success: true,
+        message: `${room.owner.tag} has closed the room.`,
+        data: null
+      } satisfies SocketResponse<null>)
+    }
+
+    socket.leave(roomSlug)
     response({
       success: true,
       message: "Session room has been successfully closed.",
