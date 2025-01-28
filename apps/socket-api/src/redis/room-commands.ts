@@ -2,8 +2,10 @@
 import type { JoinedRoom, WaitingRoom, SessionRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@repo/redis"
-import { roomKey, waitingRoomKey } from "@repo/redis/keys"
+import { redis } from "@/redis"
+
+// config
+import { roomKey, waitingRoomKey } from "@repo/config/redis-keys"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"

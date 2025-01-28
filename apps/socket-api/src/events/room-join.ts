@@ -3,9 +3,11 @@ import type { JoinSessionRoomValidation } from "@repo/schema/session-room-valida
 import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@repo/redis"
-import { connectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/redis/keys"
-import { getWaitingRoom } from "@/commands/room-commands"
+import { redis } from "@/redis"
+import { getWaitingRoom } from "@/redis/room-commands"
+
+// config
+import { connectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // schema
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"

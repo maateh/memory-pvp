@@ -1,6 +1,8 @@
 // redis
-import { redis } from "@repo/redis"
-import { connectionKey } from "@repo/redis/keys"
+import { redis } from "@/redis"
+
+// config
+import { connectionKey } from "@repo/config/redis-keys"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"

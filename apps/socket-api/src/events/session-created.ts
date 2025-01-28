@@ -2,7 +2,7 @@
 import { io } from "@/server"
 
 // redis
-import { redis } from "@repo/redis"
+import { redis } from "@/redis"
 
 type SessionCreatedData = {
   session: ClientGameSession

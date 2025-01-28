@@ -1,5 +1,5 @@
 // redis
-import { redis } from "@repo/redis"
+import { redis } from "@/redis"
 
 type SessionUpdateData = {
   roomId: string

@@ -2,10 +2,12 @@
 import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@repo/redis"
-import { roomKey } from "@repo/redis/keys"
-import { getPlayerConnection } from "@/commands/connection-commands"
-import { getSessionRoom } from "@/commands/room-commands"
+import { redis } from "@/redis"
+import { getPlayerConnection } from "@/redis/connection-commands"
+import { getSessionRoom } from "@/redis/room-commands"
+
+// config
+import { roomKey } from "@repo/config/redis-keys"
 
 // server
 import { io } from "@/server"

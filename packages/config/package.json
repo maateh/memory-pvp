@@ -1,0 +1,6 @@
+{
+  "name": "@repo/config",
+  "exports": {
+    "./redis-keys": "./redis/keys.ts"
+  }
+}

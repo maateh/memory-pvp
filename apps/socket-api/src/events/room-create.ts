@@ -3,8 +3,10 @@ import type { WaitingRoom } from "@repo/schema/session-room"
 import type { CreateSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // redis
-import { redis } from "@repo/redis"
-import { connectionKey, waitingRoomKey, waitingRoomsKey } from "@repo/redis/keys"
+import { redis } from "@/redis"
+
+// config
+import { connectionKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // schema
 import { createSessionRoomValidation } from "@repo/schema/session-room-validation"

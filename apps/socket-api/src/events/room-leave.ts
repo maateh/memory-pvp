@@ -2,10 +2,12 @@
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@repo/redis"
-import { connectionKey, roomKey } from "@repo/redis/keys"
-import { getPlayerConnectionByField } from "@/commands/connection-commands"
-import { getSessionRoom } from "@/commands/room-commands"
+import { redis } from "@/redis"
+import { getPlayerConnectionByField } from "@/redis/connection-commands"
+import { getSessionRoom } from "@/redis/room-commands"
+
+// config
+import { connectionKey, roomKey } from "@repo/config/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
