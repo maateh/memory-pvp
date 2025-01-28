@@ -1,4 +1,5 @@
 // types
+import type { ClientPlayer } from "@repo/schema/player"
 import type { WaitingRoom } from "@repo/schema/session-room"
 
 // config
@@ -9,23 +10,24 @@ import {
 } from "@/config/game-settings"
 
 // icons
-import { CalendarClock, Dices, Gamepad2, PlayCircle } from "lucide-react"
+import { CalendarClock, Dices, Gamepad2 } from "lucide-react"
 
 // shadcn
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { PlayerBadge } from "@/components/player"
 import { SessionBadge, SessionInfoBadge } from "@/components/session"
+import { RoomJoinButton } from "@/components/room"
 import { CustomDate } from "@/components/shared"
 
 type WaitingRoomCardProps = {
+  guestPlayer: ClientPlayer
   room: WaitingRoom
 }
 
-const WaitingRoomCard = ({ room }: WaitingRoomCardProps) => {
+const WaitingRoomCard = ({ guestPlayer, room }: WaitingRoomCardProps) => {
   return (
     <div className="w-full py-1.5 px-1 sm:px-2 flex flex-wrap justify-between gap-x-3 gap-y-2">
       <div className="space-y-2">
@@ -55,14 +57,9 @@ const WaitingRoomCard = ({ room }: WaitingRoomCardProps) => {
             session={{ slug: room.slug, status: "RUNNING" }}
           />
 
-          <Button className="ml-auto p-1.5 hover:bg-muted/50"
-            tooltip="Join room..."
-            variant="ghost"
-            size="sm"
-            onClick={() => {}} // TODO: implement join
-          >
-            <PlayCircle className="size-4 sm:size-5 md:size-6 shrink-0 text-accent" />
-          </Button>
+          <RoomJoinButton
+            values={{ roomSlug: room.slug, guest: guestPlayer }}
+          />
         </div>
 
         <Separator className="w-11/12 ml-auto mt-auto mb-1.5 bg-border/65" />

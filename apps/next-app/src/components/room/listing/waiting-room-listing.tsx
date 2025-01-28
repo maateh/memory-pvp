@@ -4,6 +4,7 @@ import { useState } from "react"
 
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
+import type { ClientPlayer } from "@repo/schema/player"
 import type { WaitingRoom } from "@repo/schema/session-room"
 
 // react-table
@@ -26,17 +27,23 @@ import { CardItem, NoListingData } from "@/components/shared"
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
 
+type WaitingRoomListingMetadata = {
+  guestPlayer: ClientPlayer
+}
+
 type WaitingRoomListingProps = {
+  guestPlayer: ClientPlayer
   rooms: WaitingRoom[]
 }
 
-const WaitingRoomListing = ({ rooms }: WaitingRoomListingProps) => {
+const WaitingRoomListing = ({ guestPlayer, rooms }: WaitingRoomListingProps) => {
   const { open: sidebarOpen } = useSidebar()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   const table = useReactTable({
+    meta: { guestPlayer },
     columns,
     data: rooms,
     getCoreRowModel: getCoreRowModel(),
@@ -61,7 +68,11 @@ const WaitingRoomListing = ({ rooms }: WaitingRoomListingProps) => {
       })}>
         {rooms.map((room) => (
           <CardItem key={room.slug}>
-            <WaitingRoomCard room={room} key={room.slug} />
+            <WaitingRoomCard
+              room={room}
+              guestPlayer={guestPlayer}
+              key={room.slug}
+            />
           </CardItem>
         ))}
       </ul>
@@ -93,3 +104,4 @@ const WaitingRoomListingSkeleton = () => (
 
 export default WaitingRoomListing
 export { WaitingRoomListingSkeleton }
+export type { WaitingRoomListingMetadata }

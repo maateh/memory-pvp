@@ -1,6 +1,7 @@
 // types
 import type { ColumnDef } from "@tanstack/react-table"
 import type { WaitingRoom } from "@repo/schema/session-room"
+import type { WaitingRoomListingMetadata } from "./waiting-room-listing"
 
 // config
 import {
@@ -10,15 +11,15 @@ import {
 } from "@/config/game-settings"
 
 // icons
-import { CalendarClock, Dices, Gamepad2, PlayCircle } from "lucide-react"
+import { CalendarClock, Dices, Gamepad2 } from "lucide-react"
 
 // shadcn
-import { Button } from "@/components/ui/button"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
 import { PlayerBadge } from "@/components/player"
 import { SessionInfoBadge, SessionBadge } from "@/components/session"
+import { RoomJoinButton } from "@/components/room"
 import { CustomDate } from "@/components/shared"
 
 export const columns: ColumnDef<WaitingRoom>[] = [
@@ -139,18 +140,14 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header({ table }) {
       return <DataTableColumnToggle table={table} />
     },
-    cell({ row }) {
-      const room = row.original
+    cell({ row, table }) {
+      const { slug } = row.original
+      const { guestPlayer } = table.options.meta as WaitingRoomListingMetadata
 
       return (
-        <Button className="ml-auto p-1.5"
-          tooltip="Join room..."
-          variant="ghost"
-          size="icon"
-          onClick={() => {}} // TODO: implement join
-        >
-          <PlayCircle className="size-4 sm:size-5 md:size-6 shrink-0 text-accent" />
-        </Button>
+        <RoomJoinButton
+          values={{ roomSlug: slug, guest: guestPlayer }}
+        />
       )
     }
   }
