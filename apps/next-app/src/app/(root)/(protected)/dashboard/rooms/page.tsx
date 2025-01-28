@@ -1,15 +1,13 @@
-// icons
-import { Wrench } from "lucide-react"
-
 // components
-import { NoListingData } from "@/components/shared"
+import { WaitingRoomListing } from "@/components/room/listing"
 
-const WaitingRoomsPage = () => {
+const WaitingRoomsPage = async () => {
+  // TODO: fetch waiting rooms
+  // TODO: add filter/sort/pagination options
+
   return (
-    <NoListingData className="mt-44"
-      Icon={Wrench}
-      message="Waiting rooms have not been implemented yet."
-      hideClearFilter
+    <WaitingRoomListing
+      rooms={[]}
     />
   )
 }
