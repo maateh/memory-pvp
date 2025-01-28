@@ -10,7 +10,7 @@ import { CircleCheck, DoorClosed, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // components
-import { JoinedPlayer } from "@/components/session/room"
+import { JoinedPlayer } from "@/components/room"
 
 // hooks
 import { useCopy } from "@/hooks/use-copy"
