@@ -1,11 +1,11 @@
 // types
 import type { JoinSessionRoomValidation } from "@repo/schema/session-room-validation"
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@repo/redis"
-import { connectionKey, roomKey } from "@repo/redis/keys"
-import { getSessionRoom } from "@/commands/room-commands"
+import { connectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/redis/keys"
+import { getWaitingRoom } from "@/commands/room-commands"
 
 // schema
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -23,17 +23,11 @@ export const roomJoin: SocketEventHandler<
 > = (socket) => async (input, response) => {
   console.log("DEBUG - room:join -> ", socket.id)
 
+  // FIXME: check if the user isn't already joined in other session
+
   try {
     const { roomSlug, guest } = validate(joinSessionRoomValidation, input)
-    const waitingRoom = await getSessionRoom<WaitingRoom>(roomSlug)
-
-    if (waitingRoom.status !== "waiting") {
-      SocketError.throw({
-        key: "SESSION_ALREADY_STARTED",
-        message: "Session already started.",
-        description: "Sorry, but the session has already been started in this room. Please try another."
-      })
-    }
+    const waitingRoom = await getWaitingRoom(roomSlug)
     
     const joinedRoom: JoinedRoom = {
       ...waitingRoom,
@@ -47,7 +41,9 @@ export const roomJoin: SocketEventHandler<
     
     await Promise.all([
       redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, guest.id, roomSlug)),
-      redis.hset(roomKey(roomSlug), joinedRoom)
+      redis.hset(roomKey(roomSlug), joinedRoom),
+      redis.del(waitingRoomKey(roomSlug)),
+      redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
   
     socket.join(roomSlug)

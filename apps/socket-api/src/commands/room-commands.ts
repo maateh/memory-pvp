@@ -3,10 +3,22 @@ import type { JoinedRoom, WaitingRoom, SessionRoom } from "@repo/schema/session-
 
 // redis
 import { redis } from "@repo/redis"
-import { roomKey } from "@repo/redis/keys"
+import { roomKey, waitingRoomKey } from "@repo/redis/keys"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
+
+export async function getWaitingRoom(roomSlug: string) {
+  const room = await redis.hgetall<WaitingRoom>(waitingRoomKey(roomSlug))
+  if (room) return room
+
+  // TODO: remove player connection data
+  SocketError.throw({
+    key: "ROOM_NOT_FOUND",
+    message: "Waiting room not found.",
+    description: "Sorry, but this room has been closed or the session has already started."
+  })
+}
 
 export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | SessionRoom = SessionRoom>(
   roomSlug: string

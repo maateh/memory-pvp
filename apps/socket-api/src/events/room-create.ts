@@ -4,7 +4,7 @@ import type { CreateSessionRoomValidation } from "@repo/schema/session-room-vali
 
 // redis
 import { redis } from "@repo/redis"
-import { connectionKey, roomKey } from "@repo/redis/keys"
+import { connectionKey, waitingRoomKey, waitingRoomsKey } from "@repo/redis/keys"
 
 // schema
 import { createSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -25,6 +25,8 @@ export const roomCreate: SocketEventHandler<
 > = (socket) => async (input, response) => {
   console.log("DEBUG - room:create -> ", socket.id)
 
+  // FIXME: check if the user isn't already joined in other session
+
   try {
     const { owner, settings } = validate(createSessionRoomValidation, input)
     const slug = generateSessionSlug({ type: settings.type, mode: settings.mode })
@@ -43,7 +45,8 @@ export const roomCreate: SocketEventHandler<
 
     await Promise.all([
       redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, owner.id, slug)),
-      redis.hset(roomKey(slug), waitingRoom)
+      redis.hset(waitingRoomKey(slug), waitingRoom),
+      redis.lpush(waitingRoomsKey, slug)
     ])
 
     socket.join(slug)
