@@ -1,10 +1,7 @@
 import { redirect } from "next/navigation"
 
-// types
-import type { JoinedRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-room"
-
 // redis
-import { redis } from "@repo/redis"
+import { getSessionRoom } from "@/server/redis/room-commands"
 
 // providers
 import { SessionRoomProvider } from "@/components/provider"
@@ -19,10 +16,9 @@ type MultiGamePageProps = {
 }
 
 const MultiGamePage = async ({ params }: MultiGamePageProps) => {
-  const storeKey = `memory:session_rooms:${params.slug}`
-  const room = await redis.hgetall<WaitingRoom | JoinedRoom | SessionRoom>(storeKey)
+  const room = await getSessionRoom(params.slug)
   if (!room) redirect('/game/setup')
-
+    
   return (
     <SessionRoomProvider initialRoom={room}>
       <RoomStatusHandler />

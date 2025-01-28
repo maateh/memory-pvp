@@ -1,6 +1,9 @@
 // server
 import { getPlayer } from "@/server/db/query/player-query"
 
+// redis
+import { getWaitingRooms } from "@/server/redis/room-commands"
+
 // components
 import { WaitingRoomListing } from "@/components/room/listing"
 
@@ -15,13 +18,13 @@ const WaitingRoomsPage = async () => {
     return <>Please, create a player first</>
   }
 
-  // TODO: fetch waiting rooms
   // TODO: add filter/sort/pagination options
+  const rooms = await getWaitingRooms()
 
   return (
     <WaitingRoomListing
       guestPlayer={player}
-      rooms={[]}
+      rooms={rooms}
     />
   )
 }
