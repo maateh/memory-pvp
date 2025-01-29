@@ -4,7 +4,7 @@
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // icons
-import { CircleCheck, DoorClosed, Share2 } from "lucide-react"
+import { CircleCheck, CircleCheckBig, DoorClosed, Share2 } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -17,8 +17,16 @@ import { useCopy } from "@/hooks/use-copy"
 import { useSessionRoom } from "@/components/provider/session-room-provider"
 
 const WaitingRoomScreen = () => {
-  const { room } = useSessionRoom<WaitingRoom | JoinedRoom>()
+  const {
+    room,
+    currentRoomPlayer,
+    roomClose,
+    roomLeave,
+    roomReady
+  } = useSessionRoom<WaitingRoom | JoinedRoom>()
   const { handleCopy } = useCopy({ showToast: true })
+
+  const ReadyIcon = currentRoomPlayer.ready ? CircleCheck : CircleCheckBig
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-y-12">
@@ -56,11 +64,12 @@ const WaitingRoomScreen = () => {
           <Button className="gap-x-2"
             variant="secondary"
             size="sm"
-            // TODO: disabled={currentRoomPlayer.ready}
+            onClick={roomReady}
+            disabled={currentRoomPlayer.ready}
           >
-            <CircleCheck className="size-3.5 sm:size-4 shrink-0"
+            <ReadyIcon className="size-3.5 sm:size-4 shrink-0"
               strokeWidth={2.25}
-            /> {/* TODO: use <CircleCheckBig /> if user is ready */}
+            />
             <span className="mt-0.5 text-base font-heading">
               Ready
             </span>
@@ -71,11 +80,11 @@ const WaitingRoomScreen = () => {
           tooltip="Click here to close the session. You will not lose points, even in competitive mode."
           variant="destructive"
           size="sm"
-          onClick={() => {}} // TODO: implement closing room
-          disabled={room.status === "ready" || room.status === "starting"}
+          onClick={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
+          disabled={currentRoomPlayer.ready || room.status === "ready" || room.status === "starting"}
         >
           <DoorClosed className="size-4 shrink-0" />
-          <span>Close room</span>
+          <span>{currentRoomPlayer.id === room.owner.id ? "Close room" : "Leave room"}</span>
         </Button>
       </div>
     </div>

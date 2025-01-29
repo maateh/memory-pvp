@@ -1,15 +1,16 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { JoinedRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
 import type { SocketResponse } from "@repo/types/socket-api"
 
 // utils
-import { handleServerError } from "@/lib/util/error"
+import { SocketError } from "@repo/types/socket-api-error"
+import { handleServerError, logError } from "@/lib/util/error"
 
 // providers
 import { SessionStoreProvider } from "@/components/provider"
@@ -19,6 +20,7 @@ import { useSocketService } from "@/components/provider/socket-service-provider"
 
 type TSessionRoomContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
   room: T
+  currentRoomPlayer: SessionRoomPlayer
   roomLeave: () => Promise<void>
   roomClose: () => Promise<void>
   roomReady: () => Promise<void>
@@ -28,29 +30,60 @@ const SessionRoomContext = createContext<TSessionRoomContext | null>(null)
 
 type SessionRoomProviderProps = {
   initialRoom: WaitingRoom | JoinedRoom | SessionRoom
+  currentPlayerId: string
   children: React.ReactNode
 }
 
-const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps) => {
+const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: SessionRoomProviderProps) => {
   const router = useRouter()
   const { socket } = useSocketService()
 
   const [room, setRoom] = useState(initialRoom)
+  const currentRoomPlayer = useMemo(() => {
+    if (
+      room.status === "waiting" ||
+      room.owner.id === currentPlayerId
+    ) return room.owner
 
-  // TODO: additionally, a custom `useJoinWaitingRoom` hook will be required,
-  // similarly to the `useCreateWaitingRoom`
+    return room.guest
+  }, [room, currentPlayerId])
 
   const roomLeave = async () => {
-    // TODO:
-    // - display action button only for the guest player (disable button if the guest player is ready)
-    // - remove session player connection from redis + update session room
+    toast.info("Leaving room...")
+
+    try {
+      const { message, error } = await socket?.timeout(5000)
+        .emitWithAck("room:leave", {}) as SocketResponse<null>
+
+      if (error) {
+        throw SocketError.parser(error)
+      }
+
+      router.replace("/game/setup")
+      toast.success(message)
+    } catch (err) {
+      handleServerError(err as SocketError)
+      logError(err)
+    }
   }
 
   const roomClose = async () => {
-    // TODO:
-    // - display action button only for the room owner (disable button if the owner player is ready)
-    // - remove player connections from redis
-    // - remove session room from redis
+    toast.info("Closing room...")
+
+    try {
+      const { message, error } = await socket?.timeout(5000)
+        .emitWithAck("room:close", {}) as SocketResponse<null>
+
+      if (error) {
+        throw SocketError.parser(error)
+      }
+
+      router.replace("/game/setup")
+      toast.success(message)
+    } catch (err) {
+      handleServerError(err as SocketError)
+      logError(err)
+    }
   }
 
   const roomReady = async () => {
@@ -70,24 +103,24 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
     }
 
     const roomJoined = ({ data: room, message, error }: SocketResponse<JoinedRoom>) => {
-      if (!error && room) {
-        setRoom(room)
-        toast.success(message)
-        return
-      }
+      if (error || !room) return handleServerError(error)
 
-      handleServerError(error)
+      setRoom(room)
+      toast.success(message)
     }
 
-    const roomLeft = () => {
-      // TODO:
-      // - notify the joined player that the other player has left
+    const roomLeft = ({ data: room, message, error }: SocketResponse<WaitingRoom>) => {
+      if (error || !room) return handleServerError(error)
+      
+      setRoom(room)
+      toast.warning(message)
     }
 
-    const roomClosed = () => {
-      // TODO:
-      // - notify joined players that the room has been closed
-      // - redirect players to the setup page after room has been closed
+    const roomClosed = ({ message, error }: SocketResponse<null>) => {
+      if (error) return handleServerError(error)
+
+      toast.warning(message)
+      router.replace("/game/setup")
     }
 
     const roomReadied = () => {
@@ -108,12 +141,20 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
       // - no need to redirect, just update the session room status on redis
     }
 
+    const disconnect = () => {
+      // TODO:
+      // - notify the player that the room has been closed due to a server issue
+      // - redirect the user to the setup page
+    }
+
     socket.on("room:joined", roomJoined)
     socket.on("room:left", roomLeft)
     socket.on("room:closed", roomClosed)
     socket.on("room:readied", roomReadied)
     socket.on("session:starting", sessionStarting)
     socket.on("session:started", sessionStarted)
+
+    socket.on("disconnect", disconnect)
 
     return () => {
       socket.off("room:joined", roomJoined)
@@ -122,11 +163,13 @@ const SessionRoomProvider = ({ initialRoom, children }: SessionRoomProviderProps
       socket.off("room:readied", roomReadied)
       socket.off("session:starting", sessionStarting)
       socket.off("session:started", sessionStarted)
+
+      socket.off("disconnect", disconnect)
     }
   }, [router, socket])
 
   return (
-    <SessionRoomContext.Provider value={{ room, roomLeave, roomClose, roomReady }}>
+    <SessionRoomContext.Provider value={{ room, currentRoomPlayer, roomLeave, roomClose, roomReady }}>
       {room.status === "running" ? (
         <SessionStoreProvider session={room.session}>
           {children}
