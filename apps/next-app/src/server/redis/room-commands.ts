@@ -21,9 +21,7 @@ export async function getWaitingRooms() {
 }
 
 export async function getSessionRoom(roomSlug: string) {
-  const room: WaitingRoom | JoinedRoom | SessionRoom | null = await redis.hgetall<WaitingRoom>(
-    waitingRoomKey(roomSlug)
-  )
+  const room = await redis.hgetall<WaitingRoom>(waitingRoomKey(roomSlug))
   if (room) return room
   
   return await redis.hgetall<JoinedRoom | SessionRoom>(roomKey(roomSlug))
