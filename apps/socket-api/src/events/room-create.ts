@@ -6,7 +6,7 @@ import type { CreateSessionRoomValidation } from "@repo/schema/session-room-vali
 import { redis } from "@/redis"
 
 // config
-import { connectionKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // schema
 import { createSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -45,8 +45,10 @@ export const roomCreate: SocketEventHandler<
       createdAt: new Date()
     }
 
+    const connection = socketPlayerConnection(socket.id, owner.id, slug)
     await Promise.all([
-      redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, owner.id, slug)),
+      redis.hset(connectionKey(socket.id), connection),
+      redis.hset(playerConnectionKey(owner.id), connection),
       redis.hset(waitingRoomKey(slug), waitingRoom),
       redis.lpush(waitingRoomsKey, slug)
     ])

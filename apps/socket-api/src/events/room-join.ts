@@ -7,7 +7,7 @@ import { redis } from "@/redis"
 import { getWaitingRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // schema
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -40,9 +40,11 @@ export const roomJoin: SocketEventHandler<
         ready: false
       }
     }
-    
+
+    const connection = socketPlayerConnection(socket.id, guest.id, roomSlug)
     await Promise.all([
-      redis.hset(connectionKey(socket.id), socketPlayerConnection(socket.id, guest.id, roomSlug)),
+      redis.hset(connectionKey(socket.id), connection),
+      redis.hset(playerConnectionKey(guest.id), connection),
       redis.hset(roomKey(roomSlug), joinedRoom),
       redis.del(waitingRoomKey(roomSlug)),
       redis.lrem(waitingRoomsKey, 1, roomSlug)

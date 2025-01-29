@@ -3,7 +3,7 @@ import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
-import { getPlayerConnection } from "@/redis/connection-commands"
+import { getSocketConnection } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
@@ -22,7 +22,7 @@ export const roomReady: SocketEventHandler<
   console.log("DEBUG - room:ready -> ", socket.id)
 
   try {
-    const { roomSlug, playerId } = await getPlayerConnection(socket.id)
+    const { roomSlug, playerId } = await getSocketConnection(socket.id)
     const room = await getSessionRoom<JoinedRoom>(roomSlug)
     
     room.owner.ready = room.owner.id === playerId

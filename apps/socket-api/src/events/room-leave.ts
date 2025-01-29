@@ -3,11 +3,11 @@ import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
-import { getPlayerConnectionByField } from "@/redis/connection-commands"
+import { getSocketConnection } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, roomKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey } from "@repo/config/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -16,7 +16,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
   console.log("DEBUG - room:leave -> ", socket.id)
 
   try {
-    const roomSlug = await getPlayerConnectionByField<string>(socket.id, 'roomSlug')
+    const { playerId, roomSlug } = await getSocketConnection(socket.id)
     const { guest, ...room } = await getSessionRoom<JoinedRoom>(roomSlug)
     const waitingRoom: WaitingRoom = {
       ...room,
@@ -25,6 +25,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
 
     await Promise.all([
       redis.del(connectionKey(socket.id)),
+      redis.del(playerConnectionKey(playerId)),
       redis.hset(roomKey(roomSlug), waitingRoom)
     ])
 

@@ -6,22 +6,23 @@ import { io } from "@/server"
 
 // redis
 import { redis } from "@/redis"
-import { getPlayerConnection } from "@/redis/connection-commands"
+import { getSocketConnection } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
 
   try {
-    const { roomSlug, playerId } = await getPlayerConnection(socket.id)
+    const { roomSlug, playerId } = await getSocketConnection(socket.id)
     const room = await getSessionRoom<WaitingRoom | JoinedRoom | SessionRoom>(roomSlug, true)
 
     if (room.status === "waiting") {
       await Promise.all([
         redis.del(connectionKey(socket.id)),
+        redis.del(playerConnectionKey(playerId)),
         redis.del(waitingRoomKey(roomSlug)),
         redis.lrem(waitingRoomsKey, 1, roomSlug)
       ])
@@ -36,20 +37,24 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
         await Promise.all([
           redis.del(connectionKey(room.owner.socketId)),
           redis.del(connectionKey(room.guest.socketId)),
+          redis.del(playerConnectionKey(room.owner.id)),
+          redis.del(playerConnectionKey(room.guest.id)),
           redis.del(roomKey(roomSlug))
         ])
       } else {
         await Promise.all([
           redis.del(connectionKey(socket.id)),
+          redis.del(playerConnectionKey(playerId)),
           redis.del(roomKey(roomSlug)),
           redis.hset(waitingRoomKey(roomSlug), waitingRoom),
           redis.lpush(waitingRoomsKey, roomSlug)
         ])
       }
 
-      socket.broadcast.to(roomSlug).emit(`room:${ownerDisconnected ? "closed" : "left"}`, {
+      const eventKey = `room:${ownerDisconnected ? "closed" : "left"}`
+      socket.broadcast.to(roomSlug).emit(eventKey, {
         success: true,
-        message: `${playerId} has disconnected.`, // TODO: update `SocketPlayerConnection`
+        message: `${playerId} has disconnected.`,
         data: ownerDisconnected ? null : waitingRoom
       } satisfies SocketResponse<WaitingRoom | null>)
     }
