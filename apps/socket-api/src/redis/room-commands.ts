@@ -23,10 +23,16 @@ export async function getWaitingRoom(roomSlug: string) {
 }
 
 export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | SessionRoom = SessionRoom>(
-  roomSlug: string
+  roomSlug: string,
+  includeWaitingRoom: boolean = false
 ) {
   const room = await redis.hgetall<R>(roomKey(roomSlug))
   if (room) return room
+
+  if (includeWaitingRoom) {
+    const waitingRoom = await redis.hgetall<R>(waitingRoomKey(roomSlug))
+    if (waitingRoom) return waitingRoom
+  }
 
   // TODO: remove player(s) connection data
   SocketError.throw({

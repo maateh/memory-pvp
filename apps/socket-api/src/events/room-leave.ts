@@ -24,7 +24,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
     }
 
     await Promise.all([
-      redis.hdel(connectionKey(socket.id)),
+      redis.del(connectionKey(socket.id)),
       redis.hset(roomKey(roomSlug), waitingRoom)
     ])
 
