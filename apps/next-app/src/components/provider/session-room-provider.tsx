@@ -171,19 +171,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
 
         // TODO: initalize game session here
 
-        const {
-          data: room,
-          message: createdMessage,
-          description: createdDescription,
-          error: createdError
-        }: SocketResponse<SessionRoom> = await socket?.emitWithAck("session:created", {})
-
-        if (createdError || !room) {
-          throw SocketError.parser(createdError)
-        }
-        
-        setRoom(room)
-        toast.success(createdMessage, { description: createdDescription })
+        socket?.emit("session:created", {})
       } catch (err) {
         handleServerError(err as SocketError)
         logError(err)

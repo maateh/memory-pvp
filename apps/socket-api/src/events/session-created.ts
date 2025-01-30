@@ -12,14 +12,16 @@ import { roomKey } from "@repo/config/redis-keys"
 import { redis } from "@/redis"
 import { getSessionRoom } from "@/redis/room-commands"
 
+// socket
+import { io } from "@/server"
+
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
 import { validate } from "@/utils/validate"
 
 export const sessionCreated: SocketEventHandler<
-  SessionCreatedValidation,
-  SessionRoom
-> = (socket) => async (input, response) => {
+  SessionCreatedValidation
+> = (socket) => async (input) => {
   console.log("session:created ->", socket.id)
 
   try {
@@ -32,28 +34,21 @@ export const sessionCreated: SocketEventHandler<
       session
     }
 
-    await redis.hset(roomKey(session.slug), room)
+    await redis.hset(roomKey(room.slug), room)
 
     // TODO: formatting helpers would be cool here
     // (which are currently only used in the client-side)
     const { type, mode, tableSize } = joinedRoom.settings
 
-    // TODO: might be better broadcasting to everyone -> `io.to`   
-    socket.broadcast.to(session.slug).emit("session:started", {
+    io.to(room.slug).emit("session:started", {
       message: "The game session has started!",
       description: `${type} | ${mode} | ${tableSize}`,
       data: room
     } satisfies SocketResponse<SessionRoom>)
-    
-    response({
-      message: "The game session has started!",
-      description: `${type} | ${mode} | ${tableSize}`,
-      data: room
-    })
   } catch (err) {
-    response({
+    io.to(input.session.slug).emit("session:started", {
       message: "Failed to start game session.",
       error: SocketError.parser(err)
-    })
+    } satisfies SocketResponse)
   }
 }
