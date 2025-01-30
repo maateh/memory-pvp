@@ -21,11 +21,10 @@ export const sessionStarting: SocketEventHandler = (socket) => async (_, respons
       status: "starting"
     } as Pick<JoinedRoom, 'status'>)
 
-    socket.broadcast.to(roomSlug).emit("session:starting", {
-      message: "Initializing game session..."
-    } satisfies SocketResponse)
+    const message = "Initializing game session..."
 
-    response({ message: "Initializing game session..." })
+    socket.broadcast.to(roomSlug).emit("session:starting", { message } satisfies SocketResponse)
+    response({ message })
   } catch (err) {
     response({
       message: "Failed to update room status.",

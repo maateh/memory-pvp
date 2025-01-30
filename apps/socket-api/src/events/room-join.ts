@@ -50,15 +50,20 @@ export const roomJoin: SocketEventHandler<
       redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
   
+    const responseBody: Omit<SocketResponse<JoinedRoom>, 'message'> = {
+      description: "Change your status to ready if you want to start playing.",
+      data: joinedRoom
+    }
+
     socket.join(roomSlug)
     socket.broadcast.to(roomSlug).emit("room:joined", {
-      message: `${guest.tag} has connected to the room. Game will start soon...`,
-      data: joinedRoom
+      message: `${guest.tag} has connected to the room.`,
+      ...responseBody
     } satisfies SocketResponse<JoinedRoom>)
 
     response({
-      message: "You have successfully joined the session room.",
-      data: joinedRoom
+      message: "You have successfully joined to the session room.",
+      ...responseBody
     })
   } catch (err) {
     console.error(err)

@@ -54,6 +54,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
     try {
       const {
         message,
+        description,
         error
       }: SocketResponse = await socket?.emitWithAck("room:leave", {})
 
@@ -61,8 +62,8 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
         throw SocketError.parser(error)
       }
 
-      router.replace("/game/setup")
-      toast.success(message)
+      router.replace("/dashboard/rooms")
+      toast.success(message, { description })
     } catch (err) {
       handleServerError(err as SocketError)
       logError(err)
@@ -75,6 +76,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
     try {
       const {
         message,
+        description,
         error
       }: SocketResponse = await socket?.emitWithAck("room:close", {})
 
@@ -83,7 +85,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       }
 
       router.replace("/game/setup")
-      toast.success(message)
+      toast.success(message, { description })
     } catch (err) {
       handleServerError(err as SocketError)
       logError(err)
@@ -95,6 +97,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       const {
         data: ready,
         message,
+        description,
         error
       }: SocketResponse<boolean> = await socket?.emitWithAck("room:ready", {})
 
@@ -103,7 +106,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       }
 
       const toaster = ready ? toast.success : toast.info
-      toaster(message)
+      toaster(message, { description })
     } catch (err) {
       handleServerError(err as SocketError)
       logError(err)
@@ -120,32 +123,32 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       return
     }
 
-    const roomJoined = ({ data: room, message, error }: SocketResponse<JoinedRoom>) => {
+    const roomJoined = ({ data: room, message, description, error }: SocketResponse<JoinedRoom>) => {
       if (error || !room) return handleServerError(error)
 
       setRoom(room)
-      toast.success(message)
+      toast.success(message, { description })
     }
 
-    const roomLeft = ({ data: room, message, error }: SocketResponse<WaitingRoom>) => {
+    const roomLeft = ({ data: room, message, description, error }: SocketResponse<WaitingRoom>) => {
       if (error || !room) return handleServerError(error)
       
       setRoom(room)
-      toast.warning(message)
+      toast.warning(message, { description })
     }
 
-    const roomClosed = ({ message, error }: SocketResponse) => {
+    const roomClosed = ({ message, description, error }: SocketResponse) => {
       if (error) return handleServerError(error)
 
-      toast.warning(message)
-      router.replace("/game/setup")
+      toast.warning(message, { description })
+      router.replace("/dashboard/rooms")
     }
 
-    const roomReadied = async ({ data: room, message, error }: SocketResponse<JoinedRoom>) => {
+    const roomReadied = async ({ data: room, message, description, error }: SocketResponse<JoinedRoom>) => {
       if (error || !room) return handleServerError(error)
         
       const toaster = room.status === "ready" ? toast.success : toast.info
-      toaster(message)
+      toaster(message, { description })
       setRoom(room)
 
       if (
@@ -156,6 +159,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       try {
         const {
           message: startingMessage,
+          description: startingDescription,
           error: startingError
         }: SocketResponse = await socket?.emitWithAck("session:starting", {})
   
@@ -163,13 +167,14 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
           throw SocketError.parser(startingError)
         }
 
-        toast.loading(startingMessage)
+        toast.loading(startingMessage, { description: startingDescription })
 
         // TODO: initalize game session here
 
         const {
           data: room,
           message: createdMessage,
+          description: createdDescription,
           error: createdError
         }: SocketResponse<SessionRoom> = await socket?.emitWithAck("session:created", {})
 
@@ -178,25 +183,25 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
         }
         
         setRoom(room)
-        toast.success(createdMessage)
+        toast.success(createdMessage, { description: createdDescription })
       } catch (err) {
         handleServerError(err as SocketError)
         logError(err)
       }
     }
 
-    const sessionStarting = ({ message, error }: SocketResponse) => {
+    const sessionStarting = ({ message, description, error }: SocketResponse) => {
       if (error) return handleServerError(error)
 
       setRoom((room) => ({ ...room, status: "starting" } as JoinedRoom))
-      toast.loading(message)
+      toast.loading(message, { description })
     }
     
-    const sessionStarted = ({ data: room, message, error }: SocketResponse<SessionRoom>) => {
+    const sessionStarted = ({ data: room, message, description, error }: SocketResponse<SessionRoom>) => {
       if (error || !room) return handleServerError(error)
 
       setRoom(room)
-      toast.success(message)
+      toast.success(message, { description })
     }
 
     const disconnect = () => {

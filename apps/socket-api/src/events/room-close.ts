@@ -36,12 +36,16 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
 
     if (room.status !== "waiting") {
       socket.broadcast.to(roomSlug).emit("room:closed", {
-        message: `${room.owner.tag} has closed the room.`
+        message: `${room.owner.tag} has closed the room.`,
+        description: "This will not affect your ranking scores."
       } satisfies SocketResponse)
     }
 
     socket.leave(roomSlug)
-    response({ message: "Session room has been successfully closed." })
+    response({
+      message: "Session room has been successfully closed.",
+      description: "This will not affect your ranking scores."
+    })
   } catch (err) {
     response({
       message: "Failed to close session room.",

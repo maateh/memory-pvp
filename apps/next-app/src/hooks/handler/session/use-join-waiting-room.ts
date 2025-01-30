@@ -23,6 +23,8 @@ export function useJoinWaitingRoom() {
     try {
       const {
         data: room,
+        message,
+        description,
         error
       }: SocketResponse<JoinedRoom> = await socket?.connect()
         .emitWithAck("room:join", values satisfies JoinSessionRoomValidation)
@@ -32,9 +34,7 @@ export function useJoinWaitingRoom() {
       }
 
       router.push(`/game/${room.slug}`)
-      toast.success("Joined successfully!", {
-        description: "You will be redirected to the room page."
-      })
+      toast.success(message, { description })
     } catch (err) {
       handleServerError(err as SocketError, "Socket service seems to be unavailable. Please try again later.")
       logError(err)

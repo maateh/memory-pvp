@@ -25,6 +25,8 @@ export function useCreateWaitingRoom() {
     try {
       const {
         data: room,
+        message,
+        description,
         error
       }: SocketResponse<WaitingRoom> = await socket?.connect().emitWithAck("room:create", {
         owner: activePlayer,
@@ -36,9 +38,7 @@ export function useCreateWaitingRoom() {
       }
 
       router.push(`/game/${room.slug}`)
-      toast.success("Waiting room created!", {
-        description: "You will be redirected to the room page."
-      })
+      toast.success(message, { description })
     } catch (err) {
       handleServerError(err as SocketError, "Socket service seems to be unavailable. Please try again later.")
       logError(err)

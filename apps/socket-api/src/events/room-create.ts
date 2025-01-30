@@ -55,7 +55,8 @@ export const roomCreate: SocketEventHandler<
 
     socket.join(slug)
     response({
-      message: "Waiting for another user to join...",
+      message: "Session room successfully created!",
+      description: "Waiting for another user to join...",
       data: waitingRoom
     })
   } catch (err) {

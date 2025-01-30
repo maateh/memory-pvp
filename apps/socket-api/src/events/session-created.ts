@@ -34,13 +34,20 @@ export const sessionCreated: SocketEventHandler<
 
     await redis.hset(roomKey(session.slug), room)
 
+    // TODO: formatting helpers would be cool here
+    // (which are currently only used in the client-side)
+    const { type, mode, tableSize } = joinedRoom.settings
+
+    // TODO: might be better broadcasting to everyone -> `io.to`   
     socket.broadcast.to(session.slug).emit("session:started", {
       message: "The game session has started!",
+      description: `${type} | ${mode} | ${tableSize}`,
       data: room
     } satisfies SocketResponse<SessionRoom>)
     
     response({
       message: "The game session has started!",
+      description: `${type} | ${mode} | ${tableSize}`,
       data: room
     })
   } catch (err) {

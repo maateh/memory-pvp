@@ -54,8 +54,11 @@ export const sessionReconnect: SocketEventHandler<
     ])
 
     socket.join(room.slug)
+    // TODO: notify joined player -> `socket.broadcast`
+
     response({
       message: "You have successfully reconnected!",
+      description: "Session is continued from where you left off.",
       data: room
     })
   } catch (err) {

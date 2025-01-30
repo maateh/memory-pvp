@@ -43,18 +43,32 @@ export const roomReady: SocketEventHandler<
     await redis.hset(roomKey(roomSlug), room)
 
     response({
-      message: `Your status has been successfully set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,
+      message: `Your status has been set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,
+      description: room[roomPlayerKey].ready
+        ? room.status === "ready"
+          ? "Session will be starting soon..."
+          : "Waiting for the other player..."
+        : "Please don't keep the other player waiting too long. :)",
       data: room[roomPlayerKey].ready
     })
 
+    const currentPlayer = room.owner.id === playerId ? room.owner : room.guest
     const unreadyPlayerTag = !room.owner.ready ? room.owner.tag : room.guest.tag
+
     const message = room.status === "ready"
       ? "Session room is ready." : !room.owner.ready && !room.guest.ready
-      ? "Waiting for both players to be ready..."
-      : `Waiting for ${unreadyPlayerTag} to be ready...`
+      ? "Waiting for both players to be ready..." : currentPlayer.ready
+      ? `${currentPlayer.tag} is ready to play.`
+      : `${currentPlayer.tag} is not ready now.`
+
+    const description = room.status === "ready"
+      ? "Session will be starting soon..." : room.owner.ready || room.guest.ready
+      ? `Waiting for ${unreadyPlayerTag} to be ready...`
+      : undefined
 
     io.to(roomSlug).emit("room:readied", {
       message,
+      description,
       data: room
     } satisfies SocketResponse<JoinedRoom>)
   } catch (err) {

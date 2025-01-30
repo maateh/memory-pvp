@@ -34,10 +34,14 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
     socket.leave(roomSlug)
     socket.broadcast.to(roomSlug).emit("room:left", {
       message: `${guest.tag} has left the room.`,
+      description: "Please wait for another player to join...",
       data: waitingRoom
     } satisfies SocketResponse<WaitingRoom>)
 
-    response({ message: "You have left the room." })
+    response({
+      message: "You have left the room.",
+      description: "This will not affect your ranking scores."
+    })
   } catch (err) {
     response({
       message: "Failed to leave the room.",
