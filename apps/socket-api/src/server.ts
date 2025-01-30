@@ -14,7 +14,8 @@ import {
   roomClose,
   sessionCreated,
   sessionUpdate,
-  sessionReconnect
+  sessionReconnect,
+  sessionStarting
 } from "@/events"
 
 const app = express()
@@ -35,6 +36,7 @@ io.on("connection", (socket) => {
   socket.on("room:leave", roomLeave(socket))
   socket.on("room:close", roomClose(socket))
 
+  socket.on("session:starting", sessionStarting(socket))
   socket.on("session:created", sessionCreated(socket))
   socket.on("session:update", sessionUpdate(socket))
   socket.on("session:reconnect", sessionReconnect(socket))
