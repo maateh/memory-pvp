@@ -3,6 +3,9 @@
 // types
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
+// utils
+import { cn } from "@/lib/util"
+
 // icons
 import { CircleCheck, CircleCheckBig, DoorClosed, Share2 } from "lucide-react"
 
@@ -61,17 +64,17 @@ const WaitingRoomScreen = () => {
             </span>
           </Button>
         ) : (
-          <Button className="gap-x-2"
-            variant="secondary"
+          <Button className={cn("gap-x-2", { "opacity-95": currentRoomPlayer.ready })}
+            variant={currentRoomPlayer.ready ? "default" : "secondary"}
             size="sm"
             onClick={roomReady}
-            disabled={currentRoomPlayer.ready}
+            disabled={room.status !== "joined"}
           >
             <ReadyIcon className="size-3.5 sm:size-4 shrink-0"
               strokeWidth={2.25}
             />
             <span className="mt-0.5 text-base font-heading">
-              Ready
+              {currentRoomPlayer.ready ? "Unready" : "Ready"}
             </span>
           </Button>
         )}

@@ -87,9 +87,20 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
   }
 
   const roomReady = async () => {
-    // TODO:
-    // - display action button for both joined players (make button toggleable -> ready/unready)
-    // - update session room
+    try {
+      const { data: ready, message, error } = await socket?.timeout(5000)
+        .emitWithAck("room:ready", {}) as SocketResponse<boolean>
+
+      if (error) {
+        throw SocketError.parser(error)
+      }
+
+      const toaster = ready ? toast.success : toast.info
+      toaster(message)
+    } catch (err) {
+      handleServerError(err as SocketError)
+      logError(err)
+    }
   }
 
   useEffect(() => {
@@ -123,28 +134,71 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       router.replace("/game/setup")
     }
 
-    const roomReadied = () => {
-      // TODO:
-      // - if both users are ready -> initalize game session on the owner player side
-      //   -> on the start -> emit "session:starting"
-      //   -> after session is created -> emit "session:created" and emit session data
+    const roomReadied = async ({ data: room, message, error }: SocketResponse<JoinedRoom>) => {
+      if (error || !room) return handleServerError(error)
+        
+      const toaster = room.status === "ready" ? toast.success : toast.info
+      toaster(message)
+      setRoom(room)
+
+      if (
+        room.status !== "ready" ||
+        currentPlayerId !== room.owner.id
+      ) return
+
+      try {
+        const {
+          message: startingMessage,
+          error: startingError
+        }: SocketResponse<null> = await socket?.timeout(5000).emitWithAck("session:starting", {})
+  
+        if (startingError) {
+          throw SocketError.parser(startingError)
+        }
+
+        toast.loading(startingMessage)
+
+        // TODO: initalize game session here
+
+        const {
+          data: room,
+          message: createdMessage,
+          error: createdError
+        }: SocketResponse<SessionRoom> = await socket?.timeout(5000).emitWithAck("session:created", {})
+
+        if (createdError || !room) {
+          throw SocketError.parser(createdError)
+        }
+        
+        setRoom(room)
+        toast.success(createdMessage)
+      } catch (err) {
+        handleServerError(err as SocketError)
+        logError(err)
+      }
     }
 
-    const sessionStarting = () => {
-      // TODO:
-      // - notify joined players that the session is currently under initialization
+    const sessionStarting = ({ message, error }: SocketResponse<null>) => {
+      if (error) return handleServerError(error)
+
+      setRoom((room) => ({ ...room, status: "starting" } as JoinedRoom))
+      toast.loading(message)
     }
     
-    const sessionStarted = () => {
-      // TODO:
-      // - notify joined players that the session has been started
-      // - no need to redirect, just update the session room status on redis
+    const sessionStarted = ({ data: room, message, error }: SocketResponse<SessionRoom>) => {
+      if (error || !room) return handleServerError(error)
+
+      setRoom(room)
+      toast.success(message)
     }
 
     const disconnect = () => {
-      // TODO:
-      // - notify the player that the room has been closed due to a server issue
-      // - redirect the user to the setup page
+      // TODO: This is a temporary route.
+      // `/game/reconnect` will be the route to handle session recovery.
+      router.replace("/game/setup")
+      toast.warning("Connection has been lost with the server.", {
+        description: "Your session has been likely cancelled, so you can continue it whenever you want."
+      })
     }
 
     socket.on("room:joined", roomJoined)
@@ -166,7 +220,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
 
       socket.off("disconnect", disconnect)
     }
-  }, [router, socket])
+  }, [router, socket, currentPlayerId])
 
   return (
     <SessionRoomContext.Provider value={{ room, currentRoomPlayer, roomLeave, roomClose, roomReady }}>
