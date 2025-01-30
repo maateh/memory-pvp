@@ -21,9 +21,11 @@ export function useJoinWaitingRoom() {
     toast.info("Joining room...")
 
     try {
-      const { data: room, error } = await socket?.connect()
-        .timeout(5000)
-        .emitWithAck("room:join", values satisfies JoinSessionRoomValidation) as SocketResponse<JoinedRoom>
+      const {
+        data: room,
+        error
+      }: SocketResponse<JoinedRoom> = await socket?.connect()
+        .emitWithAck("room:join", values satisfies JoinSessionRoomValidation)
 
       if (error || !room) {
         throw SocketError.parser(error)

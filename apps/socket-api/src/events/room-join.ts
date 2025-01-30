@@ -54,20 +54,17 @@ export const roomJoin: SocketEventHandler<
     socket.broadcast.to(roomSlug).emit("room:joined", {
       message: `${guest.tag} has connected to the room. Game will start soon...`,
       data: joinedRoom
-    })
+    } satisfies SocketResponse<JoinedRoom>)
 
     response({
-      success: true,
       message: "You have successfully joined the session room.",
       data: joinedRoom
     })
   } catch (err) {
     console.error(err)
     response({
-      success: false,
       message: "Failed to join waiting room.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }

@@ -55,16 +55,13 @@ export const roomCreate: SocketEventHandler<
 
     socket.join(slug)
     response({
-      success: true,
       message: "Waiting for another user to join...",
       data: waitingRoom
     })
   } catch (err) {
     response({
-      success: false,
       message: "Failed to create waiting room.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }

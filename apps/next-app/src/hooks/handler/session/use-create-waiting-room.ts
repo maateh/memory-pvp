@@ -28,10 +28,13 @@ export function useCreateWaitingRoom() {
     toast.info("Creating room...")
 
     try {
-      const { data: room, error } = await socket?.connect().timeout(5000).emitWithAck("room:create", {
+      const {
+        data: room,
+        error
+      }: SocketResponse<WaitingRoom> = await socket?.connect().emitWithAck("room:create", {
         owner: activePlayer,
         settings: values
-      } satisfies CreateSessionRoomValidation) as SocketResponse<WaitingRoom>
+      } satisfies CreateSessionRoomValidation)
 
       if (error || !room) {
         throw SocketError.parser(error)

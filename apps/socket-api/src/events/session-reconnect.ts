@@ -55,16 +55,13 @@ export const sessionReconnect: SocketEventHandler<
 
     socket.join(room.slug)
     response({
-      success: true,
       message: "You have successfully reconnected!",
       data: room
     })
   } catch (err) {
     response({
-      success: false,
       message: "Failed to reconnect to this session.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }

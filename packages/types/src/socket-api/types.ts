@@ -1,8 +1,8 @@
 import type { SocketError } from "./error"
 
-export type SocketResponse<T> = {
-  success: boolean
+export type SocketResponse<T = unknown> = {
   message: string
-  data: T | null
+  description?: string
+  data?: T | null
   error?: SocketError | null
 }

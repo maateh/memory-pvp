@@ -52,8 +52,10 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
     toast.info("Leaving room...")
 
     try {
-      const { message, error } = await socket?.timeout(5000)
-        .emitWithAck("room:leave", {}) as SocketResponse<null>
+      const {
+        message,
+        error
+      }: SocketResponse = await socket?.emitWithAck("room:leave", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -71,8 +73,10 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
     toast.info("Closing room...")
 
     try {
-      const { message, error } = await socket?.timeout(5000)
-        .emitWithAck("room:close", {}) as SocketResponse<null>
+      const {
+        message,
+        error
+      }: SocketResponse = await socket?.emitWithAck("room:close", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -88,8 +92,11 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
 
   const roomReady = async () => {
     try {
-      const { data: ready, message, error } = await socket?.timeout(5000)
-        .emitWithAck("room:ready", {}) as SocketResponse<boolean>
+      const {
+        data: ready,
+        message,
+        error
+      }: SocketResponse<boolean> = await socket?.emitWithAck("room:ready", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -127,7 +134,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       toast.warning(message)
     }
 
-    const roomClosed = ({ message, error }: SocketResponse<null>) => {
+    const roomClosed = ({ message, error }: SocketResponse) => {
       if (error) return handleServerError(error)
 
       toast.warning(message)
@@ -150,7 +157,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
         const {
           message: startingMessage,
           error: startingError
-        }: SocketResponse<null> = await socket?.timeout(5000).emitWithAck("session:starting", {})
+        }: SocketResponse = await socket?.emitWithAck("session:starting", {})
   
         if (startingError) {
           throw SocketError.parser(startingError)
@@ -164,7 +171,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
           data: room,
           message: createdMessage,
           error: createdError
-        }: SocketResponse<SessionRoom> = await socket?.timeout(5000).emitWithAck("session:created", {})
+        }: SocketResponse<SessionRoom> = await socket?.emitWithAck("session:created", {})
 
         if (createdError || !room) {
           throw SocketError.parser(createdError)
@@ -178,7 +185,7 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       }
     }
 
-    const sessionStarting = ({ message, error }: SocketResponse<null>) => {
+    const sessionStarting = ({ message, error }: SocketResponse) => {
       if (error) return handleServerError(error)
 
       setRoom((room) => ({ ...room, status: "starting" } as JoinedRoom))

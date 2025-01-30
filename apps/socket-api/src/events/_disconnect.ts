@@ -53,7 +53,6 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
       const eventKey = `room:${ownerDisconnected ? "closed" : "left"}`
       socket.broadcast.to(roomSlug).emit(eventKey, {
-        success: true,
         message: `${playerId} has disconnected.`,
         data: ownerDisconnected ? null : waitingRoom
       } satisfies SocketResponse<WaitingRoom | null>)

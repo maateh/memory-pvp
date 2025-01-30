@@ -18,6 +18,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
   try {
     const { playerId, roomSlug } = await getSocketConnection(socket.id)
     const { guest, ...room } = await getSessionRoom<JoinedRoom>(roomSlug)
+    
     const waitingRoom: WaitingRoom = {
       ...room,
       status: "waiting"
@@ -32,22 +33,15 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
 
     socket.leave(roomSlug)
     socket.broadcast.to(roomSlug).emit("room:left", {
-      success: true,
       message: `${guest.tag} has left the room.`,
       data: waitingRoom
     } satisfies SocketResponse<WaitingRoom>)
 
-    response({
-      success: true,
-      message: "You have left the room.",
-      data: null
-    })
+    response({ message: "You have left the room." })
   } catch (err) {
     response({
-      success: false,
       message: "Failed to leave the room.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }

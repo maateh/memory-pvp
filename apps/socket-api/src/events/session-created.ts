@@ -37,19 +37,16 @@ export const sessionCreated: SocketEventHandler<
     socket.broadcast.to(session.slug).emit("session:started", {
       message: "The game session has started!",
       data: room
-    })
+    } satisfies SocketResponse<SessionRoom>)
     
     response({
-      success: true,
       message: "The game session has started!",
       data: room
     })
   } catch (err) {
     response({
-      success: false,
       message: "Failed to start game session.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }

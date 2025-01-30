@@ -43,7 +43,6 @@ export const roomReady: SocketEventHandler<
     await redis.hset(roomKey(roomSlug), room)
 
     response({
-      success: true,
       message: `Your status has been successfully set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,
       data: room
     })
@@ -57,14 +56,12 @@ export const roomReady: SocketEventHandler<
     io.to(roomSlug).emit("room:readied", {
       message,
       data: room
-    })
+    } satisfies SocketResponse<JoinedRoom>)
   } catch (err) {
     console.error(err)
     response({
-      success: false,
       message: "Failed to update your status.",
-      error: SocketError.parser(err),
-      data: null
+      error: SocketError.parser(err)
     })
   }
 }
