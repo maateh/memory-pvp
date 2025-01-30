@@ -7,7 +7,7 @@ import { getSocketConnection } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, playerConnectionKey, roomKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomKey } from "@repo/config/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -26,7 +26,8 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
     await Promise.all([
       redis.del(connectionKey(socket.id)),
       redis.del(playerConnectionKey(playerId)),
-      redis.hset(roomKey(roomSlug), waitingRoom)
+      redis.del(roomKey(roomSlug)),
+      redis.hset(waitingRoomKey(roomSlug), waitingRoom)
     ])
 
     socket.leave(roomSlug)
