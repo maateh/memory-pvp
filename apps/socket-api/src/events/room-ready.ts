@@ -16,8 +16,8 @@ import { io } from "@/server"
 import { SocketError } from "@repo/types/socket-api-error"
 
 export const roomReady: SocketEventHandler<
-  any,
-  JoinedRoom
+  unknown,
+  JoinedRoom | boolean
 > = (socket) => async (_, response) => {
   console.log("DEBUG - room:ready -> ", socket.id)
 
@@ -44,7 +44,7 @@ export const roomReady: SocketEventHandler<
 
     response({
       message: `Your status has been successfully set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,
-      data: room
+      data: room[roomPlayerKey].ready
     })
 
     const unreadyPlayerTag = !room.owner.ready ? room.owner.tag : room.guest.tag
