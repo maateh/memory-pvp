@@ -1,25 +1,55 @@
-// socket
-import { io } from "@/server"
+// types
+import type { JoinedRoom, SessionRoom } from "@repo/schema/session-room"
+import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
+
+// schema
+import { sessionCreatedValidation } from "@repo/schema/session-room-validation"
+
+// config
+import { roomKey } from "@repo/config/redis-keys"
 
 // redis
 import { redis } from "@/redis"
+import { getSessionRoom } from "@/redis/room-commands"
 
-type SessionCreatedData = {
-  session: ClientGameSession
-  roomId: string
-}
+// utils
+import { SocketError } from "@repo/types/socket-api-error"
+import { validate } from "@/utils/validate"
 
 export const sessionCreated: SocketEventHandler<
-  SessionCreatedData,
+  SessionCreatedValidation,
   SessionRoom
-> = (socket) => async (data, _) => {
-  const { roomId, session } = data
+> = (socket) => async (input, response) => {
+  console.log("session:created ->", socket.id)
 
-  console.info("session:created -> ")
-  await redis.del(`waiting_room:${roomId}`)
+  try {
+    const { session } = validate(sessionCreatedValidation, input)
+    const joinedRoom = await getSessionRoom<JoinedRoom>(session.slug)
 
-  io.to(roomId).emit("session:start", {
-    message: "Session has been created. Let's start the game...",
-    session
-  })
+    const room: SessionRoom = {
+      ...joinedRoom,
+      status: "running",
+      session
+    }
+
+    await redis.hset(roomKey(session.slug), room)
+
+    socket.broadcast.to(session.slug).emit("session:started", {
+      message: "The game session has started!",
+      data: room
+    })
+    
+    response({
+      success: true,
+      message: "The game session has started!",
+      data: room
+    })
+  } catch (err) {
+    response({
+      success: false,
+      message: "Failed to start game session.",
+      error: SocketError.parser(err),
+      data: null
+    })
+  }
 }

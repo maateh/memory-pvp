@@ -26,4 +26,5 @@ export const sessionReconnectValidation = z.object({
 
 export type CreateSessionRoomValidation = z.infer<typeof createSessionRoomValidation>
 export type JoinSessionRoomValidation = z.infer<typeof joinSessionRoomValidation>
+export type SessionCreatedValidation = z.infer<typeof sessionCreatedValidation>
 export type SessionReconnectValidation = z.infer<typeof sessionReconnectValidation>

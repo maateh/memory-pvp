@@ -17,6 +17,7 @@ export const sessionRoomSchema = z.object({
   status: sessionRoomStatusSchema,
   owner: sessionRoomPlayer,
   guest: sessionRoomPlayer,
+  settings: createSessionValidation,
   session: clientSessionSchema,
   createdAt: z.coerce.date()
 })
@@ -29,8 +30,7 @@ export const waitingRoomSchema = sessionRoomSchema
     session: true
   })
   .extend({
-    status: z.literal(sessionRoomStatusSchema.enum.waiting),
-    settings: createSessionValidation
+    status: z.literal(sessionRoomStatusSchema.enum.waiting)
   })
 
 export const joinedRoomSchema = sessionRoomSchema
@@ -43,8 +43,7 @@ export const joinedRoomSchema = sessionRoomSchema
       sessionRoomStatusSchema.enum.joined,
       sessionRoomStatusSchema.enum.ready,
       sessionRoomStatusSchema.enum.starting
-    ]),
-    settings: createSessionValidation
+    ])
   })
 
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
