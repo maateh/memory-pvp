@@ -13,7 +13,6 @@ import {
   roomLeave,
   roomClose,
   sessionCreated,
-  sessionUpdate,
   sessionReconnect,
   sessionStarting
 } from "@/events"
@@ -38,7 +37,6 @@ io.on("connection", (socket) => {
 
   socket.on("session:starting", sessionStarting(socket))
   socket.on("session:created", sessionCreated(socket))
-  socket.on("session:update", sessionUpdate(socket))
   socket.on("session:reconnect", sessionReconnect(socket))
 
   socket.on("disconnect", disconnect(socket))
