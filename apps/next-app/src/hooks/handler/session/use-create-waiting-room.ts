@@ -14,15 +14,10 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
-import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export function useCreateWaitingRoom() {
   const router = useRouter()
   const { socket } = useSocketService()
-  
-  const setCache = useCacheStore<{
-    room: WaitingRoom
-  }, 'set'>((state) => state.set)
 
   const execute = async (values: CreateSessionValidation, activePlayer: ClientPlayer) => {
     toast.info("Creating room...")
@@ -40,7 +35,6 @@ export function useCreateWaitingRoom() {
         throw SocketError.parser(error)
       }
 
-      setCache({ room })
       router.push(`/game/${room.slug}`)
       toast.success("Waiting room created!", {
         description: "You will be redirected to the room page."
