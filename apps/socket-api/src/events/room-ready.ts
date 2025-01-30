@@ -24,30 +24,45 @@ export const roomReady: SocketEventHandler<
   try {
     const { roomSlug, playerId } = await getSocketConnection(socket.id)
     const room = await getSessionRoom<JoinedRoom>(roomSlug)
+
+    if (room.status === "ready" || room.status === "starting") {
+      SocketError.throw({
+        key: "SESSION_ALREADY_STARTED",
+        message: "Session has already started.",
+        description: "You cannot change your status after the session has already started."
+      })
+    }
     
-    room.owner.ready = room.owner.id === playerId
-    room.guest.ready = room.guest.id === playerId
+    const roomPlayerKey: keyof Pick<
+      JoinedRoom,
+      'guest' | 'owner'
+    > = room.owner.id === playerId ? "owner" : "guest"
+
+    room[roomPlayerKey].ready = !room[roomPlayerKey].ready
     room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
     await redis.hset(roomKey(roomSlug), room)
 
-    const unreadyPlayer = room.owner.ready ? room.guest.tag : room.owner.tag
-    io.to(roomSlug).emit("room:readied", {
-      message: room.status === "ready"
-        ? "Session room is ready. Game will start soon..."
-        : `Waiting for ${unreadyPlayer} to be ready...`,
+    response({
+      success: true,
+      message: `Your status has been successfully set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,
       data: room
     })
 
-    response({
-      success: true,
-      message: "Your status has been successfully set to ready.",
-      data: null
+    const unreadyPlayerTag = !room.owner.ready ? room.owner.tag : room.guest.tag
+    const message = room.status === "ready"
+      ? "Session room is ready." : !room.owner.ready && !room.guest.ready
+      ? "Waiting for both players to be ready..."
+      : `Waiting for ${unreadyPlayerTag} to be ready...`
+
+    io.to(roomSlug).emit("room:readied", {
+      message,
+      data: room
     })
   } catch (err) {
     console.error(err)
     response({
       success: false,
-      message: "Failed to set your status as ready. Please try again.",
+      message: "Failed to update your status.",
       error: SocketError.parser(err),
       data: null
     })
