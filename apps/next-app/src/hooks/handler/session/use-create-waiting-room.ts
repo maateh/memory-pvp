@@ -18,7 +18,7 @@ export function useCreateWaitingRoom() {
   const { socket } = useSocketService()
 
   const execute = async (values: CreateSessionRoomValidation) => {
-    toast.info("Creating room...")
+    toast.loading("Creating room...", { id: "room:create" })
 
     try {
       const {
@@ -38,7 +38,7 @@ export function useCreateWaitingRoom() {
     } catch (err) {
       handleServerError(err as SocketError, "Socket service seems to be unavailable. Please try again later.")
       logError(err)
-    }
+    } finally { toast.dismiss("room:create") }
   }
 
   return { execute }
