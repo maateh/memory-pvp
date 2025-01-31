@@ -7,7 +7,7 @@ import type { CreateSingleSessionValidation } from "@repo/schema/session-validat
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
-import { createSession } from "@/server/action/session-action"
+import { createSingleSession } from "@/server/action/session-action"
 
 // utils
 import { handleServerError } from "@/lib/util/error"
@@ -15,11 +15,11 @@ import { handleServerError } from "@/lib/util/error"
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 
-export const useCreateSessionAction = () => {
+export const useCreateSingleSessionAction = () => {
   const router = useRouter()
   const setCache = useCacheStore<SessionFormValuesCache<CreateSingleSessionValidation>, 'set'>((state) => state.set)
 
-  return useAction(createSession, {
+  return useAction(createSingleSession, {
     onSuccess({ input: { type, mode, tableSize, forceStart } }) {
       if (forceStart) {
         toast.warning('Previous session has been abandoned.', {

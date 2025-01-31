@@ -1,4 +1,4 @@
-export { useCreateSessionAction } from "./use-create-session"
+export { useCreateSingleSessionAction } from "./use-create-single-session"
 export { useStoreSessionAction } from "./use-store-session"
 export { useFinishSessionAction } from "./use-finish-session"
 export { useAbandonSessionAction } from "./use-abandon-session"

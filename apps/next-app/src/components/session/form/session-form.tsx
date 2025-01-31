@@ -28,7 +28,7 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
-import { useCreateSessionAction } from "@/lib/safe-action/session"
+import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
@@ -57,14 +57,14 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
   })
 
   const {
-    execute: executeCreateSession,
-    status: createSessionStatus
-  } = useCreateSessionAction()
+    execute: createSingleSession,
+    status: createSingleSessionStatus
+  } = useCreateSingleSessionAction()
   const { execute: createOfflineSession } = useCreateOfflineSession()
   const { execute: createWaitingRoom } = useCreateWaitingRoom()
 
   const handleSubmit = (values: CreateSessionValidation) => {
-    if (values.mode === "SINGLE") executeCreateSession(values)
+    if (values.mode === "SINGLE") createSingleSession(values)
     else createWaitingRoom(values, activePlayer)
   }
 
@@ -114,12 +114,12 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
           size="lg"
           disabled={
             !clerkUser
-              || createSessionStatus === 'executing'
+              || createSingleSessionStatus === 'executing'
               || !collectionId
               || !collection
           }
         >
-          {createSessionStatus === 'executing' ? (
+          {createSingleSessionStatus === 'executing' ? (
             <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
           ) : (
             <SubmitIcon className="size-5 sm:size-6 shrink-0" />
@@ -135,7 +135,7 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
           type="button"
           onClick={form.handleSubmit((sessionValues) => createOfflineSession({ sessionValues, collection }))}
           disabled={
-            createSessionStatus === 'executing'
+            createSingleSessionStatus === 'executing'
               || type === 'COMPETITIVE'
               || mode !== 'SINGLE'
               || !collectionId

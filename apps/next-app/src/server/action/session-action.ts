@@ -3,11 +3,9 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 import type { ClientGameSession } from "@/lib/schema/session-schema"
 
 // server
-import { getRandomCollection } from "@/server/db/query/collection-query"
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
@@ -23,6 +21,7 @@ import { SESSION_STORE_TTL } from "@/config/redis-settings"
 import { clientSessionSchema } from "@/lib/schema/session-schema"
 import {
   abandonSessionValidation,
+  createMultiSessionValidation,
   createSingleSessionValidation,
   finishSessionSchema,
   saveOfflineGameValidation,
@@ -45,20 +44,10 @@ export const getActiveSession = sessionActionClient
     return parseSchemaToClientSession(ctx.activeSession, ctx.player.id)
   })
 
-export const createSession = playerActionClient
+export const createSingleSession = playerActionClient
   .schema(createSingleSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { collectionId, forceStart, ...sessionValues } = parsedInput
-
-    // TODO: implement "PVP" & "COOP" game modes
-    // Note: Socket.io implementation required
-    if (sessionValues.mode !== 'SINGLE') {
-      ApiError.throw({
-        key: 'UNKNOWN',
-        message: 'Sorry, but currently you can only play in Single.',
-        description: 'This feature is still work in progress. Please, try again later.'
-      })
-    }
+    const { collectionId, forceStart, ...settings } = parsedInput
 
     /* Checks if there is any ongoing session */
     const activeSession = await ctx.db.gameSession.findFirst({
@@ -89,54 +78,37 @@ export const createSession = playerActionClient
       })
     }
 
-    /* Loads the given or a randomly generated collection for the session */
-    let collection: ClientCardCollection | null = null
-    if (collectionId) {
-      collection = await ctx.db.cardCollection.findUnique({
-        where: { id: collectionId },
-        include: {
-          user: true,
-          cards: true
-        },
-      })
-    } else {
-      collection = await getRandomCollection(sessionValues.tableSize)
-    }
+    const collection = await ctx.db.cardCollection.findUnique({
+      where: { id: collectionId },
+      include: {
+        user: true,
+        cards: true
+      }
+    })
 
     if (!collection) {
       ApiError.throw({
-        key: 'COLLECTION_NOT_FOUND',
-        message: 'Sorry, but we cannot find card collection for your session.',
-        description: 'Please, try select another card collection or try again later.'
+        key: "COLLECTION_NOT_FOUND",
+        message: "Sorry, but we can't find the card collection you selected.",
+        description: "Please, select another card collection or try again later."
       })
     }
 
     /* Creates the game session then redirects the user to the game page */
     await ctx.db.gameSession.create({
       data: {
-        ...sessionValues,
-        slug: generateSessionSlug({ type: sessionValues.type, mode: sessionValues.mode }),
+        ...settings,
+        slug: generateSessionSlug(settings),
         status: 'RUNNING',
         flipped: [],
         cards: generateSessionCards(collection),
         stats: {
           timer: 0,
-          flips: { // TODO: add guest flips (update validation schema)
-            [ctx.player.id]: 0
-          },
-          matches: { // TODO: add guest matches (update validation schema)
-            [ctx.player.id]: 0
-          }
+          flips: { [ctx.player.id]: 0 },
+          matches: { [ctx.player.id]: 0 }
         },
-        collection: {
-          connect: { id: collection.id }
-        },
-        owner: {
-          connect: { id: ctx.player.id }
-        },
-        guest: { // TODO: connect guest (update validation schema)
-          // connect: { id: sessionValues.guestId }
-        }
+        collection: { connect: { id: collection.id } },
+        owner: { connect: { id: ctx.player.id } }
       }
     })
 
@@ -147,6 +119,14 @@ export const createSession = playerActionClient
      * https://github.com/vercel/next.js/discussions/60864
      */
     redirect('/game/single', forceStart ? RedirectType.replace : RedirectType.push)
+  })
+
+export const createMultiSession = playerActionClient
+  .schema(createMultiSessionValidation)
+  .action(async ({ ctx, parsedInput }) => {
+    const { collectionId, ...settings } = parsedInput
+
+    // TODO: implement
   })
 
 export const storeSession = sessionActionClient

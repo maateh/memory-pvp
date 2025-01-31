@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
-import { useCreateSessionAction } from "@/lib/safe-action/session"
+import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 
 const SessionRunningPopupActions = () => {
   const pathname = usePathname()
@@ -27,7 +27,7 @@ const SessionRunningPopupActions = () => {
   const {
     executeAsync: executeCreateSession,
     status: createSessionStatus
-  } = useCreateSessionAction()
+  } = useCreateSingleSessionAction()
 
   const {
     sessionValues,
