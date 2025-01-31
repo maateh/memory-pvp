@@ -30,7 +30,7 @@ export const roomCreate: SocketEventHandler<
   // FIXME: check if the user isn't already joined in other session
 
   try {
-    const { owner, settings } = validate(createSessionRoomValidation, input)
+    const { owner, ...settings } = validate(createSessionRoomValidation, input)
     const slug = generateSessionSlug({ type: settings.type, mode: settings.mode })
 
     const waitingRoom: WaitingRoom = {

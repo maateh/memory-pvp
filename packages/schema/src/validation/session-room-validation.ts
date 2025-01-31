@@ -6,9 +6,8 @@ import { clientSessionSchema } from "../session-schema"
 import { sessionRoomSettings } from "../session-room-schema"
 
 /* Forms / API validations */
-export const createSessionRoomValidation = z.object({
-  owner: clientPlayerSchema,
-  settings: sessionRoomSettings
+export const createSessionRoomValidation = sessionRoomSettings.extend({
+  owner: clientPlayerSchema
 })
 
 export const joinSessionRoomValidation = z.object({

@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
+import type { SessionFormValidation } from "@/lib/schema/validation/session-validation"
 
 // config
 import {
@@ -16,7 +16,7 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 import SessionInfoSelect from "./session-info-select"
 
 type SessionFormFieldsProps = {
-  form: UseFormReturn<CreateSessionValidation>
+  form: UseFormReturn<SessionFormValidation>
 }
 
 const SessionFormFields = ({ form }: SessionFormFieldsProps) => {

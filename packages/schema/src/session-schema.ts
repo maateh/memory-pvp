@@ -7,10 +7,12 @@ import { GameMode, GameStatus, GameType, TableSize } from "@repo/db"
 import { clientPlayerSchema } from "./player-schema"
 
 /* Base schemas */
-export const sessionStatus = z.nativeEnum(GameStatus)
-export const sessionType = z.nativeEnum(GameType)
-export const sessionMode = z.nativeEnum(GameMode)
-export const sessionTableSize = z.nativeEnum(TableSize)
+export const sessionSettings = z.object({
+  type: z.nativeEnum(GameType),
+  mode: z.nativeEnum(GameMode),
+  tableSize: z.nativeEnum(TableSize),
+  collectionId: z.string()
+})
 
 export const sessionCardMetadataSchema = z.object({
   id: z.string(),
@@ -40,10 +42,10 @@ export const clientSessionCardSchema = sessionCardSchema.extend({
 export const clientSessionSchema = z.object({
   slug: z.string(),
   collectionId: z.string(),
-  status: sessionStatus,
-  type: sessionType,
-  mode: sessionMode,
-  tableSize: sessionTableSize,
+  status: z.nativeEnum(GameStatus),
+  type: sessionSettings.shape.type,
+  mode: sessionSettings.shape.mode,
+  tableSize: sessionSettings.shape.tableSize,
 
   players: z.object({
     current: clientPlayerSchema,

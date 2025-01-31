@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 // types
 import type { DefaultValues } from "react-hook-form"
 import type { ClientPlayer } from "@repo/schema/player"
-import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
+import type { SessionFormValidation } from "@/lib/schema/validation/session-validation"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // clerk
@@ -14,7 +14,7 @@ import { useClerk } from "@clerk/nextjs"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createSessionValidation } from "@/lib/schema/validation/session-validation"
+import { sessionFormValidation } from "@/lib/schema/validation/session-validation"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"
@@ -32,13 +32,13 @@ import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
-type SessionFormValuesCache<T = CreateSessionValidation> = {
+type SessionFormValuesCache<T = SessionFormValidation> = {
   sessionValues: T
   collection: ClientCardCollection | null
 }
 
 type SessionFormProps = {
-  defaultValues?: DefaultValues<CreateSessionValidation>
+  defaultValues?: DefaultValues<SessionFormValidation>
   collection: ClientCardCollection | null
   activePlayer: ClientPlayer
 }
@@ -46,13 +46,14 @@ type SessionFormProps = {
 const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormProps) => {
   const { user: clerkUser } = useClerk()
 
-  const form = useForm<CreateSessionValidation>({
-    resolver: zodResolver(createSessionValidation),
+  const form = useForm<SessionFormValidation>({
+    resolver: zodResolver(sessionFormValidation),
     defaultValues: {
       type: defaultValues?.type || 'CASUAL',
       mode: defaultValues?.mode || 'SINGLE',
       tableSize: defaultValues?.tableSize || 'SMALL',
-      collectionId: collection?.id
+      collectionId: collection?.id,
+      owner: activePlayer
     }
   })
 
@@ -63,9 +64,9 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
   const { execute: createOfflineSession } = useCreateOfflineSession()
   const { execute: createWaitingRoom } = useCreateWaitingRoom()
 
-  const handleSubmit = (values: CreateSessionValidation) => {
+  const handleSubmit = (values: SessionFormValidation) => {
     if (values.mode === "SINGLE") createSingleSession(values)
-    else createWaitingRoom(values, activePlayer)
+    else createWaitingRoom(values)
   }
 
   const type = form.watch('type')
@@ -75,7 +76,7 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
   const SubmitIcon = mode === 'SINGLE' ? SquarePlay : CircleFadingPlus
 
   return (
-    <Form<CreateSessionValidation>
+    <Form<SessionFormValidation>
       className="h-full flex flex-col gap-y-8"
       form={form}
       onSubmit={handleSubmit}

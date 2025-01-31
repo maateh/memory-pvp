@@ -2,7 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { clientPlayerSchema } from "./player-schema"
-import { clientSessionSchema, sessionMode, sessionTableSize, sessionType } from "./session-schema"
+import { clientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
 export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
@@ -11,12 +11,14 @@ export const sessionRoomPlayer = clientPlayerSchema.extend({
   ready: z.coerce.boolean()
 })
 
-export const sessionRoomSettings = z.object({
-  type: sessionType,
-  mode: z.enum([sessionMode.enum.COOP, sessionMode.enum.PVP]),
-  tableSize: sessionTableSize,
-  collectionId: z.string()
-})
+export const sessionRoomSettings = sessionSettings
+  .omit({ mode: true })
+  .extend({
+    mode: z.enum([
+      sessionSettings.shape.mode.enum.COOP,
+      sessionSettings.shape.mode.enum.PVP
+    ])
+  })
 
 export const sessionRoomSchema = z.object({
   slug: z.string(),
