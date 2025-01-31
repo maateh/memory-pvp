@@ -124,9 +124,51 @@ export const createSingleSession = playerActionClient
 export const createMultiSession = playerActionClient
   .schema(createMultiSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { collectionId, ...settings } = parsedInput
+    const { collectionId, guestId, ...settings } = parsedInput
 
-    // TODO: implement
+    // FIXME: active session must be checked before the owner user creates and the guest user joins the room
+
+    const collection = await ctx.db.cardCollection.findUnique({
+      where: { id: collectionId },
+      include: {
+        user: true,
+        cards: true
+      }
+    })
+
+    if (!collection) {
+      ApiError.throw({
+        key: "COLLECTION_NOT_FOUND",
+        message: "Sorry, but we can't find the card collection you selected.",
+        description: "Please, select another card collection or try again later."
+      })
+    }
+
+    const session = await ctx.db.gameSession.create({
+      data: {
+        ...settings,
+        status: 'RUNNING',
+        flipped: [],
+        cards: generateSessionCards(collection),
+        stats: {
+          timer: 0,
+          flips: {
+            [ctx.player.id]: 0,
+            [guestId]: 0
+          },
+          matches: {
+            [ctx.player.id]: 0,
+            [guestId]: 0
+          }
+        },
+        collection: { connect: { id: collection.id } },
+        owner: { connect: { id: ctx.player.id } },
+        guest: { connect: { id: guestId } }
+      },
+      include: sessionSchemaFields
+    })
+
+    return parseSchemaToClientSession(session, ctx.player.id)
   })
 
 export const storeSession = sessionActionClient

@@ -7,6 +7,7 @@ import { toast } from "sonner"
 // types
 import type { JoinedRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
 import type { SocketResponse } from "@repo/types/socket-api"
+import { ApiError } from "@/server/_error"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
@@ -17,6 +18,8 @@ import { SessionStoreProvider } from "@/components/provider"
 
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
+import { createMultiSession } from "@/server/action/session-action"
+import { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 type TSessionRoomContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
   room: T
@@ -169,11 +172,27 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
 
         toast.loading(startingMessage, { description: startingDescription })
 
-        // TODO: initalize game session here
+        const { data: session, serverError } = await createMultiSession({
+          ...room.settings,
+          slug: room.slug,
+          guestId: room.guest.id
+        }) || {}
 
-        socket?.emit("session:created", {})
+        if (serverError || !session) {
+          ApiError.throw({
+            key: serverError?.key || "UNKNOWN",
+            message: serverError?.key || "Something unexpected happened.",
+            description: serverError?.description || "Failed to initialize game session."
+          })
+        }
+
+        toast.info("Game session has been initialized.")
+        socket?.emit("session:created", { session } satisfies SessionCreatedValidation)
       } catch (err) {
-        handleServerError(err as SocketError)
+        // TODO: emit `session:starting:failed`
+        // socket.emit("session:starting:failed")
+
+        handleServerError(err as SocketError | ApiError)
         logError(err)
       }
     }
