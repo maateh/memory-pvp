@@ -1,14 +1,14 @@
 import { z } from "zod"
 
 // schemas
-import { createSessionValidation } from "./session-validation"
 import { clientPlayerSchema } from "../player-schema"
 import { clientSessionSchema } from "../session-schema"
+import { sessionRoomSettings } from "../session-room-schema"
 
 /* Forms / API validations */
 export const createSessionRoomValidation = z.object({
   owner: clientPlayerSchema,
-  settings: createSessionValidation
+  settings: sessionRoomSettings
 })
 
 export const joinSessionRoomValidation = z.object({

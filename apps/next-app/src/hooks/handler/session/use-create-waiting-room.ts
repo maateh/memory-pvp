@@ -2,11 +2,10 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { WaitingRoom } from "@repo/schema/session-room"
+import type { SessionRoomSettings, WaitingRoom } from "@repo/schema/session-room"
 import type { ClientPlayer } from "@repo/schema/player"
 import type { SocketResponse } from "@repo/types/socket-api"
 import type { CreateSessionRoomValidation } from "@repo/schema/session-room-validation"
-import type { CreateSessionValidation } from "@/lib/schema/validation/session-validation"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
@@ -19,7 +18,7 @@ export function useCreateWaitingRoom() {
   const router = useRouter()
   const { socket } = useSocketService()
 
-  const execute = async (values: CreateSessionValidation, activePlayer: ClientPlayer) => {
+  const execute = async (values: SessionRoomSettings, activePlayer: ClientPlayer) => {
     toast.info("Creating room...")
 
     try {

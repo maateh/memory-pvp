@@ -32,8 +32,8 @@ import { useCreateSessionAction } from "@/lib/safe-action/session"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
-type SessionFormValuesCache = {
-  sessionValues: CreateSessionValidation
+type SessionFormValuesCache<T = CreateSessionValidation> = {
+  sessionValues: T
   collection: ClientCardCollection | null
 }
 
@@ -64,12 +64,8 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
   const { execute: createWaitingRoom } = useCreateWaitingRoom()
 
   const handleSubmit = (values: CreateSessionValidation) => {
-    if (mode === "SINGLE") {
-      executeCreateSession(values)
-      return
-    }
-
-    createWaitingRoom(values, activePlayer)
+    if (values.mode === "SINGLE") executeCreateSession(values)
+    else createWaitingRoom(values, activePlayer)
   }
 
   const type = form.watch('type')

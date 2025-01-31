@@ -3,6 +3,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
+import type { CreateSingleSessionValidation } from "@repo/schema/session-validation"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
@@ -16,7 +17,7 @@ import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useCreateSessionAction = () => {
   const router = useRouter()
-  const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
+  const setCache = useCacheStore<SessionFormValuesCache<CreateSingleSessionValidation>, 'set'>((state) => state.set)
 
   return useAction(createSession, {
     onSuccess({ input: { type, mode, tableSize, forceStart } }) {

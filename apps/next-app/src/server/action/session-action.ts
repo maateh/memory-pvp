@@ -23,7 +23,7 @@ import { SESSION_STORE_TTL } from "@/config/redis-settings"
 import { clientSessionSchema } from "@/lib/schema/session-schema"
 import {
   abandonSessionValidation,
-  createSessionValidation,
+  createSingleSessionValidation,
   finishSessionSchema,
   saveOfflineGameValidation,
   saveSessionValidation
@@ -46,7 +46,7 @@ export const getActiveSession = sessionActionClient
   })
 
 export const createSession = playerActionClient
-  .schema(createSessionValidation)
+  .schema(createSingleSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { collectionId, forceStart, ...sessionValues } = parsedInput
 

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
 // types
+import type { CreateSingleSessionValidation } from "@repo/schema/session-validation"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
@@ -31,7 +32,7 @@ const SessionRunningPopupActions = () => {
   const {
     sessionValues,
     collection = null
-  } = useCacheStore<SessionFormValuesCache, 'cache'>((state) => state.cache) || {}
+  } = useCacheStore<SessionFormValuesCache<CreateSingleSessionValidation>, 'cache'>((state) => state.cache) || {}
 
   const handleForceStart = async () => {
     if (!sessionValues) {

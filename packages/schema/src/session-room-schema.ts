@@ -2,8 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { clientPlayerSchema } from "./player-schema"
-import { clientSessionSchema } from "./session-schema"
-import { createSessionValidation } from "./validation/session-validation"
+import { clientSessionSchema, sessionMode, sessionTableSize, sessionType } from "./session-schema"
 
 /* Base schemas */
 export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
@@ -12,12 +11,19 @@ export const sessionRoomPlayer = clientPlayerSchema.extend({
   ready: z.coerce.boolean()
 })
 
+export const sessionRoomSettings = z.object({
+  type: sessionType,
+  mode: z.enum([sessionMode.enum.COOP, sessionMode.enum.PVP]),
+  tableSize: sessionTableSize,
+  collectionId: z.string()
+})
+
 export const sessionRoomSchema = z.object({
   slug: z.string(),
   status: sessionRoomStatusSchema,
   owner: sessionRoomPlayer,
   guest: sessionRoomPlayer,
-  settings: createSessionValidation,
+  settings: sessionRoomSettings,
   session: clientSessionSchema,
   createdAt: z.coerce.date()
 })
@@ -48,6 +54,7 @@ export const joinedRoomSchema = sessionRoomSchema
 
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
 export type SessionRoomPlayer = z.infer<typeof sessionRoomPlayer>
+export type SessionRoomSettings = z.infer<typeof sessionRoomSettings>
 export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
