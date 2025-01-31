@@ -5,6 +5,9 @@ import type { ClientGameSession } from "@/lib/schema/session-schema"
 import { redis } from "@/server/redis"
 import { db } from "@/server/db"
 
+// config
+import { sessionKey } from "@repo/config/redis-keys"
+
 const ROUTE_PREFIX = '[API | GET - /cron/save-sessions]'
 
 export async function GET(req: Request) {
@@ -59,7 +62,7 @@ async function getSessionsFromRedis(): Promise<ClientGameSession[]> {
 
   do {
     const [newCursor, sessionKeys] = await redis.scan(cursor, {
-      match: 'session:*',
+      match: sessionKey("*"),
       count: 100
     })
 

@@ -13,9 +13,10 @@ import { ApiError } from "@/server/_error"
 import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
+import { sessionKey } from "@repo/config/redis-keys"
+import { SESSION_STORE_TTL } from "@/config/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
-import { SESSION_STORE_TTL } from "@/config/redis-settings"
 
 // validations
 import { clientSessionSchema } from "@/lib/schema/session-schema"
@@ -37,8 +38,9 @@ import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const getActiveSession = sessionActionClient
   .action(async ({ ctx }) => {
-    const storeKey = `session:${ctx.activeSession.slug}`
-    const clientSession = await ctx.redis.get<ClientGameSession>(storeKey)
+    const clientSession = await ctx.redis.get<ClientGameSession>(
+      sessionKey(ctx.activeSession.slug)
+    )
 
     if (clientSession) return clientSession
     return parseSchemaToClientSession(ctx.activeSession, ctx.player.id)
@@ -175,7 +177,7 @@ export const storeSession = sessionActionClient
   .schema(clientSessionSchema)
   .action(async ({ ctx, parsedInput: session }) => {
     const response = await ctx.redis.set(
-      `session:${ctx.activeSession.slug}`,
+      sessionKey(ctx.activeSession.slug),
       session,
       { ex: SESSION_STORE_TTL }
     )
@@ -194,7 +196,7 @@ export const storeSession = sessionActionClient
 export const saveSession = sessionActionClient
   .schema(saveSessionValidation)
   .action(async ({ ctx, parsedInput: clientSession }) => {
-    await ctx.redis.del(`session:${ctx.activeSession.slug}`)
+    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
     const session = await ctx.db.gameSession.update({
       where: { id: ctx.activeSession.id },
@@ -208,7 +210,7 @@ export const saveSession = sessionActionClient
 export const finishSession = sessionActionClient
   .schema(finishSessionSchema)
   .action(async ({ ctx, parsedInput: session }) => {
-    await ctx.redis.del(`session:${ctx.activeSession.slug}`)
+    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
     const { slug } = await updateSessionStatus({
       session,
@@ -228,7 +230,7 @@ export const finishSession = sessionActionClient
 export const abandonSession = sessionActionClient
   .schema(abandonSessionValidation)
   .action(async ({ ctx, parsedInput: session }) => {
-    await ctx.redis.del(`session:${ctx.activeSession.slug}`)
+    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
     if (!session) {
       const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
