@@ -67,7 +67,7 @@ export const useGameHandler = ({
    */
   const handleCardFlip = (clickedCard: ClientSessionCard) => {
     const flippable = session.flipped.length < 2
-      && clickedCard.flippedBy === null
+      && session.flipped.every(({ key }) => clickedCard.key !== key)
       && clickedCard.matchedBy === null
 
     if (!flippable) return
@@ -80,11 +80,8 @@ export const useGameHandler = ({
 
     if (flipped.length < 2) return
 
-    if (flipped[0].id === flipped[1].id) {
-      handleMatchUpdate()
-    } else {
-      handleUnmatchUpdate()
-    }
+    if (flipped[0].id === flipped[1].id) handleMatchUpdate()
+    else handleUnmatchUpdate()
   }
 
   /**

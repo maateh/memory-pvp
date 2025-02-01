@@ -53,11 +53,6 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
           if (session === null) return { session }
     
           const playerId = session.players.current.id
-          const cards = session.cards.map(
-            (card) => card.key === clickedCard.key
-              ? { ...card, flippedBy: playerId }
-              : card
-          )
     
           /*
            * Note: updates `flips` value of the player inside the session stats.
@@ -69,7 +64,6 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
 
           session = {
             ...session,
-            cards,
             flipped: [...session.flipped, { id: clickedCard.id, key: clickedCard.key }]
           }
     
@@ -87,7 +81,7 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
               const prevFlippedCardId = session?.flipped[0].id
     
               return card.id === prevFlippedCardId
-                ? { ...card, flippedBy: null, matchedBy: playerId }
+                ? { ...card, matchedBy: playerId }
                 : card
             })
     
@@ -112,17 +106,8 @@ const SessionStoreProvider = ({ session, syncState = 'SYNCHRONIZED', ...props }:
           set(({ session }) => {
             if (session === null) return { session }
     
-            const cards = session.cards.map((card) => {
-              const isFlipped = session?.flipped.some((fc) => fc.key === card.key)
-    
-              return isFlipped
-                ? { ...card, flippedBy: null }
-                : card
-            })
-    
             session = {
               ...session,
-              cards,
               flipped: []
             }
     

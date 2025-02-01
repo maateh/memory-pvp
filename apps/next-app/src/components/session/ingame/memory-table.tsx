@@ -24,6 +24,7 @@ const MemoryTable = ({ session, handleCardFlip }: MemoryTableProps) => {
         {session.cards.map((card) => (
           <MemoryCard
             card={card}
+            isFlipped={session.flipped.some(({ key }) => card.key === key)}
             onClick={() => handleCardFlip(card)}
             key={card.key}
           />

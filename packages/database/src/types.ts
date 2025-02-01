@@ -16,7 +16,6 @@ declare global {
     type SessionCard = {
       id: string
       key: number
-      flippedBy: string | null
       matchedBy: string | null
     }
 

@@ -20,7 +20,6 @@ export const sessionCardMetadataSchema = z.object({
 })
 
 export const sessionCardSchema = sessionCardMetadataSchema.extend({
-  flippedBy: z.string().nullable(), // TODO: remove `flippedBy` -> track flipped cards only inside the `flipped` array
   matchedBy: z.string().nullable()
 })
 

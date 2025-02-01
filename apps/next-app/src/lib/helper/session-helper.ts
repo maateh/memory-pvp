@@ -10,7 +10,7 @@ import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"
  * Generates an array of shuffled session cards from a given card collection for use in a game session.
  * 
  * - Selects a random subset of cards from the provided collection, based on half the collection's `tableSize` to ensure matched pairs.
- * - Duplicates each card, assigning unique keys to create pairs, and initializes `flippedBy` and `matchedBy` as `null`.
+ * - Duplicates each card, assigning unique keys to create pairs, and initializes `matchedBy` as `null`.
  * - Returns a shuffled array of session cards for randomized placement on the game board.
  * 
  * @param {ClientCardCollection} collection - The card collection used to generate session cards, containing a list of memory cards.
@@ -28,17 +28,11 @@ export function generateSessionCards(
     const firstKey = index * 2
     const secondKey = index * 2 + 1
 
-    const cardWithoutKey = {
-      id: card.id,
-      flippedBy: null,
-      matchedBy: null
-    }
-
     return [
       ...cards,
-      { key: firstKey, ...cardWithoutKey },
-      { key: secondKey, ...cardWithoutKey }
-    ]
+      { key: firstKey, id: card.id, matchedBy: null },
+      { key: secondKey, id: card.id, matchedBy: null }
+    ] satisfies PrismaJson.SessionCard[]
   }, [] as PrismaJson.SessionCard[])
 
   return sessionCards.sort(() => Math.random() - 0.5)
