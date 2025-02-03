@@ -24,12 +24,12 @@ export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | Sessio
   })
 }
 
-export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom | SessionRoom, F extends R[keyof R]>(
+export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom | SessionRoom, F extends keyof R>(
   roomSlug: string,
-  field: keyof R
+  field: F
 ) {
-  const fieldValue = await redis.json.get<F>(roomKey(roomSlug), field as string)
-  if (fieldValue) return fieldValue
+  const fieldValue = await redis.json.get<R[F]>(roomKey(roomSlug), field as string)
+  if (fieldValue) return fieldValue as R[F]
 
   // TODO: remove player(s) connection data
   SocketError.throw({
