@@ -1,13 +1,13 @@
 // types
 import type { JoinSessionRoomValidation } from "@repo/schema/session-room-validation"
-import type { JoinedRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
-import { getWaitingRoom } from "@/redis/room-commands"
+import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // schema
 import { joinSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -29,7 +29,7 @@ export const roomJoin: SocketEventHandler<
 
   try {
     const { roomSlug, guest } = validate(joinSessionRoomValidation, input)
-    const waitingRoom = await getWaitingRoom(roomSlug)
+    const waitingRoom = await getSessionRoom<WaitingRoom>(roomSlug)
     
     const joinedRoom: JoinedRoom = {
       ...waitingRoom,
@@ -45,8 +45,7 @@ export const roomJoin: SocketEventHandler<
     await Promise.all([
       redis.hset(connectionKey(socket.id), connection),
       redis.hset(playerConnectionKey(guest.id), connection),
-      redis.hset(roomKey(roomSlug), joinedRoom),
-      redis.del(waitingRoomKey(roomSlug)),
+      redis.json.set(roomKey(roomSlug), "$", joinedRoom, { xx: true }),
       redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
   

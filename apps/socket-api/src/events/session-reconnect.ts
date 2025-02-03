@@ -50,7 +50,7 @@ export const sessionReconnect: SocketEventHandler<
       redis.del(connectionKey(prevConnection.socketId)),
       redis.hset(connectionKey(socket.id), connection),
       redis.hset(playerConnectionKey(playerId), connection),
-      redis.hset(roomKey(room.slug), room)
+      redis.json.set(roomKey(room.slug), "$", room, { xx: true })
     ])
 
     socket.join(room.slug)

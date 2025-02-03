@@ -40,7 +40,7 @@ export const roomReady: SocketEventHandler<
 
     room[roomPlayerKey].ready = !room[roomPlayerKey].ready
     room.status = room.owner.ready && room.guest.ready ? "ready" : "joined"
-    await redis.hset(roomKey(roomSlug), room)
+    await redis.json.set(roomKey(roomSlug), "$", room, { xx: true })
 
     response({
       message: `Your status has been set to ${room[roomPlayerKey].ready ? "ready" : "unready"}.`,

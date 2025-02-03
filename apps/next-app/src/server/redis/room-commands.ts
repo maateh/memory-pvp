@@ -5,24 +5,24 @@ import type { JoinedRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-
 import { redis } from "@/server/redis"
 
 // config
-import { roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 /**
  * TODO: write doc
+ * 
+ * @returns 
  */
-export async function getWaitingRooms() {
+export async function getWaitingRooms(): Promise<WaitingRoom[]> {
   // TODO: pagination support
-  const roomSlugs = await redis.lrange(waitingRoomsKey, 0, 10)
-  const rooms = await Promise.all(
-    roomSlugs.map((slug) => redis.hgetall<WaitingRoom>(waitingRoomKey(slug)))
-  ) as WaitingRoom[]
+  const roomSlugs = await redis.lrange(waitingRoomsKey, 0, 10)  
+  if (roomSlugs.length === 0) return []
 
-  return rooms
-}
+  const roomKeys = roomSlugs.map((slug) => roomKey(slug))
 
-export async function getSessionRoom(roomSlug: string) {
-  const room = await redis.hgetall<WaitingRoom>(waitingRoomKey(roomSlug))
-  if (room) return room
-  
-  return await redis.hgetall<JoinedRoom | SessionRoom>(roomKey(roomSlug))
+  /*
+   * Note: I don't know why, but `json.mget` gives back every data
+   * inside a nested array, so I have to do a `flatMap` on it.
+   */
+  const rooms = await redis.json.mget<WaitingRoom[][]>(roomKeys, "$")
+  return rooms.flatMap((room) => room)
 }

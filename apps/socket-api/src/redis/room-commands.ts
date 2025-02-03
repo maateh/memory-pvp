@@ -5,34 +5,16 @@ import type { JoinedRoom, WaitingRoom, SessionRoom } from "@repo/schema/session-
 import { redis } from "@/redis"
 
 // config
-import { roomKey, waitingRoomKey } from "@repo/config/redis-keys"
+import { roomKey } from "@repo/config/redis-keys"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
 
-export async function getWaitingRoom(roomSlug: string) {
-  const room = await redis.hgetall<WaitingRoom>(waitingRoomKey(roomSlug))
-  if (room) return room
-
-  // TODO: remove player connection data
-  SocketError.throw({
-    key: "ROOM_NOT_FOUND",
-    message: "Waiting room not found.",
-    description: "Sorry, but this room has been closed or the session has already started."
-  })
-}
-
 export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | SessionRoom = SessionRoom>(
-  roomSlug: string,
-  includeWaitingRoom: boolean = false
+  roomSlug: string
 ) {
-  const room = await redis.hgetall<R>(roomKey(roomSlug))
+  const room = await redis.json.get<R>(roomKey(roomSlug))
   if (room) return room
-
-  if (includeWaitingRoom) {
-    const waitingRoom = await redis.hgetall<R>(waitingRoomKey(roomSlug))
-    if (waitingRoom) return waitingRoom
-  }
 
   // TODO: remove player(s) connection data
   SocketError.throw({
@@ -46,7 +28,7 @@ export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom |
   roomSlug: string,
   field: keyof R
 ) {
-  const fieldValue = await redis.hget<F>(roomKey(roomSlug), field as string)
+  const fieldValue = await redis.json.get<F>(roomKey(roomSlug), field as string)
   if (fieldValue) return fieldValue
 
   // TODO: remove player(s) connection data

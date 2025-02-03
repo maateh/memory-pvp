@@ -16,10 +16,12 @@ export const sessionStarting: SocketEventHandler = (socket) => async (_, respons
 
   try {
     const roomSlug = await getSocketConnectionByField<string>(socket.id, 'roomSlug')
-
-    await redis.hmset(roomKey(roomSlug), {
-      status: "starting"
-    } as Pick<JoinedRoom, 'status'>)
+    await redis.json.set(
+      roomKey(roomSlug),
+      "$.status",
+      "starting" as JoinedRoom["status"],
+      { xx: true }
+    )
 
     const message = "Initializing game session..."
 

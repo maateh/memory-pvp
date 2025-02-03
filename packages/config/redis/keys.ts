@@ -13,7 +13,6 @@ export const waitingRoomsKey = getKeyName("waiting_rooms")
 
 /* Hash keys */
 export const sessionKey = (slug: string) => getKeyName("sessions", slug)
-export const waitingRoomKey = (slug: string) => getKeyName("waiting_rooms", slug)
 export const roomKey = (slug: string) => getKeyName("session_rooms", slug)
 export const connectionKey = (socketId: string) => getKeyName("connections", socketId)
 export const playerConnectionKey = (playerId: string) => getKeyName("player_connections", playerId)

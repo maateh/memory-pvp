@@ -7,7 +7,7 @@ import { getSocketConnectionByField } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -17,12 +17,12 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
 
   try {
     const roomSlug = await getSocketConnectionByField<string>(socket.id, 'roomSlug')
-    const room = await getSessionRoom<WaitingRoom | JoinedRoom>(roomSlug, true)
+    const room = await getSessionRoom<WaitingRoom | JoinedRoom>(roomSlug)
     
     const commands = [
       redis.del(connectionKey(room.owner.socketId)),
       redis.del(playerConnectionKey(room.owner.id)),
-      redis.del(room.status === "waiting" ? waitingRoomKey(roomSlug) : roomKey(roomSlug))
+      redis.json.del(roomKey(roomSlug))
     ]
 
     if (room.status === "waiting") {

@@ -1,14 +1,20 @@
 import { redirect } from "next/navigation"
 
-// redis
-import { getSessionRoom } from "@/server/redis/room-commands"
+// types
+import type { JoinedRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-room"
+
+// server
+import { redis } from "@/server/redis"
+import { getPlayer } from "@/server/db/query/player-query"
+
+// config
+import { roomKey } from "@repo/config/redis-keys"
 
 // providers
 import { SessionRoomProvider } from "@/components/provider"
 
 // components
 import RoomStatusHandler from "./room-status-handler"
-import { getPlayer } from "@/server/db/query/player-query"
 
 type MultiGamePageProps = {
   params: {
@@ -23,7 +29,7 @@ const MultiGamePage = async ({ params }: MultiGamePageProps) => {
     redirect('/game/setup')
   }
 
-  const room = await getSessionRoom(params.slug)
+  const room = await redis.json.get<WaitingRoom | JoinedRoom | SessionRoom>(roomKey(params.slug))
   if (!room) redirect('/game/setup')
     
   return (
