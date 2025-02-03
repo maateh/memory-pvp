@@ -11,7 +11,7 @@ import { getPlayer } from "@/server/db/query/player-query"
 import { roomKey } from "@repo/config/redis-keys"
 
 // providers
-import { SessionRoomProvider } from "@/components/provider"
+import { RoomEventProvider } from "@/components/provider"
 
 // components
 import RoomStatusHandler from "./room-status-handler"
@@ -31,11 +31,11 @@ const MultiGamePage = async ({ params }: MultiGamePageProps) => {
 
   const room = await redis.json.get<WaitingRoom | JoinedRoom | SessionRoom>(roomKey(params.slug))
   if (!room) redirect('/game/setup')
-    
+
   return (
-    <SessionRoomProvider initialRoom={room} currentPlayerId={player.id}>
+    <RoomEventProvider initialRoom={room} currentPlayerId={player.id}>
       <RoomStatusHandler />
-    </SessionRoomProvider>
+    </RoomEventProvider>
   )
 }
 

@@ -7,10 +7,10 @@ import WaitingRoomScreen from "./waiting-room-screen"
 import MultiGameHandler from "./multi-game-handler"
 
 // hooks
-import { useSessionRoom } from "@/components/provider/session-room-provider"
+import { useRoomEvents } from "@/components/provider/room-event-provider"
 
 const RoomStatusHandler = () => {
-  const { room } = useSessionRoom()
+  const { room } = useRoomEvents()
 
   if (
     room.status === "waiting" ||

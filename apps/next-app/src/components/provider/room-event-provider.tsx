@@ -5,12 +5,16 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { JoinedRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
 import type { SocketResponse } from "@repo/types/socket-api"
-import { ApiError } from "@/server/_error"
+import type { JoinedRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
+import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
+
+// server
+import { createMultiSession } from "@/server/action/session-action"
 
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
+import { ApiError } from "@/server/_error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 // providers
@@ -18,10 +22,8 @@ import { SessionStoreProvider } from "@/components/provider"
 
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
-import { createMultiSession } from "@/server/action/session-action"
-import { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
-type TSessionRoomContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
+type TRoomEventContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
   room: T
   currentRoomPlayer: SessionRoomPlayer
   roomLeave: () => Promise<void>
@@ -29,19 +31,19 @@ type TSessionRoomContext<T extends WaitingRoom | JoinedRoom | SessionRoom = Wait
   roomReady: () => Promise<void>
 }
 
-const SessionRoomContext = createContext<TSessionRoomContext | null>(null)
+const RoomEventContext = createContext<TRoomEventContext | null>(null)
 
-type SessionRoomProviderProps = {
+type RoomEventProviderProps = {
   initialRoom: WaitingRoom | JoinedRoom | SessionRoom
   currentPlayerId: string
   children: React.ReactNode
 }
 
-const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: SessionRoomProviderProps) => {
+const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEventProviderProps) => {
   const router = useRouter()
   const { socket } = useSocketService()
 
-  const [room, setRoom] = useState(initialRoom)
+  const [room, setRoom] = useState<WaitingRoom | JoinedRoom | SessionRoom>(initialRoom)
   const currentRoomPlayer = useMemo(() => {
     if (
       room.status === "waiting" ||
@@ -238,7 +240,6 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
     socket.on("room:readied", roomReadied)
     socket.on("session:starting", sessionStarting)
     socket.on("session:started", sessionStarted)
-
     socket.on("disconnect", disconnect)
 
     return () => {
@@ -248,24 +249,23 @@ const SessionRoomProvider = ({ initialRoom, currentPlayerId, children }: Session
       socket.off("room:readied", roomReadied)
       socket.off("session:starting", sessionStarting)
       socket.off("session:started", sessionStarted)
-
       socket.off("disconnect", disconnect)
     }
   }, [router, socket, currentPlayerId])
 
   return (
-    <SessionRoomContext.Provider value={{ room, currentRoomPlayer, roomLeave, roomClose, roomReady }}>
+    <RoomEventContext.Provider value={{ room, currentRoomPlayer, roomLeave, roomClose, roomReady }}>
       {room.status === "running" ? (
         <SessionStoreProvider session={room.session}>
           {children}
         </SessionStoreProvider>
       ) : children}
-    </SessionRoomContext.Provider>
+    </RoomEventContext.Provider>
   )
 }
 
-function useSessionRoom<T extends WaitingRoom | JoinedRoom | SessionRoom>() {
-  const context = useContext(SessionRoomContext) as TSessionRoomContext<T> | null
+function useRoomEvents<T extends WaitingRoom | JoinedRoom | SessionRoom>() {
+  const context = useContext(RoomEventContext) as TRoomEventContext<T> | null
 
   if (!context) {
     throw new Error('Session room context must be used within its provider.')
@@ -274,5 +274,5 @@ function useSessionRoom<T extends WaitingRoom | JoinedRoom | SessionRoom>() {
   return context
 }
 
-export default SessionRoomProvider
-export { useSessionRoom }
+export default RoomEventProvider
+export { useRoomEvents }

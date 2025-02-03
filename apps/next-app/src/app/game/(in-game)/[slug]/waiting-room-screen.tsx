@@ -17,7 +17,7 @@ import { JoinedPlayer } from "@/components/room"
 
 // hooks
 import { useCopy } from "@/hooks/use-copy"
-import { useSessionRoom } from "@/components/provider/session-room-provider"
+import { useRoomEvents } from "@/components/provider/room-event-provider"
 
 const WaitingRoomScreen = () => {
   const {
@@ -26,7 +26,7 @@ const WaitingRoomScreen = () => {
     roomClose,
     roomLeave,
     roomReady
-  } = useSessionRoom<WaitingRoom | JoinedRoom>()
+  } = useRoomEvents<WaitingRoom | JoinedRoom>()
   const { handleCopy } = useCopy({ showToast: true })
 
   const ReadyIcon = currentRoomPlayer.ready ? CircleCheck : CircleCheckBig
