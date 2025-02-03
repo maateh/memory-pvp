@@ -19,7 +19,7 @@ type ApiErrorOpts = {
 }
 
 export class ApiError {
-  public readonly key?: CAUSE_KEYS
+  public readonly key: CAUSE_KEYS
   public readonly message: string
   public readonly description?: string | undefined
   public readonly data?: unknown
