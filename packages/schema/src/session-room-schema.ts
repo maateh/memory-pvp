@@ -6,7 +6,7 @@ import { clientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
 export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
-export const sessionRoomPlayer = clientPlayerSchema.extend({
+export const sessionRoomPlayer = clientPlayerSchema.extend({ // TODO: must be replaced by db schema
   socketId: z.string(),
   ready: z.coerce.boolean()
 })
@@ -26,8 +26,9 @@ export const sessionRoomSchema = z.object({
   owner: sessionRoomPlayer,
   guest: sessionRoomPlayer,
   settings: sessionRoomSettings,
-  session: clientSessionSchema,
+  session: clientSessionSchema, // TODO: must be replaced by db schema
   createdAt: z.coerce.date()
+  // TODO: add & track `updatedAt`
 })
 
 /* Custom room types based on room status */
@@ -54,9 +55,19 @@ export const joinedRoomSchema = sessionRoomSchema
     ])
   })
 
+export const runningRoomSchema = sessionRoomSchema
+  .omit({
+    status: true,
+    session: true
+  })
+  .extend({
+    status: z.literal(sessionRoomStatusSchema.enum.running)
+  })
+
 export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
 export type SessionRoomPlayer = z.infer<typeof sessionRoomPlayer>
 export type SessionRoomSettings = z.infer<typeof sessionRoomSettings>
 export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
+export type RunningRoom = z.infer<typeof runningRoomSchema>

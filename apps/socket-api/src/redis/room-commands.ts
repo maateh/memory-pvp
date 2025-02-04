@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom, WaitingRoom, SessionRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, WaitingRoom, SessionRoom, RunningRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
@@ -10,7 +10,7 @@ import { roomKey } from "@repo/config/redis-keys"
 // utils
 import { SocketError } from "@repo/types/socket-api-error"
 
-export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | SessionRoom = SessionRoom>(
+export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | SessionRoom | RunningRoom = SessionRoom>(
   roomSlug: string
 ) {
   const room = await redis.json.get<R>(roomKey(roomSlug))
@@ -24,7 +24,7 @@ export async function getSessionRoom<R extends WaitingRoom | JoinedRoom | Sessio
   })
 }
 
-export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom | SessionRoom, F extends keyof R>(
+export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom | SessionRoom | RunningRoom, F extends keyof R>(
   roomSlug: string,
   field: F
 ) {

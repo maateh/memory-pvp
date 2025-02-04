@@ -1,16 +1,12 @@
 // types
-import type { JoinedRoom, SessionRoom } from "@repo/schema/session-room"
+import type { JoinedRoom } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
-// schema
+// schemas
 import { sessionCreatedValidation } from "@repo/schema/session-room-validation"
 
-// config
-import { roomKey } from "@repo/config/redis-keys"
-
 // redis
-import { redis } from "@/redis"
-import { getSessionRoom } from "@/redis/room-commands"
+import { getSessionRoomByField } from "@/redis/room-commands"
 
 // socket
 import { io } from "@/server"
@@ -25,28 +21,22 @@ export const sessionCreated: SocketEventHandler<
   console.log("session:created ->", socket.id)
 
   try {
-    const { session } = validate(sessionCreatedValidation, input)
-    const joinedRoom = await getSessionRoom<JoinedRoom>(session.slug)
+    const { roomSlug } = validate(sessionCreatedValidation, input)
+    const {
+      type,
+      mode,
+      tableSize
+    } = await getSessionRoomByField<JoinedRoom, "settings">(roomSlug, "settings")
 
-    const room: SessionRoom = {
-      ...joinedRoom,
-      status: "running",
-      session
-    }
-
-    await redis.hset(roomKey(room.slug), room)
-
-    // TODO: formatting helpers would be cool here
-    // (which are currently only used in the client-side)
-    const { type, mode, tableSize } = joinedRoom.settings
-
-    io.to(room.slug).emit("session:started", {
+    io.to(roomSlug).emit("session:started", {
       message: "The game session has started!",
+      // TODO: formatting helpers would be cool here
+      // (which are currently only used on the client-side)
       description: `${type} | ${mode} | ${tableSize}`,
-      data: room
-    } satisfies SocketResponse<SessionRoom>)
+      data: roomSlug
+    } satisfies SocketResponse<string>)
   } catch (err) {
-    io.to(input.session.slug).emit("session:started", {
+    io.to(input.roomSlug).emit("session:started", {
       message: "Failed to start game session.",
       error: SocketError.parser(err)
     } satisfies SocketResponse)

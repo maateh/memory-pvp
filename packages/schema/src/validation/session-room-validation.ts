@@ -16,7 +16,7 @@ export const joinSessionRoomValidation = z.object({
 })
 
 export const sessionCreatedValidation = z.object({
-  session: clientSessionSchema
+  roomSlug: z.string()
 })
 
 export const sessionReconnectValidation = z.object({

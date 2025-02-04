@@ -6,6 +6,7 @@ import { redirect, RedirectType } from "next/navigation"
 import type { ClientGameSession } from "@/lib/schema/session-schema"
 
 // server
+import { redis } from "@/server/redis"
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
@@ -13,7 +14,7 @@ import { ApiError } from "@/server/_error"
 import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
-import { sessionKey } from "@repo/config/redis-keys"
+import { roomKey, sessionKey } from "@repo/config/redis-keys"
 import { SESSION_STORE_TTL } from "@/config/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
@@ -170,7 +171,20 @@ export const createMultiSession = playerActionClient
       include: sessionSchemaFields
     })
 
-    return parseSchemaToClientSession(session, ctx.player.id)
+    const response = await redis.json.set(
+      roomKey(session.slug),
+      "$.session",
+      session,
+      { xx: true }
+    )
+
+    if (response !== "OK") {
+      ApiError.throw({
+        key: 'UNKNOWN',
+        message: 'Failed to store game session.',
+        description: 'Cache server probably not available.'
+      })
+    }
   })
 
 export const storeSession = sessionActionClient
