@@ -33,7 +33,7 @@ export function useJoinWaitingRoom() {
         throw SocketError.parser(error)
       }
 
-      router.push(`/game/${room.slug}`)
+      router.push(`/dashboard/rooms/${room.slug}`)
       toast.success(message, { description })
     } catch (err) {
       handleServerError(err as SocketError, "Socket service seems to be unavailable. Please try again later.")

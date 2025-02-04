@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 // types
 import type { SocketResponse } from "@repo/types/socket-api"
-import type { JoinedRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, RunningRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 // server
@@ -17,13 +17,10 @@ import { SocketError } from "@repo/types/socket-api-error"
 import { ApiError } from "@/server/_error"
 import { handleServerError, logError } from "@/lib/util/error"
 
-// providers
-import { SessionStoreProvider } from "@/components/provider"
-
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
-type TRoomEventContext<T extends WaitingRoom | JoinedRoom | SessionRoom = WaitingRoom | JoinedRoom | SessionRoom> = {
+type TRoomEventContext<T extends WaitingRoom | JoinedRoom | RunningRoom | SessionRoom = WaitingRoom | JoinedRoom | RunningRoom | SessionRoom> = {
   room: T
   currentRoomPlayer: SessionRoomPlayer
   roomLeave: () => Promise<void>
@@ -34,7 +31,7 @@ type TRoomEventContext<T extends WaitingRoom | JoinedRoom | SessionRoom = Waitin
 const RoomEventContext = createContext<TRoomEventContext | null>(null)
 
 type RoomEventProviderProps = {
-  initialRoom: WaitingRoom | JoinedRoom | SessionRoom
+  initialRoom: WaitingRoom | JoinedRoom | SessionRoom | RunningRoom
   currentPlayerId: string
   children: React.ReactNode
 }
@@ -43,7 +40,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   const router = useRouter()
   const { socket } = useSocketService()
 
-  const [room, setRoom] = useState<WaitingRoom | JoinedRoom | SessionRoom>(initialRoom)
+  const [room, setRoom] = useState<WaitingRoom | JoinedRoom | SessionRoom | RunningRoom>(initialRoom)
   const currentRoomPlayer = useMemo(() => {
     if (
       room.status === "waiting" ||
@@ -123,8 +120,8 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   useEffect(() => {
     if (!socket?.active) {
       router.replace('/game/setup')
-      toast.error("Session room is not available.", {
-        description: "Socket connection was not established. Please try again later.",
+      toast.error("Socket connection is not active.", {
+        description: "Socket connection was not established. Please try again.",
         id: "_" /* Note: prevent re-render by adding a custom id. */
       })
       return
@@ -179,21 +176,20 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
           description: startingDescription
         })
 
-        const { data: session, serverError } = await createMultiSession({
+        const { serverError } = await createMultiSession({
           ...room.settings,
           slug: room.slug,
           guestId: room.guest.id
         }) || {}
 
-        if (serverError || !session) {
+        if (serverError) {
           ApiError.throw({
-            key: serverError?.key || "UNKNOWN",
-            message: serverError?.key || "Something unexpected happened.",
-            description: serverError?.description || "Failed to initialize game session."
+            ...serverError,
+            description: serverError.description || "Failed to initialize game session."
           })
         }
 
-        socket?.emit("session:created", { session } satisfies SessionCreatedValidation)
+        socket?.emit("session:created", { roomSlug: room.slug } satisfies SessionCreatedValidation)
         toast.info("Game session has been initialized.", {
           id: "session:created",
           description: "Starting the game session..."
@@ -214,14 +210,15 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
       toast.loading(message, { id: "session:starting", description })
     }
     
-    const sessionStarted = ({ data: room, message, description, error }: SocketResponse<SessionRoom>) => {
-      if (error || !room) return handleServerError(error)
+    const sessionStarted = ({ data: roomSlug, message, description, error }: SocketResponse<string>) => {
+      if (error || !roomSlug) return handleServerError(error)
 
-      setRoom(room)
       toast.dismiss("room:ready:response")
       toast.dismiss("room:readied")
       toast.dismiss("session:starting")
-      toast.dismiss("session:created")
+      toast.dismiss("session:created")      
+
+      router.replace(`/game/${roomSlug}`)
       toast.success(message, { description })
     }
 
@@ -254,21 +251,23 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   }, [router, socket, currentPlayerId])
 
   return (
-    <RoomEventContext.Provider value={{ room, currentRoomPlayer, roomLeave, roomClose, roomReady }}>
-      {room.status === "running" ? (
-        <SessionStoreProvider session={room.session}>
-          {children}
-        </SessionStoreProvider>
-      ) : children}
+    <RoomEventContext.Provider value={{
+      room,
+      currentRoomPlayer,
+      roomLeave,
+      roomClose,
+      roomReady
+    }}>
+      {children}
     </RoomEventContext.Provider>
   )
 }
 
-function useRoomEvents<T extends WaitingRoom | JoinedRoom | SessionRoom>() {
+function useRoomEvents<T extends WaitingRoom | JoinedRoom | RunningRoom | SessionRoom>() {
   const context = useContext(RoomEventContext) as TRoomEventContext<T> | null
 
   if (!context) {
-    throw new Error('Session room context must be used within its provider.')
+    throw new Error('Room events must be used within its provider.')
   }
 
   return context
