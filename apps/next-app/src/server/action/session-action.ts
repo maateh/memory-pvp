@@ -174,8 +174,7 @@ export const createMultiSession = playerActionClient
     const response = await redis.json.set(
       roomKey(session.slug),
       "$.session",
-      session,
-      { xx: true }
+      session
     )
 
     if (response !== "OK") {

@@ -28,7 +28,7 @@ export async function getSessionRoomByField<R extends WaitingRoom | JoinedRoom |
   roomSlug: string,
   field: F
 ) {
-  const fieldValue = await redis.json.get<R[F]>(roomKey(roomSlug), field as string)
+  const fieldValue = await redis.json.get<R[F]>(roomKey(roomSlug), `$.${field as string}`)
   if (fieldValue) return fieldValue as R[F]
 
   // TODO: remove player(s) connection data

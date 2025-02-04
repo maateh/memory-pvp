@@ -19,12 +19,11 @@ export const sessionStarting: SocketEventHandler = (socket) => async (_, respons
     await redis.json.set(
       roomKey(roomSlug),
       "$.status",
-      "starting" as JoinedRoom["status"],
+      '"starting"' as JoinedRoom["status"], /* Note: DO NOT REMOVE the extra outer delimiter! */
       { xx: true }
     )
 
     const message = "Initializing game session..."
-
     socket.broadcast.to(roomSlug).emit("session:starting", { message } satisfies SocketResponse)
     response({ message })
   } catch (err) {
