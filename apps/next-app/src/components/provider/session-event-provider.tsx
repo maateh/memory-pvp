@@ -45,7 +45,7 @@ const SessionEventProvider = ({ initialSession, currentPlayer, children }: Sessi
   }
 
   useEffect(() => {
-    if (!socket?.active) {
+    if (!socket.active) {
       router.replace('/game/setup')
       toast.error("Socket connection is not active.", {
         description: "Socket connection was not established. Please try again.",

@@ -26,7 +26,7 @@ export function useCreateWaitingRoom() {
         message,
         description,
         error
-      }: SocketResponse<WaitingRoom> = await socket?.connect()
+      }: SocketResponse<WaitingRoom> = await socket.connect()
         .emitWithAck("room:create", values satisfies CreateSessionRoomValidation)
 
       if (error || !room) {

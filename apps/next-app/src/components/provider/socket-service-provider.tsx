@@ -10,7 +10,7 @@ import type { Socket } from "socket.io-client"
 import { io } from "socket.io-client"
 
 type TSocketServiceContext = {
-  socket: Socket | null
+  socket: Socket
 }
 
 const SocketServiceContext = createContext<TSocketServiceContext | null>(null)
@@ -18,13 +18,14 @@ const SocketServiceContext = createContext<TSocketServiceContext | null>(null)
 const SocketServiceProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket] = useState(() => {
     if (typeof window === "undefined") return null
+
     return io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
       autoConnect: false
     })
   })
 
   return (
-    <SocketServiceContext.Provider value={{ socket }}>
+    <SocketServiceContext.Provider value={{ socket: socket! }}>
       {children}
     </SocketServiceContext.Provider>
   )
@@ -37,11 +38,25 @@ function useSocketService() {
     throw new Error("Socket service must be used within its provider.")
   }
 
-  if (!context.socket && typeof window !== "undefined") {
-    toast.error("Socket server is not initialized.", {
+  /**
+   * Note: Prevent throwing an error on the server side
+   * because the socket instance is not initialized there.
+   * 
+   * Since the server will not use it, it makes more sense to
+   * return back the context without the initialized socket
+   * rather than throwing an unnecessary error.
+   */
+  if (typeof window === "undefined") {
+    return context
+  }
+
+  if (!context.socket) {
+    toast.error("Socket service is not initialized.", {
       description: "Multiplayer services might not work. Please try to reach an administrator.",
       id: "_" /* Note: prevent re-render by adding a custom id. */
     })
+
+    throw new Error("Socket service is not initialized. Please try to reach an administrator.")
   }
 
   return context

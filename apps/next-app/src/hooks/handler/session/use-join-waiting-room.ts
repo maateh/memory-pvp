@@ -26,7 +26,7 @@ export function useJoinWaitingRoom() {
         message,
         description,
         error
-      }: SocketResponse<JoinedRoom> = await socket?.connect()
+      }: SocketResponse<JoinedRoom> = await socket.connect()
         .emitWithAck("room:join", values satisfies JoinSessionRoomValidation)
 
       if (error || !room) {

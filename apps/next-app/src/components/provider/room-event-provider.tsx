@@ -58,7 +58,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
         message,
         description,
         error
-      }: SocketResponse = await socket?.emitWithAck("room:leave", {})
+      }: SocketResponse = await socket.emitWithAck("room:leave", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -80,7 +80,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
         message,
         description,
         error
-      }: SocketResponse = await socket?.emitWithAck("room:close", {})
+      }: SocketResponse = await socket.emitWithAck("room:close", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -103,7 +103,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
         message,
         description,
         error
-      }: SocketResponse<boolean> = await socket?.emitWithAck("room:ready", {})
+      }: SocketResponse<boolean> = await socket.emitWithAck("room:ready", {})
 
       if (error) {
         throw SocketError.parser(error)
@@ -118,7 +118,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   }
 
   useEffect(() => {
-    if (!socket?.active) {
+    if (!socket.active) {
       router.replace('/game/setup')
       toast.error("Socket connection is not active.", {
         description: "Socket connection was not established. Please try again.",
@@ -165,7 +165,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
           message: startingMessage,
           description: startingDescription,
           error: startingError
-        }: SocketResponse = await socket?.emitWithAck("session:starting", {})
+        }: SocketResponse = await socket.emitWithAck("session:starting", {})
   
         if (startingError) {
           throw SocketError.parser(startingError)
@@ -189,7 +189,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
           })
         }
 
-        socket?.emit("session:created", { roomSlug: room.slug } satisfies SessionCreatedValidation)
+        socket.emit("session:created", { roomSlug: room.slug } satisfies SessionCreatedValidation)
         toast.info("Game session has been initialized.", {
           id: "session:created",
           description: "Starting the game session..."
