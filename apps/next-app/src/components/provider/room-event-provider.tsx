@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 // types
 import type { SocketResponse } from "@repo/types/socket-api"
-import type { JoinedRoom, RunningRoom, SessionRoom, SessionRoomPlayer, WaitingRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, SessionRoomPlayer, WaitingRoom, WaitingRoomVariants } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 // server
@@ -20,7 +20,7 @@ import { handleServerError, logError } from "@/lib/util/error"
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
-type TRoomEventContext<T extends WaitingRoom | JoinedRoom | RunningRoom | SessionRoom = WaitingRoom | JoinedRoom | RunningRoom | SessionRoom> = {
+type TRoomEventContext<T extends WaitingRoomVariants> = {
   room: T
   currentRoomPlayer: SessionRoomPlayer
   roomLeave: () => Promise<void>
@@ -28,10 +28,10 @@ type TRoomEventContext<T extends WaitingRoom | JoinedRoom | RunningRoom | Sessio
   roomReady: () => Promise<void>
 }
 
-const RoomEventContext = createContext<TRoomEventContext | null>(null)
+const RoomEventContext = createContext<TRoomEventContext<WaitingRoomVariants> | null>(null)
 
 type RoomEventProviderProps = {
-  initialRoom: WaitingRoom | JoinedRoom | SessionRoom | RunningRoom
+  initialRoom: WaitingRoomVariants
   currentPlayerId: string
   children: React.ReactNode
 }
@@ -40,7 +40,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   const router = useRouter()
   const { socket } = useSocketService()
 
-  const [room, setRoom] = useState<WaitingRoom | JoinedRoom | SessionRoom | RunningRoom>(initialRoom)
+  const [room, setRoom] = useState<WaitingRoomVariants>(initialRoom)
   const currentRoomPlayer = useMemo(() => {
     if (
       room.status === "waiting" ||
@@ -263,7 +263,7 @@ const RoomEventProvider = ({ initialRoom, currentPlayerId, children }: RoomEvent
   )
 }
 
-function useRoomEvents<T extends WaitingRoom | JoinedRoom | RunningRoom | SessionRoom>() {
+function useRoomEvents<T extends WaitingRoomVariants = WaitingRoomVariants>() {
   const context = useContext(RoomEventContext) as TRoomEventContext<T> | null
 
   if (!context) {

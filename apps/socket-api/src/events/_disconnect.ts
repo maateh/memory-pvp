@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom, WaitingRoom, SessionRoom } from "@repo/schema/session-room"
+import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // socket
 import { io } from "@/server"
@@ -17,7 +17,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
   try {
     const { roomSlug, playerId } = await getSocketConnection(socket.id)
-    const room = await getSessionRoom<WaitingRoom | JoinedRoom | SessionRoom>(roomSlug)
+    const room = await getSessionRoom(roomSlug)
 
     if (room.status === "waiting") {
       await Promise.all([

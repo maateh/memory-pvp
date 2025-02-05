@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { JoinedRoom, RunningRoom, SessionRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { RoomVariants, WaitingRoomVariants } from "@repo/schema/session-room"
 
 // server
 import { redis } from "@/server/redis"
@@ -25,36 +25,52 @@ type WaitingRoomPageProps = {
 
 const WaitingRoomPage = async ({ params }: WaitingRoomPageProps) => {
   const promises = Promise.all([
-    redis.json.get<WaitingRoom | JoinedRoom | RunningRoom | SessionRoom>(roomKey(params.slug)),
+    redis.json.get<RoomVariants>(roomKey(params.slug)),
     getPlayer({ filter: { isActive: true } })
   ])
 
   return (
     <Suspense fallback={<>Loading...</>}> {/* TODO: loading fallback */}
       <Await promise={promises}>
-        {([room, player]) => room && player ? (
-          <RoomEventProvider initialRoom={room} currentPlayerId={player.id}>
-            {room.status === "finished" ? (
+        {([room, player]) => {
+          if (!room || !player) {
+            return (
+              <RedirectFallback
+                redirect="/dashboard/rooms"
+                type="replace"
+                message="Session room cannot be loaded."
+                description="Unable to find this session room."
+              />
+            )
+          }
+
+          if (room.status === "finished") {
+            return (
               <RedirectFallback
                 redirect="/dashboard/rooms"
                 type="replace"
                 message="Session is finished."
                 description="The session has already ended in this room."
               />
-            ) : room.status === "running" ? ( // TODO: implement reconnection + add status "cancelled"
-              <>Running session</>
-            ) : <WaitingRoomScreen />}
-          </RoomEventProvider>
-        ) : (
-          <RedirectFallback
-            redirect="/dashboard/rooms"
-            type="replace"
-            message="Session room cannot be loaded."
-            description="Unable to find this session room."
-          >
-            Loading... {/* TODO: loading fallback */}
-          </RedirectFallback>
-        )}
+            )
+          }
+
+          if (room.status === "running") { // TODO: add status "cancelled"
+            return (
+              // TODO: implement reconnection
+              <>Session is running. Do you want to reconnect?</>
+            )
+          }
+
+          return (
+            <RoomEventProvider
+              initialRoom={room as WaitingRoomVariants}
+              currentPlayerId={player.id}
+            >
+              <WaitingRoomScreen />
+            </RoomEventProvider>
+          )
+        }}
       </Await>
     </Suspense>
   )

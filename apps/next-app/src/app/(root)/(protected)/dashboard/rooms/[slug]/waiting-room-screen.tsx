@@ -1,8 +1,5 @@
 "use client"
 
-// types
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
-
 // utils
 import { cn } from "@/lib/util"
 
@@ -26,7 +23,7 @@ const WaitingRoomScreen = () => {
     roomClose,
     roomLeave,
     roomReady
-  } = useRoomEvents<WaitingRoom | JoinedRoom>()
+  } = useRoomEvents()
   const { handleCopy } = useCopy({ showToast: true })
 
   const ReadyIcon = currentRoomPlayer.ready ? CircleCheck : CircleCheckBig

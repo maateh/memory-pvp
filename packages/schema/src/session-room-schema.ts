@@ -71,3 +71,6 @@ export type SessionRoom = z.infer<typeof sessionRoomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
 export type RunningRoom = z.infer<typeof runningRoomSchema>
+
+export type WaitingRoomVariants = WaitingRoom | JoinedRoom
+export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | SessionRoom

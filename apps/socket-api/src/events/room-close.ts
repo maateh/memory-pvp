@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { WaitingRoomVariants } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
@@ -17,7 +17,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
 
   try {
     const roomSlug = await getSocketConnectionByField<string>(socket.id, 'roomSlug')
-    const room = await getSessionRoom<WaitingRoom | JoinedRoom>(roomSlug)
+    const room = await getSessionRoom<WaitingRoomVariants>(roomSlug)
     
     const commands = [
       redis.del(connectionKey(room.owner.socketId)),
