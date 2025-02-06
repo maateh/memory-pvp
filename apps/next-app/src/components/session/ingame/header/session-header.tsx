@@ -1,5 +1,8 @@
 "use client"
 
+// types
+import type { ClientGameSession } from "@repo/schema/session"
+
 // config
 import {
   gameModePlaceholders,
@@ -16,19 +19,17 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { SessionInfoBadge } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
-import SessionSyncMarker from "./session-sync-marker"
 import SessionTimer from "./session-timer"
 
-// hooks
-import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
+type SessionHeaderProps = {
+  session: ClientGameSession
+}
 
-const SessionHeader = () => {
-  const session = useSingleSessionStore((state) => state.session)
-
+const SessionHeader = ({ session }: SessionHeaderProps) => {
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
-        <SessionActionsDropdown />
+        <SessionActionsDropdown session={session} />
 
         <Separator className="h-4 sm:h-5 w-1 bg-border/50 rounded-full"
           orientation="vertical"
@@ -58,7 +59,7 @@ const SessionHeader = () => {
               orientation="vertical"
             />
 
-            <SessionSyncMarker />
+            {/* FIXME: <SessionSyncMarker /> */}
           </>
         )}
       </div>

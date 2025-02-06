@@ -35,7 +35,7 @@ const OfflineGameHandler = () => {
 
   return (
     <>
-      <SessionHeader />
+      <SessionHeader session={session} />
 
       <MemoryTable
         session={session}

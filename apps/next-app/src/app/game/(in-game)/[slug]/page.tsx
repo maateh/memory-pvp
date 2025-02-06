@@ -18,7 +18,7 @@ import { MultiSessionStoreProvider } from "@/components/provider"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
-import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
+import { SessionLoader } from "@/components/session/ingame"
 import MultiGameHandler from "./multi-game-handler"
 
 type MultiGamePageProps = {
@@ -44,9 +44,7 @@ const MultiGamePage = async ({ params }: MultiGamePageProps) => {
             initialSession={parseSchemaToClientSession(session[0])}
             currentPlayer={player}
           >
-            <SessionHeader />
             <MultiGameHandler />
-            <SessionFooter />
           </MultiSessionStoreProvider>
         ) : (
           <RedirectFallback

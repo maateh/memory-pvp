@@ -7,8 +7,8 @@ import { getActiveSession } from "@/server/action/session-action"
 import { SingleSessionStoreProvider } from "@/components/provider"
 
 // components
-import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
 import { Await, RedirectFallback } from "@/components/shared"
+import { SessionLoader } from "@/components/session/ingame"
 import SingleGameHandler from "./single-game-handler"
 
 const SingleGamePage = () => {
@@ -17,11 +17,7 @@ const SingleGamePage = () => {
       <Await promise={getActiveSession()}>
         {(session) => session?.data ? (
           <SingleSessionStoreProvider session={session.data}>
-            <SessionHeader />
-
             <SingleGameHandler />
-
-            <SessionFooter />
           </SingleSessionStoreProvider>
         ) : (
           <RedirectFallback

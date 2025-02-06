@@ -5,6 +5,7 @@ import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
 // types
+import type { ClientGameSession } from "@repo/schema/session"
 import type { UseThemeProps } from "@/lib/types/theme"
 
 // config
@@ -34,13 +35,15 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
-const SessionActionsDropdown = () => {
+type SessionActionsDropdownProps = {
+  session: ClientGameSession
+}
+
+const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
   const router = useRouter()
   const { theme, setTheme } = useTheme() as UseThemeProps
-  const session = useSingleSessionStore((state) => state.session)
 
   const {
     executeAsync: executeAbandonSession,

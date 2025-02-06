@@ -1,5 +1,13 @@
+"use client"
+
+import { useMemo } from "react"
+
 // types
+import type { ClientGameSession } from "@repo/schema/session"
 import type { ClientPlayer } from "@/lib/schema/player-schema"
+
+// helpers
+import { calculatePlayerSessionScore, getFreeFlips } from "@/lib/helper/session-helper"
 
 // utils
 import { cn } from "@/lib/util"
@@ -17,14 +25,17 @@ import { PlayerBadge } from "@/components/player"
 import { StatisticBadge } from "@/components/shared"
 
 type SessionPlayerProps = {
+  session: ClientGameSession
   player: ClientPlayer
-  flips: number
-  freeFlips: number | null
-  score: number | null
   flipOrder?: boolean
 }
 
-const SessionPlayer = ({ player, flips, freeFlips, score, flipOrder }: SessionPlayerProps) => {
+const SessionPlayer = ({ session, player, flipOrder }: SessionPlayerProps) => {
+  const freeFlips = useMemo(() => getFreeFlips(session), [session])
+  const score = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
+
+  const flips = session.stats.flips[player.id]
+
   return (
     <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
       <div className="space-y-1.5">
