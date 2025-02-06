@@ -11,7 +11,7 @@ import { offlineSessionMetadata } from "@/config/session-settings"
 import { getSessionFromStorage } from "@/lib/util/storage"
 
 // providers
-import { SessionStoreProvider } from "@/components/provider"
+import { SingleSessionStoreProvider } from "@/components/provider"
 
 // components
 import { SessionLoader } from "@/components/session/ingame"
@@ -37,12 +37,12 @@ const OfflineSessionLoader = () => {
   }
 
   return (
-    <SessionStoreProvider session={{
+    <SingleSessionStoreProvider session={{
       ...session.current,
       ...offlineSessionMetadata
     }}>
       <OfflineGameHandler />
-    </SessionStoreProvider>
+    </SingleSessionStoreProvider>
   )
 }
 
