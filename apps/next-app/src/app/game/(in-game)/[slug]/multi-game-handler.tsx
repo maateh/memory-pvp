@@ -4,10 +4,10 @@
 import { MemoryTable } from "@/components/session/ingame"
 
 // hooks
-import { useSessionEvents } from "@/components/provider/session-event-provider"
+import { useMultiSessionStore } from "@/components/provider/multi-session-store-provider"
 
 const MultiGameHandler = () => {
-  const { session } = useSessionEvents()
+  const session = useMultiSessionStore((state) => state.session)
 
   return (
     <MemoryTable

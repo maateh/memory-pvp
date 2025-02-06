@@ -14,7 +14,7 @@ import { roomKey } from "@repo/config/redis-keys"
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 // providers
-import { SessionEventProvider } from "@/components/provider"
+import { MultiSessionStoreProvider } from "@/components/provider"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
@@ -40,14 +40,14 @@ const MultiGamePage = async ({ params }: MultiGamePageProps) => {
     <Suspense fallback={<SessionLoader />}>
       <Await promise={promises}>
         {([session, player]) => session && session.length && player ? (
-          <SessionEventProvider
+          <MultiSessionStoreProvider
             initialSession={parseSchemaToClientSession(session[0])}
             currentPlayer={player}
           >
             <SessionHeader />
             <MultiGameHandler />
             <SessionFooter />
-          </SessionEventProvider>
+          </MultiSessionStoreProvider>
         ) : (
           <RedirectFallback
             redirect="/game/setup"
