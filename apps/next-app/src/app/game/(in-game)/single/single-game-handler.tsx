@@ -10,12 +10,12 @@ import { logError } from "@/lib/util/error"
 import { MemoryTable } from "@/components/session/ingame"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
 import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
 
 const SingleGameHandler = () => {
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   const { executeAsync: executeFinishSession } = useFinishSessionAction()
   const { executeAsync: executeStoreSession } = useStoreSessionAction()

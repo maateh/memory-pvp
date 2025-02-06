@@ -7,11 +7,11 @@ import { storeSession } from "@/server/action/session-action"
 import { handleServerError } from "@/lib/util/error"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 import { useFinishSessionAction } from "./use-finish-session"
 
 export const useStoreSessionAction = () => {
-  const updateSyncState = useSessionStore((state) => state.updateSyncState)
+  const updateSyncState = useSingleSessionStore((state) => state.updateSyncState)
 
   const { status: finishSessionStatus } = useFinishSessionAction()
 

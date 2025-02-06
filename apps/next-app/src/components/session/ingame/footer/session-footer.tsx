@@ -12,10 +12,10 @@ import { Separator } from "@/components/ui/separator"
 import SessionPlayer from "./session-player"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 
 const SessionFooter = () => {
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   const currentPlayer = session.players.current
   const otherPlayer = session.players.other

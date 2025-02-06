@@ -11,11 +11,11 @@ import { SessionHeader, MemoryTable } from "@/components/session/ingame"
 
 // hooks
 import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 
 const OfflineGameHandler = () => {
   const router = useRouter()
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   const { handleCardFlip } = useGameHandler({
     onIngameUpdate: () => {

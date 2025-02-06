@@ -34,13 +34,13 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
 const SessionActionsDropdown = () => {
   const router = useRouter()
   const { theme, setTheme } = useTheme() as UseThemeProps
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   const {
     executeAsync: executeAbandonSession,

@@ -6,7 +6,7 @@ import { useRef } from "react"
 import { formatTimer } from "@/lib/util/game"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 import { useTimer } from "@/hooks/use-timer"
 
 type SessionTimerProps = {
@@ -16,7 +16,7 @@ type SessionTimerProps = {
 const SessionTimer = ({ timer }: SessionTimerProps) => {
   const initialTimerRef = useRef<number>(timer)
 
-  const updateSessionTimer = useSessionStore((state) => state.updateTimer)
+  const updateSessionTimer = useSingleSessionStore((state) => state.updateTimer)
 
   const { timerInMs } = useTimer({
     initialInMs: initialTimerRef.current * 1000,

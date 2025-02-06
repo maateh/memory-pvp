@@ -20,10 +20,10 @@ import SessionSyncMarker from "./session-sync-marker"
 import SessionTimer from "./session-timer"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 
 const SessionHeader = () => {
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">

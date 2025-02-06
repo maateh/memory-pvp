@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { getActiveSession } from "@/server/action/session-action"
 
 // providers
-import { SessionStoreProvider } from "@/components/provider"
+import { SingleSessionStoreProvider } from "@/components/provider"
 
 // components
 import { SessionFooter, SessionHeader, SessionLoader } from "@/components/session/ingame"
@@ -16,13 +16,13 @@ const SingleGamePage = () => {
     <Suspense fallback={<SessionLoader />}>
       <Await promise={getActiveSession()}>
         {(session) => session?.data ? (
-          <SessionStoreProvider session={session.data}>
+          <SingleSessionStoreProvider session={session.data}>
             <SessionHeader />
 
             <SingleGameHandler />
 
             <SessionFooter />
-          </SessionStoreProvider>
+          </SingleSessionStoreProvider>
         ) : (
           <RedirectFallback
             redirect="/game/setup"

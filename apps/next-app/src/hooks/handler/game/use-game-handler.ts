@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 import type { ClientSessionCard } from "@/lib/schema/session-schema"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 
 type UseGameHandlerProps = {
   onIngameUpdate?: () => void
@@ -48,13 +48,13 @@ export const useGameHandler = ({
   onBeforeUnload,
   onFinish
 }: UseGameHandlerProps): UseGameHandlerReturn => {
-  const session = useSessionStore((state) => state.session)
+  const session = useSingleSessionStore((state) => state.session)
 
   /** Initialize required states and handlers for the game. */
-  const syncState = useSessionStore((state) => state.syncState)
-  const handleFlipUpdate = useSessionStore((state) => state.handleFlipUpdate)
-  const handleMatchUpdate = useSessionStore((state) => state.handleMatchUpdate)
-  const handleUnmatchUpdate = useSessionStore((state) => state.handleUnmatchUpdate)
+  const syncState = useSingleSessionStore((state) => state.syncState)
+  const handleFlipUpdate = useSingleSessionStore((state) => state.handleFlipUpdate)
+  const handleMatchUpdate = useSingleSessionStore((state) => state.handleMatchUpdate)
+  const handleUnmatchUpdate = useSingleSessionStore((state) => state.handleUnmatchUpdate)
 
   /**
    * Flips the clicked memory card and handles matching logic.

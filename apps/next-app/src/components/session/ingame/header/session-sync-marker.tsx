@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { SessionSyncState } from "@/components/provider/session-store-provider"
+import type { SessionSyncState } from "@/lib/store/single-session-store"
 
 // utils
 import { cn } from "@/lib/util"
@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { CustomTooltip } from "@/components/shared"
 
 // hooks
-import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
 
 const syncStateMap: Record<SessionSyncState, {
   icon: React.ReactNode
@@ -37,7 +37,7 @@ const syncStateMap: Record<SessionSyncState, {
 }
 
 const SessionSyncMarker = () => {
-  const syncState = useSessionStore((state) => state.syncState)
+  const syncState = useSingleSessionStore((state) => state.syncState)
 
   const tooltipContent = (
     <>
