@@ -11,7 +11,7 @@ import { getPlayer } from "@/server/db/query/player-query"
 import { roomKey } from "@repo/config/redis-keys"
 
 // providers
-import { RoomEventProvider } from "@/components/provider"
+import { RoomStoreProvider } from "@/components/provider"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
@@ -63,12 +63,12 @@ const WaitingRoomPage = async ({ params }: WaitingRoomPageProps) => {
           }
 
           return (
-            <RoomEventProvider
+            <RoomStoreProvider
               initialRoom={room as WaitingRoomVariants}
               currentPlayerId={player.id}
             >
               <WaitingRoomScreen />
-            </RoomEventProvider>
+            </RoomStoreProvider>
           )
         }}
       </Await>

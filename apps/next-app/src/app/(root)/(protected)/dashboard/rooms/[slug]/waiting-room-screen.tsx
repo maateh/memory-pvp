@@ -14,16 +14,14 @@ import { JoinedPlayer } from "@/components/room"
 
 // hooks
 import { useCopy } from "@/hooks/use-copy"
-import { useRoomEvents } from "@/components/provider/room-event-provider"
+import { useRoomStore } from "@/components/provider/room-store-provider"
 
 const WaitingRoomScreen = () => {
-  const {
-    room,
-    currentRoomPlayer,
-    roomClose,
-    roomLeave,
-    roomReady
-  } = useRoomEvents()
+  const room = useRoomStore((state) => state.room)
+  const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
+  const roomClose = useRoomStore((state) => state.roomClose)
+  const roomLeave = useRoomStore((state) => state.roomLeave)
+  const roomReady = useRoomStore((state) => state.roomReady)
   const { handleCopy } = useCopy({ showToast: true })
 
   const ReadyIcon = currentRoomPlayer.ready ? CircleCheck : CircleCheckBig
