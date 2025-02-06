@@ -5,7 +5,6 @@ import { useStore } from "zustand"
 
 // types
 import type { StoreApi } from "zustand"
-import type { ClientPlayer } from "@repo/schema/player"
 import type { ClientGameSession } from "@repo/schema/session"
 import type { MultiSessionStore } from "@/lib/store/multi-session-store"
 
@@ -19,17 +18,15 @@ const MultiSessionStoreContext = createContext<StoreApi<MultiSessionStore> | nul
 
 type MultiSessionStoreProviderProps = {
   initialSession: ClientGameSession
-  currentPlayer: ClientPlayer
   children: React.ReactNode
 }
 
-const MultiSessionStoreProvider = ({ initialSession, currentPlayer, children }: MultiSessionStoreProviderProps) => {
+const MultiSessionStoreProvider = ({ initialSession, children }: MultiSessionStoreProviderProps) => {
   const { socket } = useSocketService()
 
   const [store] = useState(
     multiSessionStore({
       initialSession,
-      currentPlayer,
       socket
     })
   )

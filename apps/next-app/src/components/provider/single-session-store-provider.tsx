@@ -6,7 +6,7 @@ import { useStore } from "zustand"
 // types
 import type { StoreApi } from "zustand"
 import type { ClientGameSession } from "@repo/schema/session"
-import type { SessionSyncState, SingleSessionStore } from "@/lib/store/single-session-store"
+import type { SingleSessionStore } from "@/lib/store/single-session-store"
 
 // store
 import { singleSessionStore } from "@/lib/store/single-session-store"
@@ -14,16 +14,14 @@ import { singleSessionStore } from "@/lib/store/single-session-store"
 const SingleSessionStoreContext = createContext<StoreApi<SingleSessionStore> | null>(null)
 
 type SingleSessionStoreProviderProps = {
-  session: ClientGameSession
-  syncState?: SessionSyncState
+  initialSession: ClientGameSession
   children: React.ReactNode
 }
 
-const SingleSessionStoreProvider = ({ session, syncState, children }: SingleSessionStoreProviderProps) => {
+const SingleSessionStoreProvider = ({ initialSession, children }: SingleSessionStoreProviderProps) => {
   const [store] = useState(
     singleSessionStore({
-      session,
-      syncState
+      initialSession
     })
   )
 

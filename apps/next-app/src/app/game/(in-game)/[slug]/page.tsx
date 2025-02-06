@@ -5,7 +5,6 @@ import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/
 
 // server
 import { redis } from "@/server/redis"
-import { getPlayer } from "@/server/db/query/player-query"
 
 // config
 import { roomKey } from "@repo/config/redis-keys"
@@ -28,21 +27,17 @@ type MultiGamePageProps = {
 }
 
 const MultiGamePage = async ({ params }: MultiGamePageProps) => {
-  const promises = Promise.all([
-    redis.json.get<GameSessionWithPlayersWithAvatarWithCollectionWithCards[]>(
-      roomKey(params.slug),
-      "$.session"
-    ),
-    getPlayer({ filter: { isActive: true } })
-  ])
+  const promise = redis.json.get<GameSessionWithPlayersWithAvatarWithCollectionWithCards[]>(
+    roomKey(params.slug),
+    "$.session"
+  )
 
   return (
     <Suspense fallback={<SessionLoader />}>
-      <Await promise={promises}>
-        {([session, player]) => session && session.length && player ? (
+      <Await promise={promise}>
+        {(session) => session && session.length ? (
           <MultiSessionStoreProvider
             initialSession={parseSchemaToClientSession(session[0])}
-            currentPlayer={player}
           >
             <MultiGameHandler />
           </MultiSessionStoreProvider>

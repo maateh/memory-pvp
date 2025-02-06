@@ -16,7 +16,7 @@ const SingleGamePage = () => {
     <Suspense fallback={<SessionLoader />}>
       <Await promise={getActiveSession()}>
         {(session) => session?.data ? (
-          <SingleSessionStoreProvider session={session.data}>
+          <SingleSessionStoreProvider initialSession={session.data}>
             <SingleGameHandler />
           </SingleSessionStoreProvider>
         ) : (

@@ -4,7 +4,6 @@ import { toast } from "sonner"
 // types
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/types/socket-api"
-import type { ClientPlayer } from "@repo/schema/player"
 import type { ClientGameSession } from "@repo/schema/session"
 
 // utils
@@ -14,7 +13,6 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 type MultiSessionState = {
   session: ClientGameSession
-  currentPlayer: ClientPlayer
 }
 
 type MultiSessionAction = {
@@ -29,17 +27,14 @@ export type MultiSessionStore = MultiSessionState & MultiSessionAction & MultiSe
 
 type MultiSessionStoreProps = {
   initialSession: ClientGameSession
-  currentPlayer: ClientPlayer
   socket: Socket
 }
 
 export const multiSessionStore = ({
   initialSession,
-  currentPlayer,
   socket
 }: MultiSessionStoreProps) => () => createStore<MultiSessionStore>((set) => ({
   session: initialSession,
-  currentPlayer,
 
   /* Actions */
 

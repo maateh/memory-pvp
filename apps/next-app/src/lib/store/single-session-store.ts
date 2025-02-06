@@ -21,15 +21,14 @@ type SingleSessionAction = {
 export type SingleSessionStore = SingleSessionState & SingleSessionAction
 
 type SingleSessionStoreProps = {
-  session: ClientGameSession
-  syncState?: SessionSyncState
+  initialSession: ClientGameSession
 }
 
 export const singleSessionStore = ({
-  session,
-  syncState = "SYNCHRONIZED"
+  initialSession
 }: SingleSessionStoreProps) => () => createStore<SingleSessionStore>((set) => ({
-  session, syncState,
+  session: initialSession,
+  syncState: "SYNCHRONIZED",
 
   updateSyncState(syncState) {
     set({ syncState })

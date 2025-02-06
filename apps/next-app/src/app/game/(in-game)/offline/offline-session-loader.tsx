@@ -37,7 +37,7 @@ const OfflineSessionLoader = () => {
   }
 
   return (
-    <SingleSessionStoreProvider session={{
+    <SingleSessionStoreProvider initialSession={{
       ...session.current,
       ...offlineSessionMetadata
     }}>
