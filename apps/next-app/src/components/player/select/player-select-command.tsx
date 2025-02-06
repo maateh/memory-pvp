@@ -3,7 +3,7 @@
 import Link from "next/link"
 
 // types
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 
 // utils
 import { cn } from "@/lib/util"

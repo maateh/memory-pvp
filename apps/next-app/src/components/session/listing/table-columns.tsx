@@ -2,7 +2,7 @@ import Link from "next/link"
 
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientGameSession } from "@repo/schema/session"
 
 // config
 import {

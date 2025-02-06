@@ -1,6 +1,6 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 import type { PlayerFilterQuery, PlayerSortQuery } from "@/lib/schema/query/player-query"
 
 // server

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 
 // types
-import type { ClientSessionCard } from "@/lib/schema/session-schema"
+import type { ClientSessionCard } from "@repo/schema/session"
 
 // hooks
 import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"

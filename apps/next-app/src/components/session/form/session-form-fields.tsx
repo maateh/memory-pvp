@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { SessionFormValidation } from "@/lib/schema/validation/session-validation"
+import type { SessionFormValidation } from "@repo/schema/session-validation"
 
 // config
 import {

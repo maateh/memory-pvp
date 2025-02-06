@@ -1,5 +1,5 @@
 // types
-import type { UnsignedClientGameSession } from "@/lib/schema/session-schema"
+import type { UnsignedClientGameSession } from "@repo/schema/session"
 
 // constants
 import { offlineSessionKeys } from "@/lib/util/parser/session-parser"

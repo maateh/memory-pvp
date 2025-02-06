@@ -1,5 +1,5 @@
 // types
-import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientGameSession } from "@repo/schema/session"
 
 // utils
 import { cn } from "@/lib/util"

@@ -1,5 +1,5 @@
 // types
-import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientGameSession } from "@repo/schema/session"
 
 // server
 import { redis } from "@/server/redis"

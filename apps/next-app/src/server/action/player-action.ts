@@ -10,7 +10,7 @@ import { playerActionClient, protectedActionClient } from "@/server/action"
 import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 
 // validations
-import { playerTagSchema } from "@/lib/schema/player-schema"
+import { playerTagSchema } from "@repo/schema/player"
 import {
   createPlayerValidation,
   updatePlayerValidation

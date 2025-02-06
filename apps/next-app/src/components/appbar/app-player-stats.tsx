@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // types
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"

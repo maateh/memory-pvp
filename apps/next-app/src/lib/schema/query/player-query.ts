@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 // schemas
-import { sortKeys } from "@/lib/schema"
-import { clientPlayerSchema } from "@/lib/schema/player-schema"
+import { sortKeys } from "@/lib/schema/query"
+import { clientPlayerSchema } from "@repo/schema/player"
 
 /* Query filters */
 export const playerFilterQuery = clientPlayerSchema.pick({

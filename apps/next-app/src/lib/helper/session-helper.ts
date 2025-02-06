@@ -1,7 +1,7 @@
 // types
 import type { MemoryCard } from "@repo/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
-import type { ClientGameSession, ClientSessionCard } from "@/lib/schema/session-schema"
+import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
 
 // config
 import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"

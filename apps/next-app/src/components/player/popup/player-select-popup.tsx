@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 
 // server
 import { getPlayers } from "@/server/db/query/player-query"

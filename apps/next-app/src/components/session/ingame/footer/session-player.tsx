@@ -4,7 +4,7 @@ import { useMemo } from "react"
 
 // types
 import type { ClientGameSession } from "@repo/schema/session"
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 
 // helpers
 import { calculatePlayerSessionScore, getFreeFlips } from "@/lib/helper/session-helper"

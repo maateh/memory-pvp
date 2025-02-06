@@ -3,7 +3,7 @@
 import { Suspense } from "react"
 
 // types
-import type { ClientPlayer } from "@/lib/schema/player-schema"
+import type { ClientPlayer } from "@repo/schema/player"
 
 // trpc
 import { trpc, HydrateClient } from "@/server/trpc/server"

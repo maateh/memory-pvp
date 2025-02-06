@@ -2,7 +2,6 @@ import { z } from "zod"
 
 // schemas
 import { clientPlayerSchema } from "../player-schema"
-import { clientSessionSchema } from "../session-schema"
 import { sessionRoomSettings } from "../session-room-schema"
 
 /* Forms / API validations */

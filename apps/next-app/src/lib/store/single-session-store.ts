@@ -1,7 +1,7 @@
 import { createStore } from "zustand"
 
 // types
-import type { ClientGameSession, ClientSessionCard } from "@/lib/schema/session-schema"
+import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
 
 export type SessionSyncState = "SYNCHRONIZED" | "OUT_OF_SYNC" | "PENDING"
 

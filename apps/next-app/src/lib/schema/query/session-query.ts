@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 // schemas
-import { sortKeys } from "@/lib/schema"
-import { clientSessionSchema } from "@/lib/schema/session-schema"
+import { sortKeys } from "@/lib/schema/query"
+import { clientSessionSchema } from "@repo/schema/session"
 
 /* Query filters */
 export const sessionFilterQuery = clientSessionSchema.pick({

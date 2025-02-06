@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 // types
 import type { DefaultValues } from "react-hook-form"
 import type { ClientPlayer } from "@repo/schema/player"
-import type { SessionFormValidation } from "@/lib/schema/validation/session-validation"
+import type { SessionFormValidation } from "@repo/schema/session-validation"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // clerk
@@ -14,7 +14,7 @@ import { useClerk } from "@clerk/nextjs"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { sessionFormValidation } from "@/lib/schema/validation/session-validation"
+import { sessionFormValidation } from "@repo/schema/session-validation"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"

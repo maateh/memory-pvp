@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // schemas
-import { playerColorSchema, playerTagSchema } from "@/lib/schema/player-schema"
+import { playerColorSchema, playerTagSchema } from "@repo/schema/player"
 
 /* Form / API validations */
 export const createPlayerValidation = z.object({

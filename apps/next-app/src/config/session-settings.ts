@@ -1,6 +1,6 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientGameSession, UnsignedClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientGameSession, UnsignedClientGameSession } from "@repo/schema/session"
 
 /* Offline session metadata */
 export const offlineSessionMetadata = {

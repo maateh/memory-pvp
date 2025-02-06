@@ -3,7 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { ClientGameSession } from "@/lib/schema/session-schema"
+import type { ClientGameSession } from "@repo/schema/session"
 
 // server
 import { redis } from "@/server/redis"
@@ -20,7 +20,7 @@ import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
-import { clientSessionSchema } from "@/lib/schema/session-schema"
+import { clientSessionSchema } from "@repo/schema/session"
 import {
   abandonSessionValidation,
   createMultiSessionValidation,
@@ -28,7 +28,7 @@ import {
   finishSessionSchema,
   saveOfflineGameValidation,
   saveSessionValidation
-} from "@/lib/schema/validation/session-validation"
+} from "@repo/schema/session-validation"
 
 // helpers
 import { generateSessionSlug } from "@repo/helper/session"
