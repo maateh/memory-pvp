@@ -7,6 +7,7 @@ import { redis } from "@/redis"
 
 // config
 import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { socketConnection } from "@repo/config/redis-data-parser"
 
 // schema
 import { createSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -18,16 +19,16 @@ import { SocketError } from "@repo/types/socket-api-error"
 import { generateSessionSlug } from "@repo/helper/session"
 
 // utils
-import { socketPlayerConnection } from "@/utils/socket-player-connection"
 import { validate } from "@/utils/validate"
 
+// FIXME: implement this event as a SERVER ACTION
 export const roomCreate: SocketEventHandler<
   CreateSessionRoomValidation,
   WaitingRoom
 > = (socket) => async (input, response) => {
   console.log("DEBUG - room:create -> ", socket.id)
 
-  // FIXME: check if the user isn't already joined in other session
+  // FIXME: check if the user hasn't already joined in other session
 
   try {
     const { owner, ...settings } = validate(createSessionRoomValidation, input)
@@ -38,6 +39,7 @@ export const roomCreate: SocketEventHandler<
       slug,
       owner: {
         ...owner,
+        status: "online",
         socketId: socket.id,
         ready: false
       },
@@ -45,7 +47,7 @@ export const roomCreate: SocketEventHandler<
       createdAt: new Date()
     }
 
-    const connection = socketPlayerConnection(socket.id, owner.id, slug)
+    const connection = socketConnection(socket.id, owner.id, slug)
     await Promise.all([
       redis.hset(connectionKey(socket.id), connection),
       redis.hset(playerConnectionKey(owner.id), connection),

@@ -1,4 +1,5 @@
 // types
+import type { SocketConnection } from "@repo/types/socket-api"
 import type { SessionRoom } from "@repo/schema/session-room"
 import type { SessionReconnectValidation } from "@repo/schema/session-room-validation"
 
@@ -41,7 +42,7 @@ export const sessionReconnect: SocketEventHandler<
     // TODO: add "cancelled" option to room status
     // room.status = room.owner.ready && room.guest.ready ? "running" : "cancelled"
 
-    const connection: SocketPlayerConnection = {
+    const connection: SocketConnection = {
       ...prevConnection,
       socketId: socket.id
     }

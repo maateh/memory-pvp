@@ -7,6 +7,7 @@
     "./socket-api-error": "./src/socket-api/error.ts"
   },
   "devDependencies": {
-    "@repo/ts-config": "workspace:*"
+    "@repo/ts-config": "workspace:*",
+    "@repo/schema": "workspace:*"
   }
 }

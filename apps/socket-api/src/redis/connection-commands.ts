@@ -1,3 +1,6 @@
+// types
+import type { PlayerConnection, SocketConnection } from "@repo/types/socket-api"
+
 // redis
 import { redis } from "@/redis"
 
@@ -8,7 +11,7 @@ import { connectionKey, playerConnectionKey } from "@repo/config/redis-keys"
 import { SocketError } from "@repo/types/socket-api-error"
 
 export async function getSocketConnection(socketId: string) {
-  const connection = await redis.hgetall<SocketPlayerConnection>(connectionKey(socketId))
+  const connection = await redis.hgetall<SocketConnection>(connectionKey(socketId))
   if (connection) return connection
 
   // TODO: force close session
@@ -19,9 +22,9 @@ export async function getSocketConnection(socketId: string) {
   })
 }
 
-export async function getSocketConnectionByField<F extends SocketPlayerConnection[keyof SocketPlayerConnection]>(
+export async function getSocketConnectionByField<F extends SocketConnection[keyof SocketConnection]>(
   socketId: string,
-  field: keyof SocketPlayerConnection
+  field: keyof SocketConnection
 ) {
   const fieldValue = await redis.hget<F>(connectionKey(socketId), field)
   if (fieldValue) return fieldValue
@@ -35,7 +38,7 @@ export async function getSocketConnectionByField<F extends SocketPlayerConnectio
 }
 
 export async function getPlayerConnection(playerId: string) {
-  const connection = await redis.hgetall<SocketPlayerConnection>(playerConnectionKey(playerId))
+  const connection = await redis.hgetall<PlayerConnection>(playerConnectionKey(playerId))
   if (connection) return connection
 
   // TODO: force close session
@@ -46,9 +49,9 @@ export async function getPlayerConnection(playerId: string) {
   })
 }
 
-export async function getPlayerConnectionByField<F extends SocketPlayerConnection[keyof SocketPlayerConnection]>(
+export async function getPlayerConnectionByField<F extends PlayerConnection[keyof PlayerConnection]>(
   playerId: string,
-  field: keyof SocketPlayerConnection
+  field: keyof PlayerConnection
 ) {
   const fieldValue = await redis.hget<F>(playerConnectionKey(playerId), field)
   if (fieldValue) return fieldValue
