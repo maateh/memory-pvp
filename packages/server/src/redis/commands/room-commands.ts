@@ -2,11 +2,11 @@
 import type { SessionRoom, RoomVariants } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@/redis/redis"
-import { roomKey } from "@/redis/keys"
+import { redis } from "../redis"
+import { roomKey } from "../keys"
 
 // utils
-import { ServerError } from "@/error/error"
+import { ServerError } from "../../error/error"
 
 export async function getSessionRoom<R extends RoomVariants = SessionRoom>(
   roomSlug: string

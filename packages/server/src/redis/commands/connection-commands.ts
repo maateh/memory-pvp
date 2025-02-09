@@ -2,11 +2,11 @@
 import type { PlayerConnection, SocketConnection } from "@repo/types/socket-api"
 
 // redis
-import { redis } from "@/redis/redis"
-import { connectionKey, playerConnectionKey } from "@/redis/keys"
+import { redis } from "../redis"
+import { connectionKey, playerConnectionKey } from "../keys"
 
 // utils
-import { ServerError } from "@/error/error"
+import { ServerError } from "../../error/error"
 
 export async function getSocketConnection(socketId: string) {
   const connection = await redis.hgetall<SocketConnection>(connectionKey(socketId))
