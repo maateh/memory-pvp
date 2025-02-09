@@ -5,7 +5,6 @@
     "composite": true,
     "rootDir": "./",
     "outDir": "./dist",
-    "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["./src/*"]
