@@ -8,7 +8,7 @@
     "./db-types": "./src/database/types/index.d.ts",
     "./error": "./src/error/error.ts",
     "./redis": "./src/redis/redis.ts",
-    "./redis-commands": "./src/redis/redis/commands/index.ts",
+    "./redis-commands": "./src/redis/commands/index.ts",
     "./redis-keys": "./src/redis/keys.ts",
     "./redis-data-parser": "./src/redis/data-parser.ts"
   },
