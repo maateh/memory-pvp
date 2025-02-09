@@ -30,6 +30,7 @@
     "@repo/config": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/schema": "workspace:*",
+    "@repo/server": "workspace:*",
     "@repo/helper": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/ts-config": "workspace:*",
