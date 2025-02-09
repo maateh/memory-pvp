@@ -1,0 +1,30 @@
+{
+  "name": "@repo/server",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "exports": {
+    "./db": "./src/database/db.ts",
+    "./db-types": "./src/database/types/index.d.ts",
+    "./error": "./src/error/error.ts",
+    "./redis": "./src/redis/redis.ts",
+    "./redis-commands": "./src/redis/redis/commands/index.ts",
+    "./redis-keys": "./src/redis/keys.ts",
+    "./redis-data-parser": "./src/redis/data-parser.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "@upstash/redis": "^1.34.3"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@types/node": "^22.10.4",
+    "prisma": "^5.20.0",
+    "prisma-json-types-generator": "^3.1.1"
+  }
+}

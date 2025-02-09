@@ -1,0 +1,32 @@
+export type CauseType =
+  "UNKNOWN" |
+  "ACTION" |
+  "API" |
+  "SOCKET_API" |
+  "REDIS"
+
+export type CauseKey =
+  "UNKNOWN" |
+  "CLERK_UNAUTHORIZED" |
+  "USER_NOT_FOUND" |
+  "PLAYER_PROFILE_NOT_FOUND" |
+  "PLAYER_PROFILE_LIMIT" |
+  "ACTIVE_PLAYER_PROFILE" |
+  "ALREADY_TAKEN" |
+  "SESSION_NOT_FOUND" |
+  "SESSION_ACCESS_DENIED" | 
+  "ACTIVE_SESSION" |
+  "COLLECTION_NOT_FOUND" |
+  "COLLECTION_ACCESS_DENIED" |
+  'VALIDATION_FAILED' |
+  "ROOM_NOT_FOUND" |
+  "SOCKET_CONNECTION_NOT_FOUND" |
+  "PLAYER_CONNECTION_NOT_FOUND" |
+  "SESSION_ALREADY_STARTED"
+
+export type ServerErrorOpts = {
+  type?: CauseType
+  key?: CauseKey
+  message: string
+  description?: string | undefined
+}

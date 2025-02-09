@@ -271,6 +271,12 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1(prisma@5.20.0)(typescript@5.6.2)
 
+  packages/error:
+    devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+
   packages/helper:
     dependencies:
       '@repo/schema':
@@ -293,6 +299,31 @@ importers:
       '@repo/ts-config':
         specifier: workspace:*
         version: link:../ts-config
+
+  packages/server:
+    dependencies:
+      '@prisma/client':
+        specifier: ^5.20.0
+        version: 5.20.0(prisma@5.20.0)
+      '@upstash/redis':
+        specifier: ^1.34.3
+        version: 1.34.3
+    devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
+      '@types/node':
+        specifier: ^22.10.4
+        version: 22.10.4
+      prisma:
+        specifier: ^5.20.0
+        version: 5.20.0
+      prisma-json-types-generator:
+        specifier: ^3.1.1
+        version: 3.1.1(prisma@5.20.0)(typescript@5.6.2)
 
   packages/ts-config: {}
 
