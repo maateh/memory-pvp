@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@repo/ts-config": "workspace:*",
+    "@repo/schema": "workspace:*",
     "@repo/types": "workspace:*",
     "@types/node": "^22.10.4",
     "prisma": "^5.20.0",
