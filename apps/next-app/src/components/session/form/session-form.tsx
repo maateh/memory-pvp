@@ -29,8 +29,8 @@ import SessionFormFields from "./session-form-fields"
 
 // hooks
 import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
+import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
-import { useCreateWaitingRoom } from "@/hooks/handler/session/use-create-waiting-room"
 
 type SessionFormValuesCache<T = SessionFormValidation> = {
   sessionValues: T
@@ -61,8 +61,11 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
     execute: createSingleSession,
     status: createSingleSessionStatus
   } = useCreateSingleSessionAction()
+  const {
+    execute: createWaitingRoom,
+    status: createRoomActionStatus
+  } = useCreateRoomAction()
   const { execute: createOfflineSession } = useCreateOfflineSession()
-  const { execute: createWaitingRoom } = useCreateWaitingRoom()
 
   const handleSubmit = (values: SessionFormValidation) => {
     if (values.mode === "SINGLE") createSingleSession(values)
@@ -116,11 +119,12 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
           disabled={
             !clerkUser
               || createSingleSessionStatus === 'executing'
+              || createRoomActionStatus === 'executing'
               || !collectionId
               || !collection
           }
         >
-          {createSingleSessionStatus === 'executing' ? (
+          {createSingleSessionStatus === 'executing' || createRoomActionStatus === 'executing' ? (
             <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
           ) : (
             <SubmitIcon className="size-5 sm:size-6 shrink-0" />
@@ -137,16 +141,14 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
           onClick={form.handleSubmit((sessionValues) => createOfflineSession({ sessionValues, collection }))}
           disabled={
             createSingleSessionStatus === 'executing'
+              || createRoomActionStatus === 'executing'
               || type === 'COMPETITIVE'
               || mode !== 'SINGLE'
               || !collectionId
               || !collection
           }
         >
-          <WifiOff className="size-4 sm:size-5 shrink-0"
-            strokeWidth={1.5}
-          />
-
+          <WifiOff className="size-4 sm:size-5 shrink-0" strokeWidth={1.5} />
           <span>Start offline</span>
         </Button>
       </div>
