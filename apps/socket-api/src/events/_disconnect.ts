@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { JoinedRoom } from "@repo/schema/session-room"
 
 // socket
 import { io } from "@/server"
@@ -11,6 +11,7 @@ import { getSessionRoom } from "@/redis/room-commands"
 
 // config
 import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { playerConnection } from "@repo/server/redis-data-parser"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
@@ -20,43 +21,44 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     const room = await getSessionRoom(roomSlug)
 
     if (room.status === "waiting") {
+      room.owner.status = "offline"
+      room.owner.ready = false
+      room.owner.socketId = null
+
       await Promise.all([
         redis.del(connectionKey(socket.id)),
-        redis.del(playerConnectionKey(playerId)),
-        redis.json.del(roomKey(roomSlug)),
-        redis.lrem(waitingRoomsKey, 1, roomSlug)
+        redis.json.set(roomKey(roomSlug), "$", room, { xx: true }),
+        redis.hset(playerConnectionKey(playerId), playerConnection({
+          playerId,
+          roomSlug,
+          status: "offline"
+        }))
       ])
     }
 
     if (room.status === "joined" || room.status === "ready") {
-      const ownerDisconnected = room.owner.id === playerId
-      const { guest: _, ...joinedRoom } = room as JoinedRoom
-      const waitingRoom: WaitingRoom = { ...joinedRoom, status: "waiting" }
-
-      const commands: Promise<unknown>[] = [
-        redis.del(connectionKey(room.guest.socketId)),
-        redis.del(playerConnectionKey(room.guest.id))
-      ]
-
-      if (ownerDisconnected) {
-        commands.push(redis.del(connectionKey(room.owner.socketId)))
-        commands.push(redis.del(playerConnectionKey(room.owner.id)))
-        commands.push(redis.json.del(roomKey(roomSlug)))
-      } else {
-        commands.push(redis.json.set(roomKey(roomSlug), "$", waitingRoom, { xx: true }))
-        commands.push(redis.lpush(waitingRoomsKey, roomSlug))
+      const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
+      const joinedRoom: JoinedRoom = {
+        ...room as JoinedRoom,
+        status: "joined",
+        owner: { ...room.owner, ready: false },
+        guest: { ...room.guest, ready: false }
       }
+      room[currentPlayerKey].status = "offline"
+      room[currentPlayerKey].socketId = null
+      await Promise.all([
+        redis.del(connectionKey(socket.id)),
+        redis.hset(playerConnectionKey(playerId), playerConnection({ playerId, roomSlug, status: "offline" })),
+        redis.json.set(roomKey(roomSlug), "$", joinedRoom, { xx: true })
+      ])
 
-      await Promise.all(commands)
-
-      const eventKey = `room:${ownerDisconnected ? "closed" : "left"}`
-      socket.broadcast.to(roomSlug).emit(eventKey, {
-        message: `${playerId} has disconnected.`,
-        description: ownerDisconnected
-          ? "This will not affect your ranking scores."
-          : "Please wait for another player to join...",
-        data: ownerDisconnected ? null : waitingRoom
-      } satisfies SocketResponse<WaitingRoom | null>)
+      socket.broadcast.to(roomSlug).emit("room:disconnected", {
+        message: `${room[currentPlayerKey].tag} has disconnected.`,
+        description: currentPlayerKey === "owner"
+          ? "You can leave the room without losing any ranking scores."
+          : "You can kick the player out of the room if you don't want to wait any longer.",
+        data: joinedRoom
+      } satisfies SocketResponse<JoinedRoom>)
     }
 
     if (room.status === "starting" || room.status === "running") {

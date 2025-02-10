@@ -3,11 +3,11 @@ import type { WaitingRoomVariants } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "@/redis"
-import { getSocketConnectionByField } from "@/redis/connection-commands"
+import { getSocketConnection } from "@/redis/connection-commands"
 import { getSessionRoom } from "@/redis/room-commands"
 
 // config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { connectionKey, playerConnectionKey, roomKey } from "@repo/config/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -15,19 +15,19 @@ import { SocketError } from "@repo/types/socket-api-error"
 export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:close -> ", socket.id)
 
+  // FIXME: if the session is running -> room cannot be closed
+
   try {
-    const roomSlug = await getSocketConnectionByField<string>(socket.id, 'roomSlug')
+    const { playerId, roomSlug } = await getSocketConnection(socket.id)
     const room = await getSessionRoom<WaitingRoomVariants>(roomSlug)
-    
-    const commands = [
-      redis.del(connectionKey(room.owner.socketId)),
-      redis.del(playerConnectionKey(room.owner.id)),
+
+    const commands: Promise<unknown>[] = [
+      redis.del(connectionKey(socket.id)),
+      redis.del(playerConnectionKey(playerId)),
       redis.json.del(roomKey(roomSlug))
     ]
 
-    if (room.status === "waiting") {
-      commands.push(redis.lrem(waitingRoomsKey, 1, roomSlug))
-    } else {
+    if (room.status !== "waiting" && room.guest.socketId) {
       commands.push(redis.del(connectionKey(room.guest.socketId)))
       commands.push(redis.del(playerConnectionKey(room.guest.id)))
     }

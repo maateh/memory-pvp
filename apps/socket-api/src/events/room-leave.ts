@@ -15,13 +15,16 @@ import { SocketError } from "@repo/types/socket-api-error"
 export const roomLeave: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:leave -> ", socket.id)
 
+  // FIXME: if the session is running -> room cannot be left
+
   try {
     const { playerId, roomSlug } = await getSocketConnection(socket.id)
     const { guest, ...room } = await getSessionRoom<JoinedRoom>(roomSlug)
     
     const waitingRoom: WaitingRoom = {
       ...room,
-      status: "waiting"
+      status: "waiting",
+      owner: { ...room.owner, ready: false }
     }
 
     await Promise.all([
