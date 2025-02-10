@@ -31,8 +31,7 @@ import {
 } from "@repo/schema/session-validation"
 
 // helpers
-import { generateSessionSlug } from "@repo/helper/session"
-import { generateSessionCards } from "@/lib/helper/session-helper"
+import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"

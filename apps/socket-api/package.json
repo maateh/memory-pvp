@@ -16,7 +16,6 @@
     "@repo/config": "workspace:*",
     "@repo/schema": "workspace:*",
     "@repo/server": "workspace:*",
-    "@repo/helper": "workspace:*",
     "@repo/types": "workspace:*",
     "@upstash/redis": "^1.34.3",
     "express": "^4.21.2",

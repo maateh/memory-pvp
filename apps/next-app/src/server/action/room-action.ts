@@ -16,7 +16,7 @@ import { getSessionRoom } from "@repo/server/redis-commands"
 import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/session-room-validation"
 
 // utils
-import { generateSessionSlug } from "@repo/helper/session"
+import { generateSessionSlug } from "@/lib/helper/session-helper"
 
 export const createRoom = playerActionClient
   .schema(createSessionRoomValidation)
