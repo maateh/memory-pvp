@@ -5,9 +5,10 @@ import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/types/socket-api"
+import type { RoomPlayer } from "@repo/schema/player"
+import type { RoomConnectValidation } from "@repo/schema/session-room-validation"
 import type {
   JoinedRoom,
-  SessionRoomPlayer,
   WaitingRoom,
   WaitingRoomVariants
 } from "@repo/schema/session-room"
@@ -23,23 +24,26 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 type RoomState = {
   room: WaitingRoomVariants
-  currentRoomPlayer: SessionRoomPlayer
+  currentRoomPlayer: RoomPlayer
 }
 
 type RoomAction = {
+  roomConnect: () => Promise<void>
   roomLeave: () => Promise<void>
   roomClose: () => Promise<void>
   roomReady: () => Promise<void>
+  roomKick: () => Promise<void>
 }
 
 type RoomListener = {
-  roomJoined: (response: SocketResponse<JoinedRoom>) => void
+  roomConnected: (response: SocketResponse<JoinedRoom>) => void
+  roomDisconnected: (response: SocketResponse<JoinedRoom>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
-  roomReadied: (response: SocketResponse<JoinedRoom>) => void
+  roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<string>) => void
-  disconnect: () => void
+  disconnect: (reason: Socket.DisconnectReason) => void
 }
 
 export type RoomStore = RoomState & RoomAction & RoomListener
@@ -63,6 +67,31 @@ export const roomStore = ({
     : initialRoom.guest,
 
   /* Actions */
+  async roomConnect() {
+    toast.loading("Connecting to the room...", { id: "room:connect" })
+
+    try {
+      const {
+        data: room,
+        message,
+        description,
+        error
+      }: SocketResponse<WaitingRoomVariants> = await socket.connect().emitWithAck("room:connect", {
+        playerId: currentPlayerId
+      } satisfies RoomConnectValidation)
+
+      if (error || !room) {
+        throw SocketError.parser(error)
+      }
+
+      toast.success(message, { description, id: "room:connect" })
+      set({ room })
+    } catch (err) {
+      handleServerError(err as SocketError)
+      logError(err)
+    }
+  },
+
   async roomLeave() {
     toast.loading("Leaving room...", { id: "room:leave" })
 
@@ -130,11 +159,22 @@ export const roomStore = ({
     } finally { toast.dismiss("room:ready") }
   },
 
+  async roomKick() {
+    // TODO: implement kicking user
+  },
+
   /* Listeners */
-  roomJoined({ data: room, message, description, error }) {
+  roomConnected({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
 
     toast.success(message, { description })
+    set({ room })
+  },
+
+  roomDisconnected({ data: room, message, description, error }) {
+    if (error || !room) return handleServerError(error)
+
+    toast.warning(message, { description })
     set({ room })
   },
 
@@ -232,12 +272,16 @@ export const roomStore = ({
     toast.success(message, { description })
   },
 
-  disconnect() {
-    // TODO: This is a temporary route.
-    // `/game/reconnect` will be the route to handle session recovery.
-    router.replace("/game/setup")
+  disconnect(reason) {
+    if (
+      reason === "io client disconnect" ||
+      reason === "io server disconnect"
+    ) return
+
+    // TODO: implement reconnections
+    router.replace("/game/reconnect")
     toast.warning("Connection has been lost with the server.", {
-      description: "Your session has been likely cancelled, so you can continue it whenever you want."
+      description: "Your session has been likely cancelled, but you can continue it if you want."
     })
   }
 }))
