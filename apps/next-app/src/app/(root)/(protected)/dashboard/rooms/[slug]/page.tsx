@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import dynamic from "next/dynamic"
 
 // types
 import type { RoomVariants, WaitingRoomVariants } from "@repo/schema/session-room"
@@ -10,12 +11,12 @@ import { getPlayer } from "@/server/db/query/player-query"
 // config
 import { roomKey } from "@repo/config/redis-keys"
 
-// providers
-import { RoomStoreProvider } from "@/components/provider"
-
 // components
 import { Await, RedirectFallback } from "@/components/shared"
 import WaitingRoomScreen from "./waiting-room-screen"
+
+// providers
+const RoomStoreProvider = dynamic(() => import("@/components/provider/room-store-provider"), { ssr: false })
 
 type WaitingRoomPageProps = {
   params: {

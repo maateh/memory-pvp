@@ -1,10 +1,14 @@
-import type { Metadata } from "next"
+import dynamic from "next/dynamic"
 import { Josefin_Sans, Geologica } from "next/font/google"
+
+// types
+import type { Metadata } from "next"
 
 // providers
 import { ClerkProvider } from "@clerk/nextjs"
-import { SocketServiceProvider, ThemeProvider, TRPCProvider } from "@/components/provider"
+import { ThemeProvider, TRPCProvider } from "@/components/provider"
 import { Toaster } from "@/components/ui/sonner"
+const SocketServiceProvider = dynamic(() => import("@/components/provider/socket-service-provider"), { ssr: false })
 
 // uploadthing
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
