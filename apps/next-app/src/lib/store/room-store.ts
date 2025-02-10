@@ -18,7 +18,7 @@ import type { SessionCreatedValidation } from "@repo/schema/session-room-validat
 import { createMultiSession } from "@/server/action/session-action"
 
 // utils
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 import { ApiError } from "@/server/_error"
 import { handleServerError, logError } from "@/lib/util/error"
 
@@ -81,13 +81,13 @@ export const roomStore = ({
       } satisfies RoomConnectValidation)
 
       if (error || !room) {
-        throw SocketError.parser(error)
+        throw ServerError.parser(error)
       }
 
       toast.success(message, { description, id: "room:connect" })
       set({ room })
     } catch (err) {
-      handleServerError(err as SocketError)
+      handleServerError(err as ServerError)
       logError(err)
     }
   },
@@ -103,13 +103,13 @@ export const roomStore = ({
       }: SocketResponse = await socket.emitWithAck("room:leave", {})
 
       if (error) {
-        throw SocketError.parser(error)
+        throw ServerError.parser(error)
       }
 
       router.replace("/dashboard/rooms")
       toast.success(message, { description })
     } catch (err) {
-      handleServerError(err as SocketError)
+      handleServerError(err as ServerError)
       logError(err)
     } finally { toast.dismiss("room:leave") }
   },
@@ -125,13 +125,13 @@ export const roomStore = ({
       }: SocketResponse = await socket.emitWithAck("room:close", {})
 
       if (error) {
-        throw SocketError.parser(error)
+        throw ServerError.parser(error)
       }
 
       router.replace("/game/setup")
       toast.success(message, { description })
     } catch (err) {
-      handleServerError(err as SocketError)
+      handleServerError(err as ServerError)
       logError(err)
     } finally { toast.dismiss("room:close") }
   },
@@ -148,13 +148,13 @@ export const roomStore = ({
       }: SocketResponse<boolean> = await socket.emitWithAck("room:ready", {})
 
       if (error) {
-        throw SocketError.parser(error)
+        throw ServerError.parser(error)
       }
 
       const toaster = ready ? toast.success : toast.info
       toaster(message, { id: "room:ready:response", description })
     } catch (err) {
-      handleServerError(err as SocketError)
+      handleServerError(err as ServerError)
       logError(err)
     } finally { toast.dismiss("room:ready") }
   },
@@ -212,7 +212,7 @@ export const roomStore = ({
       }: SocketResponse = await socket.emitWithAck("session:starting", {})
 
       if (startingError) {
-        throw SocketError.parser(startingError)
+        throw ServerError.parser(startingError)
       }
 
       toast.loading(startingMessage, {
@@ -242,7 +242,7 @@ export const roomStore = ({
       // TODO: emit `session:starting:failed`
       // socket.emit("session:starting:failed")
 
-      handleServerError(err as SocketError | ApiError)
+      handleServerError(err as ServerError | ApiError)
       logError(err)
     } finally { toast.dismiss("session:starting") }
   },

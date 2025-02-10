@@ -11,7 +11,7 @@ import { getRoomByField } from "@repo/server/redis-commands"
 import { io } from "@/server"
 
 // utils
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 import { validate } from "@/utils/validate"
 
 export const sessionCreated: SocketEventHandler<
@@ -37,7 +37,7 @@ export const sessionCreated: SocketEventHandler<
   } catch (err) {
     io.to(input.roomSlug).emit("session:started", {
       message: "Failed to start game session.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     } satisfies SocketResponse)
   }
 }

@@ -7,7 +7,7 @@ import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
 import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:close -> ", socket.id)
@@ -46,7 +46,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
   } catch (err) {
     response({
       message: "Failed to close session room.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

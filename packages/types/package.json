@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "exports": {
-    "./socket-api": "./src/socket-api/types.ts",
-    "./socket-api-error": "./src/socket-api/error.ts"
+    "./socket-api": "./src/socket-api/types.ts"
   },
   "devDependencies": {
     "@repo/ts-config": "workspace:*",
-    "@repo/schema": "workspace:*"
+    "@repo/schema": "workspace:*",
+    "@repo/server": "workspace:*"
   }
 }

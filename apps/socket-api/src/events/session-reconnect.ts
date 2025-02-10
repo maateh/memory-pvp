@@ -12,7 +12,7 @@ import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-
 import { sessionReconnectValidation } from "@repo/schema/session-room-validation"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 // utils
 import { validate } from "@/utils/validate"
@@ -62,7 +62,7 @@ export const sessionReconnect: SocketEventHandler<
   } catch (err) {
     response({
       message: "Failed to reconnect to this session.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

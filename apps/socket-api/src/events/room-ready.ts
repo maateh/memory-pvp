@@ -10,7 +10,7 @@ import { roomKey } from "@repo/server/redis-keys"
 import { io } from "@/server"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 export const roomReady: SocketEventHandler<
   unknown,
@@ -23,7 +23,8 @@ export const roomReady: SocketEventHandler<
     const room = await getRoom<JoinedRoom>(roomSlug)
 
     if (room.status === "ready" || room.status === "starting") {
-      SocketError.throw({
+      ServerError.throw({
+        type: "SOCKET_API",
         key: "SESSION_ALREADY_STARTED",
         message: "Session has already started.",
         description: "You cannot change your status after the session has already started."
@@ -72,7 +73,7 @@ export const roomReady: SocketEventHandler<
     console.error(err)
     response({
       message: "Failed to update your status.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

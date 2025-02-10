@@ -12,7 +12,7 @@ import { playerConnection, socketConnection } from "@repo/server/redis-data-pars
 import { roomConnectValidation } from "@repo/schema/session-room-validation"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 // utils
 import { validate } from "@/utils/validate"
@@ -67,7 +67,7 @@ export const roomConnect: SocketEventHandler<
     console.error(err)
     response({
       message: "Session room not found.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

@@ -3,19 +3,18 @@ import { DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action"
 
 // types
 import type { UploadThingError } from "uploadthing/server"
+import type { ServerError } from "@repo/server/error"
 import type { ApiError } from "@/server/_error"
-import type { SocketError } from "@repo/types/socket-api-error"
 
 export function handleServerError(
-  error: ApiError | SocketError | UploadThingError<any> | undefined | null,
+  error: ServerError | ApiError | UploadThingError<any> | undefined | null,
   fallbackDescription?: string
 ) {
-  if (error?.name === 'ApiError') {
+  if (error?.name === "ServerError") {
     toast.error(error.message, { description: error.description })
-    return
   }
 
-  if (error?.name === "SocketError") {
+  if (error?.name === 'ApiError') {
     toast.error(error.message, { description: error.description })
     return
   }

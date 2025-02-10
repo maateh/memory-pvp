@@ -1,11 +1,11 @@
 import type { RoomPlayerStatus } from "@repo/schema/player"
-import type { SocketError } from "./error"
+import type { ServerError } from "@repo/server/error"
 
 export type SocketResponse<T = unknown> = {
   message: string
   description?: string
   data?: T | null
-  error?: SocketError | null
+  error?: ServerError | null
 }
 
 export type SocketConnection = {

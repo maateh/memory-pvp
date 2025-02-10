@@ -7,7 +7,7 @@ import { getSocketConnectionByField } from "@repo/server/redis-commands"
 import { roomKey } from "@repo/server/redis-keys"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 export const sessionStarting: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - session:starting -> ", socket.id)
@@ -27,7 +27,7 @@ export const sessionStarting: SocketEventHandler = (socket) => async (_, respons
   } catch (err) {
     response({
       message: "Failed to update room status.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

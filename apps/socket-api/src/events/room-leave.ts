@@ -7,7 +7,7 @@ import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
 import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
-import { SocketError } from "@repo/types/socket-api-error"
+import { ServerError } from "@repo/server/error"
 
 export const roomLeave: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:leave -> ", socket.id)
@@ -45,7 +45,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
   } catch (err) {
     response({
       message: "Failed to leave the room.",
-      error: SocketError.parser(err)
+      error: ServerError.parser(err)
     })
   }
 }

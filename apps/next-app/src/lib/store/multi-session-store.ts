@@ -7,8 +7,7 @@ import type { SocketResponse } from "@repo/types/socket-api"
 import type { ClientGameSession } from "@repo/schema/session"
 
 // utils
-import { SocketError } from "@repo/types/socket-api-error"
-import { ApiError } from "@/server/_error"
+import { ServerError } from "@repo/server/error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 type MultiSessionState = {
