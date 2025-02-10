@@ -1,14 +1,16 @@
 import { z } from "zod"
 
+// db
+import { GameModeSchema, GameStatusSchema, GameTypeSchema, TableSizeSchema } from "@repo/server/db-schema-types"
+
 // validations
 import { clientPlayerSchema } from "./player-schema"
 
 /* Base schemas */
 export const sessionSettings = z.object({
-  // FIXME: using prisma schemas directly -> first add zod generator
-  type: z.enum(["CASUAL", "COMPETITIVE"]),
-  mode: z.enum(["SINGLE", "PVP", "COOP"]),
-  tableSize: z.enum(["SMALL", "MEDIUM", "LARGE"]),
+  type: GameTypeSchema,
+  mode: GameModeSchema,
+  tableSize: TableSizeSchema,
   collectionId: z.string()
 })
 
@@ -39,7 +41,7 @@ export const clientSessionCardSchema = sessionCardSchema.extend({
 export const clientSessionSchema = z.object({
   slug: z.string(),
   collectionId: z.string(),
-  status: z.enum(["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]),
+  status: GameStatusSchema,
   type: sessionSettings.shape.type,
   mode: sessionSettings.shape.mode,
   tableSize: sessionSettings.shape.tableSize,

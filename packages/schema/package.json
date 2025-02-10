@@ -9,6 +9,9 @@
     "./session-validation": "./src/validation/session-validation.ts",
     "./session-room-validation": "./src/validation/session-room-validation.ts"
   },
+  "dependencies": {
+    "@repo/server": "workspace:*"
+  },
   "devDependencies": {
     "@repo/ts-config": "workspace:*"
   }

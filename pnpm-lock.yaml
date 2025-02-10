@@ -134,7 +134,7 @@ importers:
         version: 14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-safe-action:
         specifier: ^7.9.9
-        version: 7.9.9(next@14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.23.8)
+        version: 7.9.9(next@14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -238,6 +238,10 @@ importers:
         version: 4.19.2
 
   packages/schema:
+    dependencies:
+      '@repo/server':
+        specifier: workspace:*
+        version: link:../server
     devDependencies:
       '@repo/ts-config':
         specifier: workspace:*
@@ -251,6 +255,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.34.3
         version: 1.34.3
+      zod-prisma-types:
+        specifier: ^3.2.4
+        version: 3.2.4(@prisma/client@5.20.0(prisma@5.20.0))(prisma@5.20.0)
     devDependencies:
       '@repo/schema':
         specifier: workspace:*
@@ -658,6 +665,9 @@ packages:
   '@prisma/debug@5.20.0':
     resolution: {integrity: sha512-oCx79MJ4HSujokA8S1g0xgZUGybD4SyIOydoHMngFYiwEwYDQ5tBQkK5XoEHuwOYDKUOKRn/J0MEymckc4IgsQ==}
 
+  '@prisma/debug@6.3.1':
+    resolution: {integrity: sha512-RrEBkd+HLZx+ydfmYT0jUj7wjLiS95wfTOSQ+8FQbvb6vHh5AeKfEPt/XUQ5+Buljj8hltEfOslEW57/wQIVeA==}
+
   '@prisma/engines-version@5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284':
     resolution: {integrity: sha512-Lg8AS5lpi0auZe2Mn4gjuCg081UZf88k3cn0RCwHgR+6cyHHpttPZBElJTHf83ZGsRNAmVCZCfUGA57WB4u4JA==}
 
@@ -669,6 +679,9 @@ packages:
 
   '@prisma/generator-helper@5.20.0':
     resolution: {integrity: sha512-37Aibw0wVRQgQVtCdNAIN71YFnSQfvetok7vd95KKkYkQRbEx94gsvPDpyN9Mw7p3IwA3nFgPfLc3jBRztUkKw==}
+
+  '@prisma/generator-helper@6.3.1':
+    resolution: {integrity: sha512-hX2fxjMksyAWAS0OcDi7GVmRUqsZ35ZY3Zla1EfO+uDYW6BY+om8kuKHyKkIvvRcUlTmL+xccl+nJwNToqP/aA==}
 
   '@prisma/get-platform@5.20.0':
     resolution: {integrity: sha512-8/+CehTZZNzJlvuryRgc77hZCWrUDYd/PmlZ7p2yNXtmf2Una4BWnTbak3us6WVdqoz5wmptk6IhsXdG2v5fmA==}
@@ -1665,6 +1678,9 @@ packages:
       react: ^18.0.0
       react-dom: ^18.0.0
 
+  code-block-writer@12.0.0:
+    resolution: {integrity: sha512-q4dMFMlXtKR3XNBHyMHt/3pwYNA69EDk00lloMOaaUMKPUXBw6lpXtbu3MMVG6/uOihGnRDOlkyqsONEUj60+w==}
+
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -2446,6 +2462,9 @@ packages:
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -3496,8 +3515,18 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod-prisma-types@3.2.4:
+    resolution: {integrity: sha512-S4spVBMJAmecLv+aLyRhXK26qW9nWwcsOf1H1fRcEmiI8DPbftZ99u0fhqHlymuTpmMcUpuKxcNNOIqNY0ScSQ==}
+    hasBin: true
+    peerDependencies:
+      '@prisma/client': ^4.x.x || ^5.x.x || ^6.x.x
+      prisma: ^4.x.x || ^5.x.x || ^6.x.x
+
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
 
   zustand@4.5.5:
     resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}
@@ -3806,6 +3835,8 @@ snapshots:
 
   '@prisma/debug@5.20.0': {}
 
+  '@prisma/debug@6.3.1': {}
+
   '@prisma/engines-version@5.20.0-12.06fc58a368dc7be9fbbbe894adf8d445d208c284': {}
 
   '@prisma/engines@5.20.0':
@@ -3824,6 +3855,10 @@ snapshots:
   '@prisma/generator-helper@5.20.0':
     dependencies:
       '@prisma/debug': 5.20.0
+
+  '@prisma/generator-helper@6.3.1':
+    dependencies:
+      '@prisma/debug': 6.3.1
 
   '@prisma/get-platform@5.20.0':
     dependencies:
@@ -4854,6 +4889,8 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
+  code-block-writer@12.0.0: {}
+
   color-convert@2.0.1:
     dependencies:
       color-name: 1.1.4
@@ -5852,6 +5889,8 @@ snapshots:
 
   lodash.merge@4.6.2: {}
 
+  lodash@4.17.21: {}
+
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -5942,13 +5981,13 @@ snapshots:
 
   negotiator@0.6.3: {}
 
-  next-safe-action@7.9.9(next@14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.23.8):
+  next-safe-action@7.9.9(next@14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.1):
     dependencies:
       next: 14.2.21(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
-      zod: 3.23.8
+      zod: 3.24.1
 
   next-themes@0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -6925,7 +6964,18 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
+  zod-prisma-types@3.2.4(@prisma/client@5.20.0(prisma@5.20.0))(prisma@5.20.0):
+    dependencies:
+      '@prisma/client': 5.20.0(prisma@5.20.0)
+      '@prisma/generator-helper': 6.3.1
+      code-block-writer: 12.0.0
+      lodash: 4.17.21
+      prisma: 5.20.0
+      zod: 3.24.1
+
   zod@3.23.8: {}
+
+  zod@3.24.1: {}
 
   zustand@4.5.5(@types/react@18.3.4)(react@18.3.1):
     dependencies:

@@ -8,6 +8,14 @@ generator json {
   namespace = "PrismaJson"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  createInputTypes = false
+  addInputTypeValidation = false
+  addIncludeType = false
+  addSelectType = false
+}
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")

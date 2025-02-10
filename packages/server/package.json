@@ -6,6 +6,7 @@
   "exports": {
     "./db": "./src/db/db.ts",
     "./db-types": "./src/db/types/index.d.ts",
+    "./db-schema-types": "./prisma/generated/zod/index.ts",
     "./error": "./src/error/error.ts",
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",
@@ -19,7 +20,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
-    "@upstash/redis": "^1.34.3"
+    "@upstash/redis": "^1.34.3",
+    "zod-prisma-types": "^3.2.4"
   },
   "devDependencies": {
     "@repo/ts-config": "workspace:*",
