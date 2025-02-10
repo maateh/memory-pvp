@@ -1,4 +1,4 @@
-export type CauseType =
+export type ThrownBy =
   "UNKNOWN" |
   "ACTION" |
   "API" |
@@ -25,7 +25,7 @@ export type CauseKey =
   "SESSION_ALREADY_STARTED"
 
 export type ServerErrorOpts = {
-  type?: CauseType
+  thrownBy?: ThrownBy
   key?: CauseKey
   message: string
   description?: string | undefined

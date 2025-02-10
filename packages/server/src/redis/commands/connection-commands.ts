@@ -13,7 +13,7 @@ export async function getSocketConnection(socketId: string) {
   if (connection) return connection
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "SOCKET_CONNECTION_NOT_FOUND",
     message: "Socket connection data not found.",
     description: "Something went wrong because your connection data has been lost. Your current session will be closed without point losses."
@@ -28,7 +28,7 @@ export async function getSocketConnectionByField<F extends keyof SocketConnectio
   if (fieldValue) return fieldValue
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "SOCKET_CONNECTION_NOT_FOUND",
     message: "Socket connection data not found.",
     description: "Something went wrong because your connection data has been lost. Your current session will be closed without point losses."
@@ -40,7 +40,7 @@ export async function getPlayerConnection(playerId: string) {
   if (connection) return connection
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "PLAYER_CONNECTION_NOT_FOUND",
     message: "Player connection data not found.",
     description: "Something went wrong because your connection data has been lost. Your current session will be closed without point losses."
@@ -55,7 +55,7 @@ export async function getPlayerConnectionByField<F extends keyof PlayerConnectio
   if (fieldValue) return fieldValue
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "PLAYER_CONNECTION_NOT_FOUND",
     message: "Player connection data not found.",
     description: "Something went wrong because your connection data has been lost. Your current session will be closed without point losses."

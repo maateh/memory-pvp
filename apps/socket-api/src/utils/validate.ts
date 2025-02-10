@@ -8,7 +8,7 @@ export const validate = <T>(schema: ZodSchema<T>, input: T) => {
   const { success, data } = schema.safeParse(input)
   if (!success) {
     ServerError.throw({
-      type: "SOCKET_API",
+      thrownBy: "SOCKET_API",
       key: "VALIDATION_FAILED",
       message: "Validation failed.",
       description: "The session data sent to the server looks corrupted."

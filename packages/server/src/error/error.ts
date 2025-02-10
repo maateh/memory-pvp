@@ -1,8 +1,8 @@
 // types
-import type { CauseKey, CauseType, ServerErrorOpts } from "./types"
+import type { CauseKey, ThrownBy, ServerErrorOpts } from "./types"
 
 export class ServerError {
-  public readonly type: CauseType
+  public readonly thrownBy: ThrownBy
   public readonly key: CauseKey
   public readonly message: string
   public readonly description?: string | undefined
@@ -11,7 +11,7 @@ export class ServerError {
   public readonly name: 'ServerError'
 
   constructor(opts: ServerErrorOpts) {
-    this.type = opts.type || 'UNKNOWN'
+    this.thrownBy = opts.thrownBy || 'UNKNOWN'
     this.key = opts.key || 'UNKNOWN'
     this.message = opts.message
     this.description = opts.description

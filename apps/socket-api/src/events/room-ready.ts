@@ -24,7 +24,7 @@ export const roomReady: SocketEventHandler<
 
     if (room.status === "ready" || room.status === "starting") {
       ServerError.throw({
-        type: "SOCKET_API",
+        thrownBy: "SOCKET_API",
         key: "SESSION_ALREADY_STARTED",
         message: "Session has already started.",
         description: "You cannot change your status after the session has already started."

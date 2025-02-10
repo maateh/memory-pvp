@@ -41,7 +41,7 @@ export async function getRoom<R extends RoomVariants = RoomVariants>(
   if (room) return room
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "ROOM_NOT_FOUND",
     message: "Session room not found.",
     description: "Sorry, but this room has been closed."
@@ -63,7 +63,7 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
   if (fieldValue) return fieldValue
 
   ServerError.throw({
-    type: "REDIS",
+    thrownBy: "REDIS",
     key: "ROOM_NOT_FOUND",
     message: "Session room not found.",
     description: "Sorry, but this room has been closed."
