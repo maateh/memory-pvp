@@ -1,5 +1,5 @@
 // types
-import type { GameStatus } from "@repo/db"
+import type { GameStatus } from "@repo/server/db"
 import type { LucideProps } from "lucide-react"
 
 // utils

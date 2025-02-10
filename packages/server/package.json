@@ -4,8 +4,8 @@
   "license": "MIT",
   "private": true,
   "exports": {
-    "./db": "./src/database/db.ts",
-    "./db-types": "./src/database/types/index.d.ts",
+    "./db": "./src/db/db.ts",
+    "./db-types": "./src/db/types/index.d.ts",
     "./error": "./src/error/error.ts",
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",

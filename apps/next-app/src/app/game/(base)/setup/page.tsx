@@ -1,5 +1,5 @@
 // prisma
-import type { GameMode, GameType, TableSize } from "@repo/db"
+import type { GameMode, GameType, TableSize } from "@repo/server/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // server

@@ -1,5 +1,5 @@
 // types
-import type { Prisma } from "@repo/db"
+import type { Prisma } from "@repo/server/db"
 import type { ClientPlayer } from "@repo/schema/player"
 import type { ClientGameSession, UnsignedClientGameSession } from "@repo/schema/session"
 import type { SessionFilterQuery } from "@/lib/schema/query/session-query"

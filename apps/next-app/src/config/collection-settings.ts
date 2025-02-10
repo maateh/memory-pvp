@@ -1,5 +1,5 @@
 // types
-import type { TableSize } from "@repo/db"
+import type { TableSize } from "@repo/server/db"
 import type { FileRouterInputKey } from "@uploadthing/shared"
 import type { CardCollectionWithCardsWithUser } from "@/lib/types/prisma"
 import type { UploadRouter } from "@/server/uploadthing/core"
