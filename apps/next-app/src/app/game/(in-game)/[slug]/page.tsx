@@ -3,11 +3,9 @@ import { Suspense } from "react"
 // types
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 
-// server
-import { redis } from "@/server/redis"
-
-// config
-import { roomKey } from "@repo/config/redis-keys"
+// redis
+import { redis } from "@repo/server/redis"
+import { roomKey } from "@repo/server/redis-keys"
 
 // utils
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"

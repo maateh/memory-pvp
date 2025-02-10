@@ -2,7 +2,7 @@
 import { getPlayer } from "@/server/db/query/player-query"
 
 // redis
-import { getWaitingRooms } from "@/server/redis/room-commands"
+import { getWaitingRooms } from "@repo/server/redis-commands"
 
 // components
 import { WaitingRoomListing } from "@/components/room/listing"

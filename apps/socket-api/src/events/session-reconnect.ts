@@ -4,12 +4,9 @@ import type { SessionRoom } from "@repo/schema/session-room"
 import type { SessionReconnectValidation } from "@repo/schema/session-room-validation"
 
 // redis
-import { redis } from "@/redis"
-import { getSessionRoom } from "@/redis/room-commands"
-import { getPlayerConnection } from "@/redis/connection-commands"
-
-// config
-import { connectionKey, playerConnectionKey, roomKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getPlayerConnection, getRoom } from "@repo/server/redis-commands"
+import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // schema
 import { sessionReconnectValidation } from "@repo/schema/session-room-validation"
@@ -29,7 +26,7 @@ export const sessionReconnect: SocketEventHandler<
   try {
     const { playerId } = validate(sessionReconnectValidation, input)
     const prevConnection = await getPlayerConnection(playerId)
-    const room = await getSessionRoom<SessionRoom>(prevConnection.roomSlug)
+    const room = await getRoom<SessionRoom>(prevConnection.roomSlug)
 
     if (room.owner.id === playerId) {
       room.owner.socketId = socket.id

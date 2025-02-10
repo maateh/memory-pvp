@@ -1,14 +1,11 @@
 // types
-import type { JoinedRoom, RoomVariants, WaitingRoomVariants } from "@repo/schema/session-room"
+import type { JoinedRoom, WaitingRoomVariants } from "@repo/schema/session-room"
 import type { RoomConnectValidation } from "@repo/schema/session-room-validation"
 
 // redis
-import { redis } from "@/redis"
-import { getPlayerConnectionByField } from "@/redis/connection-commands"
-import { getSessionRoom } from "@/redis/room-commands"
-
-// config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getPlayerConnectionByField, getRoom } from "@repo/server/redis-commands"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 import { playerConnection, socketConnection } from "@repo/server/redis-data-parser"
 
 // schema
@@ -28,8 +25,8 @@ export const roomConnect: SocketEventHandler<
 
   try {
     const { playerId } = validate(roomConnectValidation, input)
-    const roomSlug = await getPlayerConnectionByField<string>(playerId, "roomSlug")
-    const room = await getSessionRoom<RoomVariants>(roomSlug)
+    const roomSlug = await getPlayerConnectionByField(playerId, "roomSlug")
+    const room = await getRoom(roomSlug)
     
     const connection = socketConnection(socket.id, playerId, roomSlug)
     

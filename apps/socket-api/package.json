@@ -13,7 +13,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/config": "workspace:*",
     "@repo/schema": "workspace:*",
     "@repo/server": "workspace:*",
     "@repo/types": "workspace:*",

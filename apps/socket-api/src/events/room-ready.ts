@@ -2,12 +2,9 @@
 import type { JoinedRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@/redis"
-import { getSocketConnection } from "@/redis/connection-commands"
-import { getSessionRoom } from "@/redis/room-commands"
-
-// config
-import { roomKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
+import { roomKey } from "@repo/server/redis-keys"
 
 // server
 import { io } from "@/server"
@@ -23,7 +20,7 @@ export const roomReady: SocketEventHandler<
 
   try {
     const { roomSlug, playerId } = await getSocketConnection(socket.id)
-    const room = await getSessionRoom<JoinedRoom>(roomSlug)
+    const room = await getRoom<JoinedRoom>(roomSlug)
 
     if (room.status === "ready" || room.status === "starting") {
       SocketError.throw({

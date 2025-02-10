@@ -1,12 +1,12 @@
 // types
 import type { ClientGameSession } from "@repo/schema/session"
 
-// server
-import { redis } from "@/server/redis"
-import { db } from "@/server/db"
+// redis
+import { redis } from "@repo/server/redis"
+import { sessionKey } from "@repo/server/redis-keys"
 
-// config
-import { sessionKey } from "@repo/config/redis-keys"
+// db
+import { db } from "@/server/db"
 
 const ROUTE_PREFIX = '[API | GET - /cron/save-sessions]'
 

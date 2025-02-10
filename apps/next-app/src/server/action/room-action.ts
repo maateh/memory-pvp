@@ -8,9 +8,9 @@ import { ApiError } from "@/server/_error"
 import { playerActionClient } from "@/server/action"
 
 // config
+import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 import { playerConnection } from "@repo/server/redis-data-parser"
-import { getSessionRoom } from "@repo/server/redis-commands"
 
 // schemas
 import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/session-room-validation"
@@ -58,7 +58,7 @@ export const joinRoom = playerActionClient
     // TODO: remove guest from validation
     const { guest:_, roomSlug } = parsedInput
 
-    const room = await getSessionRoom<WaitingRoom>(roomSlug)
+    const room = await getRoom<WaitingRoom>(roomSlug)
     const joinedRoom: JoinedRoom = {
       ...room,
       status: "joined",

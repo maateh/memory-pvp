@@ -2,12 +2,9 @@
 import type { WaitingRoomVariants } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@/redis"
-import { getSocketConnection } from "@/redis/connection-commands"
-import { getSessionRoom } from "@/redis/room-commands"
-
-// config
-import { connectionKey, playerConnectionKey, roomKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
+import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -19,7 +16,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
 
   try {
     const { playerId, roomSlug } = await getSocketConnection(socket.id)
-    const room = await getSessionRoom<WaitingRoomVariants>(roomSlug)
+    const room = await getRoom<WaitingRoomVariants>(roomSlug)
 
     const commands: Promise<unknown>[] = [
       redis.del(connectionKey(socket.id)),

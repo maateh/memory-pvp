@@ -20,11 +20,11 @@ export async function getSocketConnection(socketId: string) {
   })
 }
 
-export async function getSocketConnectionByField<F extends SocketConnection[keyof SocketConnection]>(
+export async function getSocketConnectionByField<F extends keyof SocketConnection = keyof SocketConnection>(
   socketId: string,
-  field: keyof SocketConnection
+  field: F
 ) {
-  const fieldValue = await redis.hget<F>(connectionKey(socketId), field)
+  const fieldValue = await redis.hget<SocketConnection[F]>(connectionKey(socketId), field)
   if (fieldValue) return fieldValue
 
   ServerError.throw({
@@ -47,11 +47,11 @@ export async function getPlayerConnection(playerId: string) {
   })
 }
 
-export async function getPlayerConnectionByField<F extends PlayerConnection[keyof PlayerConnection]>(
+export async function getPlayerConnectionByField<F extends keyof PlayerConnection = keyof PlayerConnection>(
   playerId: string,
-  field: keyof PlayerConnection
+  field: F
 ) {
-  const fieldValue = await redis.hget<F>(playerConnectionKey(playerId), field)
+  const fieldValue = await redis.hget<PlayerConnection[F]>(playerConnectionKey(playerId), field)
   if (fieldValue) return fieldValue
 
   ServerError.throw({

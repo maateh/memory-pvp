@@ -1,12 +1,11 @@
 // types
-import type { JoinedRoom } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 // schemas
 import { sessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 // redis
-import { getSessionRoomByField } from "@/redis/room-commands"
+import { getRoomByField } from "@repo/server/redis-commands"
 
 // socket
 import { io } from "@/server"
@@ -26,7 +25,7 @@ export const sessionCreated: SocketEventHandler<
       type,
       mode,
       tableSize
-    } = await getSessionRoomByField<JoinedRoom, "settings">(roomSlug, "settings")
+    } = await getRoomByField(roomSlug, "settings")
 
     io.to(roomSlug).emit("session:started", {
       message: "The game session has started!",

@@ -5,12 +5,9 @@ import type { JoinedRoom } from "@repo/schema/session-room"
 import { io } from "@/server"
 
 // redis
-import { redis } from "@/redis"
-import { getSocketConnection } from "@/redis/connection-commands"
-import { getSessionRoom } from "@/redis/room-commands"
-
-// config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
+import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 import { playerConnection } from "@repo/server/redis-data-parser"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
@@ -18,7 +15,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
   try {
     const { roomSlug, playerId } = await getSocketConnection(socket.id)
-    const room = await getSessionRoom(roomSlug)
+    const room = await getRoom(roomSlug)
 
     if (room.status === "waiting") {
       room.owner.status = "offline"

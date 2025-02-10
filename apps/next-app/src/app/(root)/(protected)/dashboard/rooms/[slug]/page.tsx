@@ -4,12 +4,12 @@ import dynamic from "next/dynamic"
 // types
 import type { RoomVariants, WaitingRoomVariants } from "@repo/schema/session-room"
 
-// server
-import { redis } from "@/server/redis"
-import { getPlayer } from "@/server/db/query/player-query"
+// redis
+import { redis } from "@repo/server/redis"
+import { roomKey } from "@repo/server/redis-keys"
 
-// config
-import { roomKey } from "@repo/config/redis-keys"
+// db
+import { getPlayer } from "@/server/db/query/player-query"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"

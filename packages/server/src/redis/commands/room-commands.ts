@@ -1,16 +1,42 @@
 // types
-import type { SessionRoom, RoomVariants } from "@repo/schema/session-room"
+import type { RoomVariants, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
 import { redis } from "../redis"
-import { roomKey } from "../keys"
+import { roomKey, waitingRoomsKey } from "../keys"
 
 // utils
 import { ServerError } from "../../error/error"
 
-export async function getSessionRoom<R extends RoomVariants = SessionRoom>(
+/**
+ * TODO: write doc
+ * 
+ * @returns 
+ */
+export async function getWaitingRooms(): Promise<WaitingRoom[]> {
+  // TODO: add pagination support
+  const roomSlugs = await redis.lrange(waitingRoomsKey, 0, 10)  
+  if (roomSlugs.length === 0) return []
+
+  const roomKeys = roomSlugs.map((slug) => roomKey(slug))
+
+  /*
+   * Note: I don't know why, but `json.mget` gives back every data
+   * inside a nested array, so I have to do a `flatMap` on it.
+   */
+  const rooms = await redis.json.mget<WaitingRoom[][]>(roomKeys, "$")
+  return rooms.flatMap((room) => room)
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param roomSlug 
+ * @returns 
+ */
+export async function getRoom<R extends RoomVariants = RoomVariants>(
   roomSlug: string
-) {
+): Promise<R> {
   const room = await redis.json.get<R>(roomKey(roomSlug))
   if (room) return room
 
@@ -22,12 +48,19 @@ export async function getSessionRoom<R extends RoomVariants = SessionRoom>(
   })
 }
 
-export async function getSessionRoomByField<R extends RoomVariants, F extends keyof R>(
+/**
+ * TODO: write doc
+ * 
+ * @param roomSlug 
+ * @param field 
+ * @returns 
+ */
+export async function getRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
   roomSlug: string,
   field: F
-) {
+): Promise<R[F]> {
   const fieldValue = await redis.json.get<R[F]>(roomKey(roomSlug), `$.${field as string}`)
-  if (fieldValue) return fieldValue as R[F]
+  if (fieldValue) return fieldValue
 
   ServerError.throw({
     type: "REDIS",

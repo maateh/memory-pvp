@@ -5,8 +5,11 @@ import { redirect, RedirectType } from "next/navigation"
 // types
 import type { ClientGameSession } from "@repo/schema/session"
 
-// server
-import { redis } from "@/server/redis"
+// redis
+import { redis } from "@repo/server/redis"
+import { roomKey, sessionKey } from "@repo/server/redis-keys"
+
+// db
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
@@ -14,8 +17,7 @@ import { ApiError } from "@/server/_error"
 import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
-import { roomKey, sessionKey } from "@repo/config/redis-keys"
-import { SESSION_STORE_TTL } from "@/config/redis-settings"
+import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
 

@@ -2,12 +2,9 @@
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
 // redis
-import { redis } from "@/redis"
-import { getSocketConnection } from "@/redis/connection-commands"
-import { getSessionRoom } from "@/redis/room-commands"
-
-// config
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/config/redis-keys"
+import { redis } from "@repo/server/redis"
+import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
+import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
 import { SocketError } from "@repo/types/socket-api-error"
@@ -19,7 +16,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
 
   try {
     const { playerId, roomSlug } = await getSocketConnection(socket.id)
-    const { guest, ...room } = await getSessionRoom<JoinedRoom>(roomSlug)
+    const { guest, ...room } = await getRoom<JoinedRoom>(roomSlug)
     
     const waitingRoom: WaitingRoom = {
       ...room,
