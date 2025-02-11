@@ -4,7 +4,7 @@ import { toast } from "sonner"
 // types
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
-import type { SocketResponse } from "@repo/types/socket-api"
+import type { SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/player"
 import type { RoomConnectValidation } from "@repo/schema/session-room-validation"
 import type {

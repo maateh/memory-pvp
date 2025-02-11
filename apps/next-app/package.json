@@ -30,7 +30,6 @@
     "@repo/db": "workspace:*",
     "@repo/schema": "workspace:*",
     "@repo/server": "workspace:*",
-    "@repo/types": "workspace:*",
     "@repo/ts-config": "workspace:*",
     "@tanstack/react-query": "^5.52.3",
     "@tanstack/react-table": "^8.20.5",

@@ -1,5 +1,4 @@
 // types
-import type { SocketConnection } from "@repo/types/socket-api"
 import type { SessionRoom } from "@repo/schema/session-room"
 import type { SessionReconnectValidation } from "@repo/schema/session-room-validation"
 
@@ -39,17 +38,18 @@ export const sessionReconnect: SocketEventHandler<
     // TODO: add "cancelled" option to room status
     // room.status = room.owner.ready && room.guest.ready ? "running" : "cancelled"
 
-    const connection: SocketConnection = {
-      ...prevConnection,
-      socketId: socket.id
-    }
+    // FIXME: implement session reconnection
+    // const connection: SocketConnection = {
+    //   ...prevConnection,
+    //   socketId: socket.id
+    // }
 
-    await Promise.all([
-      redis.del(connectionKey(prevConnection.socketId)),
-      redis.hset(connectionKey(socket.id), connection),
-      redis.hset(playerConnectionKey(playerId), connection),
-      redis.json.set(roomKey(room.slug), "$", room, { xx: true })
-    ])
+    // await Promise.all([
+    //   redis.del(connectionKey(prevConnection.socketId)),
+    //   redis.hset(connectionKey(socket.id), connection),
+    //   redis.hset(playerConnectionKey(playerId), connection),
+    //   redis.json.set(roomKey(room.slug), "$", room, { xx: true })
+    // ])
 
     socket.join(room.slug)
     // TODO: notify joined player -> `socket.broadcast`

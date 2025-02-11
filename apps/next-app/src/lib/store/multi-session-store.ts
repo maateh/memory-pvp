@@ -3,7 +3,7 @@ import { toast } from "sonner"
 
 // types
 import type { Socket } from "socket.io-client"
-import type { SocketResponse } from "@repo/types/socket-api"
+import type { SocketResponse } from "@repo/server/socket-types"
 import type { ClientGameSession } from "@repo/schema/session"
 
 // utils

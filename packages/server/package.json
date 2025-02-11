@@ -9,7 +9,8 @@
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",
     "./redis-keys": "./src/redis/keys.ts",
-    "./redis-data-parser": "./src/redis/data-parser.ts"
+    "./redis-data-parser": "./src/redis/data-parser.ts",
+    "./socket-types": "./src/types/socket.ts"
   },
   "dependencies": {
     "@upstash/redis": "^1.34.3"
@@ -17,7 +18,6 @@
   "devDependencies": {
     "@repo/schema": "workspace:*",
     "@repo/ts-config": "workspace:*",
-    "@repo/types": "workspace:*",
     "@types/node": "^22.10.4"
   }
 }

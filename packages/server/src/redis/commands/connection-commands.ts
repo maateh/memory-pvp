@@ -1,5 +1,5 @@
 // types
-import type { PlayerConnection, SocketConnection } from "@repo/types/socket-api"
+import type { PlayerConnection, SocketConnection } from "@repo/server/socket-types"
 
 // redis
 import { redis } from "../redis"

@@ -1,5 +1,5 @@
 import type { RoomPlayerStatus } from "@repo/schema/player"
-import type { ServerError } from "@repo/server/error"
+import type { ServerError } from "../error/error"
 
 export type SocketResponse<T = unknown> = {
   message: string

@@ -1,5 +1,5 @@
 import type { Socket } from "socket.io"
-import type { SocketResponse as TSocketResponse } from "@repo/types/socket-api"
+import type { SocketResponse as TSocketResponse } from "@repo/server/socket-types"
 
 declare global {
   type SocketResponse<T = unknown> = TSocketResponse<T>
