@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 
 // types
-import type { MemoryCard } from "@repo/server/db"
+import type { MemoryCard } from "@repo/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
 

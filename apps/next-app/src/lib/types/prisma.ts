@@ -4,7 +4,7 @@ import type {
   MemoryCard,
   PlayerProfile,
   User
-} from "@repo/server/db"
+} from "@repo/db"
 
 /* Custom prisma schema types */
 export type GameSessionWithPlayersWithAvatarWithCollectionWithCards = GameSession & {

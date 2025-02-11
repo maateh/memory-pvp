@@ -1,0 +1,25 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "exports": {
+    ".": "./prisma/db.ts",
+    "./json": "./prisma/types/json.ts",
+    "./zod": "./prisma/generated/zod/index.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*",
+    "@types/node": "^22.10.4",
+    "prisma": "^5.20.0",
+    "prisma-json-types-generator": "^3.1.1",
+    "zod-prisma-types": "^3.2.4"
+  }
+}

@@ -4,7 +4,6 @@ generator client {
 
 generator json {
   provider = "prisma-json-types-generator"
-
   namespace = "PrismaJson"
 }
 

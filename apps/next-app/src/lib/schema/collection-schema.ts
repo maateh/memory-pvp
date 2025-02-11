@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // prisma
-import { TableSize } from "@repo/server/db"
+import { TableSize } from "@repo/db"
 
 // config
 import {

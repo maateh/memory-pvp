@@ -1,5 +1,5 @@
 // types
-import type { Prisma } from "@repo/server/db"
+import type { Prisma } from "@repo/db"
 import type { ClientGameSession, UnsignedClientGameSession } from "@repo/schema/session"
 
 /* Offline session metadata */

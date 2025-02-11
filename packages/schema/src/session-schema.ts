@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // db
-import { GameModeSchema, GameStatusSchema, GameTypeSchema, TableSizeSchema } from "@repo/server/db-schema-types"
+import { GameModeSchema, GameStatusSchema, GameTypeSchema, TableSizeSchema } from "@repo/db/zod"
 
 // validations
 import { clientPlayerSchema } from "./player-schema"

@@ -1,5 +1,5 @@
 // types
-import type { PlayerProfile } from "@repo/server/db"
+import type { PlayerProfile } from "@repo/db"
 import type { ClientGameSession } from "@repo/schema/session"
 
 // server

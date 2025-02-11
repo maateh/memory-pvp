@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/ts-config/base.json",
+  "compilerOptions": {
+    "incremental": true,
+    "composite": true,
+    "rootDir": "./",
+    "outDir": "./dist",
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}
