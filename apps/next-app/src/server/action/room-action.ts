@@ -3,14 +3,14 @@
 // types
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
 
-// actions
-import { ApiError } from "@/server/_error"
-import { playerActionClient } from "@/server/action"
-
-// config
+// redis
 import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 import { playerConnection } from "@repo/server/redis-data-parser"
+
+// server
+import { ServerError } from "@repo/server/error"
+import { playerActionClient } from "@/server/action"
 
 // schemas
 import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/session-room-validation"

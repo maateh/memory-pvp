@@ -1,12 +1,13 @@
+import { z } from "zod"
+
 // server
-import { ApiError } from "@/server/_error"
+import { ServerError } from "@repo/server/error"
 
 // trpc
 import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
-import { z } from "zod"
 import { playerFilterQuery } from "@/lib/schema/query/player-query"
 import { sessionFilterQuery } from "@/lib/schema/query/session-query"
 
@@ -23,7 +24,8 @@ export const playerProfileRouter = createTRPCRouter({
       if (!playerId) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          cause: new ApiError({
+          cause: new ServerError({
+            thrownBy: "TRPC",
             key: "PLAYER_PROFILE_NOT_FOUND",
             message: "Missing player ID.",
             description: "Player filter params must include the ID of the player."

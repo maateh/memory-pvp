@@ -1,6 +1,7 @@
 export type ThrownBy =
   "UNKNOWN" |
   "ACTION" |
+  "TRPC" |
   "API" |
   "SOCKET_API" |
   "REDIS"

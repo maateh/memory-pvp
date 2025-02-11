@@ -4,9 +4,9 @@ import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { ApiError } from "@/server/_error"
 import { db } from "@/server/db"
 import { redis } from "@repo/server/redis"
+import { ServerError } from "@repo/server/error"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
@@ -19,15 +19,16 @@ import { sessionSchemaFields } from "@/config/session-settings"
  */
 export const actionClient = createSafeActionClient({
   handleServerError(err) {
-    if (err.cause instanceof ApiError) {
+    if (err.cause instanceof ServerError) {
       return { ...err.cause }
     }
 
     return {
-      name: 'ApiError',
-      key: 'UNKNOWN',
+      name: "ServerError",
+      thrownBy: "ACTION",
+      key: "UNKNOWN",
       message: DEFAULT_SERVER_ERROR_MESSAGE
-    } satisfies ApiError
+    } satisfies ServerError
   }
 }).use(async ({ next }) => next({ ctx: { db, redis } }))
 
@@ -42,17 +43,17 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
   const { userId: clerkId } = auth()
 
   if (!clerkId) {
-    ApiError.throw({
-      key: 'CLERK_UNAUTHORIZED',
-      message: 'You are not signed in to your account.'
+    ServerError.throwInAction({
+      key: "CLERK_UNAUTHORIZED",
+      message: "You are not signed in to your account."
     })
   }
 
   const user = await ctx.db.user.findUnique({ where: { clerkId } })
 
   if (!user) {
-    ApiError.throw({
-      key: 'USER_NOT_FOUND',
+    ServerError.throwInAction({
+      key: "USER_NOT_FOUND",
       message: "No user data found in the database.",
       description: "Please try to remove your Clerk account and repeat the registration process."
     })
@@ -76,9 +77,9 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
   })
 
   if (!player) {
-    ApiError.throw({
-      key: 'PLAYER_PROFILE_NOT_FOUND',
-      message: 'Active player profile not found.'
+    ServerError.throwInAction({
+      key: "PLAYER_PROFILE_NOT_FOUND",
+      message: "Active player profile not found."
     })
   }
 
@@ -95,7 +96,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
 export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
   const activeSession = await ctx.db.gameSession.findFirst({
     where: {
-      status: 'RUNNING',
+      status: "RUNNING",
       OR: [
         { ownerId: ctx.player.id },
         { guestId: ctx.player.id }
@@ -105,9 +106,9 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
   })
 
   if (!activeSession) {
-    ApiError.throw({
-      key: 'SESSION_NOT_FOUND',
-      message: 'Game session not found.',
+    ServerError.throwInAction({
+      key: "SESSION_NOT_FOUND",
+      message: "Game session not found.",
       description: "You are currently not participating in any game session."
     })
   }

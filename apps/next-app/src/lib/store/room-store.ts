@@ -7,11 +7,7 @@ import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/player"
 import type { RoomConnectValidation } from "@repo/schema/session-room-validation"
-import type {
-  JoinedRoom,
-  WaitingRoom,
-  WaitingRoomVariants
-} from "@repo/schema/session-room"
+import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
 // server
@@ -19,7 +15,6 @@ import { createMultiSession } from "@/server/action/session-action"
 
 // utils
 import { ServerError } from "@repo/server/error"
-import { ApiError } from "@/server/_error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 type RoomState = {
@@ -227,7 +222,7 @@ export const roomStore = ({
       }) || {}
 
       if (serverError) {
-        ApiError.throw({
+        ServerError.throw({
           ...serverError,
           description: serverError.description || "Failed to initialize game session."
         })
@@ -242,7 +237,7 @@ export const roomStore = ({
       // TODO: emit `session:starting:failed`
       // socket.emit("session:starting:failed")
 
-      handleServerError(err as ServerError | ApiError)
+      handleServerError(err as ServerError)
       logError(err)
     } finally { toast.dismiss("session:starting") }
   },

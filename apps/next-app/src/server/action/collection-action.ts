@@ -2,11 +2,9 @@
 
 import { revalidatePath } from "next/cache"
 
-// actions
-import { ApiError } from "@/server/_error"
+// server
+import { ServerError } from "@repo/server/error"
 import { protectedActionClient } from "@/server/action"
-
-// uploadthing
 import { utapi } from "@/server/uploadthing"
 
 // helpers
@@ -43,14 +41,14 @@ export const createCollection = protectedActionClient
         }
       })
 
-      revalidatePath('/collections/manage')
+      revalidatePath("/collections/manage")
       return parseSchemaToClientCollection(collection)
     } catch (_err) {
       const fileKeys = utImages.map(({ utKey }) => utKey)
       await utapi.deleteFiles(fileKeys)
 
-      ApiError.throw({
-        key: 'UNKNOWN',
+      ServerError.throwInAction({
+        key: "UNKNOWN",
         message: "Failed to create card collection.",
         description: "Something unexpected happened and we cannot create the card collection. Please try again later."
       })
@@ -67,9 +65,9 @@ export const updateCollection = protectedActionClient
     })
 
     if (!hasAccess) {
-      ApiError.throw({
-        key: 'COLLECTION_ACCESS_DENIED',
-        message: 'Collection cannot be updated.',
+      ServerError.throwInAction({
+        key: "COLLECTION_ACCESS_DENIED",
+        message: "Collection cannot be updated.",
         description: "No collection found or cannot be accessed with the specified ID."
       })
     }
@@ -83,7 +81,7 @@ export const updateCollection = protectedActionClient
       data: { name, description }
     })
 
-    revalidatePath('/collections/manage')
+    revalidatePath("/collections/manage")
     return parseSchemaToClientCollection(updatedCollection)
   })
 
@@ -97,9 +95,9 @@ export const deleteCollection = protectedActionClient
     })
 
     if (!hasAccess) {
-      ApiError.throw({
-        key: 'COLLECTION_ACCESS_DENIED',
-        message: 'Collection cannot be deleted.',
+      ServerError.throwInAction({
+        key: "COLLECTION_ACCESS_DENIED",
+        message: "Collection cannot be deleted.",
         description: "No collection found or cannot be accessed with the specified ID."
       })
     }
@@ -119,8 +117,8 @@ export const deleteCollection = protectedActionClient
       revalidatePath('/collections/manage')
       return parseSchemaToClientCollection(deletedCollection)
     } catch (_err) {
-      ApiError.throw({
-        key: 'UNKNOWN',
+      ServerError.throwInAction({
+        key: "UNKNOWN",
         message: "Failed to delete card collection.",
         description: "Something unexpected happened and we cannot delete your card collection. Please try again later."
       })

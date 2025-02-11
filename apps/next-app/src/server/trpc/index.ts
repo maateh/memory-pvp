@@ -9,7 +9,7 @@ import { auth } from "@clerk/nextjs/server"
 import { initTRPC, TRPCError } from "@trpc/server"
 
 // server
-import { ApiError } from "@/server/_error"
+import { ServerError } from "@repo/server/error"
 import { db } from "@/server/db"
 import { redis } from "@repo/server/redis"
 
@@ -26,7 +26,7 @@ const t = initTRPC
     errorFormatter({ shape, error }) {
       return {
         ...shape,
-        cause: { ...error.cause as ApiError }
+        cause: { ...error.cause as ServerError }
       }
     }
   })
@@ -42,7 +42,8 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   if (!clerkId) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      cause: new ApiError({
+      cause: new ServerError({
+        thrownBy: "TRPC",
         key: "CLERK_UNAUTHORIZED",
         message: "You are not signed in to your account."
       })
@@ -54,7 +55,8 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   if (!user) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      cause: new ApiError({
+      cause: new ServerError({
+        thrownBy: "TRPC",
         key: "USER_NOT_FOUND",
         message: "No user data found in the database.",
         description: "Please try to remove your Clerk account and repeat the registration process."

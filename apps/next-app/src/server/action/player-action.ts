@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache"
 
-// actions
-import { ApiError } from "@/server/_error"
+// server
+import { ServerError } from "@repo/server/error"
 import { playerActionClient, protectedActionClient } from "@/server/action"
 
 // helpers
@@ -28,19 +28,19 @@ export const createPlayer = protectedActionClient
     })
 
     if (playerAmount > 5) {
-      ApiError.throw({
-        key: 'PLAYER_PROFILE_LIMIT',
+      ServerError.throwInAction({
+        key: "PLAYER_PROFILE_LIMIT",
         message: "Player profile limitation.",
-        description: 'Sorry, but you have reached the maximum number (5) of players you can create.'
+        description: "Sorry, but you have reached the maximum number (5) of players you can create."
       })
     }
 
     const tagAlreadyTaken = await ctx.db.playerProfile.findUnique({ where: { tag } })
     if (tagAlreadyTaken) {
-      ApiError.throw({
-        key: 'ALREADY_TAKEN',
-        message: 'Player tag is already in use.',
-        description: 'Sorry, but this player tag is already taken. Please try another one.'
+      ServerError.throwInAction({
+        key: "ALREADY_TAKEN",
+        message: "Player tag is already in use.",
+        description: "Sorry, but this player tag is already taken. Please try another one."
       })
     }
 
@@ -60,7 +60,7 @@ export const createPlayer = protectedActionClient
       }
     })
 
-    revalidatePath('/dashboard/players')
+    revalidatePath("/dashboard/players")
     return parseSchemaToClientPlayer(player)
   })
 
@@ -108,10 +108,10 @@ export const updatePlayer = playerActionClient
     })
 
     if (tagAlreadyTaken) {
-      ApiError.throw({
-        key: 'ALREADY_TAKEN',
-        message: 'Player tag is already in use.',
-        description: 'Sorry, but this player tag is already taken. Please try another one.'
+      ServerError.throwInAction({
+        key: "ALREADY_TAKEN",
+        message: "Player tag is already in use.",
+        description: "Sorry, but this player tag is already taken. Please try another one."
       })
     }
 
@@ -123,7 +123,7 @@ export const updatePlayer = playerActionClient
       data: { tag, color }
     })
 
-    revalidatePath('/dashboard/players')
+    revalidatePath("/dashboard/players")
     return parseSchemaToClientPlayer(player)
   })
 
@@ -138,9 +138,9 @@ export const deletePlayer = playerActionClient
     })
 
     if (playerIsActive) {
-      ApiError.throw({
-        key: 'ACTIVE_PLAYER_PROFILE',
-        message: 'Player profile cannot be deleted.',
+      ServerError.throwInAction({
+        key: "ACTIVE_PLAYER_PROFILE",
+        message: "Player profile cannot be deleted.",
         description: `${playerIsActive.tag} is an active player profile. Please select another player profile before deleting this one.`
       })
     }
@@ -155,6 +155,6 @@ export const deletePlayer = playerActionClient
       }
     })
     
-    revalidatePath('/dashboard/players')
+    revalidatePath("/dashboard/players")
     return parseSchemaToClientPlayer(player)
   })

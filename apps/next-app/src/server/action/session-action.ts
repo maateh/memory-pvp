@@ -9,12 +9,14 @@ import type { ClientGameSession } from "@repo/schema/session"
 import { redis } from "@repo/server/redis"
 import { roomKey, sessionKey } from "@repo/server/redis-keys"
 
-// db
+// server
+import { ServerError } from "@repo/server/error"
+import {
+  playerActionClient,
+  protectedActionClient,
+  sessionActionClient
+} from "@/server/action"
 import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
-
-// actions
-import { ApiError } from "@/server/_error"
-import { playerActionClient, protectedActionClient, sessionActionClient } from "@/server/action"
 
 // config
 import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
@@ -56,7 +58,7 @@ export const createSingleSession = playerActionClient
     /* Checks if there is any ongoing session */
     const activeSession = await ctx.db.gameSession.findFirst({
       where: {
-        status: 'RUNNING',
+        status: "RUNNING",
         OR: [
           { ownerId: ctx.player.id },
           { guestId: ctx.player.id }
@@ -66,10 +68,10 @@ export const createSingleSession = playerActionClient
 
     /* Throws a custom 'ACTIVE_SESSION' action error if active session found */
     if (activeSession && !forceStart) {
-      ApiError.throw({
-        key: 'ACTIVE_SESSION',
-        message: 'Active game session found.',
-        description: 'Would you like to continue the ongoing session or start a new one?'
+      ServerError.throwInAction({
+        key: "ACTIVE_SESSION",
+        message: "Active game session found.",
+        description: "Would you like to continue the ongoing session or start a new one?"
       })
     }
 
@@ -78,7 +80,7 @@ export const createSingleSession = playerActionClient
       await updateSessionStatus({
         session: activeSession,
         player: ctx.player,
-        action: 'abandon'
+        action: "abandon"
       })
     }
 
@@ -91,7 +93,7 @@ export const createSingleSession = playerActionClient
     })
 
     if (!collection) {
-      ApiError.throw({
+      ServerError.throwInAction({
         key: "COLLECTION_NOT_FOUND",
         message: "Sorry, but we can't find the card collection you selected.",
         description: "Please, select another card collection or try again later."
@@ -103,7 +105,7 @@ export const createSingleSession = playerActionClient
       data: {
         ...settings,
         slug: generateSessionSlug(settings),
-        status: 'RUNNING',
+        status: "RUNNING",
         flipped: [],
         cards: generateSessionCards(collection),
         stats: {
@@ -122,7 +124,7 @@ export const createSingleSession = playerActionClient
      * 
      * https://github.com/vercel/next.js/discussions/60864
      */
-    redirect('/game/single', forceStart ? RedirectType.replace : RedirectType.push)
+    redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const createMultiSession = playerActionClient
@@ -141,7 +143,7 @@ export const createMultiSession = playerActionClient
     })
 
     if (!collection) {
-      ApiError.throw({
+      ServerError.throwInAction({
         key: "COLLECTION_NOT_FOUND",
         message: "Sorry, but we can't find the card collection you selected.",
         description: "Please, select another card collection or try again later."
@@ -151,7 +153,7 @@ export const createMultiSession = playerActionClient
     const session = await ctx.db.gameSession.create({
       data: {
         ...settings,
-        status: 'RUNNING',
+        status: "RUNNING",
         flipped: [],
         cards: generateSessionCards(collection),
         stats: {
@@ -179,10 +181,10 @@ export const createMultiSession = playerActionClient
     )
 
     if (response !== "OK") {
-      ApiError.throw({
-        key: 'UNKNOWN',
-        message: 'Failed to store game session.',
-        description: 'Cache server probably not available.'
+      ServerError.throwInAction({
+        key: "UNKNOWN",
+        message: "Failed to store game session.",
+        description: "Cache server probably not available."
       })
     }
   })
@@ -196,11 +198,11 @@ export const storeSession = sessionActionClient
       { ex: SESSION_STORE_TTL }
     )
 
-    if (response !== 'OK') {
-      ApiError.throw({
-        key: 'UNKNOWN',
-        message: 'Failed to store game session.',
-        description: 'Cache server probably not available.'
+    if (response !== "OK") {
+      ServerError.throwInAction({
+        key: "UNKNOWN",
+        message: "Failed to store game session.",
+        description: "Cache server probably not available."
       })
     }
 
@@ -229,7 +231,7 @@ export const finishSession = sessionActionClient
     const { slug } = await updateSessionStatus({
       session,
       player: ctx.player,
-      action: 'finish'
+      action: "finish"
     })
 
     /*
@@ -250,10 +252,10 @@ export const abandonSession = sessionActionClient
       const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
 
       if (!validation.success) {
-        ApiError.throw({
-          key: 'UNKNOWN',
-          message: 'Something went wrong.',
-          description: 'Session data appears to be corrupted because it failed to be parsed.'
+        ServerError.throwInAction({
+          key: "UNKNOWN",
+          message: "Something went wrong.",
+          description: "Session data appears to be corrupted because it failed to be parsed."
         })
       }
 
@@ -263,7 +265,7 @@ export const abandonSession = sessionActionClient
     const { slug } = await updateSessionStatus({
       session,
       player: ctx.player,
-      action: 'abandon'
+      action: "abandon"
     })
 
     /**
@@ -288,9 +290,9 @@ export const saveOfflineSession = protectedActionClient
     })
 
     if (playerAmount === 0) {
-      ApiError.throw({
-        key: 'PLAYER_PROFILE_NOT_FOUND',
-        message: 'Player profile not found.',
+      ServerError.throwInAction({
+        key: "PLAYER_PROFILE_NOT_FOUND",
+        message: "Player profile not found.",
         description: "Select or create a new player to save your offline session."
       })
     }
@@ -312,10 +314,10 @@ export const saveOfflineSession = protectedActionClient
     const { slug } = await ctx.db.gameSession.create({
       data: {
         ...session, stats,
-        slug: generateSessionSlug({ type: 'CASUAL', mode: 'SINGLE' }, true),
-        type: 'CASUAL',
-        mode: 'SINGLE',
-        status: 'OFFLINE',
+        slug: generateSessionSlug({ type: "CASUAL", mode: "SINGLE" }, true),
+        type: "CASUAL",
+        mode: "SINGLE",
+        status: "OFFLINE",
         closedAt: new Date(),
         collection: {
           connect: { id: collectionId }

@@ -23,6 +23,12 @@ export class ServerError {
     throw new ServerError(error)
   }
 
+  static throwInAction(error: Omit<ServerErrorOpts, "thrownBy">, message?: string): never {
+    throw new Error(message, {
+      cause: new ServerError({ ...error, thrownBy: "ACTION" })
+    })
+  }
+
   static parser(error: ServerError | unknown): ServerError {
     if (error instanceof ServerError) {
       return error
