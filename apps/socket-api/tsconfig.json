@@ -3,16 +3,14 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "noEmit": true,
-    "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "references": [{ "path": "../../packages/schema" }, { "path": "../../packages/server" }],
-  "include": [
-    "**/*.ts",
-    "**/*.d.ts"
+  "references": [
+    { "path": "../../packages/schema" },
+    { "path": "../../packages/server" }
   ],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

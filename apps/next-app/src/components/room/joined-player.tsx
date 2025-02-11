@@ -1,5 +1,5 @@
 // types
-import type { SessionRoomPlayer } from "@repo/schema/session-room"
+import type { RoomPlayer } from "@repo/schema/player"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"
@@ -17,7 +17,7 @@ import { UserAvatar } from "@/components/user"
 import { StatisticBadge } from "@/components/shared"
 
 type JoinedPlayerProps = {
-  player: SessionRoomPlayer
+  player: RoomPlayer
 }
 
 const JoinedPlayer = ({ player }: JoinedPlayerProps) => {

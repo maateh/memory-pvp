@@ -6,7 +6,7 @@
   "main": "./src/server.ts",
   "scripts": {
     "dev": "node --import=tsx --env-file=.env --watch-path=./src src/server.ts",
-    "build": "tsc --build tsconfig.json",
+    "build": "tsc --build tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "node --env-file=.env dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
@@ -22,6 +22,7 @@
     "@repo/ts-config": "workspace:*",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "tsc-alias": "^1.8.10"
   }
 }
