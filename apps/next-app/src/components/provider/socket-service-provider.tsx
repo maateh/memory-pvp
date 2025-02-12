@@ -15,11 +15,17 @@ type TSocketServiceContext = {
 
 const SocketServiceContext = createContext<TSocketServiceContext | null>(null)
 
-const SocketServiceProvider = ({ children }: { children: React.ReactNode }) => {
+type SocketServiceProviderProps = {
+  authToken: string | null
+  children: React.ReactNode
+}
+
+const SocketServiceProvider = ({ authToken, children }: SocketServiceProviderProps) => {
   const [socket] = useState(() => {
     if (typeof window === "undefined") return null
 
     return io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
+      auth: { token: authToken },
       autoConnect: false
     })
   })

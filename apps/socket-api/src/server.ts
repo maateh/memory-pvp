@@ -4,6 +4,9 @@ import http from "http"
 // socket
 import { Server } from "socket.io"
 
+// middlewares
+import { authenticate } from "./middlewares"
+
 // events
 import {
   disconnect,
@@ -25,7 +28,11 @@ export const io = new Server(server, {
   }
 })
 
-io.on("connection", (socket) => {
+io.use(authenticate)
+
+io.on("connection", (_socket) => {
+  const socket = _socket as VerifiedSocket
+
   console.info("Connection: ", socket.id)
 
   socket.on("room:connect", roomConnect(socket))

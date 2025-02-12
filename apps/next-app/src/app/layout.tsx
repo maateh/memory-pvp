@@ -4,16 +4,19 @@ import { Josefin_Sans, Geologica } from "next/font/google"
 // types
 import type { Metadata } from "next"
 
-// providers
-import { ClerkProvider } from "@clerk/nextjs"
-import { ThemeProvider, TRPCProvider } from "@/components/provider"
-import { Toaster } from "@/components/ui/sonner"
-const SocketServiceProvider = dynamic(() => import("@/components/provider/socket-service-provider"), { ssr: false })
+// clerk
+import { auth } from "@clerk/nextjs/server"
 
 // uploadthing
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
 import { extractRouterConfig } from "uploadthing/server"
 import { uploadRouter } from "@/server/uploadthing/core"
+
+// providers
+import { ClerkProvider } from "@clerk/nextjs"
+import { ThemeProvider, TRPCProvider } from "@/components/provider"
+import { Toaster } from "@/components/ui/sonner"
+const SocketServiceProvider = dynamic(() => import("@/components/provider/socket-service-provider"), { ssr: false })
 
 // styles
 import { dark } from "@clerk/themes"
@@ -42,7 +45,10 @@ type BaseLayoutProps = {
   popup: React.ReactNode
 }
 
-const BaseLayout = ({ children, popup }: BaseLayoutProps) => {
+const BaseLayout = async ({ children, popup }: BaseLayoutProps) => {
+  const { getToken } = auth()
+  const authToken = await getToken()
+
   return (
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
@@ -55,7 +61,7 @@ const BaseLayout = ({ children, popup }: BaseLayoutProps) => {
           <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
 
           <TRPCProvider>
-            <SocketServiceProvider>
+            <SocketServiceProvider authToken={authToken}>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="dark"
