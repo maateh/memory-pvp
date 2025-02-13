@@ -8,7 +8,7 @@ import { db } from "@/server"
 import { redis } from "@repo/server/redis"
 import { playerConnectionKey } from "@repo/server/redis-keys"
 
-export const playerConnection: SocketMiddlewareFn = async (socket, next) => {
+export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
   const { clerkId, ...ctx } = socket.ctx || {}
 
   try {
