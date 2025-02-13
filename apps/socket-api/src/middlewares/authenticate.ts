@@ -2,6 +2,8 @@
 import { verifyToken } from "@clerk/express"
 
 export const authenticate: SocketMiddlewareFn = async (socket, next) => {
+  const ctx = socket.ctx || {}
+
   try {
     const token = socket.handshake.auth?.token
 
@@ -17,7 +19,7 @@ export const authenticate: SocketMiddlewareFn = async (socket, next) => {
       return next(new Error("Authentication error: Invalid token."))
     }
 
-    socket.clerkId = session.sub
+    socket.ctx = { ...ctx, clerkId: session.sub }
     next()
   } catch (err) {
     console.error("Socket authentication error: ", err)

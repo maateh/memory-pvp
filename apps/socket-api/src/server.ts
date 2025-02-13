@@ -39,7 +39,7 @@ io.use(authenticate)
 io.use(playerConnection)
 
 io.on("connection", (_socket) => {
-  const socket = _socket as VerifiedSocket
+  const socket = _socket as SocketWithContext
 
   console.info("Connection: ", socket.id)
 
