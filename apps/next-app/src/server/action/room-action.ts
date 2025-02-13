@@ -2,11 +2,11 @@
 
 // types
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
+import type { PlayerConnection } from "@repo/server/socket-types"
 
 // redis
 import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
-import { playerConnection } from "@repo/server/redis-data-parser"
 
 // server
 import { ServerError } from "@repo/server/error"
@@ -37,12 +37,18 @@ export const createRoom = playerActionClient
       createdAt: new Date()
     }
 
+    const connection: PlayerConnection = {
+      playerId: ctx.player.id,
+      playerTag: ctx.player.tag,
+      roomSlug: room.slug,
+      status: "offline",
+      socketId: null,
+      createdAt: new Date(),
+      connectedAt: null
+    }
+
     await Promise.all([
-      ctx.redis.hset(playerConnectionKey(ctx.player.id), playerConnection({
-        playerId: ctx.player.id,
-        roomSlug: room.slug,
-        status: "offline"
-      })),
+      ctx.redis.hset(playerConnectionKey(ctx.player.id), connection),
       ctx.redis.json.set(roomKey(room.slug), `$`, room),
       ctx.redis.lpush(waitingRoomsKey, room.slug)
     ])
@@ -70,12 +76,18 @@ export const joinRoom = playerActionClient
       }
     }
 
+    const connection: PlayerConnection = {
+      playerId: ctx.player.id,
+      playerTag: ctx.player.tag,
+      roomSlug: room.slug,
+      status: "offline",
+      socketId: null,
+      createdAt: new Date(),
+      connectedAt: null
+    }
+
     await Promise.all([
-      ctx.redis.hset(playerConnectionKey(ctx.player.id), playerConnection({
-        playerId: ctx.player.id,
-        roomSlug: room.slug,
-        status: "offline"
-      })),
+      ctx.redis.hset(playerConnectionKey(ctx.player.id), connection),
       ctx.redis.json.set(roomKey(roomSlug), "$", joinedRoom, { xx: true }),
       ctx.redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])

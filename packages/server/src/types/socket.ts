@@ -17,9 +17,15 @@ export type SocketConnection = {
 
 export type PlayerConnection = {
   playerId: string
+  playerTag: string
   roomSlug: string
-  socketId: string | null
-  status: RoomPlayerStatus
-  connectedAt: Date | null
-  updatedAt: Date
-}
+  createdAt: Date
+} & ({
+  status: Extract<RoomPlayerStatus, "online">
+  socketId: string
+  connectedAt: Date
+} | {
+  status: Extract<RoomPlayerStatus, "offline">
+  socketId: null
+  connectedAt: null
+})

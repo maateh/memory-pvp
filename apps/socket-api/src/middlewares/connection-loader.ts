@@ -29,7 +29,16 @@ export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
       return next(new Error("Player connection not found."))
     }
 
-    socket.ctx = { ...ctx, clerkId, connection }
+    const onlineConnection: PlayerConnection = {
+      ...connection,
+      status: "online",
+      socketId: socket.id,
+      connectedAt: new Date()
+    }
+
+    await redis.hset(playerConnectionKey(player.id), onlineConnection)
+
+    socket.ctx = { ...ctx, clerkId, connection: onlineConnection }
     next()
   } catch (err) {
     console.error("Player connection error: ", err)

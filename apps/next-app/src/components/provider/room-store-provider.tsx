@@ -38,7 +38,6 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
 
   useEffect(() => {
     const {
-      roomConnect,
       roomConnected,
       roomDisconnected,
       roomLeft,
@@ -46,10 +45,11 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
       roomReadied,
       sessionStarting,
       sessionStarted,
+      connectError,
       disconnect
     } = store.getState()
 
-    if (!socket.active) roomConnect()
+    if (!socket.active) socket.connect()
 
     socket.on("room:connected", roomConnected)
     socket.on("room:disconnected", roomDisconnected)
@@ -58,6 +58,8 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
     socket.on("room:readied", roomReadied)
     socket.on("session:starting", sessionStarting)
     socket.on("session:started", sessionStarted)
+
+    socket.on("connect_error", connectError)
     socket.on("disconnect", disconnect)
 
     return () => {
@@ -70,6 +72,8 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
       socket.off("room:readied", roomReadied)
       socket.off("session:starting", sessionStarting)
       socket.off("session:started", sessionStarted)
+
+      socket.off("connect_error", connectError)
       socket.off("disconnect", disconnect)
     }
   }, [socket, store])

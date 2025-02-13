@@ -1,6 +1,9 @@
 import express from "express"
 import http from "http"
 
+// types
+import type { RoomVariants } from "@repo/schema/session-room"
+
 // socket
 import { Server } from "socket.io"
 
@@ -17,7 +20,6 @@ import {
 // events
 import {
   disconnect,
-  roomConnect,
   roomReady,
   roomLeave,
   roomClose,
@@ -45,7 +47,12 @@ io.on("connection", (_socket) => {
 
   console.info("Connection: ", socket.id)
 
-  socket.on("room:connect", roomConnect(socket))
+  socket.join(socket.ctx.room.slug)
+  io.to(socket.ctx.room.slug).emit("room:connected", {
+    message: `${socket.ctx.connection.playerTag} has connected.`,
+    data: socket.ctx.room
+  } satisfies SocketResponse<RoomVariants>)
+
   /**
    * NOTE: "room:join" event might be necessary in the future because
    * if the action fails after the redis commands have already run

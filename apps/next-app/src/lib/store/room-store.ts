@@ -6,7 +6,6 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/player"
-import type { RoomConnectValidation } from "@repo/schema/session-room-validation"
 import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/session-room"
 import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
 
@@ -23,7 +22,6 @@ type RoomState = {
 }
 
 type RoomAction = {
-  roomConnect: () => Promise<void>
   roomLeave: () => Promise<void>
   roomClose: () => Promise<void>
   roomReady: () => Promise<void>
@@ -31,13 +29,14 @@ type RoomAction = {
 }
 
 type RoomListener = {
-  roomConnected: (response: SocketResponse<JoinedRoom>) => void
+  roomConnected: (response: SocketResponse<WaitingRoomVariants>) => void
   roomDisconnected: (response: SocketResponse<JoinedRoom>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<string>) => void
+  connectError: (error: Error) => void
   disconnect: (reason: Socket.DisconnectReason) => void
 }
 
@@ -62,31 +61,6 @@ export const roomStore = ({
     : initialRoom.guest,
 
   /* Actions */
-  async roomConnect() {
-    toast.loading("Connecting to the room...", { id: "room:connect" })
-
-    try {
-      const {
-        data: room,
-        message,
-        description,
-        error
-      }: SocketResponse<WaitingRoomVariants> = await socket.connect().emitWithAck("room:connect", {
-        playerId: currentPlayerId
-      } satisfies RoomConnectValidation)
-
-      if (error || !room) {
-        throw ServerError.parser(error)
-      }
-
-      toast.success(message, { description, id: "room:connect" })
-      set({ room })
-    } catch (err) {
-      handleServerError(err as ServerError)
-      logError(err)
-    }
-  },
-
   async roomLeave() {
     toast.loading("Leaving room...", { id: "room:leave" })
 
@@ -162,14 +136,19 @@ export const roomStore = ({
   roomConnected({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
 
-    toast.success(message, { description })
+    toast.dismiss("room:connect")
+    toast.dismiss("room:disconnected")
+    toast.success(message, { description, id: "room:connected" })
+
     set({ room })
   },
 
   roomDisconnected({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
 
-    toast.warning(message, { description })
+    toast.dismiss("room:connected")
+    toast.warning(message, { description, id: "room:disconnected" })
+
     set({ room })
   },
 
@@ -265,6 +244,10 @@ export const roomStore = ({
 
     router.replace(`/game/${roomSlug}`)
     toast.success(message, { description })
+  },
+
+  connectError(error) {
+    // TODO: implement
   },
 
   disconnect(reason) {
