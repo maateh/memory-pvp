@@ -1,9 +1,13 @@
 import type { ExtendedError, Socket } from "socket.io"
-import type { SocketResponse as TSocketResponse } from "@repo/server/socket-types"
+import type {
+  PlayerConnection,
+  SocketResponse as TSocketResponse
+} from "@repo/server/socket-types"
 
 declare global {
   type SocketMiddlewareOpts = {
     clerkId?: string
+    connection?: PlayerConnection
   }
 
   type SocketMiddleware = Socket & SocketMiddlewareOpts

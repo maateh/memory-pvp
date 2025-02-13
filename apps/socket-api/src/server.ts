@@ -4,8 +4,14 @@ import http from "http"
 // socket
 import { Server } from "socket.io"
 
+// prisma
+import { PrismaClient } from "@repo/db"
+
 // middlewares
-import { authenticate } from "./middlewares"
+import {
+  authenticate,
+  playerConnection
+} from "./middlewares"
 
 // events
 import {
@@ -22,6 +28,7 @@ import {
 const app = express()
 const server = http.createServer(app)
 
+export const db = new PrismaClient()
 export const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000"
@@ -29,6 +36,7 @@ export const io = new Server(server, {
 })
 
 io.use(authenticate)
+io.use(playerConnection)
 
 io.on("connection", (_socket) => {
   const socket = _socket as VerifiedSocket
