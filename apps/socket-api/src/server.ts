@@ -10,7 +10,8 @@ import { PrismaClient } from "@repo/db"
 // middlewares
 import {
   authenticate,
-  connectionLoader
+  connectionLoader,
+  roomLoader
 } from "./middlewares"
 
 // events
@@ -37,6 +38,7 @@ export const io = new Server(server, {
 
 io.use(authenticate)
 io.use(connectionLoader)
+io.use(roomLoader)
 
 io.on("connection", (_socket) => {
   const socket = _socket as SocketWithContext

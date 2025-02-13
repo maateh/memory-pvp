@@ -1,4 +1,5 @@
 import type { ExtendedError, Socket } from "socket.io"
+import type { RoomVariants } from "@repo/schema/session-room"
 import type {
   PlayerConnection,
   SocketResponse as TSocketResponse
@@ -8,6 +9,7 @@ declare global {
   type SocketContextOpts = Partial<{
     clerkId: string
     connection: PlayerConnection
+    room: RoomVariants
   }>
 
   type SocketWithContext = Socket & { ctx: Required<SocketContextOpts> }
