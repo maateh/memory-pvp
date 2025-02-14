@@ -1,11 +1,13 @@
 // types
 import type { JoinedRoom } from "@repo/schema/room"
-import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // redis
 import { redis } from "@repo/server/redis"
 import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
+
+// utils
+import { offlinePlayer } from "@repo/server/util"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
@@ -14,12 +16,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
   if (!socket.ctx.connection) return
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
-  const offlineConnection: PlayerConnection = {
-    ...socket.ctx.connection,
-    status: "offline",
-    socketId: null,
-    connectedAt: null
-  }
+  const offlineConnection = offlinePlayer(socket.ctx.connection)
 
   try {
     const room = await getRoom(roomSlug)

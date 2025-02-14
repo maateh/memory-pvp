@@ -2,20 +2,19 @@
 
 // types
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
-import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // redis
 import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // server
-import { ServerError } from "@repo/server/error"
 import { playerActionClient } from "@/server/action"
 
 // schemas
 import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/room-validation"
 
 // utils
+import { offlinePlayer } from "@repo/server/util"
 import { generateSessionSlug } from "@/lib/helper/session-helper"
 
 export const createRoom = playerActionClient
@@ -25,16 +24,12 @@ export const createRoom = playerActionClient
     const { owner: _, ...settings } = parsedInput
 
     const slug = generateSessionSlug(settings)
-
-    const connection: PlayerConnection = {
+    const connection = offlinePlayer({
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
       roomSlug: slug,
-      status: "offline",
       createdAt: new Date(),
-      socketId: null,
-      connectedAt: null
-    }
+    })
 
     const room: WaitingRoom = {
       slug,
@@ -66,16 +61,12 @@ export const joinRoom = playerActionClient
     const { guest:_, roomSlug } = parsedInput
 
     const room = await getRoom<WaitingRoom>(roomSlug)
-
-    const connection: PlayerConnection = {
+    const connection = offlinePlayer({
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
       roomSlug: room.slug,
-      status: "offline",
       createdAt: new Date(),
-      socketId: null,
-      connectedAt: null
-    }
+    })
 
     const joinedRoom: JoinedRoom = {
       ...room,

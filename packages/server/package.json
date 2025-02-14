@@ -5,6 +5,7 @@
   "private": true,
   "exports": {
     "./error": "./src/error/error.ts",
+    "./util": "./src/util/index.ts",
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",

@@ -7,6 +7,7 @@ import { db } from "@/server"
 // redis
 import { redis } from "@repo/server/redis"
 import { playerConnectionKey } from "@repo/server/redis-keys"
+import { onlinePlayer } from "@repo/server/util"
 
 export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
   const { clerkId, ...ctx } = socket.ctx || {}
@@ -29,13 +30,7 @@ export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
       return next(new Error("Player connection not found."))
     }
 
-    const onlineConnection: PlayerConnection = {
-      ...connection,
-      status: "online",
-      socketId: socket.id,
-      connectedAt: new Date()
-    }
-
+    const onlineConnection = onlinePlayer(connection, socket.id)
     await redis.hset(playerConnectionKey(player.id), onlineConnection)
 
     socket.ctx = { ...ctx, clerkId, connection: onlineConnection }
