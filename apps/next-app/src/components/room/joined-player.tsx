@@ -1,5 +1,5 @@
 // types
-import type { RoomPlayer } from "@repo/schema/player"
+import type { RoomPlayer } from "@repo/schema/room-player"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"

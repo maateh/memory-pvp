@@ -1,4 +1,4 @@
-import type { RoomPlayerStatus } from "@repo/schema/player"
+import type { PlayerConnectionStatus } from "@repo/schema/player-connection"
 import type { ServerError } from "../error/error"
 
 export type SocketResponse<T = unknown> = {
@@ -21,11 +21,11 @@ export type PlayerConnection = {
   roomSlug: string
   createdAt: Date
 } & ({
-  status: Extract<RoomPlayerStatus, "online">
+  status: Extract<PlayerConnectionStatus, "online">
   socketId: string
   connectedAt: Date
 } | {
-  status: Extract<RoomPlayerStatus, "offline">
+  status: Extract<PlayerConnectionStatus, "offline">
   socketId: null
   connectedAt: null
 })

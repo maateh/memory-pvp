@@ -1,5 +1,5 @@
 // types
-import type { PlayerConnection } from "@repo/server/socket-types"
+import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // db
 import { db } from "@/server"

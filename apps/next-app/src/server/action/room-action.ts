@@ -1,8 +1,8 @@
 "use server"
 
 // types
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/session-room"
-import type { PlayerConnection } from "@repo/server/socket-types"
+import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
+import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // redis
 import { getRoom } from "@repo/server/redis-commands"
@@ -13,7 +13,7 @@ import { ServerError } from "@repo/server/error"
 import { playerActionClient } from "@/server/action"
 
 // schemas
-import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/session-room-validation"
+import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/room-validation"
 
 // utils
 import { generateSessionSlug } from "@/lib/helper/session-helper"
@@ -24,27 +24,28 @@ export const createRoom = playerActionClient
     // TODO: remove owner from validation
     const { owner: _, ...settings } = parsedInput
 
-    const room: WaitingRoom = {
-      status: "waiting",
-      slug: generateSessionSlug(settings),
-      owner: {
-        ...ctx.player,
-        status: "offline",
-        socketId: null,
-        ready: false
-      },
-      settings,
-      createdAt: new Date()
-    }
+    const slug = generateSessionSlug(settings)
 
     const connection: PlayerConnection = {
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
-      roomSlug: room.slug,
+      roomSlug: slug,
       status: "offline",
-      socketId: null,
       createdAt: new Date(),
+      socketId: null,
       connectedAt: null
+    }
+
+    const room: WaitingRoom = {
+      slug,
+      status: "waiting",
+      owner: {
+        ...ctx.player,
+        ready: false,
+        connection
+      },
+      settings,
+      createdAt: new Date()
     }
 
     await Promise.all([
@@ -65,25 +66,25 @@ export const joinRoom = playerActionClient
     const { guest:_, roomSlug } = parsedInput
 
     const room = await getRoom<WaitingRoom>(roomSlug)
-    const joinedRoom: JoinedRoom = {
-      ...room,
-      status: "joined",
-      guest: {
-        ...ctx.player,
-        status: "offline",
-        socketId: null,
-        ready: false
-      }
-    }
 
     const connection: PlayerConnection = {
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
       roomSlug: room.slug,
       status: "offline",
-      socketId: null,
       createdAt: new Date(),
+      socketId: null,
       connectedAt: null
+    }
+
+    const joinedRoom: JoinedRoom = {
+      ...room,
+      status: "joined",
+      guest: {
+        ...ctx.player,
+        ready: false,
+        connection
+      }
     }
 
     await Promise.all([

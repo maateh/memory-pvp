@@ -1,5 +1,5 @@
 // types
-import type { RoomVariants, WaitingRoom } from "@repo/schema/session-room"
+import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "../redis"

@@ -1,9 +1,7 @@
 import type { ExtendedError, Socket } from "socket.io"
-import type { RoomVariants } from "@repo/schema/session-room"
-import type {
-  PlayerConnection,
-  SocketResponse as TSocketResponse
-} from "@repo/server/socket-types"
+import type { RoomVariants } from "@repo/schema/room"
+import type { PlayerConnection } from "@repo/schema/player-connection"
+import type { SocketResponse as TSocketResponse } from "@repo/server/socket-types"
 
 declare global {
   type SocketContextOpts = Partial<{

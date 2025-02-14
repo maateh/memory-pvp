@@ -1,8 +1,8 @@
 // types
-import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
+import type { SessionCreatedValidation } from "@repo/schema/room-validation"
 
 // schemas
-import { sessionCreatedValidation } from "@repo/schema/session-room-validation"
+import { sessionCreatedValidation } from "@repo/schema/room-validation"
 
 // redis
 import { getRoomByField } from "@repo/server/redis-commands"

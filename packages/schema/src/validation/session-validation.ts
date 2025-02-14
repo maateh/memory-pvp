@@ -2,8 +2,8 @@ import { z } from "zod"
 
 // schemas
 import { clientSessionSchema, sessionCardSchema, sessionSettings } from "../session-schema"
-import { createSessionRoomValidation } from "./session-room-validation"
-import { sessionRoomSettings } from "../session-room-schema"
+import { createSessionRoomValidation } from "./room-validation"
+import { roomSettings } from "../room-schema"
 
 /* Forms / API validations */
 export const createSingleSessionValidation = sessionSettings
@@ -13,7 +13,7 @@ export const createSingleSessionValidation = sessionSettings
     forceStart: z.coerce.boolean().optional()
   })
 
-export const createMultiSessionValidation = sessionRoomSettings
+export const createMultiSessionValidation = roomSettings
   .extend({
     slug: z.string(),
     guestId: z.string()

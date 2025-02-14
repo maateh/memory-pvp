@@ -1,6 +1,6 @@
 // types
-import type { JoinedRoom } from "@repo/schema/session-room"
-import type { PlayerConnection } from "@repo/server/socket-types"
+import type { JoinedRoom } from "@repo/schema/room"
+import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -22,9 +22,8 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     const room = await getRoom(roomSlug)
 
     if (room.status === "waiting") {
-      room.owner.status = "offline"
+      room.owner.connection = offlineConnection
       room.owner.ready = false
-      room.owner.socketId = null
 
       await Promise.all([
         redis.hset(playerConnectionKey(playerId), offlineConnection),
@@ -34,8 +33,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
     if (room.status === "joined" || room.status === "ready") {
       const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
-      room[currentPlayerKey].status = "offline"
-      room[currentPlayerKey].socketId = null
+      room[currentPlayerKey].connection = offlineConnection
 
       const joinedRoom: JoinedRoom = {
         ...room,

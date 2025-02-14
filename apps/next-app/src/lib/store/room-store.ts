@@ -5,9 +5,9 @@ import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
-import type { RoomPlayer } from "@repo/schema/player"
-import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/session-room"
-import type { SessionCreatedValidation } from "@repo/schema/session-room-validation"
+import type { RoomPlayer } from "@repo/schema/room-player"
+import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
+import type { SessionCreatedValidation } from "@repo/schema/room-validation"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"

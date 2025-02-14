@@ -2,7 +2,7 @@ import express from "express"
 import http from "http"
 
 // types
-import type { RoomVariants } from "@repo/schema/session-room"
+import type { RoomVariants } from "@repo/schema/room"
 
 // socket
 import { Server } from "socket.io"

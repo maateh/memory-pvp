@@ -1,6 +1,6 @@
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-import type { WaitingRoom } from "@repo/schema/session-room"
+import type { WaitingRoom } from "@repo/schema/room"
 import type { WaitingRoomListingMetadata } from "./waiting-room-listing"
 
 // config

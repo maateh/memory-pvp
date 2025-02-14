@@ -1,13 +1,13 @@
 import { z } from "zod"
 
 // schemas
-import { roomPlayerSchema } from "./player-schema"
+import { roomPlayerSchema } from "./room-player-schema"
 import { clientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
-export const sessionRoomStatusSchema = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
+export const roomStatus = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
 
-export const sessionRoomSettings = sessionSettings
+export const roomSettings = sessionSettings
   .omit({ mode: true })
   .extend({
     mode: z.enum([
@@ -16,56 +16,57 @@ export const sessionRoomSettings = sessionSettings
     ])
   })
 
-export const sessionRoomSchema = z.object({
+export const roomSchema = z.object({
   slug: z.string(),
-  status: sessionRoomStatusSchema,
+  status: roomStatus,
   owner: roomPlayerSchema,
   guest: roomPlayerSchema,
-  settings: sessionRoomSettings,
+  settings: roomSettings,
   session: clientSessionSchema, // TODO: must be replaced by db schema
   createdAt: z.coerce.date()
   // TODO: add & track `updatedAt`
 })
 
 /* Custom room types based on room status */
-export const waitingRoomSchema = sessionRoomSchema
+export const waitingRoomSchema = roomSchema
   .omit({
     status: true,
     guest: true,
     session: true
   })
   .extend({
-    status: z.literal(sessionRoomStatusSchema.enum.waiting)
+    status: z.literal(roomStatus.enum.waiting)
   })
 
-export const joinedRoomSchema = sessionRoomSchema
+export const joinedRoomSchema = roomSchema
   .omit({
     status: true,
     session: true
   })
   .extend({
     status: z.enum([
-      sessionRoomStatusSchema.enum.joined,
-      sessionRoomStatusSchema.enum.ready,
-      sessionRoomStatusSchema.enum.starting
+      roomStatus.enum.joined,
+      roomStatus.enum.ready,
+      roomStatus.enum.starting
     ])
   })
 
-export const runningRoomSchema = sessionRoomSchema
+export const runningRoomSchema = roomSchema
   .omit({
     status: true,
     session: true
   })
   .extend({
-    status: z.literal(sessionRoomStatusSchema.enum.running)
+    status: z.literal(roomStatus.enum.running)
   })
 
-export type SessionRoomStatus = z.infer<typeof sessionRoomStatusSchema>
-export type SessionRoomSettings = z.infer<typeof sessionRoomSettings>
-export type SessionRoom = z.infer<typeof sessionRoomSchema>
+export type RoomStatus = z.infer<typeof roomStatus>
+export type RoomSettings = z.infer<typeof roomSettings>
+
+export type Room = z.infer<typeof roomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
 export type RunningRoom = z.infer<typeof runningRoomSchema>
 
 export type WaitingRoomVariants = WaitingRoom | JoinedRoom
-export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | SessionRoom
+export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | Room

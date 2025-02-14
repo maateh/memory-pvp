@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom } from "@repo/schema/session-room"
+import type { JoinedRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"

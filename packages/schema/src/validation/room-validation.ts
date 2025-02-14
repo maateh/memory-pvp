@@ -2,14 +2,10 @@ import { z } from "zod"
 
 // schemas
 import { clientPlayerSchema } from "../player-schema"
-import { sessionRoomSettings } from "../session-room-schema"
+import { roomSettings } from "../room-schema"
 
 /* Forms / API validations */
-export const roomConnectValidation = z.object({
-  playerId: z.string()
-})
-
-export const createSessionRoomValidation = sessionRoomSettings.extend({
+export const createSessionRoomValidation = roomSettings.extend({
   owner: clientPlayerSchema
 })
 
@@ -26,7 +22,6 @@ export const sessionReconnectValidation = z.object({
   playerId: z.string()
 })
 
-export type RoomConnectValidation = z.infer<typeof roomConnectValidation>
 export type CreateSessionRoomValidation = z.infer<typeof createSessionRoomValidation>
 export type JoinSessionRoomValidation = z.infer<typeof joinSessionRoomValidation>
 export type SessionCreatedValidation = z.infer<typeof sessionCreatedValidation>

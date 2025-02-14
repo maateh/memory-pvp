@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { JoinSessionRoomValidation } from "@repo/schema/session-room-validation"
+import type { JoinSessionRoomValidation } from "@repo/schema/room-validation"
 
 // utils
 import { cn } from "@/lib/util"

@@ -1,6 +1,6 @@
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-import type { WaitingRoom } from "@repo/schema/session-room"
+import type { WaitingRoom } from "@repo/schema/room"
 
 // config
 import {

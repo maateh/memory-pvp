@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import dynamic from "next/dynamic"
 
 // types
-import type { RoomVariants, WaitingRoomVariants } from "@repo/schema/session-room"
+import type { RoomVariants, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"

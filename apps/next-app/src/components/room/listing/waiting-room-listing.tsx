@@ -5,7 +5,7 @@ import { useState } from "react"
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
 import type { ClientPlayer } from "@repo/schema/player"
-import type { WaitingRoom } from "@repo/schema/session-room"
+import type { WaitingRoom } from "@repo/schema/room"
 
 // react-table
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"

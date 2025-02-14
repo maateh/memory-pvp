@@ -7,7 +7,7 @@ import { useStore } from "zustand"
 // types
 import type { StoreApi } from "zustand"
 import type { RoomStore } from "@/lib/store/room-store"
-import type { WaitingRoomVariants } from "@repo/schema/session-room"
+import type { WaitingRoomVariants } from "@repo/schema/room"
 
 // store
 import { roomStore } from "@/lib/store/room-store"
