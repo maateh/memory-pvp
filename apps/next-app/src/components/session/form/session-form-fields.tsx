@@ -24,7 +24,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
     <>
       <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
         <FormField
-          name="type"
+          name="settings.type"
           control={form.control}
           render={({ field }) => (
             <FormItem className="flex-1 max-w-xs">
@@ -52,7 +52,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
         />
 
         <FormField
-          name="mode"
+          name="settings.mode"
           control={form.control}
           render={({ field }) => (
             <FormItem className="flex-1 max-w-xs">
@@ -81,7 +81,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
       </div>
 
       <FormField
-        name="tableSize"
+        name="settings.tableSize"
         control={form.control}
         render={({ field }) => (
           <FormItem className="w-full max-w-sm mx-auto">

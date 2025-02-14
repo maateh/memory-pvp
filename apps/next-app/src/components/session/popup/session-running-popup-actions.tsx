@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { CreateSingleSessionValidation } from "@repo/schema/session-validation"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
@@ -30,12 +29,12 @@ const SessionRunningPopupActions = () => {
   } = useCreateSingleSessionAction()
 
   const {
-    sessionValues,
+    settings,
     collection = null
-  } = useCacheStore<SessionFormValuesCache<CreateSingleSessionValidation>, 'cache'>((state) => state.cache) || {}
+  } = useCacheStore<SessionFormValuesCache, 'cache'>((state) => state.cache) || {}
 
   const handleForceStart = async () => {
-    if (!sessionValues) {
+    if (!settings) {
       toast.error("Session cache not not found.", {
         description: "Please try reloading the page."
       })
@@ -44,14 +43,24 @@ const SessionRunningPopupActions = () => {
 
     if (isOffline) {
       createOfflineSession({
-        sessionValues: { ...sessionValues, forceStart: true },
-        collection
+        settings,
+        collection,
+        forceStart: true
       })
       return
     }
 
     try {
-      await executeCreateSession({ ...sessionValues, forceStart: true })
+      if (settings.mode === "SINGLE") {
+        await executeCreateSession({ settings, forceStart: true })
+      } else {
+        // TODO: I'm currently not sure how to exactly handle
+        // multiplayer sessions in terms of force-start.
+        // I think it's not a good approach
+        // Two possible aprroaches:
+        // - redirect user to `/game/reconnect` page instead of this warning and handle everything there
+        // - force-close running (actually cancelled) multiplayer session
+      }
     } catch (err) {
       logError(err)
     }

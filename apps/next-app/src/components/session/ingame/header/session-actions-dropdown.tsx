@@ -62,7 +62,7 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
     }
 
     try {
-      await executeAbandonSession(session)
+      await executeAbandonSession({ clientSession: session })
     } catch (err) {
       logError(err)
     }

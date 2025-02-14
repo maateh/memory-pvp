@@ -3,7 +3,6 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
-import type { CreateSingleSessionValidation } from "@repo/schema/session-validation"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
@@ -17,23 +16,24 @@ import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useCreateSingleSessionAction = () => {
   const router = useRouter()
-  const setCache = useCacheStore<SessionFormValuesCache<CreateSingleSessionValidation>, 'set'>((state) => state.set)
+  const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
 
   return useAction(createSingleSession, {
-    onSuccess({ input: { type, mode, tableSize, forceStart } }) {
+    onSuccess({ input: { settings, forceStart } }) {
       if (forceStart) {
         toast.warning('Previous session has been abandoned.', {
           description: 'Session is saved, but cannot be continued.'
         })
       }
 
+      const { type, mode, tableSize } = settings
       toast.success('Game session started!', {
         description: `${type} | ${mode} | ${tableSize}`
       })
     },
-    onError({ error, input: sessionValues }) {
+    onError({ error, input: values }) {
       if (error.serverError?.key === 'ACTIVE_SESSION') {
-        setCache({ sessionValues, collection: null })
+        setCache({ ...values, collection: null })
         router.push('/game/setup/warning')
         return
       }

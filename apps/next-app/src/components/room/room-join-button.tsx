@@ -1,8 +1,5 @@
 "use client"
 
-// types
-import type { JoinSessionRoomValidation } from "@repo/schema/room-validation"
-
 // utils
 import { cn } from "@/lib/util"
 
@@ -16,11 +13,11 @@ import { Button } from "@/components/ui/button"
 import { useJoinRoomAction } from "@/lib/safe-action/room"
 
 type RoomJoinButtonProps = {
-  values: JoinSessionRoomValidation
+  roomSlug: string
 } & Omit<React.ComponentProps<typeof Button>, 'tooltip' | 'onClick'>
 
 const RoomJoinButton = ({
-  values,
+  roomSlug,
   className,
   variant = "ghost",
   size = "icon",
@@ -36,7 +33,7 @@ const RoomJoinButton = ({
       tooltip="Join room..."
       variant={variant}
       size={size}
-      onClick={() => joinRoom(values)}
+      onClick={() => joinRoom({ roomSlug })}
       disabled={joinRoomStatus === "executing"}
       {...props}
     >

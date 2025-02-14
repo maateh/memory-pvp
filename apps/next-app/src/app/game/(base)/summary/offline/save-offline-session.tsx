@@ -46,9 +46,11 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
 
     try {
       await executeSaveOfflineSession({
-        ...offlineSession,
         playerId,
-        cards: validateCardMatches(offlineSession.cards)
+        clientSession: {
+          ...offlineSession,
+          cards: validateCardMatches(offlineSession.cards)
+        }
       })
     } catch (err) {
       logError(err)

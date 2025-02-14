@@ -38,30 +38,30 @@ export const deleteCollectionSchema = z.object({
 })
 
 /* Client side form validation */
-export const createClientCollectionValidation = createCollectionUtValidation.extend({
-  images: z.array(collectionCardImageSchema)
-}).superRefine((collection, ctx) => {
-  const { tableSize, images } = collection
-  
-  const min = collectionMinSizeMap[tableSize]
-  const max = collectionMaxSizeMap[tableSize]
+export const createClientCollectionValidation = createCollectionUtValidation
+  .extend({ images: z.array(collectionCardImageSchema) })
+  .superRefine((collection, ctx) => {
+    const { tableSize, images } = collection
+    
+    const min = collectionMinSizeMap[tableSize]
+    const max = collectionMaxSizeMap[tableSize]
 
-  if (images.length < min) {
-    return ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `You have uploaded less card image to this collection than are required for this table size. (Min.: ${min})`,
-      path: ['images']
-    })
-  }
+    if (images.length < min) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `You have uploaded less card image to this collection than are required for this table size. (Min.: ${min})`,
+        path: ['images']
+      })
+    }
 
-  if (images.length > max) {
-    return ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `You have uploaded more card image to this collection than are allowed for this table size. (Max.: ${min})`,
-      path: ['images']
-    })
-  }
-})
+    if (images.length > max) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `You have uploaded more card image to this collection than are allowed for this table size. (Max.: ${min})`,
+        path: ['images']
+      })
+    }
+  })
 
 export type CreateCardCollectionUtValidation = z.infer<typeof createCollectionUtValidation>
 export type CreateCardCollectionValidation = z.infer<typeof createCollectionValidation>

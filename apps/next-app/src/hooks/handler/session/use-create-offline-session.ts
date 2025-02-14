@@ -33,9 +33,9 @@ export const useCreateOfflineSession = () => {
    * @param {SessionFormValuesCache} values - Object containing session values and the selected card collection.
    * @returns {void}
    */
-  const execute = ({ sessionValues, collection }: SessionFormValuesCache): void => {
+  const execute = ({ collection, settings, forceStart }: SessionFormValuesCache): void => {
     /* Checks if the values are valid for an offline session */
-    if (sessionValues.type !== 'CASUAL' || sessionValues.mode !== 'SINGLE') {
+    if (settings.type !== 'CASUAL' || settings.mode !== 'SINGLE') {
       toast.warning('Not supported in Offline mode!', {
         description: "You can only play Casual and Single mode in offline."
       })
@@ -43,14 +43,14 @@ export const useCreateOfflineSession = () => {
     }
 
     /* Checks if there is any ongoing offline session */
-    if (getSessionFromStorage() && !sessionValues.forceStart) {
-      setCache({ sessionValues, collection })
+    if (getSessionFromStorage() && !forceStart) {
+      setCache({ settings, collection, forceStart })
       router.push('/game/setup/warning/offline')
       return
     }
 
     /* Checks if card collection is selected or not */
-    if (!sessionValues.collectionId || !collection) {
+    if (!settings.collectionId || !collection) {
       toast.warning('Missing card collection!', {
         description: "If you want to play in Offline, you need to select a card collection in advanced."
       })
@@ -59,7 +59,7 @@ export const useCreateOfflineSession = () => {
 
     /* Creates and stores the offline session using `localStorage` */
     saveSessionToStorage({
-      tableSize: sessionValues.tableSize,
+      tableSize: settings.tableSize,
       startedAt: new Date(),
       updatedAt: new Date(),
       flipped: [],
@@ -67,7 +67,7 @@ export const useCreateOfflineSession = () => {
         generateSessionCards(collection),
         collection.cards
       ),
-      collectionId: sessionValues.collectionId,
+      collectionId: settings.collectionId,
       players: { current: offlinePlayerMetadata },
       stats: {
         timer: 0,
@@ -81,11 +81,11 @@ export const useCreateOfflineSession = () => {
     })
 
     /* Redirects the user to the game page */
-    if (sessionValues.forceStart) router.replace('/game/offline')
+    if (forceStart) router.replace('/game/offline')
     else router.push('/game/offline')
 
     toast.success('Game started in offline mode!', {
-      description: `${sessionValues.type} | ${sessionValues.mode} | ${sessionValues.tableSize}`
+      description: `${settings.type} | ${settings.mode} | ${settings.tableSize}`
     })
   }
 

@@ -140,15 +140,10 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header({ table }) {
       return <DataTableColumnToggle table={table} />
     },
-    cell({ row, table }) {
+    cell({ row }) {
       const { slug } = row.original
-      const { guestPlayer } = table.options.meta as WaitingRoomListingMetadata
 
-      return (
-        <RoomJoinButton
-          values={{ roomSlug: slug, guest: guestPlayer }}
-        />
-      )
+      return <RoomJoinButton roomSlug={slug} />
     }
   }
 ]

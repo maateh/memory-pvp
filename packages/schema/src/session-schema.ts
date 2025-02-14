@@ -69,6 +69,7 @@ export const unsignedClientSessionSchema = clientSessionSchema.omit({
   closedAt: true
 })
 
+export type SessionSettings = z.infer<typeof sessionSettings>
 export type SessionCardMetadata = z.infer<typeof sessionCardMetadataSchema>
 export type SessionCard = z.infer<typeof sessionCardSchema>
 export type SessionStats = z.infer<typeof sessionStatsSchema>

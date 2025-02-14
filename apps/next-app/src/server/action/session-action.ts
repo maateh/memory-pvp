@@ -53,7 +53,8 @@ export const getActiveSession = sessionActionClient
 export const createSingleSession = playerActionClient
   .schema(createSingleSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { collectionId, forceStart, ...settings } = parsedInput
+    const { forceStart } = parsedInput
+    const { collectionId, ...settings } = parsedInput.settings
 
     /* Checks if there is any ongoing session */
     const activeSession = await ctx.db.gameSession.findFirst({
@@ -130,7 +131,8 @@ export const createSingleSession = playerActionClient
 export const createMultiSession = playerActionClient
   .schema(createMultiSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { collectionId, guestId, ...settings } = parsedInput
+    const { slug, guestId } = parsedInput
+    const { collectionId, ...settings } = parsedInput.settings
 
     // FIXME: active session must be checked before the owner user creates and the guest user joins the room
 
@@ -153,6 +155,7 @@ export const createMultiSession = playerActionClient
     const session = await ctx.db.gameSession.create({
       data: {
         ...settings,
+        slug,
         status: "RUNNING",
         flipped: [],
         cards: generateSessionCards(collection),
@@ -211,9 +214,10 @@ export const storeSession = sessionActionClient
 
 export const saveSession = sessionActionClient
   .schema(saveSessionValidation)
-  .action(async ({ ctx, parsedInput: clientSession }) => {
-    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
+  .action(async ({ ctx, parsedInput }) => {
+    const { clientSession } = parsedInput
 
+    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
     const session = await ctx.db.gameSession.update({
       where: { id: ctx.activeSession.id },
       data: clientSession,
@@ -225,11 +229,13 @@ export const saveSession = sessionActionClient
 
 export const finishSession = sessionActionClient
   .schema(finishSessionSchema)
-  .action(async ({ ctx, parsedInput: session }) => {
+  .action(async ({ ctx, parsedInput }) => {
+    const { clientSession } = parsedInput
+
     await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
     const { slug } = await updateSessionStatus({
-      session,
+      session: clientSession,
       player: ctx.player,
       action: "finish"
     })
@@ -245,10 +251,12 @@ export const finishSession = sessionActionClient
 
 export const abandonSession = sessionActionClient
   .schema(abandonSessionValidation)
-  .action(async ({ ctx, parsedInput: session }) => {
+  .action(async ({ ctx, parsedInput }) => {
+    let { clientSession } = parsedInput
+
     await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
-    if (!session) {
+    if (!clientSession) {
       const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
 
       if (!validation.success) {
@@ -259,11 +267,11 @@ export const abandonSession = sessionActionClient
         })
       }
 
-      session = validation.data!
+      clientSession = validation.data!.clientSession!
     }
 
     const { slug } = await updateSessionStatus({
-      session,
+      session: clientSession,
       player: ctx.player,
       action: "abandon"
     })
@@ -280,7 +288,8 @@ export const abandonSession = sessionActionClient
 export const saveOfflineSession = protectedActionClient
   .schema(saveOfflineGameValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { playerId, collectionId, ...session } = parsedInput
+    const { playerId } = parsedInput
+    const { collectionId, ...clientSession } = parsedInput.clientSession
 
     const playerAmount = await ctx.db.playerProfile.count({
       where: {
@@ -302,18 +311,19 @@ export const saveOfflineSession = protectedActionClient
      * which is used by default in offline session stats.
      */
     const stats: PrismaJson.SessionStats = {
-      ...session.stats,
+      ...clientSession.stats,
       flips: {
-        [playerId]: session.stats.flips[offlinePlayerMetadata.id]
+        [playerId]: clientSession.stats.flips[offlinePlayerMetadata.id]
       },
       matches: {
-        [playerId]: session.stats.matches[offlinePlayerMetadata.id]
+        [playerId]: clientSession.stats.matches[offlinePlayerMetadata.id]
       }
     }
 
     const { slug } = await ctx.db.gameSession.create({
       data: {
-        ...session, stats,
+        ...clientSession,
+        stats,
         slug: generateSessionSlug({ type: "CASUAL", mode: "SINGLE" }, true),
         type: "CASUAL",
         mode: "SINGLE",

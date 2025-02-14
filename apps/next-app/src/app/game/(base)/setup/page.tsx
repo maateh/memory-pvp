@@ -24,20 +24,19 @@ type BaseGameSetupPageProps = {
     type: GameType
     mode: GameMode
     tableSize: TableSize
-    collection: string
+    collectionId: string
   }>
 }
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   const user = await signedIn()
   const players = await getPlayers({ withAvatar: true })
-  const activePlayer = players.find((player) => player.isActive)!
 
   let clientCollection: ClientCardCollection | null = null
-  if (searchParams.collection) {
+  if (searchParams.collectionId) {
     const collection = await db.cardCollection.findUnique({
       where: {
-        id: searchParams.collection
+        id: searchParams.collectionId
       },
       include: {
         user: true,
@@ -80,9 +79,8 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
 
       <main className="flex-1 flex flex-col">
         <SessionForm
-          defaultValues={{ ...searchParams, collectionId: clientCollection?.id }}
+          defaultValues={{ settings: searchParams }}
           collection={clientCollection}
-          activePlayer={activePlayer}
         />
       </main>
     </>

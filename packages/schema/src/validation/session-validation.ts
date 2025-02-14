@@ -2,62 +2,74 @@ import { z } from "zod"
 
 // schemas
 import { clientSessionSchema, sessionCardSchema, sessionSettings } from "../session-schema"
-import { createSessionRoomValidation } from "./room-validation"
 import { roomSettings } from "../room-schema"
+import { createSessionRoomValidation } from "./room-validation"
 
 /* Forms / API validations */
-export const createSingleSessionValidation = sessionSettings
-  .omit({ mode: true })
-  .extend({
-    mode: z.literal(sessionSettings.shape.mode.enum.SINGLE),
-    forceStart: z.coerce.boolean().optional()
-  })
+export const createSingleSessionValidation = z.object({
+  settings: sessionSettings
+    .omit({ mode: true })
+    .extend({ mode: z.literal(sessionSettings.shape.mode.enum.SINGLE) }),
+  forceStart: z.coerce.boolean().optional()
+})
 
-export const createMultiSessionValidation = roomSettings
-  .extend({
-    slug: z.string(),
-    guestId: z.string()
-  })
+export const sessionFormValidation = z.object({
+  settings: createSingleSessionValidation.shape.settings
+    .or(createSessionRoomValidation.shape.settings),
+  forceStart: createSingleSessionValidation.shape.forceStart
+})
 
-export const sessionFormValidation = createSingleSessionValidation.or(createSessionRoomValidation)
+export const createMultiSessionValidation = z.object({
+  settings: roomSettings,
+  slug: z.string(),
+  guestId: z.string()
+})
 
-export const saveSessionValidation = clientSessionSchema.omit({ players: true })
+export const saveSessionValidation = z.object({
+  clientSession: clientSessionSchema.omit({ players: true })
+})
 
-export const finishSessionSchema = clientSessionSchema
-  .omit({
-    status: true,
-    players: true,
-    cards: true
-  })
-  .extend({
-    cards: z.array(sessionCardSchema.extend({
-      matchedBy: z.string()
-    }))
-  })
+export const finishSessionSchema = z.object({
+  clientSession: clientSessionSchema
+    .omit({
+      status: true,
+      players: true,
+      cards: true
+    })
+    .extend({
+      cards: z.array(sessionCardSchema.extend({
+        matchedBy: z.string()
+      }))
+    })
+})
 
-export const abandonSessionValidation = clientSessionSchema
-  .omit({ status: true, players: true })
-  .optional()
+export const abandonSessionValidation = z.object({
+  clientSession: clientSessionSchema
+    .omit({ status: true, players: true })
+    .optional()
+})
 
-export const saveOfflineGameValidation = clientSessionSchema
-  .omit({
-    slug: true,
-    type: true,
-    mode: true,
-    status: true,
-    players: true,
-    cards: true
-  })
-  .extend({
-    playerId: z.string(),
-    cards: z.array(sessionCardSchema.extend({
-      matchedBy: z.string()
-    }))
-  })
+export const saveOfflineGameValidation = z.object({
+  playerId: z.string(),
+  clientSession: clientSessionSchema
+    .omit({
+      slug: true,
+      type: true,
+      mode: true,
+      status: true,
+      players: true,
+      cards: true
+    })
+    .extend({
+      cards: z.array(sessionCardSchema.extend({
+        matchedBy: z.string()
+      }))
+    })
+})
 
 export type CreateSingleSessionValidation = z.infer<typeof createSingleSessionValidation>
-export type CreateMultiSessionValidation = z.infer<typeof createMultiSessionValidation>
 export type SessionFormValidation = z.infer<typeof sessionFormValidation>
+export type CreateMultiSessionValidation = z.infer<typeof createMultiSessionValidation>
 export type SaveSessionValidation = z.infer<typeof saveSessionValidation>
 export type FinishSessionValidation = z.infer<typeof finishSessionSchema>
 export type AbandonSessionValidation = z.infer<typeof abandonSessionValidation>

@@ -30,7 +30,7 @@ const CollectionQuickSetupLink = forwardRef<
   const pathname = usePathname()
 
   const handleNavigate = () => {
-    const url = `/game/setup?collection=${collectionId}`
+    const url = `/game/setup?collectionId=${collectionId}`
 
     /*
      * Note: In this case, a full page reload is needed to make sure closing the popup.

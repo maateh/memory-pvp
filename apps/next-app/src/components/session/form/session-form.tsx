@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { DefaultValues } from "react-hook-form"
-import type { ClientPlayer } from "@repo/schema/player"
 import type { SessionFormValidation } from "@repo/schema/session-validation"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
@@ -32,28 +31,27 @@ import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 
-type SessionFormValuesCache<T = SessionFormValidation> = {
-  sessionValues: T
+type SessionFormValuesCache = {
   collection: ClientCardCollection | null
-}
+} & SessionFormValidation
 
 type SessionFormProps = {
   defaultValues?: DefaultValues<SessionFormValidation>
   collection: ClientCardCollection | null
-  activePlayer: ClientPlayer
 }
 
-const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormProps) => {
+const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const { user: clerkUser } = useClerk()
 
   const form = useForm<SessionFormValidation>({
     resolver: zodResolver(sessionFormValidation),
     defaultValues: {
-      type: defaultValues?.type || 'CASUAL',
-      mode: defaultValues?.mode || 'SINGLE',
-      tableSize: defaultValues?.tableSize || 'SMALL',
-      collectionId: collection?.id,
-      owner: activePlayer
+      settings: {
+        type: defaultValues?.settings?.type ?? "CASUAL",
+        mode: defaultValues?.settings?.mode ?? "SINGLE",
+        tableSize: defaultValues?.settings?.tableSize ?? "SMALL",
+        collectionId: collection?.id,
+      }
     }
   })
 
@@ -68,15 +66,21 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
   const { execute: createOfflineSession } = useCreateOfflineSession()
 
   const handleSubmit = (values: SessionFormValidation) => {
-    if (values.mode === "SINGLE") createSingleSession(values)
-    else createWaitingRoom(values)
+    const { settings, forceStart } = values
+
+    if (settings.mode === "SINGLE") {
+      createSingleSession({ settings, forceStart })
+      return
+    }
+
+    createWaitingRoom({ settings })
   }
 
-  const type = form.watch('type')
-  const mode = form.watch('mode')
-  const collectionId = form.watch('collectionId')
+  const type = form.watch("settings.type")
+  const mode = form.watch("settings.mode")
+  const collectionId = form.watch("settings.collectionId")
   
-  const SubmitIcon = mode === 'SINGLE' ? SquarePlay : CircleFadingPlus
+  const SubmitIcon = mode === "SINGLE" ? SquarePlay : CircleFadingPlus
 
   return (
     <Form<SessionFormValidation>
@@ -138,7 +142,7 @@ const SessionForm = ({ defaultValues, collection, activePlayer }: SessionFormPro
         <Button className="gap-x-2 rounded-2xl bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm font-normal sm:text-base"
           size="sm"
           type="button"
-          onClick={form.handleSubmit((sessionValues) => createOfflineSession({ sessionValues, collection }))}
+          onClick={form.handleSubmit((values) => createOfflineSession({ ...values, collection }))}
           disabled={
             createSingleSessionStatus === 'executing'
               || createRoomActionStatus === 'executing'

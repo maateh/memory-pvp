@@ -35,8 +35,10 @@ const SingleGameHandler = () => {
     onFinish: async () => {
       try {
         await executeFinishSession({
-          ...session,
-          cards: validateCardMatches(session.cards)
+          clientSession: {
+            ...session,
+            cards: validateCardMatches(session.cards)
+          }
         })
       } catch (err) {
         logError(err)

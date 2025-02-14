@@ -20,8 +20,7 @@ import { generateSessionSlug } from "@/lib/helper/session-helper"
 export const createRoom = playerActionClient
   .schema(createSessionRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    // TODO: remove owner from validation
-    const { owner: _, ...settings } = parsedInput
+    const { settings } = parsedInput
 
     const slug = generateSessionSlug(settings)
     const connection = offlinePlayer({
@@ -57,8 +56,7 @@ export const createRoom = playerActionClient
 export const joinRoom = playerActionClient
   .schema(joinSessionRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    // TODO: remove guest from validation
-    const { guest:_, roomSlug } = parsedInput
+    const { roomSlug } = parsedInput
 
     const room = await getRoom<WaitingRoom>(roomSlug)
     const connection = offlinePlayer({

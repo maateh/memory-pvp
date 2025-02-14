@@ -57,9 +57,7 @@ const WaitingRoomCard = ({ guestPlayer, room }: WaitingRoomCardProps) => {
             session={{ slug: room.slug, status: "RUNNING" }}
           />
 
-          <RoomJoinButton
-            values={{ roomSlug: room.slug, guest: guestPlayer }}
-          />
+          <RoomJoinButton roomSlug={room.slug} />
         </div>
 
         <Separator className="w-11/12 ml-auto mt-auto mb-1.5 bg-border/65" />

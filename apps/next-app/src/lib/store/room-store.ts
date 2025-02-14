@@ -194,7 +194,7 @@ export const roomStore = ({
       })
 
       const { serverError } = await createMultiSession({
-        ...room.settings,
+        settings: room.settings,
         slug: room.slug,
         guestId: room.guest.id
       }) || {}
