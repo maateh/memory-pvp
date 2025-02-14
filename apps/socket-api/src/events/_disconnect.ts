@@ -1,20 +1,24 @@
 // types
 import type { JoinedRoom } from "@repo/schema/session-room"
-
-// socket
-import { io } from "@/server"
+import type { PlayerConnection } from "@repo/server/socket-types"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
-import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
-import { playerConnection } from "@repo/server/redis-data-parser"
+import { getRoom } from "@repo/server/redis-commands"
+import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
 
+  const { playerId, playerTag, roomSlug } = socket.ctx.connection
+  const offlineConnection: PlayerConnection = {
+    ...socket.ctx.connection,
+    status: "offline",
+    socketId: null,
+    connectedAt: null
+  }
+
   try {
-    const { roomSlug, playerId } = await getSocketConnection(socket.id)
     const room = await getRoom(roomSlug)
 
     if (room.status === "waiting") {
@@ -23,34 +27,30 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
       room.owner.socketId = null
 
       await Promise.all([
-        redis.del(connectionKey(socket.id)),
-        redis.json.set(roomKey(roomSlug), "$", room, { xx: true }),
-        redis.hset(playerConnectionKey(playerId), playerConnection({
-          playerId,
-          roomSlug,
-          status: "offline"
-        }))
+        redis.hset(playerConnectionKey(playerId), offlineConnection),
+        redis.json.set(roomKey(room.slug), "$", room, { xx: true })
       ])
     }
 
     if (room.status === "joined" || room.status === "ready") {
       const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
+      room[currentPlayerKey].status = "offline"
+      room[currentPlayerKey].socketId = null
+
       const joinedRoom: JoinedRoom = {
-        ...room as JoinedRoom,
+        ...room,
         status: "joined",
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }
-      room[currentPlayerKey].status = "offline"
-      room[currentPlayerKey].socketId = null
+
       await Promise.all([
-        redis.del(connectionKey(socket.id)),
-        redis.hset(playerConnectionKey(playerId), playerConnection({ playerId, roomSlug, status: "offline" })),
-        redis.json.set(roomKey(roomSlug), "$", joinedRoom, { xx: true })
+        redis.hset(playerConnectionKey(playerId), offlineConnection),
+        redis.json.set(roomKey(room.slug), "$", joinedRoom, { xx: true })
       ])
 
-      socket.broadcast.to(roomSlug).emit("room:disconnected", {
-        message: `${room[currentPlayerKey].tag} has disconnected.`,
+      socket.broadcast.to(room.slug).emit("room:disconnected", {
+        message: `${playerTag} has disconnected.`,
         description: currentPlayerKey === "owner"
           ? "You can leave the room without losing any ranking scores."
           : "You can kick the player out of the room if you don't want to wait any longer.",
