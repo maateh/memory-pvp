@@ -3,7 +3,7 @@ import type { JoinedRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
+import { getRoom } from "@repo/server/redis-commands"
 import { roomKey } from "@repo/server/redis-keys"
 
 // server
@@ -18,8 +18,9 @@ export const roomReady: SocketEventHandler<
 > = (socket) => async (_, response) => {
   console.log("DEBUG - room:ready -> ", socket.id)
 
+  const { playerId, roomSlug } = socket.ctx.connection
+
   try {
-    const { roomSlug, playerId } = await getSocketConnection(socket.id)
     const room = await getRoom<JoinedRoom>(roomSlug)
 
     if (room.status === "ready" || room.status === "starting") {

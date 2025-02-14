@@ -1,9 +1,3 @@
-// types
-import type { SessionCreatedValidation } from "@repo/schema/room-validation"
-
-// schemas
-import { sessionCreatedValidation } from "@repo/schema/room-validation"
-
 // redis
 import { getRoomByField } from "@repo/server/redis-commands"
 
@@ -12,15 +6,13 @@ import { io } from "@/server"
 
 // utils
 import { ServerError } from "@repo/server/error"
-import { validate } from "@/utils/validate"
 
-export const sessionCreated: SocketEventHandler<
-  SessionCreatedValidation
-> = (socket) => async (input) => {
+export const sessionCreated: SocketEventHandler = (socket) => async () => {
   console.log("session:created ->", socket.id)
 
+  const { roomSlug } = socket.ctx.connection
+
   try {
-    const { roomSlug } = validate(sessionCreatedValidation, input)
     const {
       type,
       mode,
@@ -35,7 +27,7 @@ export const sessionCreated: SocketEventHandler<
       data: roomSlug
     } satisfies SocketResponse<string>)
   } catch (err) {
-    io.to(input.roomSlug).emit("session:started", {
+    io.to(roomSlug).emit("session:started", {
       message: "Failed to start game session.",
       error: ServerError.parser(err)
     } satisfies SocketResponse)

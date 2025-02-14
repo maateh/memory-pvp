@@ -7,7 +7,6 @@ import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
 import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
-import type { SessionCreatedValidation } from "@repo/schema/room-validation"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"
@@ -207,7 +206,7 @@ export const roomStore = ({
         })
       }
 
-      socket.emit("session:created", { roomSlug: room.slug } satisfies SessionCreatedValidation)
+      socket.emit("session:created")
       toast.info("Game session has been initialized.", {
         id: "session:created",
         description: "Starting the game session..."

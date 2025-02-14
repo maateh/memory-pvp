@@ -14,15 +14,10 @@ export const joinSessionRoomValidation = z.object({
   guest: clientPlayerSchema
 })
 
-export const sessionCreatedValidation = z.object({
-  roomSlug: z.string()
-})
-
 export const sessionReconnectValidation = z.object({
   playerId: z.string()
 })
 
 export type CreateSessionRoomValidation = z.infer<typeof createSessionRoomValidation>
 export type JoinSessionRoomValidation = z.infer<typeof joinSessionRoomValidation>
-export type SessionCreatedValidation = z.infer<typeof sessionCreatedValidation>
 export type SessionReconnectValidation = z.infer<typeof sessionReconnectValidation>

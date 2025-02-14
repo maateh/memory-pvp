@@ -3,7 +3,6 @@ import type { JoinedRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getSocketConnectionByField } from "@repo/server/redis-commands"
 import { roomKey } from "@repo/server/redis-keys"
 
 // error
@@ -12,8 +11,9 @@ import { ServerError } from "@repo/server/error"
 export const sessionStarting: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - session:starting -> ", socket.id)
 
+  const { roomSlug } = socket.ctx.connection
+
   try {
-    const roomSlug = await getSocketConnectionByField(socket.id, "roomSlug")
     await redis.json.set(
       roomKey(roomSlug),
       "$.status",
