@@ -19,7 +19,7 @@ export const useJoinRoomAction = () => {
       if (!data) return
       const { roomSlug } = data
 
-      router.push(`/dashboard/rooms/${roomSlug}`)
+      router.push(`/game/room/${roomSlug}`)
       toast.loading("You have joined the room!", {
         description: "Connecting to the server...",
         id: "room:connect"

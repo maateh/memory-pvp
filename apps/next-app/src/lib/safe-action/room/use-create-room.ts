@@ -19,7 +19,7 @@ export const useCreateRoomAction = () => {
       if (!data) return
       const { roomSlug } = data
 
-      router.push(`/dashboard/rooms/${roomSlug}`)
+      router.push(`/game/room/${roomSlug}`)
       toast.loading("Waiting room successfully created!", {
         description: "Connecting to the server...",
         id: "room:connect"
