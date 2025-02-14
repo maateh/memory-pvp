@@ -44,12 +44,13 @@ io.use(roomLoader)
 
 io.on("connection", (_socket) => {
   const socket = _socket as SocketWithContext
+  const { playerTag, roomSlug } = socket.ctx.connection
 
   console.info("Connection: ", socket.id)
 
-  socket.join(socket.ctx.room.slug)
-  io.to(socket.ctx.room.slug).emit("room:connected", {
-    message: `${socket.ctx.connection.playerTag} has connected.`,
+  socket.join(roomSlug)
+  io.to(roomSlug).emit("room:connected", {
+    message: `${playerTag} has connected.`,
     data: socket.ctx.room
   } satisfies SocketResponse<RoomVariants>)
 
@@ -58,9 +59,9 @@ io.on("connection", (_socket) => {
    * if the action fails after the redis commands have already run
    * the room status can "stuck" without the owner even being notifed.
    */
-  socket.on("room:ready", roomReady(socket))
   socket.on("room:leave", roomLeave(socket))
   socket.on("room:close", roomClose(socket))
+  socket.on("room:ready", roomReady(socket))
   socket.on("session:starting", sessionStarting(socket))
   socket.on("session:created", sessionCreated(socket))
 

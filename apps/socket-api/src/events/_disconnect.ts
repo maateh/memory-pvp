@@ -10,6 +10,9 @@ import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
 
+  /* Note: Player connection has already been closed in another event handler. */
+  if (!socket.ctx.connection) return
+
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
   const offlineConnection: PlayerConnection = {
     ...socket.ctx.connection,

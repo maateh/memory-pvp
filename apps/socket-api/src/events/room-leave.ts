@@ -3,8 +3,8 @@ import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getRoom, getSocketConnection } from "@repo/server/redis-commands"
-import { connectionKey, playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
+import { getRoom } from "@repo/server/redis-commands"
+import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
 import { ServerError } from "@repo/server/error"
@@ -12,11 +12,13 @@ import { ServerError } from "@repo/server/error"
 export const roomLeave: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:leave -> ", socket.id)
 
+  const { playerId, playerTag, roomSlug } = socket.ctx.connection
+  socket.ctx.connection = undefined!
+
   // FIXME: if the session is running -> room cannot be left
 
   try {
-    const { playerId, roomSlug } = await getSocketConnection(socket.id)
-    const { guest, ...room } = await getRoom<JoinedRoom>(roomSlug)
+    const { guest: _, ...room } = await getRoom<JoinedRoom>(roomSlug)
     
     const waitingRoom: WaitingRoom = {
       ...room,
@@ -25,7 +27,6 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
     }
 
     await Promise.all([
-      redis.del(connectionKey(socket.id)),
       redis.del(playerConnectionKey(playerId)),
       redis.json.set(roomKey(roomSlug), "$", waitingRoom, { xx: true }),
       redis.lpush(waitingRoomsKey, roomSlug)
@@ -33,7 +34,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
 
     socket.leave(roomSlug)
     socket.broadcast.to(roomSlug).emit("room:left", {
-      message: `${guest.tag} has left the room.`,
+      message: `${playerTag} has left the room.`,
       description: "Please wait for another player to join...",
       data: waitingRoom
     } satisfies SocketResponse<WaitingRoom>)
