@@ -1,59 +1,27 @@
 // types
 import type { Room } from "@repo/schema/room"
-import type { SessionReconnectValidation } from "@repo/schema/room-validation"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getPlayerConnection, getRoom } from "@repo/server/redis-commands"
-import { connectionKey, playerConnectionKey, roomKey } from "@repo/server/redis-keys"
-
-// schema
-import { sessionReconnectValidation } from "@repo/schema/room-validation"
+import { getRoom } from "@repo/server/redis-commands"
 
 // error
 import { ServerError } from "@repo/server/error"
 
-// utils
-import { validate } from "@/utils/validate"
-
 export const sessionReconnect: SocketEventHandler<
-  SessionReconnectValidation,
+  unknown,
   Room
-> = (socket) => async (input, response) => {
+> = (socket) => async (_, response) => {
   console.log("DEBUG - session:reconnect -> ", socket.id)
 
+  const { roomSlug } = socket.ctx.connection
+
   try {
-    const { playerId } = validate(sessionReconnectValidation, input)
-    const prevConnection = await getPlayerConnection(playerId)
-    const room = await getRoom<Room>(prevConnection.roomSlug)
+    const room = await getRoom<Room>(roomSlug)
 
-    if (room.owner.id === playerId) {
-      room.owner.socketId = socket.id
-      room.owner.ready = true
-    } else {
-      room.guest.socketId = socket.id
-      room.guest.ready = true
-    }
+    // TODO: implement session reconnection
 
-    // TODO: add "cancelled" option to room status
-    // room.status = room.owner.ready && room.guest.ready ? "running" : "cancelled"
-
-    // FIXME: implement session reconnection
-    // const connection: SocketConnection = {
-    //   ...prevConnection,
-    //   socketId: socket.id
-    // }
-
-    // await Promise.all([
-    //   redis.del(connectionKey(prevConnection.socketId)),
-    //   redis.hset(connectionKey(socket.id), connection),
-    //   redis.hset(playerConnectionKey(playerId), connection),
-    //   redis.json.set(roomKey(room.slug), "$", room, { xx: true })
-    // ])
-
-    socket.join(room.slug)
-    // TODO: notify joined player -> `socket.broadcast`
-
+    socket.join(roomSlug)
     response({
       message: "You have successfully reconnected!",
       description: "Session is continued from where you left off.",

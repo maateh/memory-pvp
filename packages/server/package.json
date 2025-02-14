@@ -9,7 +9,6 @@
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",
     "./redis-keys": "./src/redis/keys.ts",
-    "./redis-data-parser": "./src/redis/data-parser.ts",
     "./socket-types": "./src/types/socket.ts"
   },
   "dependencies": {
