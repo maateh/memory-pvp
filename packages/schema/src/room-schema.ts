@@ -6,6 +6,7 @@ import { clientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
 export const roomStatus = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
+export const roomConnectionStatus = z.enum(["offline", "half_online", "online"])
 
 export const roomSettings = sessionSettings
   .omit({ mode: true })
@@ -19,6 +20,7 @@ export const roomSettings = sessionSettings
 export const roomSchema = z.object({
   slug: z.string(),
   status: roomStatus,
+  connectionStatus: roomConnectionStatus,
   owner: roomPlayerSchema,
   guest: roomPlayerSchema,
   settings: roomSettings,
@@ -61,6 +63,7 @@ export const runningRoomSchema = roomSchema
   })
 
 export type RoomStatus = z.infer<typeof roomStatus>
+export type RoomConnectionStatus = z.infer<typeof roomConnectionStatus>
 export type RoomSettings = z.infer<typeof roomSettings>
 
 export type Room = z.infer<typeof roomSchema>

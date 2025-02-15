@@ -22,6 +22,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     const room = await getRoom(roomSlug)
 
     if (room.status === "waiting") {
+      room.connectionStatus = "offline"
       room.owner.connection = offlineConnection
       room.owner.ready = false
 
@@ -35,9 +36,13 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
       const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
       room[currentPlayerKey].connection = offlineConnection
 
+      const ownerIsOnline = room.owner.connection.status === "online"
+      const guestIsOnline = room.guest.connection.status === "online"
+
       const joinedRoom: JoinedRoom = {
         ...room,
         status: "joined",
+        connectionStatus: ownerIsOnline || guestIsOnline ? "half_online" : "offline",
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }

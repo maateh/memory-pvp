@@ -23,6 +23,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
     const waitingRoom: WaitingRoom = {
       ...room,
       status: "waiting",
+      connectionStatus: room.owner.connection.status === "online" ? "half_online" : "offline",
       owner: { ...room.owner, ready: false }
     }
 

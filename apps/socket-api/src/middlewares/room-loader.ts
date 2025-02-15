@@ -24,6 +24,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     //  - if not -> return next(error)
 
     if (room.status === "waiting") {
+      room.connectionStatus = "half_online"
       room.owner.connection = connection
       room.owner.ready = false
     }
@@ -31,8 +32,15 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     if (room.status === "joined" || room.status === "ready") {
       const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
       room[currentPlayerKey].connection = connection
-      
+
+      const ownerIsOnline = room.owner.connection.status === "online"
+      const guestIsOnline = room.guest.connection.status === "online"
+
       room.status = "joined"
+      room.connectionStatus = ownerIsOnline && guestIsOnline
+        ? "online" : ownerIsOnline || guestIsOnline
+        ? "half_online"
+        : "offline"
       room.owner.ready = false
       room.guest.ready = false
     }

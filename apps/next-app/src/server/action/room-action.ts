@@ -33,8 +33,10 @@ export const createRoom = playerActionClient
     const room: WaitingRoom = {
       slug,
       status: "waiting",
+      connectionStatus: "offline",
       owner: {
         ...ctx.player,
+        role: "owner",
         ready: false,
         connection
       },
@@ -71,6 +73,7 @@ export const joinRoom = playerActionClient
       status: "joined",
       guest: {
         ...ctx.player,
+        role: "guest",
         ready: false,
         connection
       }
