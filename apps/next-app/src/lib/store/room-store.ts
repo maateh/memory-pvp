@@ -115,9 +115,14 @@ export const roomStore = ({
         error
       }: SocketResponse<boolean> = await socket.emitWithAck("room:ready", {})
 
-      if (error) {
+      if (error || typeof ready !== "boolean") {
         throw ServerError.parser(error)
       }
+
+      set(({ currentRoomPlayer }) => {
+        currentRoomPlayer.ready = ready
+        return { currentRoomPlayer }
+      })
 
       const toaster = ready ? toast.success : toast.info
       toaster(message, { id: "room:ready:response", description })
@@ -148,14 +153,21 @@ export const roomStore = ({
     toast.dismiss("room:connected")
     toast.warning(message, { description, id: "room:disconnected" })
 
-    set({ room })
+    set(({ currentRoomPlayer }) => {
+      currentRoomPlayer.ready = false
+      return { room, currentRoomPlayer }
+    })
   },
 
   roomLeft({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
       
     toast.warning(message, { description })
-    set({ room })
+    
+    set(({ currentRoomPlayer }) => {
+      currentRoomPlayer.ready = false
+      return { room, currentRoomPlayer }
+    })
   },
 
   roomClosed({ message, description, error }) {
