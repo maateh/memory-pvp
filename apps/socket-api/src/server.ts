@@ -23,6 +23,7 @@ import {
   roomReady,
   roomLeave,
   roomClose,
+  roomKick,
   sessionCreated,
   sessionReconnect,
   sessionStarting
@@ -62,6 +63,7 @@ io.on("connection", (_socket) => {
   socket.on("room:leave", roomLeave(socket))
   socket.on("room:close", roomClose(socket))
   socket.on("room:ready", roomReady(socket))
+  socket.on("room:kick", roomKick(socket))
   socket.on("session:starting", sessionStarting(socket))
   socket.on("session:created", sessionCreated(socket))
 

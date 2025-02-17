@@ -8,6 +8,7 @@ export type ThrownBy =
 
 export type CauseKey =
   "UNKNOWN" |
+  "ACCESS_DENIED" |
   "CLERK_UNAUTHORIZED" |
   "USER_NOT_FOUND" |
   "PLAYER_PROFILE_NOT_FOUND" |
@@ -21,8 +22,8 @@ export type CauseKey =
   "COLLECTION_ACCESS_DENIED" |
   'VALIDATION_FAILED' |
   "ROOM_NOT_FOUND" |
-  "SOCKET_CONNECTION_NOT_FOUND" |
   "PLAYER_CONNECTION_NOT_FOUND" |
+  "ROOM_STATUS_CONFLICT" |
   "SESSION_ALREADY_STARTED"
 
 export type ServerErrorOpts = {
