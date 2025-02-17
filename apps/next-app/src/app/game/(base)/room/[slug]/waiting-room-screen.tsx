@@ -1,90 +1,105 @@
 "use client"
 
-// utils
-import { cn } from "@/lib/util"
+// types
+import type { WaitingRoomVariants } from "@repo/schema/room"
+
+// settings
+import { waitingRoomHeaderMap } from "@/config/room-settings"
 
 // icons
-import { CircleCheck, CircleCheckBig, DoorClosed, Share2 } from "lucide-react"
+import { Share2 } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 
 // components
-import { JoinedPlayer } from "@/components/room"
+import {
+  JoinedPlayer,
+  RoomLeaveButton,
+  RoomReadyButton
+} from "@/components/room"
 
 // hooks
-import { useCopy } from "@/hooks/use-copy"
 import { useRoomStore } from "@/components/provider/room-store-provider"
+import { useCopy } from "@/hooks/use-copy"
 
 const WaitingRoomScreen = () => {
-  const room = useRoomStore((state) => state.room)
+  const { handleCopy } = useCopy({ showToast: true })
+
+  const room = useRoomStore((state) => state.room) as WaitingRoomVariants
   const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
   const roomClose = useRoomStore((state) => state.roomClose)
   const roomLeave = useRoomStore((state) => state.roomLeave)
+  const roomKick = useRoomStore((state) => state.roomKick)
   const roomReady = useRoomStore((state) => state.roomReady)
-  const { handleCopy } = useCopy({ showToast: true })
-
-  const ReadyIcon = currentRoomPlayer.ready ? CircleCheck : CircleCheckBig
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-y-12">
+    <div className="flex-1 flex flex-col items-center justify-around gap-y-12">
       <div className="px-4 mb-2 text-center leading-8">
-        <h1 className="text-xl sm:text-3xl heading-decorator">
-          Waiting for another player to join...
+        <h1 className="mx-auto text-xl sm:text-3xl line-clamp-3">
+          {waitingRoomHeaderMap[room.status].title}
         </h1>
 
-        <p className="text-sm sm:text-base text-muted-foreground">
-          ...or share the invite code with your friends.
+        <Separator className="my-1.5 bg-border/20" />
+
+        <p className="w-2/3 mx-auto text-sm sm:text-base text-muted-foreground font-light line-clamp-4">
+          {waitingRoomHeaderMap[room.status].description}
         </p>
-      </div>
 
-      <div className="flex items-center justify-center gap-x-12">
-        <JoinedPlayer player={room.owner} />
-        {room.status !== "waiting" && <JoinedPlayer player={room.guest} />}
-      </div>
-
-      <div className="flex flex-col gap-y-2.5">
-        {room.status === "waiting" ? (
-          <Button className="gap-x-2"
-            tooltip={`Room code: ${room.slug}`}
-            variant="outline"
-            size="sm"
-            onClick={() => handleCopy(room.slug)}
-          >
-            <Share2 className="size-3.5 sm:size-4 shrink-0"
-              strokeWidth={2.25}
-            />
-            <span className="mt-0.5 text-base font-heading">
-              Click to copy invite code
-            </span>
-          </Button>
-        ) : (
-          <Button className={cn("gap-x-2", { "opacity-95": currentRoomPlayer.ready })}
-            variant={currentRoomPlayer.ready ? "default" : "secondary"}
-            size="sm"
-            onClick={roomReady}
-            disabled={room.status !== "joined"}
-          >
-            <ReadyIcon className="size-3.5 sm:size-4 shrink-0"
-              strokeWidth={2.25}
-            />
-            <span className="mt-0.5 text-base font-heading">
-              {currentRoomPlayer.ready ? "Unready" : "Ready"}
-            </span>
-          </Button>
-        )}
-
-        <Button className="gap-x-2"
-          tooltip="Click here to close the session. You will not lose points, even in competitive mode."
-          variant="destructive"
-          size="sm"
-          onClick={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
-          disabled={currentRoomPlayer.ready || room.status === "ready" || room.status === "starting"}
+        <Button className="mt-4 border border-border/15 gap-x-2.5 group"
+          tooltip="Copy to clipboard"
+          variant="ghost"
+          onClick={() => handleCopy(room.slug)}
         >
-          <DoorClosed className="size-4 shrink-0" />
-          <span>{currentRoomPlayer.id === room.owner.id ? "Close room" : "Leave room"}</span>
+          <Share2 className="size-4 sm:size-5 shrink-0" />
+
+          <Separator className="bg-border/35" orientation="vertical" />
+
+          <div className="mt-0.5 text-base font-heading font-normal">
+            <span className="group-hover:hidden">
+              Invite code
+            </span>
+            <span className="hidden group-hover:inline">
+              {room.slug}
+            </span>
+          </div>
         </Button>
       </div>
+
+      <div className="flex flex-col">
+        <Separator className="mb-4 bg-border/10" />
+
+        <div className="flex flex-wrap items-center justify-center gap-x-12">
+          <JoinedPlayer
+            player={room.owner}
+          />
+
+          {room.status !== "waiting" && (
+            <JoinedPlayer
+              player={room.guest}
+              disableKick={currentRoomPlayer.role === "guest"}
+              handleKick={roomKick}
+            />
+          )}
+        </div>
+
+        <Separator className="-mt-2 mb-8 bg-border/10" />
+
+        <RoomReadyButton
+          connectionStatus={room.connectionStatus}
+          roomStatus={room.status}
+          isReady={currentRoomPlayer.ready}
+          handleReady={roomReady}
+        />
+      </div>
+
+      <RoomLeaveButton
+        action={currentRoomPlayer.id === room.owner.id ? "close" : "leave"}
+        handleCloseOrLeave={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
+        roomStatus={room.status}
+        isReady={currentRoomPlayer.ready}
+      />
     </div>
   )
 }

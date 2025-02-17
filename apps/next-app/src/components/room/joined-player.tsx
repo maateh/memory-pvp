@@ -1,4 +1,7 @@
+"use client"
+
 // types
+import type { RoomStatus } from "@repo/schema/room"
 import type { RoomPlayer } from "@repo/schema/room-player"
 
 // utils
@@ -6,7 +9,7 @@ import { getRendererPlayerStats } from "@/lib/util/stats"
 import { cn } from "@/lib/util"
 
 // icons
-import { Check, X } from "lucide-react"
+import { Check, WifiOff, X } from "lucide-react"
 
 // shadcn
 import { BadgeWithIcon } from "@/components/ui/badge"
@@ -14,17 +17,36 @@ import { BadgeWithIcon } from "@/components/ui/badge"
 // components
 import { PlayerBadge } from "@/components/player"
 import { UserAvatar } from "@/components/user"
-import { StatisticBadge } from "@/components/shared"
+import { HoverActionOverlay, StatisticBadge } from "@/components/shared"
 
 type JoinedPlayerProps = {
   player: RoomPlayer
+  disableKick?: boolean
+  handleKick?: () => void
 }
 
-const JoinedPlayer = ({ player }: JoinedPlayerProps) => {
-  const { score } = getRendererPlayerStats(player, ['score'])
+const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerProps) => {
+  const { score } = getRendererPlayerStats(player, ["score"])
+  const isOffline = player.connection.status === "offline"
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-2">
+    <HoverActionOverlay className={cn("pt-4 pb-8 flex flex-col items-center justify-center gap-y-2 relative", {
+      "opacity-40": isOffline
+    })}
+      hoverAction={handleKick}
+      disableOverlay={disableKick || !handleKick}
+      overlayProps={{
+        className: "bg-destructive/40",
+        children: (
+          <div className="flex flex-col items-center justify-center gap-y-2">
+            <X className="size-6 sm:size-7 shrink-0" strokeWidth={5} />
+            <p className="text-base sm:text-lg font-heading font-semibold">
+              Kick player
+            </p>
+          </div>
+        )
+      }}
+    >
       <UserAvatar className="size-12"
         imageSize={256}
         user={{
@@ -35,15 +57,20 @@ const JoinedPlayer = ({ player }: JoinedPlayerProps) => {
       
       <PlayerBadge size="lg" player={player} />
       
-      <StatisticBadge statistic={score} />
+      <StatisticBadge className={cn({ "opacity-80": player.stats.score < 0 })}
+        variant={player.stats.score < 0 ? "destructive" : "accent"}
+        statistic={score}
+      />
 
-      <BadgeWithIcon className={cn("gap-x-1 opacity-90", { "opacity-40": !player.ready })}
-        variant={player.ready ? "secondary" : "destructive"}
-        Icon={player.ready ? Check : X}
+      <BadgeWithIcon className={cn("gap-x-1 opacity-90", {
+        "opacity-45": !player.ready && !isOffline
+      })}
+        variant={isOffline ? "muted" : player.ready ? "secondary" : "destructive"}
+        Icon={isOffline ? WifiOff : player.ready ? Check : X}
       >
-        {player.ready ? "Ready": "Unready"}
+        {isOffline ? "Offline" : player.ready ? "Ready": "Unready"}
       </BadgeWithIcon>
-    </div>
+    </HoverActionOverlay>
   )
 }
 
