@@ -9,7 +9,7 @@ type HoverActionOverlayProps = {
   hoverAction?: () => void
   disableOverlay?: boolean
   overlayProps?: React.ComponentProps<"div">
-} & Omit<React.ComponentProps<"div">, "onMouseEnter" | "onMouseLeave">
+} & React.ComponentProps<"div">
 
 const HoverActionOverlay = ({
   hoverAction,
