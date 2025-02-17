@@ -48,10 +48,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     // TODO: if room.status === "starting" || room.status === "running"
     //  -> implement session reconnection
 
-    await Promise.all([
-      redis.json.set(roomKey(room.slug), `$`, room, { xx: true }),
-      room.status !== "waiting" ? redis.lrem(waitingRoomsKey, 1, room.slug) : null
-    ])
+    await redis.json.set(roomKey(room.slug), `$`, room, { xx: true })
 
     socket.ctx = { ...ctx, connection, room }
     next()
