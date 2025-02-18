@@ -35,6 +35,7 @@ type RoomListener = {
   roomKicked: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
+  sessionStartingFailed: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<string>) => void
   connectError: (error: ExtendedSocketError<ServerError>) => void
   disconnect: (reason: Socket.DisconnectReason) => void
@@ -257,8 +258,7 @@ export const roomStore = ({
         description: "Starting the game session..."
       })
     } catch (err) {
-      // TODO: emit `session:starting:failed`
-      // socket.emit("session:starting:failed")
+      socket.emit("session:starting:failed")
 
       handleServerError(err as ServerError)
       logError(err)
@@ -276,6 +276,15 @@ export const roomStore = ({
     }))
     
     toast.loading(message, { id: "session:starting", description })
+  },
+
+  sessionStartingFailed({ message, description, error }) {
+    toast.dismiss("session:starting")
+
+    if (error) handleServerError(error)
+    else toast.warning(message, { description })
+
+    router.replace("/game/setup")
   },
 
   sessionStarted({ data: roomSlug, message, description, error }) {
