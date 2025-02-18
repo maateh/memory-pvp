@@ -32,6 +32,7 @@ type RoomListener = {
   roomDisconnected: (response: SocketResponse<JoinedRoom>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
+  roomKicked: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<string>) => void
@@ -133,7 +134,31 @@ export const roomStore = ({
   },
 
   async roomKick() {
-    // TODO: implement kicking user
+    toast.loading("Kicking player...", { id: "room:kick" })
+
+    try {
+      const {
+        data: room,
+        message,
+        description,
+        error
+      }: SocketResponse<WaitingRoom> = await socket.emitWithAck("room:kick", {})
+
+      if (error || !room) {
+        throw ServerError.parser(error)
+      }
+
+      set(({ currentRoomPlayer }) => {
+        currentRoomPlayer.ready = false
+        return { currentRoomPlayer, room }
+      })
+
+      toast.success(message, { description, id: "room:kick:response" })
+      set({ room })
+    } catch (err) {
+      handleServerError(err as ServerError)
+      logError(err)
+    } finally { toast.dismiss("room:kick") }
   },
 
   /* Listeners */
@@ -174,6 +199,14 @@ export const roomStore = ({
     if (error) return handleServerError(error)
 
     toast.warning(message, { description })
+    router.replace("/dashboard/rooms")
+  },
+
+  roomKicked({ message, description, error }) {
+    if (error) return handleServerError(error)
+
+    toast.warning(message, { description })
+    socket.emit("connection:clear")
     router.replace("/dashboard/rooms")
   },
 
