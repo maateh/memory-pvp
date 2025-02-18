@@ -18,17 +18,16 @@ import {
 } from "./middlewares"
 
 // events
+import { disconnect, connectionClear } from "@/events"
 import {
-  disconnect,
-  connectionClear,
   roomReady,
   roomLeave,
   roomClose,
   roomKick,
   sessionCreated,
-  sessionReconnect,
   sessionStarting
-} from "@/events"
+} from "@/events/room"
+import { sessionReconnect } from "@/events/session"
 
 const app = express()
 const server = http.createServer(app)
