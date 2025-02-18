@@ -25,7 +25,8 @@ import {
   roomClose,
   roomKick,
   sessionCreated,
-  sessionStarting
+  sessionStarting,
+  sessionStartingFailed
 } from "@/events/room"
 import { sessionReconnect } from "@/events/session"
 
@@ -65,6 +66,7 @@ io.on("connection", (_socket) => {
   socket.on("room:ready", roomReady(socket))
   socket.on("room:kick", roomKick(socket))
   socket.on("session:starting", sessionStarting(socket))
+  socket.on("session:starting:failed", sessionStartingFailed(socket))
   socket.on("session:created", sessionCreated(socket))
 
   socket.on("session:reconnect", sessionReconnect(socket))
