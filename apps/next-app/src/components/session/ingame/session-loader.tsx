@@ -35,9 +35,10 @@ const SessionLoader = () => {
 
       <LoaderCircle className="size-12 sm:size-14 md:size-16 shrink-0 text-foreground/40 animate-spin" />
 
-      <Button className={cn("font-heading text-foreground/80 text-base sm:text-lg sm:tracking-wide animate-in slide-in-from-bottom-32 duration-700", {
+      <Button className={cn("font-heading text-foreground/80 text-base sm:text-lg sm:tracking-wide animate-in slide-in-from-bottom-32 duration-700 transition-none", {
         "hidden": disabled
       })}
+        variant="ghost"
         size="lg"
         disabled={disabled}
         asChild
