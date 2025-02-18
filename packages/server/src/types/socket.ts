@@ -6,3 +6,7 @@ export type SocketResponse<T = unknown> = {
   data?: T | null
   error?: ServerError | null
 }
+
+export type ExtendedSocketError<T = any> = Error & {
+  data?: T
+}

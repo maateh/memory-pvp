@@ -1,5 +1,6 @@
 // types
 import type { CauseKey, ThrownBy, ServerErrorOpts } from "./types"
+import type { ExtendedSocketError } from "../types/socket"
 
 export class ServerError {
   public readonly thrownBy: ThrownBy
@@ -42,5 +43,13 @@ export class ServerError {
       message: "Something went wrong.",
       description: "Something unexpected happened during this request. Please try again later."
     })
+  }
+
+  static asSocketError(error: ServerError | unknown): ExtendedSocketError<ServerError> {
+    const serverError = ServerError.parser(error)
+
+    const socketError: ExtendedSocketError = new Error(serverError.message)
+    socketError.data = serverError
+    return socketError
   }
 }

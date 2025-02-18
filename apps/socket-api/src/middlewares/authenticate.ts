@@ -1,6 +1,9 @@
 // clerk
 import { verifyToken } from "@clerk/express"
 
+// utils
+import { ServerError } from "@repo/server/error"
+
 export const authenticate: SocketMiddlewareFn = async (socket, next) => {
   const ctx = socket.ctx || {}
 
@@ -8,7 +11,12 @@ export const authenticate: SocketMiddlewareFn = async (socket, next) => {
     const token = socket.handshake.auth?.token
 
     if (!token) {
-      return next(new Error("Authentication error: Token is missing."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "CLERK_TOKEN_MISSING",
+        message: "Authentication failed.",
+        description: "Token is missing. Please try logging into your account again."
+      })
     }
 
     const session = await verifyToken(token, {
@@ -16,13 +24,26 @@ export const authenticate: SocketMiddlewareFn = async (socket, next) => {
     })
 
     if (!session) {
-      return next(new Error("Authentication error: Invalid token."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "CLERK_TOKEN_INVALID",
+        message: "Authentication failed.",
+        description: "Invalid token. Please try logging into your account again."
+      })
     }
 
     socket.ctx = { ...ctx, clerkId: session.sub }
     next()
   } catch (err) {
-    console.error("Socket authentication error: ", err)
-    return next(new Error("Authentication failed!"))
+    if ((err as any).reason === "token-expired") {
+      err = new ServerError({
+        thrownBy: "SOCKET_API",
+        key: "CLERK_TOKEN_EXPIRED",
+        message: "Authentication failed.",
+        description: "Token is expired. Please try reconnecting or reload this page."
+      })
+    }
+    
+    return next(ServerError.asSocketError(err))
   }
 }

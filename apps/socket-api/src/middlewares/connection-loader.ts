@@ -7,6 +7,9 @@ import { db } from "@/server"
 // redis
 import { redis } from "@repo/server/redis"
 import { playerConnectionKey } from "@repo/server/redis-keys"
+
+// utils
+import { ServerError } from "@repo/server/error"
 import { onlinePlayer } from "@repo/server/util"
 
 export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
@@ -21,13 +24,23 @@ export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
     })
   
     if (!player) {
-      return next(new Error("Player profile not found."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "PLAYER_PROFILE_NOT_FOUND",
+        message: "Player profile not found.",
+        description: "Please create a player profile first."
+      })
     }
 
     const connection = await redis.hgetall<PlayerConnection>(playerConnectionKey(player.id))
 
     if (!connection) {
-      return next(new Error("Player connection not found."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "PLAYER_CONNECTION_NOT_FOUND",
+        message: "Player connection data not found.",
+        description: "Please try creating or joining a new room."
+      })
     }
 
     const onlineConnection = onlinePlayer(connection, socket.id)
@@ -36,8 +49,6 @@ export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
     socket.ctx = { ...ctx, clerkId, connection: onlineConnection }
     next()
   } catch (err) {
-    console.error("Player connection error: ", err)
-    // TODO: use `ServerError` instead
-    return next(new Error("Something went wrong."))
+    return next(ServerError.asSocketError(err))
   }
 }

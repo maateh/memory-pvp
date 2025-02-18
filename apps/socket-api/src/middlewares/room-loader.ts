@@ -3,26 +3,51 @@ import type { RoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { roomKey } from "@repo/server/redis-keys"
+import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
+
+// utils
+import { ServerError } from "@repo/server/error"
 
 export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
   const { connection, ...ctx } = socket.ctx || {}
 
   try {
     if (!connection) {
-      return next(new Error("Player connection not found."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "PLAYER_CONNECTION_NOT_FOUND",
+        message: "Player connection data not found.",
+        description: "Please try creating or joining a new room."
+      })
     }
 
     const { playerId, roomSlug } = connection
     const room = await redis.json.get<RoomVariants>(roomKey(roomSlug))
 
     if (!room) {
-      return next(new Error("Room data not found."))
+      await Promise.all([
+        redis.del(playerConnectionKey(playerId)),
+        redis.lrem(waitingRoomsKey, 1, roomSlug)
+      ])
+
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_NOT_FOUND",
+        message: "Room not found.",
+        description: "Please try creating or joining a new room."
+      })
     }
 
     if (room.status === "waiting") {
       if (room.owner.id !== playerId) {
-        return next(new Error("You have no access to this room."))
+        await redis.del(playerConnectionKey(playerId))
+
+        ServerError.throw({
+          thrownBy: "SOCKET_API",
+          key: "ROOM_ACCESS_DENIED",
+          message: "You have no access to this room.",
+          description: "Please try creating or joining a new room."
+        })
       }
 
       room.connectionStatus = "half_online"
@@ -32,7 +57,14 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
   
     if (room.status === "joined" || room.status === "ready") {
       if (room.owner.id !== playerId && room.guest.id !== playerId) {
-        return next(new Error("You have no access to this room."))
+        await redis.del(playerConnectionKey(playerId))
+
+        ServerError.throw({
+          thrownBy: "SOCKET_API",
+          key: "ROOM_ACCESS_DENIED",
+          message: "You have no access to this room.",
+          description: "Please try creating or joining a new room."
+        })
       }
 
       const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
@@ -55,8 +87,12 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
       room.status === "running"
       // TODO: add -> room.status === "cancelled"
     ) {
-      // TODO: implement session reconnection
-      return next(new Error("Session has already started in this room."))
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "SESSION_ALREADY_STARTED",
+        message: "Session has already started.",
+        description: "Please try reconnecting to finish the session."
+      })
     }
 
     await redis.json.set(roomKey(room.slug), `$`, room, { xx: true })
@@ -64,8 +100,6 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     socket.ctx = { ...ctx, connection, room }
     next()
   } catch (err) {
-    console.error("Room loader error: ", err)
-    // TODO: use `ServerError` instead
-    return next(new Error("Something went wrong."))
+    return next(ServerError.asSocketError(err))
   }
 }

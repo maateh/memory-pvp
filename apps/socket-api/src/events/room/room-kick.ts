@@ -23,7 +23,7 @@ export const roomKick: SocketEventHandler<
     if (room.owner.id !== playerId) {
       ServerError.throw({
         thrownBy: "SOCKET_API",
-        key: "ACCESS_DENIED",
+        key: "ROOM_ACCESS_DENIED",
         message: "Failed to kick player.",
         description: "You are not the owner of this room."
       })

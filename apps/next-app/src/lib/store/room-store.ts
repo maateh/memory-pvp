@@ -4,7 +4,7 @@ import { toast } from "sonner"
 // types
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
-import type { SocketResponse } from "@repo/server/socket-types"
+import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
 import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
 
@@ -36,7 +36,7 @@ type RoomListener = {
   roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<string>) => void
-  connectError: (error: Error) => void
+  connectError: (error: ExtendedSocketError<ServerError>) => void
   disconnect: (reason: Socket.DisconnectReason) => void
 }
 
@@ -290,8 +290,34 @@ export const roomStore = ({
     toast.success(message, { description })
   },
 
-  connectError(error) {
-    // TODO: implement
+  connectError({ data: error }) {
+    if (error?.key === "CLERK_TOKEN_EXPIRED") {
+      toast.warning(error.message, {
+        id: "room:connect",
+        description: error.description,
+        duration: 10000,
+        onAutoClose() { window.location.reload() },
+        action: {
+          label: "Reconnect",
+          onClick() {
+            window.location.reload()
+          }
+        }
+      })
+      return
+    }
+
+    if (error?.key === "SESSION_ALREADY_STARTED") {
+      router.replace("/game/reconnect")
+      toast.warning(error.message, {
+        id: "room:connect",
+        description: error.description
+      })
+      return
+    }
+
+    handleServerError(error)
+    router.back()
   },
 
   disconnect(reason) {
@@ -300,7 +326,7 @@ export const roomStore = ({
       reason === "io server disconnect"
     ) return
 
-    // TODO: implement reconnections
+    // TODO: implement reconnection
     router.replace("/game/reconnect")
     toast.warning("Connection has been lost with the server.", {
       description: "Your session has been likely cancelled, but you can continue it if you want."
