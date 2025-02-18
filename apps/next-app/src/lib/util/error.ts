@@ -11,6 +11,7 @@ export function handleServerError(
 ) {
   if (error?.name === "ServerError") {
     toast.error(error.message, { description: error.description })
+    return
   }
 
   if (error?.name === "UploadThingError") {
