@@ -134,7 +134,23 @@ export const createMultiSession = playerActionClient
     const { slug, guestId } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
 
-    // FIXME: active session must be checked before the owner user creates and the guest user joins the room
+    const activeSession = await ctx.db.gameSession.findFirst({
+      where: {
+        status: "RUNNING",
+        OR: [
+          { ownerId: ctx.player.id },
+          { guestId: ctx.player.id }
+        ]
+      }
+    })
+
+    if (activeSession) {
+      ServerError.throwInAction({
+        key: "ACTIVE_SESSION",
+        message: "Active game session found.",
+        description: "You cannot start a multiplayer session because there is already an active one."
+      })
+    }
 
     const collection = await ctx.db.cardCollection.findUnique({
       where: { id: collectionId },
