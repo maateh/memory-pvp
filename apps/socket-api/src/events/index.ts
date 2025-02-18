@@ -1,4 +1,5 @@
 export * from "./_disconnect"
+export * from "./_connection-clear"
 export * from "./room-ready"
 export * from "./room-leave"
 export * from "./room-close"

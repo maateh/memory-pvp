@@ -20,6 +20,7 @@ import {
 // events
 import {
   disconnect,
+  connectionClear,
   roomReady,
   roomLeave,
   roomClose,
@@ -69,6 +70,7 @@ io.on("connection", (_socket) => {
 
   socket.on("session:reconnect", sessionReconnect(socket))
 
+  socket.on("connection:clear", connectionClear(socket))
   socket.on("disconnect", disconnect(socket))
 })
 
