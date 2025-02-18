@@ -7,8 +7,8 @@ import { getPlayer } from "@/server/db/query/player-query"
 import { getWaitingRooms } from "@repo/server/redis-commands"
 
 // components
-import { WaitingRoomListing } from "@/components/room/listing"
 import { Await, RedirectFallback } from "@/components/shared"
+import { WaitingRoomListing, WaitingRoomListingSkeleton } from "@/components/room/listing"
 
 const WaitingRoomsPage = async () => {
   const promises = Promise.all([
@@ -17,11 +17,11 @@ const WaitingRoomsPage = async () => {
       withAvatar: true
     }),
     // TODO: add filter/sort/pagination options
-    getWaitingRooms() 
+    getWaitingRooms()
   ])
 
   return (
-    <Suspense fallback={<>Loading...</>}> {/* TODO: loading fallback */}
+    <Suspense fallback={<WaitingRoomListingSkeleton />}>
       <Await promise={promises}>
         {([player, rooms]) => {
           if (!player) {

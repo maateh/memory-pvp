@@ -13,6 +13,7 @@ import { getPlayer } from "@/server/db/query/player-query"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
+import { SessionLoader } from "@/components/session/ingame"
 import WaitingRoomScreen from "./waiting-room-screen"
 
 // providers
@@ -31,7 +32,7 @@ const WaitingRoomPage = async ({ params }: WaitingRoomPageProps) => {
   ])
 
   return (
-    <Suspense fallback={<>Loading...</>}> {/* TODO: loading fallback */}
+    <Suspense fallback={<SessionLoader />}>
       <Await promise={promises}>
         {([room, player]) => {
           if (!room || !player) {
