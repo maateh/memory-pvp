@@ -15,10 +15,17 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
   socket.ctx.connection = undefined!
 
-  // FIXME: if the session is running -> room cannot be closed
-
   try {
     const room = await getRoom<WaitingRoomVariants>(roomSlug)
+
+    if (room.status !== "waiting" && room.status !== "joined") {
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_STATUS_CONFLICT",
+        message: "Failed to close room.",
+        description: "You can only close room if the status is waiting."
+      })
+    }
 
     await Promise.all([
       redis.del(playerConnectionKey(playerId)),
@@ -42,7 +49,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
     })
   } catch (err) {
     response({
-      message: "Failed to close session room.",
+      message: "Failed to close room.",
       error: ServerError.parser(err)
     })
   }

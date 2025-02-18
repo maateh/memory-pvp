@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom } from "@repo/schema/room"
+import type { JoinedRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -21,13 +21,22 @@ export const roomReady: SocketEventHandler<
   const { playerId, roomSlug } = socket.ctx.connection
 
   try {
-    const room = await getRoom<JoinedRoom>(roomSlug)
+    const room = await getRoom<WaitingRoomVariants>(roomSlug)
 
-    if (room.status === "ready" || room.status === "starting") {
+    if (room.status === "waiting") {
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_STATUS_CONFLICT",
+        message: "Failed to update your status.",
+        description: "You cannot change your status until someone joins the room."
+      })
+    }
+
+    if (room.status !== "joined") {
       ServerError.throw({
         thrownBy: "SOCKET_API",
         key: "SESSION_ALREADY_STARTED",
-        message: "Session has already started.",
+        message: "Failed to update your status.",
         description: "You cannot change your status after the session has already started."
       })
     }
@@ -71,7 +80,6 @@ export const roomReady: SocketEventHandler<
       data: room
     } satisfies SocketResponse<JoinedRoom>)
   } catch (err) {
-    console.error(err)
     response({
       message: "Failed to update your status.",
       error: ServerError.parser(err)
