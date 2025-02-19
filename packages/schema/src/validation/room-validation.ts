@@ -5,7 +5,8 @@ import { roomSettings } from "../room-schema"
 
 /* Forms / API validations */
 export const createSessionRoomValidation = z.object({
-  settings: roomSettings
+  settings: roomSettings,
+  forceStart: z.coerce.boolean().optional()
 })
 
 export const joinSessionRoomValidation = z.object({

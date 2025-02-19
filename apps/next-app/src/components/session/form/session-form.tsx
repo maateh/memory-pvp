@@ -32,7 +32,7 @@ import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 
 type SessionFormValuesCache = {
-  collection: ClientCardCollection | null
+  collection?: ClientCardCollection | null
 } & SessionFormValidation
 
 type SessionFormProps = {

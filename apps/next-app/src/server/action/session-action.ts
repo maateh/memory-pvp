@@ -49,17 +49,30 @@ export const createSingleSession = playerActionClient
     /* Checks if there is any ongoing session */
     const activeSession = await getActiveSession(ctx.player.id)
 
-    /* Throws a custom 'ACTIVE_SESSION' action error if active session found */
+    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
     if (activeSession && !forceStart) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
+        // FIXME: add data to `ServerErrorOpts`
+        data: { activeSessionMode: activeSession.mode },
         message: "Active game session found.",
-        description: "Would you like to continue the ongoing session or start a new one?"
+        description: activeSession.mode === "SINGLE"
+          ? "Would you like to continue the ongoing session or start a new one?"
+          : "Please finish your active multiplayer session, before you start a new one."
       })
     }
 
-    /* Abandons session if 'forceStart' is applied and active session found */
+    /* Abandons active session if 'forceStart' is applied. */
     if (activeSession && forceStart) {
+      /* Note: multiplayer sessions can only be closed manually by the player. */
+      if (activeSession.mode !== "SINGLE") {
+        ServerError.throwInAction({
+          key: "FORCE_START_NOT_ALLOWED",
+          message: "Force start not allowed.",
+          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
+        })
+      }
+
       await updateSessionStatus({
         session: activeSession,
         player: ctx.player,

@@ -84,7 +84,7 @@ const SessionRunningPopupContent = ({ session }: { session: ClientGameSession })
     <Separator className="w-5/6 mx-auto mt-4 bg-border/15" />
 
     <PopupFooter variant="action" size="sm">
-      <SessionRunningPopupActions />
+      <SessionRunningPopupActions activeSessionMode={session.mode} />
     </PopupFooter>
   </div>
 )

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
 // types
+import type { ClientGameSession } from "@repo/schema/session"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
@@ -17,25 +18,36 @@ import { Button } from "@/components/ui/button"
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
+import { useCreateRoomAction } from "@/lib/safe-action/room"
 
-const SessionRunningPopupActions = () => {
+type SessionRunningPopupActionsProps = {
+  activeSessionMode: ClientGameSession["mode"]
+}
+
+const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {
   const pathname = usePathname()
   const isOffline = pathname === '/game/setup/warning/offline'
 
-  const { execute: createOfflineSession } = useCreateOfflineSession()
   const {
-    executeAsync: executeCreateSession,
-    status: createSessionStatus
+    executeAsync: createSingleSession,
+    status: createSingleSessionStatus
   } = useCreateSingleSessionAction()
 
   const {
+    executeAsync: createWaitingRoom,
+    status: createWaitingRoomStatus
+  } = useCreateRoomAction()
+
+  const { execute: createOfflineSession } = useCreateOfflineSession()
+
+  const {
     settings,
-    collection = null
+    collection
   } = useCacheStore<SessionFormValuesCache, 'cache'>((state) => state.cache) || {}
 
   const handleForceStart = async () => {
     if (!settings) {
-      toast.error("Session cache not not found.", {
+      toast.error("Session settings data not not found.", {
         description: "Please try reloading the page."
       })
       return
@@ -52,38 +64,36 @@ const SessionRunningPopupActions = () => {
 
     try {
       if (settings.mode === "SINGLE") {
-        await executeCreateSession({ settings, forceStart: true })
+        await createSingleSession({ settings, forceStart: true })
       } else {
-        // TODO: I'm currently not sure how to exactly handle
-        // multiplayer sessions in terms of force-start.
-        // I think it's not a good approach
-        // Two possible aprroaches:
-        // - redirect user to `/game/reconnect` page instead of this warning and handle everything there
-        // - force-close running (actually cancelled) multiplayer session
+        await createWaitingRoom({ settings, forceStart: true })
       }
     } catch (err) {
       logError(err)
     }
   }
 
+  const href = isOffline ? "/game/offline"
+    : activeSessionMode === "SINGLE" ? "/game/single" : "/game/reconnect"
+
   return (
     <>
       <Button
         variant="outline"
-        disabled={createSessionStatus === 'executing'}
+        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
         asChild
       >
-        <Link href={!isOffline ? '/game/single' : '/game/offline'} replace>
-          Continue session
+        <Link href={href} replace>
+          {activeSessionMode === "SINGLE" ? "Continue session": "Reconnect"}
         </Link>
       </Button>
 
       <Button
         variant="destructive"
         onClick={handleForceStart}
-        disabled={createSessionStatus === 'executing'}
+        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
       >
-        Start new game
+        {settings?.mode === "SINGLE" ? "Start new game": "Create new room"}
       </Button>
     </>
   )

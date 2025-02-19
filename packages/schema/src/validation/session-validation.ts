@@ -16,7 +16,7 @@ export const createSingleSessionValidation = z.object({
 export const sessionFormValidation = z.object({
   settings: createSingleSessionValidation.shape.settings
     .or(createSessionRoomValidation.shape.settings),
-  forceStart: createSingleSessionValidation.shape.forceStart
+  forceStart: z.coerce.boolean().optional()
 })
 
 export const createMultiSessionValidation = z.object({

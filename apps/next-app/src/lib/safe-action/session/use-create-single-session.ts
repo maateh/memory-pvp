@@ -3,6 +3,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
+import type { GameMode } from "@repo/db"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
@@ -32,8 +33,17 @@ export const useCreateSingleSessionAction = () => {
       })
     },
     onError({ error, input: values }) {
-      if (error.serverError?.key === 'ACTIVE_SESSION') {
-        setCache({ ...values, collection: null })
+      if (error.serverError?.key === "ACTIVE_SESSION") {
+        const { message, description, data = null } = error.serverError
+
+        const errorData = data as { activeSessionMode: GameMode } | null
+        if (errorData?.activeSessionMode !== "SINGLE") {
+          router.push("/game/reconnect")
+          toast.warning(message, { description })
+          return
+        }
+
+        setCache(values)
         router.push('/game/setup/warning')
         return
       }
