@@ -5,11 +5,13 @@ import { auth } from "@clerk/nextjs/server"
 
 // server
 import { db } from "@/server/db"
-import { redis } from "@repo/server/redis"
-import { ServerError } from "@repo/server/error"
+import { getActiveSession } from "@/server/db/query/session-query"
 
-// config
-import { sessionSchemaFields } from "@/config/session-settings"
+// redis
+import { redis } from "@repo/server/redis"
+
+// utils
+import { ServerError } from "@repo/server/error"
 
 /**
  * Creates a safe action client with error handling and adds a shared context for `db` and `redis`.
@@ -94,16 +96,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
  * - Throws an `ActionError` if no active session is found or access is denied.
  */
 export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
-  const activeSession = await ctx.db.gameSession.findFirst({
-    where: {
-      status: "RUNNING",
-      OR: [
-        { ownerId: ctx.player.id },
-        { guestId: ctx.player.id }
-      ]
-    },
-    include: sessionSchemaFields
-  })
+  const activeSession = await getActiveSession(ctx.player.id)
 
   if (!activeSession) {
     ServerError.throwInAction({

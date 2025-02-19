@@ -1,5 +1,6 @@
 // types
 import type { ClientGameSession } from "@repo/schema/session"
+import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 
@@ -90,4 +91,49 @@ export async function getClientSession({ id, slug }: {
 
   const player = session.owner?.userId === user.id ? session.owner : session.guest
   return parseSchemaToClientSession(session, player?.id)
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param playerId 
+ * @returns 
+ */
+export async function getActiveSession(
+  playerId?: string
+): Promise<GameSessionWithPlayersWithAvatarWithCollectionWithCards | null> {
+  if (!playerId) {
+    const user = await signedIn()
+    if (!user) return null
+    
+    const activePlayer = await db.playerProfile.findFirst({ where: { userId: user.id } })
+    if (!activePlayer) return null
+    playerId = activePlayer.id
+  }
+
+  return await db.gameSession.findFirst({
+    where: {
+      status: "RUNNING",
+      OR: [
+        { ownerId: playerId },
+        { guestId: playerId }
+      ]
+    },
+    include: sessionSchemaFields
+  })
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param playerId 
+ * @returns 
+ */
+export async function getActiveClientSession(
+  playerId?: string
+): Promise<ClientGameSession | null> {
+  const activeSession = await getActiveSession(playerId)
+
+  if (!activeSession) return null
+  return parseSchemaToClientSession(activeSession)
 }

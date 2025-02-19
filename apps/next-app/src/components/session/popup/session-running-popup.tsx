@@ -3,16 +3,18 @@ import { Suspense } from "react"
 // types
 import type { ClientGameSession } from "@repo/schema/session"
 
-// actions
-import { getActiveSession } from "@/server/action/session-action"
+// db
+import { getActiveClientSession } from "@/server/db/query/session-query"
 
 // utils
 import { getRendererSessionStats } from "@/lib/util/stats"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // components
+import { Await, RedirectFallback, StatisticItem, StatisticList } from "@/components/shared"
 import {
   Popup,
   PopupContent,
@@ -20,9 +22,7 @@ import {
   PopupHeader,
   PopupTrigger
 } from "@/components/popup"
-import { Await, RedirectFallback, StatisticItem, StatisticList } from "@/components/shared"
 import SessionRunningPopupActions from "./session-running-popup-actions"
-import { Skeleton } from "@/components/ui/skeleton"
 
 type SessionRunningPopupProps = ({
   renderer: "trigger"
@@ -50,9 +50,9 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
 
         {renderer === 'router' && !session && (
           <Suspense fallback={<SessionRunningPopupSkeleton />}>
-            <Await promise={getActiveSession()}>
-              {(session) => session?.data ? (
-                <SessionRunningPopupContent session={session.data} />
+            <Await promise={getActiveClientSession()}>
+              {(session) => session ? (
+                <SessionRunningPopupContent session={session} />
               ) : (
                 <RedirectFallback
                   type="back"

@@ -2,21 +2,20 @@
 
 import { redirect, RedirectType } from "next/navigation"
 
-// types
-import type { ClientGameSession } from "@repo/schema/session"
-
 // redis
 import { redis } from "@repo/server/redis"
 import { roomKey, sessionKey } from "@repo/server/redis-keys"
 
-// server
-import { ServerError } from "@repo/server/error"
+// db
+import { getActiveSession } from "@/server/db/query/session-query"
+import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
+
+// actions
 import {
   playerActionClient,
   protectedActionClient,
   sessionActionClient
 } from "@/server/action"
-import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // config
 import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
@@ -38,17 +37,8 @@ import {
 import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
+import { ServerError } from "@repo/server/error"
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
-
-export const getActiveSession = sessionActionClient
-  .action(async ({ ctx }) => {
-    const clientSession = await ctx.redis.get<ClientGameSession>(
-      sessionKey(ctx.activeSession.slug)
-    )
-
-    if (clientSession) return clientSession
-    return parseSchemaToClientSession(ctx.activeSession, ctx.player.id)
-  })
 
 export const createSingleSession = playerActionClient
   .schema(createSingleSessionValidation)
@@ -57,15 +47,7 @@ export const createSingleSession = playerActionClient
     const { collectionId, ...settings } = parsedInput.settings
 
     /* Checks if there is any ongoing session */
-    const activeSession = await ctx.db.gameSession.findFirst({
-      where: {
-        status: "RUNNING",
-        OR: [
-          { ownerId: ctx.player.id },
-          { guestId: ctx.player.id }
-        ]
-      }
-    })
+    const activeSession = await getActiveSession(ctx.player.id)
 
     /* Throws a custom 'ACTIVE_SESSION' action error if active session found */
     if (activeSession && !forceStart) {
@@ -134,15 +116,7 @@ export const createMultiSession = playerActionClient
     const { slug, guestId } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
 
-    const activeSession = await ctx.db.gameSession.findFirst({
-      where: {
-        status: "RUNNING",
-        OR: [
-          { ownerId: ctx.player.id },
-          { guestId: ctx.player.id }
-        ]
-      }
-    })
+    const activeSession = await getActiveSession(ctx.player.id)
 
     if (activeSession) {
       ServerError.throwInAction({

@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
-// actions
-import { getActiveSession } from "@/server/action/session-action"
+// db
+import { getActiveClientSession } from "@/server/db/query/session-query"
 
 // providers
 import { SingleSessionStoreProvider } from "@/components/provider"
@@ -14,9 +14,9 @@ import SingleGameHandler from "./single-game-handler"
 const SingleGamePage = () => {
   return (
     <Suspense fallback={<SessionLoader />}>
-      <Await promise={getActiveSession()}>
-        {(session) => session?.data ? (
-          <SingleSessionStoreProvider initialSession={session.data}>
+      <Await promise={getActiveClientSession()}>
+        {(session) => session ? (
+          <SingleSessionStoreProvider initialSession={session}>
             <SingleGameHandler />
           </SingleSessionStoreProvider>
         ) : (
