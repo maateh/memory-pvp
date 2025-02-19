@@ -70,7 +70,7 @@ export const sessionStartingFailed: SocketEventHandler = (socket) => async () =>
 
     io.to(roomSlug).emit("session:starting:failed", {
       message: "Failed to start session in this room.",
-      description: "The room has been force closed. Please try creating or joining a new room."
+      description: "Multiplayer session cannot be started as long as one of the players in the room has another active session."
     } satisfies SocketResponse)
   } catch (err) {
     io.to(roomSlug).emit("session:starting:failed", {

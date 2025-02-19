@@ -117,12 +117,13 @@ export const createMultiSession = playerActionClient
     const { collectionId, ...settings } = parsedInput.settings
 
     const activeSession = await getActiveSession(ctx.player.id)
+    const guestActiveSession = await getActiveSession(guestId)
 
-    if (activeSession) {
+    if (activeSession || guestActiveSession) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
         message: "Active game session found.",
-        description: "You cannot start a multiplayer session because there is already an active one."
+        description: "Multiplayer session cannot be started as long as one of the players in the room has another active session."
       })
     }
 
