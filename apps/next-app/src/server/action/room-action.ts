@@ -106,9 +106,41 @@ export const createRoom = playerActionClient
 export const joinRoom = playerActionClient
   .schema(joinRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { roomSlug } = parsedInput
+    const { roomSlug, forceJoin } = parsedInput
 
-    // FIXME: if player has active session -> throw error with `ACTIVE_SESSION` key
+    /* Checks if there is any ongoing session */
+    const activeSession = await getActiveSession(ctx.player.id)
+
+    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
+    if (activeSession && !forceJoin) {
+      ServerError.throwInAction({
+        key: "ACTIVE_SESSION",
+        data: { activeSessionMode: activeSession.mode },
+        message: "Active game session found.",
+        description: activeSession.mode === "SINGLE"
+          ? "Would you like to force close your ongoing session and join the room?"
+          : "Please finish your active multiplayer session, before you start a new one."
+      })
+    }
+
+    /* Abandons active session if 'forceJoin' is applied. */
+    if (activeSession && forceJoin) {
+      /* Note: multiplayer sessions can only be closed manually by the player. */
+      if (activeSession.mode !== "SINGLE") {
+        ServerError.throwInAction({
+          key: "FORCE_START_NOT_ALLOWED",
+          message: "Force start not allowed.",
+          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
+        })
+      }
+
+      await updateSessionStatus({
+        session: activeSession,
+        player: ctx.player,
+        action: "abandon"
+      })
+    }
+
     // FIXME: if player has active room -> throw error with `ACTIVE_ROOM` key
 
     const room = await getRoom<WaitingRoom>(roomSlug)
@@ -136,7 +168,11 @@ export const joinRoom = playerActionClient
       ctx.redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
 
-    // TODO: add custom `outputSchema`
-    // https://github.com/maateh/memory-pvp/issues/15
-    return { roomSlug: room.slug }
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
+    redirect(`/game/room/${room.slug}`, RedirectType.replace)
   })

@@ -10,7 +10,8 @@ export const createRoomValidation = z.object({
 })
 
 export const joinRoomValidation = z.object({
-  roomSlug: z.string()
+  roomSlug: z.string(),
+  forceJoin: z.coerce.boolean().optional()
 })
 
 export type CreateRoomValidation = z.infer<typeof createRoomValidation>
