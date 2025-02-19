@@ -3,7 +3,7 @@ import { z } from "zod"
 // schemas
 import { clientSessionSchema, sessionCardSchema, sessionSettings } from "../session-schema"
 import { roomSettings } from "../room-schema"
-import { createSessionRoomValidation } from "./room-validation"
+import { createRoomValidation } from "./room-validation"
 
 /* Forms / API validations */
 export const createSingleSessionValidation = z.object({
@@ -15,7 +15,7 @@ export const createSingleSessionValidation = z.object({
 
 export const sessionFormValidation = z.object({
   settings: createSingleSessionValidation.shape.settings
-    .or(createSessionRoomValidation.shape.settings),
+    .or(createRoomValidation.shape.settings),
   forceStart: z.coerce.boolean().optional()
 })
 

@@ -17,7 +17,7 @@ import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 import { playerActionClient } from "@/server/action"
 
 // schemas
-import { createSessionRoomValidation, joinSessionRoomValidation } from "@repo/schema/room-validation"
+import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-validation"
 
 // helpers
 import { generateSessionSlug } from "@/lib/helper/session-helper"
@@ -27,7 +27,7 @@ import { ServerError } from "@repo/server/error"
 import { offlinePlayer } from "@repo/server/util"
 
 export const createRoom = playerActionClient
-  .schema(createSessionRoomValidation)
+  .schema(createRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { settings, forceStart } = parsedInput
 
@@ -104,7 +104,7 @@ export const createRoom = playerActionClient
   })
 
 export const joinRoom = playerActionClient
-  .schema(joinSessionRoomValidation)
+  .schema(joinRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { roomSlug } = parsedInput
 
