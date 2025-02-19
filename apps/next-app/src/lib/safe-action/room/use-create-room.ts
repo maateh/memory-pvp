@@ -38,8 +38,8 @@ export const useCreateRoomAction = () => {
     onError({ error, input: values }) {
       if (error.serverError?.key === 'ACTIVE_SESSION') {
         const { message, description, data = null } = error.serverError
-
         const errorData = data as { activeSessionMode: GameMode } | null
+
         if (errorData?.activeSessionMode !== "SINGLE") {
           router.push("/game/reconnect")
           toast.warning(message, { description })
@@ -51,7 +51,24 @@ export const useCreateRoomAction = () => {
         return
       }
 
-      handleServerError(error.serverError, 'Failed to create waiting room. Please try again later.')
+      if (error.serverError?.key === "ACTIVE_ROOM") {
+        const { message, description, data } = error.serverError
+        const { roomSlug } = data as { roomSlug: string }
+
+        toast.warning(message, {
+          description,
+          duration: 10000,
+          action: {
+            label: "Reconnect",
+            onClick() {
+              router.push(`/game/room/${roomSlug}`)
+            }
+          }
+        })
+        return
+      }
+
+      handleServerError(error.serverError, "Failed to create waiting room. Please try again later.")
     },
     onSettled() {
       toast.dismiss("room:create")

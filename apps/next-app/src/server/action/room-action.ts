@@ -3,6 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
+import type { PlayerConnection } from "@repo/schema/player-connection"
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
@@ -64,7 +65,19 @@ export const createRoom = playerActionClient
       })
     }
 
-    // FIXME: if player has active room -> throw error with `ACTIVE_ROOM` key
+    const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
+    if (prevConnection) {
+      const room = await getRoom(prevConnection.roomSlug)
+
+      if (room) {
+        ServerError.throwInAction({
+          key: "ACTIVE_ROOM",
+          data: { roomSlug: room.slug },
+          message: "Active room found.",
+          description: "You have already joined another room. Please leave it first."
+        })
+      }
+    }
 
     const slug = generateSessionSlug(settings)
     const connection = offlinePlayer({
@@ -141,7 +154,19 @@ export const joinRoom = playerActionClient
       })
     }
 
-    // FIXME: if player has active room -> throw error with `ACTIVE_ROOM` key
+    const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
+    if (prevConnection) {
+      const room = await getRoom(prevConnection.roomSlug)
+
+      if (room) {
+        ServerError.throwInAction({
+          key: "ACTIVE_ROOM",
+          data: { roomSlug: room.slug },
+          message: "Active room found.",
+          description: "You have already joined another room. Please leave it first."
+        })
+      }
+    }
 
     const room = await getRoom<WaitingRoom>(roomSlug)
     const connection = offlinePlayer({

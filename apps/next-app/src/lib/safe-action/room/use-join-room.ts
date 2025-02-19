@@ -33,8 +33,8 @@ export const useJoinRoomAction = () => {
     onError({ error, input }) {
       if (error.serverError?.key === "ACTIVE_SESSION") {
         const { message, description, data = null } = error.serverError
-
         const errorData = data as { activeSessionMode: GameMode } | null
+
         if (errorData?.activeSessionMode !== "SINGLE") {
           toast.warning(message, {
             description,
@@ -66,6 +66,23 @@ export const useJoinRoomAction = () => {
               } catch (err) {
                 logError(err)
               }
+            }
+          }
+        })
+        return
+      }
+
+      if (error.serverError?.key === "ACTIVE_ROOM") {
+        const { message, description, data = null } = error.serverError
+        const { roomSlug } = data as { roomSlug: string }
+
+        toast.warning(message, {
+          description,
+          duration: 10000,
+          action: {
+            label: "Reconnect",
+            onClick() {
+              router.push(`/game/room/${roomSlug}`)
             }
           }
         })
