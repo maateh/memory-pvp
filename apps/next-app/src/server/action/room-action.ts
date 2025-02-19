@@ -38,7 +38,6 @@ export const createRoom = playerActionClient
     if (activeSession && !forceStart) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
-        // FIXME: add data to `ServerErrorOpts`
         data: { activeSessionMode: activeSession.mode },
         message: "Active game session found.",
         description: activeSession.mode === "SINGLE"

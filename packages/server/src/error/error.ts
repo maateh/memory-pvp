@@ -14,6 +14,7 @@ export class ServerError {
   constructor(opts: ServerErrorOpts) {
     this.thrownBy = opts.thrownBy || 'UNKNOWN'
     this.key = opts.key || 'UNKNOWN'
+    this.data = opts.data
     this.message = opts.message
     this.description = opts.description
 

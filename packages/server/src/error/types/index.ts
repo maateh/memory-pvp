@@ -30,9 +30,10 @@ export type CauseKey =
   "ROOM_STATUS_CONFLICT" |
   "SESSION_ALREADY_STARTED"
 
-export type ServerErrorOpts = {
+export type ServerErrorOpts<T = unknown> = {
   thrownBy?: ThrownBy
   key?: CauseKey
+  data?: T
   message: string
   description?: string | undefined
 }
