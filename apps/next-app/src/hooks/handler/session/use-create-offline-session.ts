@@ -68,7 +68,7 @@ export const useCreateOfflineSession = () => {
         collection.cards
       ),
       collectionId: settings.collectionId,
-      players: { current: offlinePlayerMetadata },
+      owner: offlinePlayerMetadata,
       stats: {
         timer: 0,
         flips: {

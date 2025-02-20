@@ -99,8 +99,13 @@ export const columns: ColumnDef<ClientGameSession>[] = [
     accessorKey: "players",
     enableHiding: true,
     header: "Player(s)",
-    cell({ getValue }) {
-      const players = getValue<ClientGameSession['players']>()
+    cell({ row }) {
+      const session = row.original
+      const players = [session.owner]
+
+      if (session.mode !== "SINGLE") {
+        players.push(session.guest)
+      }
 
       return (
         <ul className="flex flex-wrap items-center gap-x-2 gap-y-1.5">

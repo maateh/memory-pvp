@@ -1,7 +1,12 @@
 import { z } from "zod"
 
 // schemas
-import { clientSessionSchema, sessionCardSchema, sessionSettings } from "../session-schema"
+import {
+  baseClientSessionSchema,
+  sessionCardSchema,
+  sessionSettings,
+  unsignedClientSessionSchema
+} from "../session-schema"
 import { roomSettings } from "../room-schema"
 import { createRoomValidation } from "./room-validation"
 
@@ -26,14 +31,18 @@ export const createMultiSessionValidation = z.object({
 })
 
 export const saveSessionValidation = z.object({
-  clientSession: clientSessionSchema.omit({ players: true })
+  clientSession: baseClientSessionSchema.omit({
+    owner: true,
+    guest: true
+  })
 })
 
 export const finishSessionSchema = z.object({
-  clientSession: clientSessionSchema
+  clientSession: baseClientSessionSchema
     .omit({
       status: true,
-      players: true,
+      owner: true,
+      guest: true,
       cards: true
     })
     .extend({
@@ -44,22 +53,19 @@ export const finishSessionSchema = z.object({
 })
 
 export const abandonSessionValidation = z.object({
-  clientSession: clientSessionSchema
-    .omit({ status: true, players: true })
+  clientSession: baseClientSessionSchema
+    .omit({
+      status: true,
+      owner: true,
+      guest: true
+    })
     .optional()
 })
 
 export const saveOfflineGameValidation = z.object({
   playerId: z.string(),
-  clientSession: clientSessionSchema
-    .omit({
-      slug: true,
-      type: true,
-      mode: true,
-      status: true,
-      players: true,
-      cards: true
-    })
+  clientSession: unsignedClientSessionSchema
+    .omit({ cards: true })
     .extend({
       cards: z.array(sessionCardSchema.extend({
         matchedBy: z.string()

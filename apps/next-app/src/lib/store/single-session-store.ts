@@ -48,7 +48,7 @@ export const singleSessionStore = ({
     set(({ session }) => {
       if (session === null) return { session }
 
-      const playerId = session.players.current.id
+      const playerId = session.owner.id
 
       /*
        * Note: updates `flips` value of the player inside the session stats.
@@ -72,7 +72,7 @@ export const singleSessionStore = ({
       set(({ session }) => {
         if (session === null) return { session }
 
-        const playerId = session.players.current.id
+        const playerId = session.owner.id
         const cards = session.cards.map((card) => {
           const prevFlippedCardId = session?.flipped[0].id
 

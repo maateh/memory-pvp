@@ -2,7 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { roomPlayerSchema } from "./room-player-schema"
-import { clientSessionSchema, sessionSettings } from "./session-schema"
+import { multiClientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
 export const roomStatus = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
@@ -24,7 +24,7 @@ export const roomSchema = z.object({
   owner: roomPlayerSchema,
   guest: roomPlayerSchema,
   settings: roomSettings,
-  session: clientSessionSchema, // TODO: must be replaced by db schema
+  session: multiClientSessionSchema, // TODO: must be replaced by db schema
   createdAt: z.coerce.date()
   // TODO: add & track `updatedAt`
 })

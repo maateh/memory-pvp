@@ -32,25 +32,23 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
     return <SessionNotFound />
   }
 
-  const stats = getRendererSessionStats(clientSession)
-
   return (
     <>
-     <SessionStatistics stats={stats} />
+      <SessionStatistics stats={getRendererSessionStats(clientSession)} />
 
       <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 
       <div className={cn("mx-auto grid gap-x-16 gap-y-12", {
-        "lg:grid-cols-2": !!clientSession.players.other
+        "lg:grid-cols-2": clientSession.mode !== "SINGLE"
       })}>
         <SessionPlayerStats
-          player={clientSession.players.current}
+          player={clientSession.owner}
           session={clientSession}
         />
 
-        {clientSession.players.other && (
+        {clientSession.mode !== "SINGLE" && (
           <SessionPlayerStats
-            player={clientSession.players.other}
+            player={clientSession.guest}
             session={clientSession}
           />
         )}

@@ -52,7 +52,8 @@ const SessionCard = ({ session }: SessionCardProps) => {
 
       <div className="ml-auto flex flex-col items-end justify-between">
         <div className="mb-1.5 flex flex-wrap-reverse items-center gap-x-1.5 gap-y-1">
-          <PlayerBadge player={session.players.current} />
+          {/* TODO: display guest player */}
+          <PlayerBadge player={session.owner} />
 
           {session.status === 'RUNNING' ? (
             <Button className="ml-auto p-2.5 rounded-full hover:bg-muted/50"

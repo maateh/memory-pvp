@@ -50,7 +50,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
     include: sessionSchemaFields
   })
 
-  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session, session.owner?.id))
+  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session))
   return paginationWrapper(clientSessions, total, pagination)
 }
 
@@ -90,7 +90,7 @@ export async function getClientSession({ id, slug }: {
   if (!session) return null
 
   const player = session.owner?.userId === user.id ? session.owner : session.guest
-  return parseSchemaToClientSession(session, player?.id)
+  return parseSchemaToClientSession(session)
 }
 
 /**
