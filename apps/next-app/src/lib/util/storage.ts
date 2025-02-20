@@ -1,5 +1,5 @@
 // types
-import type { UnsignedClientGameSession } from "@repo/schema/session"
+import type { OfflineClientSession } from "@repo/schema/session"
 
 // constants
 import { offlineSessionKeys } from "@/lib/util/parser/session-parser"
@@ -14,10 +14,10 @@ const STORAGE_KEY = "CLIENT_GAME_SESSION"
  * Retrieves the game session from localStorage.
  * - Does nothing if running in a non-browser environment.
  * 
- * @returns {UnsignedClientGameSession | null} - The parsed session data or `null` if not found.
+ * @returns {OfflineClientSession | null} - The parsed session data or `null` if not found.
  * - Returns `null` if running in a non-browser environment or if the session doesn't exist.
  */
-export function getSessionFromStorage(): UnsignedClientGameSession | null {
+export function getSessionFromStorage(): OfflineClientSession | null {
   if (typeof window === 'undefined') return null
 
   const rawSession = localStorage.getItem(STORAGE_KEY)
@@ -30,10 +30,10 @@ export function getSessionFromStorage(): UnsignedClientGameSession | null {
  * Saves the game session to localStorage.
  * - Does nothing if running in a non-browser environment.
  * 
- * @param {UnsignedClientGameSession} session - The session data to be saved.
- * @returns {UnsignedClientGameSession | void} - Returns the session or void if in a non-browser environment.
+ * @param {OfflineClientSession} session - The session data to be saved.
+ * @returns {OfflineClientSession | void} - Returns the session or void if in a non-browser environment.
  */
-export function saveSessionToStorage(session: UnsignedClientGameSession): UnsignedClientGameSession | void {
+export function saveSessionToStorage(session: OfflineClientSession): OfflineClientSession | void {
   if (typeof window === 'undefined') return
 
   const offlineSession = pickFields(session, offlineSessionKeys)

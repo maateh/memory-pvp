@@ -2,7 +2,7 @@ import Link from "next/link"
 
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // config
 import {
@@ -23,7 +23,7 @@ import { PlayerBadge } from "@/components/player"
 import { SessionInfoBadge, SessionBadge } from "@/components/session"
 import { CustomDate } from "@/components/shared"
 
-export const columns: ColumnDef<ClientGameSession>[] = [
+export const columns: ColumnDef<ClientSession>[] = [
   {
     id: "Session",
     accessorKey: "status",
@@ -83,7 +83,7 @@ export const columns: ColumnDef<ClientGameSession>[] = [
       )
     },
     cell({ getValue }) {
-      const tableSize = getValue<ClientGameSession['tableSize']>()
+      const tableSize = getValue<ClientSession['tableSize']>()
 
       return (
         <SessionInfoBadge
@@ -131,7 +131,7 @@ export const columns: ColumnDef<ClientGameSession>[] = [
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientGameSession['startedAt']>()
+      const date = getValue<ClientSession['startedAt']>()
 
       return (
         <CustomDate
@@ -154,7 +154,7 @@ export const columns: ColumnDef<ClientGameSession>[] = [
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientGameSession['closedAt']>()
+      const date = getValue<ClientSession['closedAt']>()
 
       if (!date) {
         return (

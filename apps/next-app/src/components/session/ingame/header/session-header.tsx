@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // config
 import {
@@ -22,7 +22,7 @@ import SessionActionsDropdown from "./session-actions-dropdown"
 import SessionTimer from "./session-timer"
 
 type SessionHeaderProps = {
-  session: ClientGameSession
+  session: ClientSession
 }
 
 const SessionHeader = ({ session }: SessionHeaderProps) => {

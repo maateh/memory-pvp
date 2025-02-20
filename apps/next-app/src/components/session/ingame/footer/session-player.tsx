@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 
 // helpers
@@ -25,7 +25,7 @@ import { PlayerBadge } from "@/components/player"
 import { StatisticBadge } from "@/components/shared"
 
 type SessionPlayerProps = {
-  session: ClientGameSession
+  session: ClientSession
   player: ClientPlayer
   flipOrder?: boolean
 }

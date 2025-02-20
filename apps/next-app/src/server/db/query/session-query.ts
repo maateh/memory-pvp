@@ -1,5 +1,5 @@
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
@@ -30,13 +30,13 @@ import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parse
  * - Converts each session to the `ClientGameSession` format.
  * 
  * @param {Object} input - The filter and sort criteria for retrieving sessions.
- * @returns {Promise<ClientGameSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
+ * @returns {Promise<ClientSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
 export async function getClientSessions({ filter, sort, pagination }: {
   filter: SessionFilterQuery
   sort: SessionSortQuery
   pagination: PaginationParams
-}): Promise<Pagination<ClientGameSession>> {
+}): Promise<Pagination<ClientSession>> {
   const user = await signedIn()
   if (!user) return paginationWrapper([], 0, pagination)
 
@@ -68,7 +68,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
  * - Transforms the session data into a client-friendly format using `parseSchemaToClientSession`.
  * 
  * @param {Object} filter - Filter to find the game session by `id` or `slug`.
- * @returns {Promise<ClientGameSession | null>} - The client-friendly game session or `null` if not found or unauthorized.
+ * @returns {Promise<ClientSession | null>} - The client-friendly game session or `null` if not found or unauthorized.
  */
 export async function getClientSession({ id, slug }: {
   id: string
@@ -76,7 +76,7 @@ export async function getClientSession({ id, slug }: {
 } | {
   slug: string
   id?: never
-}): Promise<ClientGameSession | null> {
+}): Promise<ClientSession | null> {
   const user = await signedIn()
   if (!user) return null
 
@@ -138,7 +138,7 @@ export async function getActiveSession(
  */
 export async function getActiveClientSession(
   playerId?: string
-): Promise<ClientGameSession | null> {
+): Promise<ClientSession | null> {
   const activeSession = await getActiveSession(playerId)
 
   if (!activeSession) return null

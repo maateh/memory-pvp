@@ -1,6 +1,6 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientGameSession, UnsignedClientGameSession } from "@repo/schema/session"
+import type { ClientSession, OfflineClientSession } from "@repo/schema/session"
 
 /* Offline session metadata */
 export const offlineSessionMetadata = {
@@ -8,7 +8,7 @@ export const offlineSessionMetadata = {
   type: 'CASUAL',
   mode: 'SINGLE',
   status: 'OFFLINE'
-} satisfies Omit<ClientGameSession, keyof UnsignedClientGameSession>
+} satisfies Omit<ClientSession, keyof OfflineClientSession>
 
 export const sessionSchemaFields = {
   owner: {

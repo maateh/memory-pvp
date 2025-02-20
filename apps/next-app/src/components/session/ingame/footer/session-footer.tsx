@@ -1,5 +1,5 @@
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import SessionPlayer from "./session-player"
 
 type SessionFooterProps = {
-  session: ClientGameSession
+  session: ClientSession
 }
 
 const SessionFooter = ({ session }: SessionFooterProps) => {

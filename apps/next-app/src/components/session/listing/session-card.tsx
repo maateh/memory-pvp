@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // config
 import {
@@ -24,7 +24,7 @@ import { SessionInfoBadge, SessionBadge } from "@/components/session"
 import { CustomDate } from "@/components/shared"
 
 type SessionCardProps = {
-  session: ClientGameSession
+  session: ClientSession
 }
 
 const SessionCard = ({ session }: SessionCardProps) => {

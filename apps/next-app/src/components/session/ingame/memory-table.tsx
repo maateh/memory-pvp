@@ -1,5 +1,5 @@
 // types
-import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
+import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
 
 // utils
 import { cn } from "@/lib/util"
@@ -8,7 +8,7 @@ import { cn } from "@/lib/util"
 import MemoryCard from "./memory-card"
 
 type MemoryTableProps = {
-  session: ClientGameSession
+  session: ClientSession
   handleCardFlip: (clickedCard: ClientSessionCard) => void
 }
 

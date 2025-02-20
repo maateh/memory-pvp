@@ -1,7 +1,12 @@
 import { z } from "zod"
 
-// db
-import { GameModeSchema, GameStatusSchema, GameTypeSchema, TableSizeSchema } from "@repo/db/zod"
+// db schemas
+import {
+  GameModeSchema,
+  GameStatusSchema,
+  GameTypeSchema,
+  TableSizeSchema
+} from "@repo/db/zod"
 
 // validations
 import { clientPlayerSchema } from "./player-schema"
@@ -14,12 +19,12 @@ export const sessionSettings = z.object({
   collectionId: z.string()
 })
 
-export const sessionCardMetadataSchema = z.object({
+export const sessionCardMetadata = z.object({
   id: z.string(),
   key: z.coerce.number()
 })
 
-export const sessionCardSchema = sessionCardMetadataSchema.extend({
+export const sessionCard = sessionCardMetadata.extend({
   matchedBy: z.string().nullable()
 })
 
@@ -34,7 +39,7 @@ export const sessionStatsSchema = z.object({
 })
 
 /* Client base schemas */
-export const clientSessionCardSchema = sessionCardSchema.extend({
+export const clientSessionCard = sessionCard.extend({
   imageUrl: z.string()
 })
 
@@ -51,8 +56,8 @@ export const baseClientSessionSchema = z.object({
   owner: clientPlayerSchema,
   guest: clientPlayerSchema.optional().nullable(),
   stats: sessionStatsSchema,
-  cards: z.array(clientSessionCardSchema),
-  flipped: z.array(sessionCardMetadataSchema),
+  cards: z.array(clientSessionCard),
+  flipped: z.array(sessionCardMetadata),
 
   startedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -79,7 +84,7 @@ export const multiClientSessionSchema = baseClientSessionSchema
 export const clientSessionSchema = singleClientSessionSchema
   .or(multiClientSessionSchema)
 
-export const unsignedClientSessionSchema = baseClientSessionSchema.omit({
+export const offlineClientSessionSchema = baseClientSessionSchema.omit({
   slug: true,
   type: true,
   mode: true,
@@ -89,13 +94,14 @@ export const unsignedClientSessionSchema = baseClientSessionSchema.omit({
 })
 
 export type SessionSettings = z.infer<typeof sessionSettings>
-export type SessionCardMetadata = z.infer<typeof sessionCardMetadataSchema>
-export type SessionCard = z.infer<typeof sessionCardSchema>
+export type SessionCardMetadata = z.infer<typeof sessionCardMetadata>
+export type SessionCard = z.infer<typeof sessionCard>
 export type SessionStats = z.infer<typeof sessionStatsSchema>
 
-export type ClientSessionCard = z.infer<typeof clientSessionCardSchema>
+export type ClientSessionCard = z.infer<typeof clientSessionCard>
+
 export type BaseClientSession = z.infer<typeof baseClientSessionSchema>
 export type SingleClientSession = z.infer<typeof singleClientSessionSchema>
 export type MultiClientSession = z.infer<typeof multiClientSessionSchema>
-export type ClientGameSession = z.infer<typeof clientSessionSchema>
-export type UnsignedClientGameSession = z.infer<typeof unsignedClientSessionSchema>
+export type ClientSession = z.infer<typeof clientSessionSchema>
+export type OfflineClientSession = z.infer<typeof offlineClientSessionSchema>

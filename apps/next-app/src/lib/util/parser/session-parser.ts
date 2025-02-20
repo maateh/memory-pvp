@@ -2,8 +2,8 @@
 import type { Prisma } from "@repo/db"
 import type {
   BaseClientSession,
-  ClientGameSession,
-  UnsignedClientGameSession
+  ClientSession,
+  OfflineClientSession
 } from "@repo/schema/session"
 import type { SessionFilterQuery } from "@/lib/schema/query/session-query"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
@@ -31,7 +31,7 @@ export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'startedAt', 'updatedAt', 'continuedAt', 'closedAt'
 ] as const
 
-export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
+export const offlineSessionKeys: (keyof OfflineClientSession)[] = [
   'collectionId', 'owner', 'tableSize',
   'stats', 'flipped', 'cards',
   'startedAt', 'updatedAt', 'continuedAt'
@@ -46,19 +46,19 @@ export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
  *   - `other`: The other player in the session.
  * 
  * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
- * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
+ * @returns {ClientSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
   currentPlayerId: string | undefined | null
-): ClientGameSession {
+): ClientSession {
   currentPlayerId = currentPlayerId || deletedPlayerPlaceholder.id
 
   const parserKeys = clientSessionKeys.filter((key) => key !== "currentPlayerId")
   const filteredSession = pickFields(session, parserKeys)
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
 
-  const baseClientSession: Omit<ClientGameSession, "mode" | "guest"> = {
+  const baseClientSession: Omit<ClientSession, "mode" | "guest"> = {
     ...filteredSession,
     collectionId: sessionCollection.id,
     cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),

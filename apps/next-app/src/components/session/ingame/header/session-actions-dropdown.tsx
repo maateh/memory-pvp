@@ -5,7 +5,7 @@ import { useTheme } from "next-themes"
 import { toast } from "sonner"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 import type { UseThemeProps } from "@/lib/types/theme"
 
 // config
@@ -38,7 +38,7 @@ import { Separator } from "@/components/ui/separator"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
 type SessionActionsDropdownProps = {
-  session: ClientGameSession
+  session: ClientSession
 }
 
 const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {

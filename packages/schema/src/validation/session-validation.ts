@@ -3,9 +3,9 @@ import { z } from "zod"
 // schemas
 import {
   baseClientSessionSchema,
-  sessionCardSchema,
+  sessionCard,
   sessionSettings,
-  unsignedClientSessionSchema
+  offlineClientSessionSchema
 } from "../session-schema"
 import { roomSettings } from "../room-schema"
 import { createRoomValidation } from "./room-validation"
@@ -46,7 +46,7 @@ export const finishSessionSchema = z.object({
       cards: true
     })
     .extend({
-      cards: z.array(sessionCardSchema.extend({
+      cards: z.array(sessionCard.extend({
         matchedBy: z.string()
       }))
     })
@@ -64,10 +64,10 @@ export const abandonSessionValidation = z.object({
 
 export const saveOfflineGameValidation = z.object({
   playerId: z.string(),
-  clientSession: unsignedClientSessionSchema
+  clientSession: offlineClientSessionSchema
     .omit({ cards: true })
     .extend({
-      cards: z.array(sessionCardSchema.extend({
+      cards: z.array(sessionCard.extend({
         matchedBy: z.string()
       }))
     })

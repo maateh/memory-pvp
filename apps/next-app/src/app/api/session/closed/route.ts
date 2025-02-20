@@ -1,12 +1,12 @@
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // actions
 import { saveSession } from "@/server/action/session-action"
 
 export async function POST(req: Request) {
   try {
-    const clientSession = await req.json() as ClientGameSession
+    const clientSession = await req.json() as ClientSession
     await saveSession({ clientSession })
 
     return Response.json({ status: 'OK' })

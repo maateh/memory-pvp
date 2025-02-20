@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { toast } from "sonner"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
@@ -21,7 +21,7 @@ import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 import { useCreateRoomAction } from "@/lib/safe-action/room"
 
 type SessionRunningPopupActionsProps = {
-  activeSessionMode: ClientGameSession["mode"]
+  activeSessionMode: ClientSession["mode"]
 }
 
 const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {

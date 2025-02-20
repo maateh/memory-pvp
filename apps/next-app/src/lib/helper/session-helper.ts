@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 // types
 import type { MemoryCard } from "@repo/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
-import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
+import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
 
 // config
 import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"
@@ -23,7 +23,7 @@ import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"
  * @returns {string} - The generated slug in the format `xx-yyy_xxxxxxxx`.
  */
 export function generateSessionSlug(
-  session: Pick<ClientGameSession, 'type' | 'mode'>,
+  session: Pick<ClientSession, 'type' | 'mode'>,
   isOffline: boolean = false
 ): string {
   const { type, mode } = session
@@ -125,7 +125,7 @@ export function pairSessionCardsWithCollection(
  * @returns {number | null} - The player's calculated score, or `null` if scoring is not applicable.
  */
 export function calculatePlayerSessionScore(
-  session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
+  session: Pick<ClientSession, 'type' | 'mode' | 'tableSize' | 'stats'>,
   playerId: string,
   action: 'finish' | 'abandon' = 'finish'
 ): number | null {
@@ -170,7 +170,7 @@ export function calculatePlayerSessionScore(
  * @returns {number | null} - The calculated free flips based on the session's settings, or `null` if not applicable.
  */
 export function getFreeFlips(
-  session: Pick<ClientGameSession, 'type' | 'mode' | 'tableSize'>
+  session: Pick<ClientSession, 'type' | 'mode' | 'tableSize'>
 ): number | null {
   const { type, mode, tableSize } = session
 

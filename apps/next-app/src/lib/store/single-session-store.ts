@@ -1,12 +1,12 @@
 import { createStore } from "zustand"
 
 // types
-import type { ClientGameSession, ClientSessionCard } from "@repo/schema/session"
+import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
 
 export type SessionSyncState = "SYNCHRONIZED" | "OUT_OF_SYNC" | "PENDING"
 
 type SingleSessionState = {
-  session: ClientGameSession
+  session: ClientSession
   syncState: SessionSyncState
 }
 
@@ -21,7 +21,7 @@ type SingleSessionAction = {
 export type SingleSessionStore = SingleSessionState & SingleSessionAction
 
 type SingleSessionStoreProps = {
-  initialSession: ClientGameSession
+  initialSession: ClientSession
 }
 
 export const singleSessionStore = ({

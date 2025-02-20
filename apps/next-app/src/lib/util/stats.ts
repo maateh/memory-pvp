@@ -1,7 +1,7 @@
 import { formatDistance } from "date-fns"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 import type { RendererStatsMap, RendererSessionStatKeys, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
@@ -26,13 +26,13 @@ import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Time
  * - Each entry consists of a label, icon, and formatted value, making it easy to display in a UI.
  * - If the `keys` argument is provided, only the corresponding session stats will be included in the result.
  * 
- * @param {ClientGameSession} session - The session whose statistics are being processed.
+ * @param {ClientSession} session - The session whose statistics are being processed.
  * @param {RendererSessionStatKeys[]} [keys] - Optional list of specific stat keys to include in the result.
  * 
  * @returns {RendererStatsMap<RendererSessionStatKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
 export function getRendererSessionStats(
-  session: ClientGameSession,
+  session: ClientSession,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
   const playerId = session.mode === "SINGLE" ? session.owner.id

@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { ClientGameSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // db
 import { getActiveClientSession } from "@/server/db/query/session-query"
@@ -26,10 +26,10 @@ import SessionRunningPopupActions from "./session-running-popup-actions"
 
 type SessionRunningPopupProps = ({
   renderer: "trigger"
-  session: ClientGameSession
+  session: ClientSession
 } | {
   renderer: "router"
-  session?: ClientGameSession
+  session?: ClientSession
 }) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
 
 const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopupProps) => {
@@ -68,7 +68,7 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
   )
 }
 
-const SessionRunningPopupContent = ({ session }: { session: ClientGameSession }) => (
+const SessionRunningPopupContent = ({ session }: { session: ClientSession }) => (
   <div className="px-4 md:px-0">
     <StatisticList className="max-w-xl mx-auto">
       {Object.values(getRendererSessionStats(session)).map((stat) => (
