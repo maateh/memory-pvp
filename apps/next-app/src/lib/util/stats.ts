@@ -35,8 +35,9 @@ export function getRendererSessionStats(
   session: ClientGameSession,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
-  // FIXME: handle guest
-  const playerId = session.owner.id
+  const playerId = session.mode === "SINGLE" ? session.owner.id
+    : session.currentPlayerId === session.owner.id
+    ? session.owner.id : session.guest.id
 
   const stats: RendererStatsMap<RendererSessionStatKeys> = {
     typeMode: {
