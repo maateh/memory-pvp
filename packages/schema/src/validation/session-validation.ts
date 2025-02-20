@@ -39,12 +39,7 @@ export const saveSessionValidation = z.object({
 
 export const finishSessionSchema = z.object({
   clientSession: baseClientSessionSchema
-    .omit({
-      status: true,
-      owner: true,
-      guest: true,
-      cards: true
-    })
+    .omit({ status: true, cards: true })
     .extend({
       cards: z.array(sessionCard.extend({
         matchedBy: z.string()
@@ -54,11 +49,7 @@ export const finishSessionSchema = z.object({
 
 export const abandonSessionValidation = z.object({
   clientSession: baseClientSessionSchema
-    .omit({
-      status: true,
-      owner: true,
-      guest: true
-    })
+    .omit({ status: true })
     .optional()
 })
 

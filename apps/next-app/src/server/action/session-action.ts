@@ -72,11 +72,10 @@ export const createSingleSession = playerActionClient
         })
       }
 
-      await updateSessionStatus({
-        session: activeSession,
-        player: ctx.player,
-        action: "abandon"
-      })
+      await updateSessionStatus(
+        parseSchemaToClientSession(activeSession, ctx.player.id),
+        "abandon"
+      )
     }
 
     const collection = await ctx.db.cardCollection.findUnique({
@@ -235,13 +234,10 @@ export const finishSession = sessionActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { clientSession } = parsedInput
 
-    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
-
-    const { slug } = await updateSessionStatus({
-      session: clientSession,
-      player: ctx.player,
-      action: "finish"
-    })
+    await Promise.all([
+      ctx.redis.del(sessionKey(clientSession.slug)),
+      updateSessionStatus(clientSession, "finish")
+    ])
 
     /*
      * Note: Unfortunately, passing 'RedirectType.replace' as redirect type doesn't work in NextJS 14.
@@ -249,15 +245,13 @@ export const finishSession = sessionActionClient
      * 
      * https://github.com/vercel/next.js/discussions/60864
      */
-    redirect(`/game/summary/${slug}`, RedirectType.replace)
+    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
   })
 
 export const abandonSession = sessionActionClient
   .schema(abandonSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     let { clientSession } = parsedInput
-
-    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
 
     if (!clientSession) {
       const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
@@ -273,11 +267,10 @@ export const abandonSession = sessionActionClient
       clientSession = validation.data!.clientSession!
     }
 
-    const { slug } = await updateSessionStatus({
-      session: clientSession,
-      player: ctx.player,
-      action: "abandon"
-    })
+    await Promise.all([
+      ctx.redis.del(sessionKey(clientSession.slug)),
+      updateSessionStatus(clientSession, "abandon")
+    ])
 
     /**
      * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
@@ -285,7 +278,7 @@ export const abandonSession = sessionActionClient
      * 
      * https://github.com/vercel/next.js/discussions/60864
      */
-    redirect(`/game/summary/${slug}`, RedirectType.replace)
+    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
   })
 
 export const saveOfflineSession = protectedActionClient

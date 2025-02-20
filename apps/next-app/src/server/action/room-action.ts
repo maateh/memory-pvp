@@ -26,6 +26,7 @@ import { generateSessionSlug } from "@/lib/helper/session-helper"
 // utils
 import { ServerError } from "@repo/server/error"
 import { offlinePlayer } from "@repo/server/util"
+import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const createRoom = playerActionClient
   .schema(createRoomValidation)
@@ -58,11 +59,10 @@ export const createRoom = playerActionClient
         })
       }
 
-      await updateSessionStatus({
-        session: activeSession,
-        player: ctx.player,
-        action: "abandon"
-      })
+      await updateSessionStatus(
+        parseSchemaToClientSession(activeSession, ctx.player.id),
+        "abandon"
+      )
     }
 
     const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
@@ -147,11 +147,10 @@ export const joinRoom = playerActionClient
         })
       }
 
-      await updateSessionStatus({
-        session: activeSession,
-        player: ctx.player,
-        action: "abandon"
-      })
+      await updateSessionStatus(
+        parseSchemaToClientSession(activeSession, ctx.player.id),
+        "abandon"
+      )
     }
 
     const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
