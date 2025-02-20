@@ -47,6 +47,7 @@ export const baseClientSessionSchema = z.object({
   mode: sessionSettings.shape.mode,
   tableSize: sessionSettings.shape.tableSize,
 
+  currentPlayerId: z.string(),
   owner: clientPlayerSchema,
   guest: clientPlayerSchema.optional().nullable(),
   stats: sessionStatsSchema,

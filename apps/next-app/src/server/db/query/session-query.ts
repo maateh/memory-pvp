@@ -50,7 +50,12 @@ export async function getClientSessions({ filter, sort, pagination }: {
     include: sessionSchemaFields
   })
 
-  const clientSessions = sessions.map((session) => parseSchemaToClientSession(session))
+  const clientSessions = sessions.map((session) => {
+    const playerId = session.owner?.userId === user.id
+      ? session.owner.id
+      : session.guest?.id
+    return parseSchemaToClientSession(session, playerId)
+  })
   return paginationWrapper(clientSessions, total, pagination)
 }
 
@@ -89,8 +94,10 @@ export async function getClientSession({ id, slug }: {
 
   if (!session) return null
 
-  const player = session.owner?.userId === user.id ? session.owner : session.guest
-  return parseSchemaToClientSession(session)
+  const playerId = session.owner?.userId === user.id
+    ? session.owner.id
+    : session.guest?.id
+  return parseSchemaToClientSession(session, playerId)
 }
 
 /**
@@ -135,5 +142,5 @@ export async function getActiveClientSession(
   const activeSession = await getActiveSession(playerId)
 
   if (!activeSession) return null
-  return parseSchemaToClientSession(activeSession)
+  return parseSchemaToClientSession(activeSession, playerId)
 }

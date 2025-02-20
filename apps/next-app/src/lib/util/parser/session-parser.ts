@@ -25,7 +25,7 @@ import { pickFields } from "@/lib/util/parser"
 /* Schema parser keys */
 export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'slug', 'collectionId',
-  'owner', 'guest',
+  'currentPlayerId', 'owner', 'guest',
   'type', 'mode', 'tableSize', 'status',
   'stats', 'flipped', 'cards',
   'startedAt', 'updatedAt', 'continuedAt', 'closedAt'
@@ -49,15 +49,20 @@ export const offlineSessionKeys: (keyof UnsignedClientGameSession)[] = [
  * @returns {ClientGameSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
-  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards
+  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
+  currentPlayerId: string | undefined | null
 ): ClientGameSession {
-  const filteredSession = pickFields(session, clientSessionKeys)
+  currentPlayerId = currentPlayerId || deletedPlayerPlaceholder.id
+
+  const parserKeys = clientSessionKeys.filter((key) => key !== "currentPlayerId")
+  const filteredSession = pickFields(session, parserKeys)
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
 
   const baseClientSession: Omit<ClientGameSession, "mode" | "guest"> = {
     ...filteredSession,
     collectionId: sessionCollection.id,
     cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),
+    currentPlayerId,
     owner: session.owner
       ? parseSchemaToClientPlayer(session.owner)
       : deletedPlayerPlaceholder

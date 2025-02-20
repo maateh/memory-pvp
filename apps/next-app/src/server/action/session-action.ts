@@ -227,7 +227,7 @@ export const saveSession = sessionActionClient
       include: sessionSchemaFields
     })
 
-    return parseSchemaToClientSession(session)
+    return parseSchemaToClientSession(session, ctx.player.id)
   })
 
 export const finishSession = sessionActionClient
