@@ -9,11 +9,15 @@ import { db } from "@/server/db"
 import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
 
 /**
- * TODO: write doc
+ * Updates the status of a game session and updates player statistics accordingly.
  * 
- * @param clientSession 
- * @param action 
- * @returns 
+ * - Updates player statistics such as score, timer, flips, matches, and session count.
+ * - Updates the game session status to either "FINISHED" or "ABANDONED".
+ * - Stores the session results for each player.
+ * 
+ * @param {BaseClientSession} clientSession - The session data to update.
+ * @param {"finish" | "abandon"} action - The action to perform on the session (finishing or abandoning).
+ * @returns {Promise<GameSession>} - The updated game session.
  */
 export async function updateSessionStatus(
   clientSession: Pick<BaseClientSession, "slug" | "type" | "mode" | "tableSize" | "currentPlayerId" | "owner" | "guest" | "stats">,

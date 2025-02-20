@@ -101,10 +101,14 @@ export async function getClientSession({ id, slug }: {
 }
 
 /**
- * TODO: write doc
+ * Retrieves the active game session for a given player.
  * 
- * @param playerId 
- * @returns 
+ * - If no `playerId` is provided, it attempts to determine the player based on the signed-in user.
+ * - Searches for a game session that is currently in the "RUNNING" state.
+ * - Returns the session with all relevant data, including players, avatars, collection, and cards.
+ * 
+ * @param {string} [playerId] - The ID of the player whose active session should be retrieved.
+ * @returns {Promise<GameSessionWithPlayersWithAvatarWithCollectionWithCards | null>} - The active game session or `null` if none exists.
  */
 export async function getActiveSession(
   playerId?: string
@@ -131,10 +135,14 @@ export async function getActiveSession(
 }
 
 /**
- * TODO: write doc
+ * Retrieves the active game session for a given player and converts it to a client-friendly format.
  * 
- * @param playerId 
- * @returns 
+ * - Calls `getActiveSession` to find the currently running session for the player.
+ * - If an active session exists, it is parsed into a `ClientSession` format.
+ * - Returns `null` if no active session is found.
+ * 
+ * @param {string} [playerId] - The ID of the player whose active session should be retrieved.
+ * @returns {Promise<ClientSession | null>} - The active game session in a client-friendly format or `null` if none exists.
  */
 export async function getActiveClientSession(
   playerId?: string

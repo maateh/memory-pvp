@@ -9,9 +9,11 @@ import { roomKey, waitingRoomsKey } from "../keys"
 import { ServerError } from "../../error/error"
 
 /**
- * TODO: write doc
+ * Retrieves a list of waiting rooms from Redis.
  * 
- * @returns 
+ * Note: Pagination will be added later.
+ * 
+ * @returns {Promise<WaitingRoom[]>} - A list of waiting rooms.
  */
 export async function getWaitingRooms(): Promise<WaitingRoom[]> {
   // TODO: add pagination support
@@ -29,10 +31,15 @@ export async function getWaitingRooms(): Promise<WaitingRoom[]> {
 }
 
 /**
- * TODO: write doc
+ * Retrieves a specific room from Redis based on its slug.
  * 
- * @param roomSlug 
- * @returns 
+ * - Attempts to fetch the room data from Redis using `json.get`.
+ * - If the room is found, it is returned.
+ * - If the room is not found, a `ServerError` is thrown indicating that the session room has been closed.
+ * 
+ * @param {string} roomSlug - The unique identifier of the room to fetch.
+ * @returns {Promise<R>} - The requested room data.
+ * @throws {ServerError} - If the room is not found in Redis.
  */
 export async function getRoom<R extends RoomVariants = RoomVariants>(
   roomSlug: string
@@ -49,11 +56,19 @@ export async function getRoom<R extends RoomVariants = RoomVariants>(
 }
 
 /**
- * TODO: write doc
+ * Retrieves a specific field from a room stored in Redis.
  * 
- * @param roomSlug 
- * @param field 
- * @returns 
+ * - Fetches the value of the specified field from the room data using `json.get`.
+ * - If the field exists, it is returned.
+ * - If the field is not found or the room does not exist, a `ServerError` is thrown.
+ * 
+ * @template R - The room variant type.
+ * @template F - The key of the field to retrieve from the room.
+ * 
+ * @param {string} roomSlug - The unique identifier of the room.
+ * @param {F} field - The field key to retrieve from the room data.
+ * @returns {Promise<R[F]>} - The value of the specified field.
+ * @throws {ServerError} - If the room is not found in Redis.
  */
 export async function getRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
   roomSlug: string,
