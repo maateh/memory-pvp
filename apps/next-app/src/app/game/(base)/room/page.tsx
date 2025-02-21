@@ -49,8 +49,12 @@ const WaitingRoomPage = async () => {
     
               if (room.status === "running") { // TODO: add status "cancelled"
                 return (
-                  // TODO: implement reconnection
-                  <>Session is running. Do you want to reconnect?</>
+                  <RedirectFallback
+                    redirect="/game/room/reconnect"
+                    type="replace"
+                    message="Session has already started."
+                    description="You will be redirected to the reconnection page."
+                  />
                 )
               }
     

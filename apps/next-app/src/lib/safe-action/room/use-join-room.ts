@@ -42,7 +42,7 @@ export const useJoinRoomAction = () => {
             action: {
               label: "Reconnect",
               onClick() {
-                router.push("/game/reconnect")
+                router.push("/game/room/reconnect")
               }
             }
           })

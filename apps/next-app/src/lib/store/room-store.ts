@@ -315,7 +315,7 @@ export const roomStore = ({
     }
 
     if (error?.key === "SESSION_ALREADY_STARTED") {
-      router.replace("/game/reconnect")
+      router.replace("/game/room/reconnect")
       toast.warning(error.message, {
         id: "room:connect",
         description: error.description
@@ -333,8 +333,7 @@ export const roomStore = ({
       reason === "io server disconnect"
     ) return
 
-    // TODO: implement reconnection
-    router.replace("/game/reconnect")
+    router.replace("/game/room/reconnect")
     toast.warning("Connection has been lost with the server.", {
       description: "Your session has been likely cancelled, but you can continue it if you want."
     })
