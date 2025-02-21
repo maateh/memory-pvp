@@ -54,10 +54,7 @@ export const joinedRoomSchema = roomSchema
   })
 
 export const runningRoomSchema = roomSchema
-  .omit({
-    status: true,
-    session: true
-  })
+  .omit({ status: true })
   .extend({
     status: z.literal(roomStatus.enum.running)
   })
