@@ -3,7 +3,7 @@ import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "../redis"
-import { roomKey, waitingRoomsKey } from "../keys"
+import { playerConnectionKey, roomKey, waitingRoomsKey } from "../keys"
 
 /**
  * Retrieves a list of waiting rooms from Redis.
@@ -25,6 +25,21 @@ export async function getWaitingRooms(): Promise<WaitingRoom[]> {
    */
   const rooms = await redis.json.mget<WaitingRoom[][]>(roomKeys, "$")
   return rooms.flatMap((room) => room)
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param playerId 
+ * @returns 
+ */
+export async function getActiveRoom<R extends RoomVariants>(
+  playerId: string
+): Promise<R | null> {
+  const roomSlug = await redis.hget<string>(playerConnectionKey(playerId), "roomSlug")
+  if (!roomSlug) return null
+
+  return await getRoom(roomSlug)
 }
 
 /**

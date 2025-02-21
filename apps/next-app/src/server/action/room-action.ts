@@ -3,11 +3,10 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { PlayerConnection } from "@repo/schema/player-connection"
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { getRoom } from "@repo/server/redis-commands"
+import { getActiveRoom, getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // db
@@ -65,18 +64,15 @@ export const createRoom = playerActionClient
       )
     }
 
-    const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
-    if (prevConnection) {
-      const activeRoom = await getRoom(prevConnection.roomSlug)
-
-      if (activeRoom) {
-        ServerError.throwInAction({
-          key: "ACTIVE_ROOM",
-          data: { roomSlug: activeRoom.slug },
-          message: "Active room found.",
-          description: "You have already joined another room. Please leave it first."
-        })
-      }
+    /* Throws server error with 'ACTIVE_ROOM' key if active room found. */
+    const activeRoom = await getActiveRoom(ctx.player.id)
+    if (activeRoom) {
+      ServerError.throwInAction({
+        key: "ACTIVE_ROOM",
+        data: { roomSlug: activeRoom.slug },
+        message: "Active room found.",
+        description: "You have already joined another room. Please leave it first."
+      })
     }
 
     const slug = generateSessionSlug(settings)
@@ -153,22 +149,22 @@ export const joinRoom = playerActionClient
       )
     }
 
-    const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
-    if (prevConnection) {
-      const activeRoom = await getRoom(prevConnection.roomSlug)
-
-      if (activeRoom) {
-        ServerError.throwInAction({
-          key: "ACTIVE_ROOM",
-          data: { roomSlug: activeRoom.slug },
-          message: "Active room found.",
-          description: "You have already joined another room. Please leave it first."
-        })
-      }
+    /* Throws server error with 'ACTIVE_ROOM' key if active room found. */
+    const activeRoom = await getActiveRoom(ctx.player.id)
+    if (activeRoom) {
+      ServerError.throwInAction({
+        key: "ACTIVE_ROOM",
+        data: { roomSlug: activeRoom.slug },
+        message: "Active room found.",
+        description: "You have already joined another room. Please leave it first."
+      })
     }
 
+    /**
+     * Gets the room the player wants to join.
+     * Throws server error with 'ROOM_NOT_FOUND' key if the room not found.
+     */
     const room = await getRoom<WaitingRoom>(roomSlug)
-
     if (!room) {
       ServerError.throwInAction({
         key: "ROOM_NOT_FOUND",
