@@ -69,7 +69,6 @@ export const createRoom = playerActionClient
     if (activeRoom) {
       ServerError.throwInAction({
         key: "ACTIVE_ROOM",
-        data: { roomSlug: activeRoom.slug },
         message: "Active room found.",
         description: "You have already joined another room. Please leave it first."
       })
@@ -109,7 +108,7 @@ export const createRoom = playerActionClient
      * 
      * https://github.com/vercel/next.js/discussions/60864
      */
-    redirect(`/game/room/${room.slug}`, RedirectType.replace)
+    redirect("/game/room", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const joinRoom = playerActionClient
@@ -154,7 +153,6 @@ export const joinRoom = playerActionClient
     if (activeRoom) {
       ServerError.throwInAction({
         key: "ACTIVE_ROOM",
-        data: { roomSlug: activeRoom.slug },
         message: "Active room found.",
         description: "You have already joined another room. Please leave it first."
       })
@@ -197,11 +195,5 @@ export const joinRoom = playerActionClient
       ctx.redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
-    redirect(`/game/room/${room.slug}`, RedirectType.replace)
+    redirect("/game/room")
   })

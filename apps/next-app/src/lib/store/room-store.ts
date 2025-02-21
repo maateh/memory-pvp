@@ -295,7 +295,7 @@ export const roomStore = ({
     toast.dismiss("session:starting")
     toast.dismiss("session:created")      
 
-    router.replace(`/game/${roomSlug}`)
+    router.replace("/game/multiplayer")
     toast.success(message, { description })
   },
 
@@ -308,9 +308,7 @@ export const roomStore = ({
         onAutoClose() { window.location.reload() },
         action: {
           label: "Reconnect",
-          onClick() {
-            window.location.reload()
-          }
+          onClick() { window.location.reload() }
         }
       })
       return

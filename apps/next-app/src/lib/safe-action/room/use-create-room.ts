@@ -52,17 +52,14 @@ export const useCreateRoomAction = () => {
       }
 
       if (error.serverError?.key === "ACTIVE_ROOM") {
-        const { message, description, data } = error.serverError
-        const { roomSlug } = data as { roomSlug: string }
+        const { message, description } = error.serverError
 
         toast.warning(message, {
           description,
           duration: 10000,
           action: {
             label: "Reconnect",
-            onClick() {
-              router.push(`/game/room/${roomSlug}`)
-            }
+            onClick() { router.push("/game/room") }
           }
         })
         return
