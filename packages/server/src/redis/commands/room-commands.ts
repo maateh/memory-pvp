@@ -5,9 +5,6 @@ import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
 import { redis } from "../redis"
 import { roomKey, waitingRoomsKey } from "../keys"
 
-// utils
-import { ServerError } from "../../error/error"
-
 /**
  * Retrieves a list of waiting rooms from Redis.
  * 
@@ -38,21 +35,12 @@ export async function getWaitingRooms(): Promise<WaitingRoom[]> {
  * - If the room is not found, a `ServerError` is thrown indicating that the session room has been closed.
  * 
  * @param {string} roomSlug - The unique identifier of the room to fetch.
- * @returns {Promise<R>} - The requested room data.
- * @throws {ServerError} - If the room is not found in Redis.
+ * @returns {Promise<R | null>} - The requested room data or null if not found.
  */
 export async function getRoom<R extends RoomVariants = RoomVariants>(
   roomSlug: string
-): Promise<R> {
-  const room = await redis.json.get<R>(roomKey(roomSlug))
-  if (room) return room
-
-  ServerError.throw({
-    thrownBy: "REDIS",
-    key: "ROOM_NOT_FOUND",
-    message: "Session room not found.",
-    description: "Sorry, but this room has been closed."
-  })
+): Promise<R | null> {
+  return await redis.json.get<R>(roomKey(roomSlug))
 }
 
 /**
@@ -67,20 +55,13 @@ export async function getRoom<R extends RoomVariants = RoomVariants>(
  * 
  * @param {string} roomSlug - The unique identifier of the room.
  * @param {F} field - The field key to retrieve from the room data.
- * @returns {Promise<R[F]>} - The value of the specified field.
- * @throws {ServerError} - If the room is not found in Redis.
+ * @returns {Promise<R[F] | null>} - The value of the specified field or null if not found.
  */
 export async function getRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
   roomSlug: string,
   field: F
-): Promise<R[F]> {
-  const fieldValue = await redis.json.get<R[F]>(roomKey(roomSlug), `$.${field as string}`)
-  if (fieldValue) return fieldValue
-
-  ServerError.throw({
-    thrownBy: "REDIS",
-    key: "ROOM_NOT_FOUND",
-    message: "Session room not found.",
-    description: "Sorry, but this room has been closed."
-  })
+): Promise<R[F] | null> {
+  return await redis.json.get<R[F]>(
+    roomKey(roomSlug), `$.${field as string}`
+  )
 }

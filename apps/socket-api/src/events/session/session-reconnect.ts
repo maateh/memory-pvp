@@ -3,7 +3,7 @@ import type { Room } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getRoom } from "@repo/server/redis-commands"
+import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
 import { ServerError } from "@repo/server/error"

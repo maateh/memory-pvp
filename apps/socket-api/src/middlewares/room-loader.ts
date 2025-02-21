@@ -1,8 +1,6 @@
-// types
-import type { RoomVariants } from "@repo/schema/room"
-
 // redis
 import { redis } from "@repo/server/redis"
+import { getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // utils
@@ -22,7 +20,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     }
 
     const { playerId, roomSlug } = connection
-    const room = await redis.json.get<RoomVariants>(roomKey(roomSlug))
+    const room = await getRoom(roomSlug)
 
     if (!room) {
       await Promise.all([

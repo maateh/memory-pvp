@@ -67,12 +67,12 @@ export const createRoom = playerActionClient
 
     const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
     if (prevConnection) {
-      const room = await getRoom(prevConnection.roomSlug)
+      const activeRoom = await getRoom(prevConnection.roomSlug)
 
-      if (room) {
+      if (activeRoom) {
         ServerError.throwInAction({
           key: "ACTIVE_ROOM",
-          data: { roomSlug: room.slug },
+          data: { roomSlug: activeRoom.slug },
           message: "Active room found.",
           description: "You have already joined another room. Please leave it first."
         })
@@ -155,12 +155,12 @@ export const joinRoom = playerActionClient
 
     const prevConnection = await ctx.redis.hgetall<PlayerConnection>(playerConnectionKey(ctx.player.id))
     if (prevConnection) {
-      const room = await getRoom(prevConnection.roomSlug)
+      const activeRoom = await getRoom(prevConnection.roomSlug)
 
-      if (room) {
+      if (activeRoom) {
         ServerError.throwInAction({
           key: "ACTIVE_ROOM",
-          data: { roomSlug: room.slug },
+          data: { roomSlug: activeRoom.slug },
           message: "Active room found.",
           description: "You have already joined another room. Please leave it first."
         })
@@ -168,6 +168,15 @@ export const joinRoom = playerActionClient
     }
 
     const room = await getRoom<WaitingRoom>(roomSlug)
+
+    if (!room) {
+      ServerError.throwInAction({
+        key: "ROOM_NOT_FOUND",
+        message: "Room not found.",
+        description: "Sorry, but this room is probably already closed."
+      })
+    }
+
     const connection = offlinePlayer({
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,

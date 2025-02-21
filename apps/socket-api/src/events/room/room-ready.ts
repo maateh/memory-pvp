@@ -3,7 +3,7 @@ import type { JoinedRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { getRoom } from "@repo/server/redis-commands"
+import { getRoom } from "@repo/server/redis-commands-throwable"
 import { roomKey } from "@repo/server/redis-keys"
 
 // server

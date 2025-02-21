@@ -9,6 +9,7 @@
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",
+    "./redis-commands-throwable": "./src/redis/commands/throwable/index.ts",
     "./redis-keys": "./src/redis/keys.ts",
     "./socket-types": "./src/types/socket.ts"
   },

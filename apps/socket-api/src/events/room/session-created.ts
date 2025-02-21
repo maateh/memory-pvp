@@ -1,5 +1,5 @@
 // redis
-import { getRoomByField } from "@repo/server/redis-commands"
+import { getRoomByField } from "@repo/server/redis-commands-throwable"
 
 // socket
 import { io } from "@/server"
