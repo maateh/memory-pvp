@@ -1,13 +1,13 @@
 // types
-import type { WaitingRoomVariants } from "@repo/schema/room"
+import type { RoomVariants } from "@repo/schema/room"
 
-type WaitingRoomHeaderMap = Record< WaitingRoomVariants["status"], {
-  key:  WaitingRoomVariants["status"]
+type RoomHeaderMap = Record<RoomVariants["status"], {
+  key:  RoomVariants["status"]
   title: string
   description: string
 }>
 
-export const waitingRoomHeaderMap = {
+export const roomHeaderMap = {
   waiting: {
     key: "waiting",
     title: "Waiting for another player to join...",
@@ -27,5 +27,15 @@ export const waitingRoomHeaderMap = {
     key: "starting",
     title: "Game is ready to start!",
     description: "Initializing game session..."
+  },
+  running: {
+    key: "running",
+    title: "Session is already running.",
+    description: "Please reconnect."
+  },
+  finished: {
+    key: "finished",
+    title: "Session is finished.",
+    description: "The game has already ended in this room."
   }
-} satisfies WaitingRoomHeaderMap
+} satisfies RoomHeaderMap
