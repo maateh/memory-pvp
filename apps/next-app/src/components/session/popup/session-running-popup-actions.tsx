@@ -74,7 +74,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
   }
 
   const href = isOffline ? "/game/offline"
-    : activeSessionMode === "SINGLE" ? "/game/single" : "/game/room/reconnect"
+    : activeSessionMode === "SINGLE" ? "/game/single" : "/game/reconnect"
 
   return (
     <>

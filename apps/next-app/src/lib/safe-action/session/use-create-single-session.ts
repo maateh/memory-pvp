@@ -38,7 +38,7 @@ export const useCreateSingleSessionAction = () => {
 
         const errorData = data as { activeSessionMode: GameMode } | null
         if (errorData?.activeSessionMode !== "SINGLE") {
-          router.push("/game/room/reconnect")
+          router.push("/game/reconnect")
           toast.warning(message, { description })
           return
         }
