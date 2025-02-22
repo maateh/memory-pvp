@@ -1,6 +1,6 @@
 // types
 import type { ClientSession } from "@repo/schema/session"
-import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
+import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 

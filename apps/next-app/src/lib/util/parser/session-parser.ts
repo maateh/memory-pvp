@@ -6,7 +6,7 @@ import type {
   OfflineClientSession
 } from "@repo/schema/session"
 import type { SessionFilterQuery } from "@/lib/schema/query/session-query"
-import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@/lib/types/prisma"
+import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 
 // schemas
 import { sessionFilterQuery } from "@/lib/schema/query/session-query"

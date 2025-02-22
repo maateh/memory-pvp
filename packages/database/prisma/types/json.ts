@@ -1,28 +1,18 @@
+import type z from "zod"
+
+// schemas - json
+import {
+  playerStats,
+  sessionCard,
+  sessionCardMetadata,
+  sessionStats
+} from "../schema/json"
+
 declare global {
   namespace PrismaJson {
-    type PlayerStats = {
-      score: number
-      timer: number
-      flips: number
-      matches: number
-      sessions: number
-    }
-
-    type SessionCardMetadata = {
-      id: string
-      key: number
-    }
-
-    type SessionCard = {
-      id: string
-      key: number
-      matchedBy: string | null
-    }
-
-    type SessionStats = {
-      timer: number
-      flips: Record<string, number>
-      matches: Record<string, number>
-    }
+    type PlayerStats = z.infer<typeof playerStats>
+    type SessionCardMetadata = z.infer<typeof sessionCardMetadata>
+    type SessionCard = z.infer<typeof sessionCard>
+    type SessionStats = z.infer<typeof sessionStats>
   }
 }

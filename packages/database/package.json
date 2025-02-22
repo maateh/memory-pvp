@@ -5,7 +5,10 @@
   "private": true,
   "exports": {
     ".": "./prisma/db.ts",
-    "./json": "./prisma/types/json.ts",
+    "./types": "./prisma/types/index.ts",
+    "./schema": "./prisma/schema/index.ts",
+    "./json-schema": "./prisma/schema/json.ts",
+    "./json-types": "./prisma/types/json.ts",
     "./zod": "./prisma/generated/zod/index.ts"
   },
   "scripts": {

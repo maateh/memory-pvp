@@ -1,6 +1,6 @@
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-import type { PlayerProfileWithUserAvatar } from "@/lib/types/prisma"
+import type { PlayerProfileWithUserAvatar } from "@repo/db/types"
 
 // utils
 import { pickFields } from "@/lib/util/parser"

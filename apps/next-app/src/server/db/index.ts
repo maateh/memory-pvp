@@ -1,6 +1,6 @@
 // prisma
 import { PrismaClient } from "@repo/db"
-import "@repo/db/json"
+import "@repo/db/json-types"
 
 declare global {
   var prisma: PrismaClient | undefined
