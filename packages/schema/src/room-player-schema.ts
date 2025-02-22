@@ -6,7 +6,7 @@ import { playerConnection } from "./player-connection-schema"
 
 export const roomPlayerRole = z.enum(["owner", "guest"])
 
-export const roomPlayerSchema = clientPlayerSchema.extend({ // TODO: must be replaced by db schema
+export const roomPlayerSchema = clientPlayerSchema.extend({
   ready: z.coerce.boolean(),
   role: roomPlayerRole,
   connection: playerConnection

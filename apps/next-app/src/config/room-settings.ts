@@ -2,7 +2,7 @@
 import type { RoomVariants } from "@repo/schema/room"
 
 type RoomHeaderMap = Record<RoomVariants["status"], {
-  key:  RoomVariants["status"]
+  key: RoomVariants["status"]
   title: string
   description: string
 }>

@@ -1,5 +1,5 @@
 // types
-import type { Room } from "@repo/schema/room"
+import type { RoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -10,14 +10,14 @@ import { ServerError } from "@repo/server/error"
 
 export const sessionReconnect: SocketEventHandler<
   unknown,
-  Room
+  RoomVariants
 > = (socket) => async (_, response) => {
   console.log("DEBUG - session:reconnect -> ", socket.id)
 
   const { roomSlug } = socket.ctx.connection
 
   try {
-    const room = await getRoom<Room>(roomSlug)
+    const room = await getRoom(roomSlug)
 
     // TODO: implement session reconnection
 
