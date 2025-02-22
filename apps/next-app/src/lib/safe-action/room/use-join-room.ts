@@ -80,7 +80,7 @@ export const useJoinRoomAction = () => {
           duration: 10000,
           action: {
             label: "Reconnect",
-            onClick() { router.push("/game/room") }
+            onClick() { router.push("/game/multiplayer/connect") }
           }
         })
         return

@@ -110,7 +110,7 @@ const ActiveRoomCardContent = ({ room, className, ...props }: ActiveRoomCardCont
           size="icon"
           asChild
         >
-          <Link href="/game/room">
+          <Link href="/game/multiplayer/connect">
             <RotateCcw className="size-4 sm:size-5 shrink-0"
               strokeWidth={2.25}
             />
