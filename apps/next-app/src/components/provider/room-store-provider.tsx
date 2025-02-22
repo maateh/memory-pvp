@@ -7,7 +7,7 @@ import { useStore } from "zustand"
 // types
 import type { StoreApi } from "zustand"
 import type { RoomStore } from "@/lib/store/room-store"
-import type { WaitingRoomVariants } from "@repo/schema/room"
+import type { RoomVariants } from "@repo/schema/room"
 
 // store
 import { roomStore } from "@/lib/store/room-store"
@@ -18,7 +18,7 @@ import { useSocketService } from "@/components/provider/socket-service-provider"
 const RoomStoreContext = createContext<StoreApi<RoomStore> | null>(null)
 
 type RoomStoreProviderProps = {
-  initialRoom: WaitingRoomVariants
+  initialRoom: RoomVariants
   currentPlayerId: string
   children: React.ReactNode
 }

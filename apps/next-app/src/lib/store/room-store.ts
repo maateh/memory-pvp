@@ -6,7 +6,7 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import type { Socket } from "socket.io-client"
 import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
-import type { JoinedRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
+import type { JoinedRoom, RoomVariants, WaitingRoom } from "@repo/schema/room"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"
@@ -16,7 +16,7 @@ import { ServerError } from "@repo/server/error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 type RoomState = {
-  room: WaitingRoomVariants
+  room: RoomVariants
   currentRoomPlayer: RoomPlayer
 }
 
@@ -28,7 +28,7 @@ type RoomAction = {
 }
 
 type RoomListener = {
-  roomConnected: (response: SocketResponse<WaitingRoomVariants>) => void
+  roomConnected: (response: SocketResponse<RoomVariants>) => void
   roomDisconnected: (response: SocketResponse<JoinedRoom>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
@@ -44,7 +44,7 @@ type RoomListener = {
 export type RoomStore = RoomState & RoomAction & RoomListener
 
 type RoomStoreProps = {
-  initialRoom: WaitingRoomVariants
+  initialRoom: RoomVariants
   currentPlayerId: string
   socket: Socket
   router: AppRouterInstance
