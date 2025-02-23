@@ -23,11 +23,6 @@ export const roomHeaderMap = {
     title: "Game is ready to start!",
     description: "Initializing game session..."
   },
-  starting: {
-    key: "starting",
-    title: "Game is ready to start!",
-    description: "Initializing game session..."
-  },
   running: {
     key: "running",
     title: "Session is already running.",

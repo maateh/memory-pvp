@@ -5,7 +5,7 @@ import { roomPlayerSchema } from "./room-player-schema"
 import { multiClientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
-export const roomStatus = z.enum(["waiting", "joined", "ready", "starting", "running", "finished"])
+export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "finished"])
 export const roomConnectionStatus = z.enum(["offline", "half_online", "online"])
 
 export const roomSettings = sessionSettings
@@ -39,8 +39,7 @@ export const joinedRoomSchema = roomSchema
   .extend({
     status: z.enum([
       roomStatus.enum.joined,
-      roomStatus.enum.ready,
-      roomStatus.enum.starting
+      roomStatus.enum.ready
     ]),
     guest: roomPlayerSchema
   })

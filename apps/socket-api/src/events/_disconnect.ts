@@ -61,7 +61,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
       } satisfies SocketResponse<JoinedRoom>)
     }
 
-    if (room.status === "starting" || room.status === "running") {
+    if (room.status === "running") {
       // TODO:
       // - remove both joined players socket connection
       // - emit `session:cancelled` event

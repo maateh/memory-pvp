@@ -12,28 +12,14 @@ import { io } from "@/server"
 // error
 import { ServerError } from "@repo/server/error"
 
-export const sessionStarting: SocketEventHandler = (socket) => async (_, response) => {
+export const sessionStarting: SocketEventHandler = (socket) => async () => {
   console.log("DEBUG - session:starting -> ", socket.id)
 
   const { roomSlug } = socket.ctx.connection
 
-  try {
-    await redis.json.set(
-      roomKey(roomSlug),
-      "$.status",
-      '"starting"' as JoinedRoom["status"], /* Note: DO NOT REMOVE the extra outer delimiter! */
-      { xx: true }
-    )
-
-    const message = "Initializing game session..."
-    socket.broadcast.to(roomSlug).emit("session:starting", { message } satisfies SocketResponse)
-    response({ message })
-  } catch (err) {
-    response({
-      message: "Failed to update room status.",
-      error: ServerError.parser(err)
-    })
-  }
+  io.to(roomSlug).emit("session:starting", {
+    message: "Initializing game session..."
+  } satisfies SocketResponse)
 }
 
 export const sessionStartingFailed: SocketEventHandler = (socket) => async () => {
@@ -53,7 +39,7 @@ export const sessionStartingFailed: SocketEventHandler = (socket) => async () =>
       })
     }
 
-    if (room.status !== "starting") {
+    if (room.status !== "ready") {
       ServerError.throw({
         thrownBy: "SOCKET_API",
         key: "ROOM_STATUS_CONFLICT",

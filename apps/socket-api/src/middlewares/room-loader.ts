@@ -80,11 +80,8 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
       room.guest.ready = false
     }
   
-    if (
-      room.status === "starting" ||
-      room.status === "running"
-      // TODO: add -> room.status === "cancelled"
-    ) {
+    // TODO: add -> room.status === "cancelled"
+    if (room.status === "running") {
       ServerError.throw({
         thrownBy: "SOCKET_API",
         key: "SESSION_ALREADY_STARTED",

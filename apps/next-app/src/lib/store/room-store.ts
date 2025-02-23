@@ -223,22 +223,9 @@ export const roomStore = ({
       currentPlayerId !== room.owner.id
     ) return
 
+    socket.emit("session:starting")
+
     try {
-      const {
-        message: startingMessage,
-        description: startingDescription,
-        error: startingError
-      }: SocketResponse = await socket.emitWithAck("session:starting", {})
-
-      if (startingError) {
-        throw ServerError.parser(startingError)
-      }
-
-      toast.loading(startingMessage, {
-        id: "session:starting",
-        description: startingDescription
-      })
-
       const { serverError } = await createMultiSession({
         settings: room.settings,
         slug: room.slug,
@@ -253,10 +240,6 @@ export const roomStore = ({
       }
 
       socket.emit("session:created")
-      toast.info("Game session has been initialized.", {
-        id: "session:created",
-        description: "Starting the game session..."
-      })
     } catch (err) {
       socket.emit("session:starting:failed")
 
@@ -267,13 +250,6 @@ export const roomStore = ({
 
   sessionStarting({ message, description, error }) {
     if (error) return handleServerError(error)
-
-    set(({ room }) => ({
-      room: {
-        ...room,
-        status: "starting"
-      } as JoinedRoom
-    }))
     
     toast.loading(message, { id: "session:starting", description })
   },

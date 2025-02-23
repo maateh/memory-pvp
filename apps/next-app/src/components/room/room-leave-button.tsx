@@ -41,7 +41,7 @@ const RoomLeaveButton = ({
         variant="ghost"
         size="icon"
         onClick={handleCloseOrLeave}
-        disabled={isReady || roomStatus === "ready" || roomStatus === "starting" || disabled}
+        disabled={isReady || roomStatus === "ready" || disabled}
         {...props}
       >
         <DoorClosed className="size-4 sm:size-5 shrink-0"
