@@ -54,18 +54,19 @@ export function getRendererSessionStats(
       label: "Timer",
       data: formatTimer(session.stats.timer * 1000)
     },
-    // FIXME: summarize session matches & flips
     matches: {
       key: "matches",
       Icon: Spade,
       label: "Matched Cards",
-      data: session.stats.matches[playerId] + ' matches'
+      data: Object.values(session.stats.matches)
+        .reduce((total, current) => total + current, 0) + " matches"
     },
     flips: {
       key: "flips",
       Icon: ScanEye,
       label: "Card Flips",
-      data: session.stats.flips[playerId] + ' flips'
+      data: Object.values(session.stats.flips)
+        .reduce((total, current) => total + current, 0) + " flips"
     },
     startedAt: {
       key: "startedAt",
