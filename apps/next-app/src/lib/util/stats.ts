@@ -35,10 +35,6 @@ export function getRendererSessionStats(
   session: ClientSession,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
-  const playerId = session.mode === "SINGLE" ? session.owner.id
-    : session.currentPlayerId === session.owner.id
-    ? session.owner.id : session.guest.id
-
   const stats: RendererStatsMap<RendererSessionStatKeys> = {
     typeMode: {
       key: "typeMode",
@@ -58,6 +54,7 @@ export function getRendererSessionStats(
       label: "Timer",
       data: formatTimer(session.stats.timer * 1000)
     },
+    // FIXME: summarize session matches & flips
     matches: {
       key: "matches",
       Icon: Spade,

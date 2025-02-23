@@ -59,7 +59,8 @@ export const createRoom = playerActionClient
       }
 
       await updateSessionStatus(
-        parseSchemaToClientSession(activeSession, ctx.player.id),
+        parseSchemaToClientSession(activeSession),
+        ctx.player.id,
         "abandon"
       )
     }
@@ -143,7 +144,8 @@ export const joinRoom = playerActionClient
       }
 
       await updateSessionStatus(
-        parseSchemaToClientSession(activeSession, ctx.player.id),
+        parseSchemaToClientSession(activeSession),
+        ctx.player.id,
         "abandon"
       )
     }

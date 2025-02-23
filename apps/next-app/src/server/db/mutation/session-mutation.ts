@@ -16,14 +16,16 @@ import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
  * - Stores the session results for each player.
  * 
  * @param {BaseClientSession} clientSession - The session data to update.
+ * @param {string} currentPlayerId - The player id of the player who requested this action.
  * @param {"finish" | "abandon"} action - The action to perform on the session (finishing or abandoning).
  * @returns {Promise<GameSession>} - The updated game session.
  */
 export async function updateSessionStatus(
-  clientSession: Pick<BaseClientSession, "slug" | "type" | "mode" | "tableSize" | "currentPlayerId" | "owner" | "guest" | "stats">,
+  clientSession: Pick<BaseClientSession, "slug" | "type" | "mode" | "tableSize" | "owner" | "guest" | "stats">,
+  currentPlayerId: string,
   action: "finish" | "abandon"
 ): Promise<GameSession> {
-  const { slug, mode, owner, guest, stats, currentPlayerId } = clientSession
+  const { slug, mode, owner, guest, stats } = clientSession
 
   const players = [owner]
   if (mode !== "SINGLE") players.push(guest!)

@@ -73,7 +73,8 @@ export const createSingleSession = playerActionClient
       }
 
       await updateSessionStatus(
-        parseSchemaToClientSession(activeSession, ctx.player.id),
+        parseSchemaToClientSession(activeSession),
+        ctx.player.id,
         "abandon"
       )
     }
@@ -226,7 +227,7 @@ export const saveSession = sessionActionClient
       include: sessionSchemaFields
     })
 
-    return parseSchemaToClientSession(session, ctx.player.id)
+    return parseSchemaToClientSession(session)
   })
 
 export const finishSession = sessionActionClient
@@ -236,7 +237,7 @@ export const finishSession = sessionActionClient
 
     await Promise.all([
       ctx.redis.del(sessionKey(clientSession.slug)),
-      updateSessionStatus(clientSession, "finish")
+      updateSessionStatus(clientSession, ctx.player.id, "finish")
     ])
 
     /*
@@ -269,7 +270,7 @@ export const abandonSession = sessionActionClient
 
     await Promise.all([
       ctx.redis.del(sessionKey(clientSession.slug)),
-      updateSessionStatus(clientSession, "abandon")
+      updateSessionStatus(clientSession, ctx.player.id, "abandon")
     ])
 
     /**

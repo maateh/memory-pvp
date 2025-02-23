@@ -25,7 +25,7 @@ import { pickFields } from "@/lib/util/parser"
 /* Schema parser keys */
 export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'slug', 'collectionId',
-  'currentPlayerId', 'owner', 'guest',
+  'owner', 'guest',
   'type', 'mode', 'tableSize', 'status',
   'stats', 'flipped', 'cards',
   'startedAt', 'updatedAt', 'continuedAt', 'closedAt'
@@ -38,31 +38,21 @@ export const offlineSessionKeys: (keyof OfflineClientSession)[] = [
 ] as const
 
 /**
- * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientGameSession`, 
- * organizing player data based on the current player's ID.
- * 
- * - The `players` field is structured to have:
- *   - `current`: The player object whose ID matches the `currentPlayerId`.
- *   - `other`: The other player in the session.
+ * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientSession`.
  * 
  * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
  * @returns {ClientSession} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
-  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards,
-  currentPlayerId: string | undefined | null
+  session: GameSessionWithPlayersWithAvatarWithCollectionWithCards
 ): ClientSession {
-  currentPlayerId = currentPlayerId || deletedPlayerPlaceholder.id
-
-  const parserKeys = clientSessionKeys.filter((key) => key !== "currentPlayerId")
-  const filteredSession = pickFields(session, parserKeys)
+  const filteredSession = pickFields(session, clientSessionKeys)
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
 
   const baseClientSession: Omit<ClientSession, "mode" | "guest"> = {
     ...filteredSession,
     collectionId: sessionCollection.id,
     cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),
-    currentPlayerId,
     owner: session.owner
       ? parseSchemaToClientPlayer(session.owner)
       : deletedPlayerPlaceholder
