@@ -6,7 +6,7 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import type { Socket } from "socket.io-client"
 import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
-import type { RoomVariants, JoinedRoom, WaitingRoom } from "@repo/schema/room"
+import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"
@@ -36,7 +36,7 @@ type RoomListener = {
   roomReadied: (response: SocketResponse<JoinedRoom>) => Promise<void>
   sessionStarting: (response: SocketResponse) => void
   sessionStartingFailed: (response: SocketResponse) => void
-  sessionStarted: (response: SocketResponse<string>) => void
+  sessionStarted: (response: SocketResponse<RunningRoom>) => void
   connectError: (error: ExtendedSocketError<ServerError>) => void
   disconnect: (reason: Socket.DisconnectReason) => void
 }
@@ -287,16 +287,17 @@ export const roomStore = ({
     router.replace("/game/setup")
   },
 
-  sessionStarted({ data: roomSlug, message, description, error }) {
-    if (error || !roomSlug) return handleServerError(error)
+  sessionStarted({ data: room, message, description, error }) {
+    if (error || !room) return handleServerError(error)
 
     toast.dismiss("room:ready:response")
     toast.dismiss("room:readied")
     toast.dismiss("session:starting")
     toast.dismiss("session:created")      
 
-    router.replace("/game/multiplayer")
+    set({ room })
     toast.success(message, { description })
+    router.replace("/game/multiplayer")
   },
 
   connectError({ data: error }) {

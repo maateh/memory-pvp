@@ -1,5 +1,8 @@
+// types
+import type { RunningRoom } from "@repo/schema/room"
+
 // redis
-import { getRoomByField } from "@repo/server/redis-commands-throwable"
+import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // socket
 import { io } from "@/server"
@@ -13,19 +16,14 @@ export const sessionCreated: SocketEventHandler = (socket) => async () => {
   const { roomSlug } = socket.ctx.connection
 
   try {
-    const {
-      type,
-      mode,
-      tableSize
-    } = await getRoomByField(roomSlug, "settings")
+    const room = await getRoom<RunningRoom>(roomSlug)
+    const { type, mode, tableSize } = room.settings
 
     io.to(roomSlug).emit("session:started", {
       message: "The game session has started!",
-      // TODO: formatting helpers would be cool here
-      // (which are currently only used on the client-side)
       description: `${type} | ${mode} | ${tableSize}`,
-      data: roomSlug
-    } satisfies SocketResponse<string>)
+      data: room
+    } satisfies SocketResponse<RunningRoom>)
   } catch (err) {
     io.to(roomSlug).emit("session:started", {
       message: "Failed to start game session.",

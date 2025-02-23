@@ -2,9 +2,14 @@
 
 import { redirect, RedirectType } from "next/navigation"
 
+// types
+import type { MultiClientSession } from "@repo/schema/session"
+import type { JoinedRoom, RunningRoom } from "@repo/schema/room"
+
 // redis
 import { redis } from "@repo/server/redis"
 import { roomKey, sessionKey } from "@repo/server/redis-keys"
+import { getActiveRoom } from "@repo/server/redis-commands"
 
 // db
 import { getActiveSession } from "@/server/db/query/session-query"
@@ -180,11 +185,22 @@ export const createMultiSession = playerActionClient
       include: sessionSchemaFields
     })
 
-    const response = await redis.json.set(
-      roomKey(session.slug),
-      "$.session",
-      session
-    )
+    const activeRoom = await getActiveRoom<JoinedRoom>(ctx.player.id)
+    if (!activeRoom) {
+      ServerError.throwInAction({
+        key: "ROOM_NOT_FOUND",
+        message: "Active room not found.",
+        description: "Something went wrong. Please create or join another room."
+      })
+    }
+
+    const room: RunningRoom = {
+      ...activeRoom,
+      status: "running",
+      session: parseSchemaToClientSession(session) as MultiClientSession
+    }
+
+    const response = await redis.json.set(roomKey(room.slug), "$", room, { xx: true })
 
     if (response !== "OK") {
       ServerError.throwInAction({
