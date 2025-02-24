@@ -31,6 +31,8 @@ const RoomScreen = () => {
   const roomKick = useRoomStore((state) => state.roomKick)
   const roomReady = useRoomStore((state) => state.roomReady)
 
+  // TODO: implement session reconnection
+
   return (
     <div className="flex-1 flex flex-col items-center justify-around gap-y-12">
       <div className="px-4 mb-2 text-center leading-8">

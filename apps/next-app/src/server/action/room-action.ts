@@ -109,7 +109,7 @@ export const createRoom = playerActionClient
      * 
      * https://github.com/vercel/next.js/discussions/60864
      */
-    redirect("/game/multiplayer/connect", forceStart ? RedirectType.replace : RedirectType.push)
+    redirect("/game/multiplayer", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const joinRoom = playerActionClient
@@ -197,5 +197,5 @@ export const joinRoom = playerActionClient
       ctx.redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
 
-    redirect("/game/multiplayer/connect")
+    redirect("/game/multiplayer")
   })

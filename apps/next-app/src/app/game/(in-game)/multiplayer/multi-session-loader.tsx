@@ -3,9 +3,13 @@
 // settings
 import { roomHeaderMap } from "@/config/room-settings"
 
+// layouts
+import BaseGameLayout from "@/app/game/(base)/layout"
+
 // components
 import { RedirectFallback } from "@/components/shared"
 import MultiGameHandler from "./multi-game-handler"
+import RoomScreen from "./room-screen"
 
 // providers
 import { MultiSessionStoreProvider } from "@/components/provider"
@@ -24,17 +28,21 @@ const MultiSessionLoader = () => {
     )
   }
 
-  const href = room.status === "finished"
-    ? `/game/summary/${room.slug}`
-    : "/game/multiplayer/connect"
+  if (room.status === "finished") {
+    return (
+      <RedirectFallback
+        redirect={`/game/summary/${room.slug}`}
+        type="replace"
+        message={roomHeaderMap[room.status].title}
+        description={roomHeaderMap[room.status].description}
+      />
+    )
+  }
 
   return (
-    <RedirectFallback
-      redirect={href}
-      type="replace"
-      message={roomHeaderMap[room.status].title}
-      description={roomHeaderMap[room.status].description}
-    />
+    <BaseGameLayout>
+      <RoomScreen />
+    </BaseGameLayout>
   )
 }
 
