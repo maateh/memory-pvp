@@ -13,10 +13,10 @@ type RedirectFallbackProps = {
 }
 
 const RedirectFallback = ({
-  redirect = '/',
+  redirect = "",
   type = "push",
   message,
-  description = '',
+  description = "",
   children
 }: RedirectFallbackProps) => {
   const router = useRouter()
@@ -32,10 +32,9 @@ const RedirectFallback = ({
       }
 
       switch (type) {
-        case 'back': router.back()
-        case 'push': router.push(redirect, { scroll: false })
-        case 'replace': router.replace(redirect, { scroll: false })
-        default: router.back()
+        case "back": router.back()
+        case "push": router.push(redirect, { scroll: false })
+        case "replace": router.replace(redirect, { scroll: false })
       }
     }
   }, [router, type, message, description, redirect])
