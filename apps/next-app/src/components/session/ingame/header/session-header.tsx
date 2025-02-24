@@ -27,7 +27,7 @@ type SessionHeaderProps = {
 
 const SessionHeader = ({ session }: SessionHeaderProps) => {
   return (
-    <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-primary md:px-5 md:rounded-b-2xl md:max-w-2xl">
+    <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-background/65 md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
         <SessionActionsDropdown session={session} />
 

@@ -13,7 +13,7 @@ type SessionFooterProps = {
 
 const SessionFooter = ({ session }: SessionFooterProps) => {
   return (
-    <footer className="w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-4 bg-primary md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]">
+    <footer className="w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-4 bg-background/65 md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]">
       <SessionPlayer
         session={session}
         player={session.owner}

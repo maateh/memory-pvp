@@ -4,7 +4,7 @@ type InGameLayoutProps = {
 
 const InGameLayout = ({ children }: InGameLayoutProps) => {
   return (
-    <div className="w-full mx-auto flex flex-col items-center gap-y-2 bg-foreground/10 rounded-xl">
+    <div className="flex-1 flex flex-col">
       {children}
     </div>
   )

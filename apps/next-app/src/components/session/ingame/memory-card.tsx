@@ -22,7 +22,7 @@ const MemoryCard = ({ card, isFlipped, onClick }: MemoryCardProps) => {
       isFlipped={isFlipped}
       onClick={onClick}
     >
-      <MemoryCardContentWrapper className="flex items-center justify-center bg-primary text-primary-foreground text-4xl font-bold">
+      <MemoryCardContentWrapper className="flex items-center justify-center bg-accent/45 dark:bg-accent/35 text-4xl font-bold">
         ?
       </MemoryCardContentWrapper>
 
