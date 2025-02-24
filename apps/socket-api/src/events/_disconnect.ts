@@ -1,5 +1,5 @@
 // types
-import type { JoinedRoom } from "@repo/schema/room"
+import type { CancelledRoom, JoinedRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -61,18 +61,44 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
       } satisfies SocketResponse<JoinedRoom>)
     }
 
-    if (room.status === "running") {
-      // TODO:
-      // - remove both joined players socket connection
-      // - emit `session:cancelled` event
+    if (room.status === "running" || room.status === "cancelled") {
+      const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
+      room[currentPlayerKey].connection = offlineConnection
+
+      const ownerIsOnline = room.owner.connection.status === "online"
+      const guestIsOnline = room.guest.connection.status === "online"
+
+      const cancelledRoom: CancelledRoom = {
+        ...room,
+        status: "cancelled",
+        connectionStatus: ownerIsOnline || guestIsOnline ? "half_online" : "offline",
+        owner: { ...room.owner, ready: false },
+        guest: { ...room.guest, ready: false }
+      }
+
+      await Promise.all([
+        redis.hset(playerConnectionKey(playerId), offlineConnection),
+        redis.json.set(roomKey(room.slug), "$", cancelledRoom, { xx: true })
+      ])
+
+      socket.broadcast.to(room.slug).emit("room:disconnected", {
+        message: `${playerTag} has disconnected.`,
+        description: currentPlayerKey === "owner"
+          ? ""
+          : "",
+        data: cancelledRoom
+      } satisfies SocketResponse<CancelledRoom>)
+
+      // TODO: From this point, the session is "cancelled".
+      // - if `session.type === CASUAL`
+      //   -> Session can be abandoned anytime by the player who still connected without point losses.
       // 
-      // IMPLEMENT:
-      // From this point, the session status must be changed to "cancelled".
-      // - if the `room status === "cancelled"`
-      //  -> the player who stayed has the right to:
-      //    - claim the win but only if the other player doesn't reconnect for at least a minute
-      //    - completely cancel the session without waiting for the other user to rejoin, but this case it doesn't count as a win
-      //  -> if the player reconnects the session will continue normally
+      // - if `session.type === COMPETITIVE`
+      //   -> Session can be abandoned by the player who still connected but
+      //      only if the other player will not reconnect under 5 minutes.
+      //      This case, the connected player can claim the session as a win,
+      //      and the other player will lose points.
+      //   -> If the disconnected player reconnects the session will continue normally.
     }
 
     if (room.status === "finished") {

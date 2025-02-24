@@ -6,7 +6,7 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import type { Socket } from "socket.io-client"
 import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
-import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
+import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom, CancelledRoom } from "@repo/schema/room"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"
@@ -29,7 +29,7 @@ type RoomAction = {
 
 type RoomListener = {
   roomConnected: (response: SocketResponse<RoomVariants>) => void
-  roomDisconnected: (response: SocketResponse<JoinedRoom>) => void
+  roomDisconnected: (response: SocketResponse<JoinedRoom | CancelledRoom>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
   roomKicked: (response: SocketResponse) => void
@@ -273,7 +273,6 @@ export const roomStore = ({
 
     set({ room })
     toast.success(message, { description })
-    router.replace("/game/multiplayer")
   },
 
   connectError({ data: error }) {
@@ -300,10 +299,8 @@ export const roomStore = ({
       reason === "io server disconnect"
     ) return
 
-    // TODO: implement reconnection
-    router.replace("/game/reconnect")
     toast.warning("Connection has been lost with the server.", {
-      description: "Your session has been likely cancelled, but you can continue it if you want."
+      description: "Your session has been likely cancelled. Please reconnect."
     })
   }
 }))
