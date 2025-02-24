@@ -25,12 +25,17 @@ export const roomHeaderMap = {
   },
   running: {
     key: "running",
-    title: "Session is already running.",
-    description: "Please reconnect."
+    title: "Game started!",
+    description: "Redirecting..."
+  },
+  cancelled: {
+    key: "cancelled",
+    title: "Game session has been cancelled.",
+    description: "Please reconnect and wait for the other player."
   },
   finished: {
     key: "finished",
-    title: "Session is finished.",
-    description: "The game has already ended in this room."
+    title: "Game is over in this session.",
+    description: "You can check the results in the summary."
   }
 } satisfies RoomHeaderMap

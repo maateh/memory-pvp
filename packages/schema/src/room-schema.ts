@@ -5,7 +5,7 @@ import { roomPlayerSchema } from "./room-player-schema"
 import { multiClientSessionSchema, sessionSettings } from "./session-schema"
 
 /* Base schemas */
-export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "finished"])
+export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "cancelled", "finished"])
 export const roomConnectionStatus = z.enum(["offline", "half_online", "online"])
 
 export const roomSettings = sessionSettings
@@ -52,6 +52,14 @@ export const runningRoomSchema = roomSchema
     session: multiClientSessionSchema
   })
 
+export const cancelledRoomSchema = roomSchema
+  .omit({ status: true, guest: true, session: true })
+  .extend({
+    status: z.literal(roomStatus.enum.cancelled),
+    guest: roomPlayerSchema,
+    session: multiClientSessionSchema
+  })
+
 export const finishedRoomSchema = roomSchema
   .omit({ status: true, guest: true, session: true })
   .extend({
@@ -68,7 +76,8 @@ export type Room = z.infer<typeof roomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
 export type RunningRoom = z.infer<typeof runningRoomSchema>
+export type CancelledRoom = z.infer<typeof cancelledRoomSchema>
 export type FinishedRoom = z.infer<typeof finishedRoomSchema>
 
 export type WaitingRoomVariants = WaitingRoom | JoinedRoom
-export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | FinishedRoom
+export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | CancelledRoom | FinishedRoom

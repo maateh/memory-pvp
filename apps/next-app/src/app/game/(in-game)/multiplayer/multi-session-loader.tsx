@@ -1,5 +1,8 @@
 "use client"
 
+// settings
+import { roomHeaderMap } from "@/config/room-settings"
+
 // components
 import { RedirectFallback } from "@/components/shared"
 import MultiGameHandler from "./multi-game-handler"
@@ -13,17 +16,6 @@ import { useRoomStore } from "@/components/provider/room-store-provider"
 const MultiSessionLoader = () => {
   const room = useRoomStore((state) => state.room)
 
-  if (room.status === "finished") {
-    return (
-      <RedirectFallback
-        redirect="/game/setup"
-        type="replace"
-        message="Session is finished."
-        description="The game has already ended in this room."
-      />
-    )
-  }
-
   if (room.status === "running") {
     return (
       <MultiSessionStoreProvider initialSession={room.session}>
@@ -31,15 +23,17 @@ const MultiSessionLoader = () => {
       </MultiSessionStoreProvider>
     )
   }
-  
-  // TODO: add room status `cancelled`
-  //  -> show different message & description
+
+  const href = room.status === "finished"
+    ? `/game/summary/${room.slug}`
+    : "/game/multiplayer/connect"
+
   return (
     <RedirectFallback
-      redirect="/game/multiplayer/connect"
+      redirect={href}
       type="replace"
-      message="Session has not started yet."
-      description="You will be redirected to the room page."
+      message={roomHeaderMap[room.status].title}
+      description={roomHeaderMap[room.status].description}
     />
   )
 }
