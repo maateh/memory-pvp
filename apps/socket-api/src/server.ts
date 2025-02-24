@@ -14,6 +14,7 @@ import { PrismaClient } from "@repo/db"
 import {
   authenticate,
   connectionLoader,
+  roomAccess,
   roomLoader
 } from "./middlewares"
 
@@ -42,6 +43,7 @@ export const io = new Server(server, {
 
 io.use(authenticate)
 io.use(connectionLoader)
+io.use(roomAccess)
 io.use(roomLoader)
 
 io.on("connection", (_socket) => {

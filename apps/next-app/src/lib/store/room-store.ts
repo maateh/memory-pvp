@@ -291,17 +291,7 @@ export const roomStore = ({
       return
     }
 
-    if (error?.key === "SESSION_ALREADY_STARTED") {
-      router.replace("/game/reconnect")
-      toast.warning(error.message, {
-        id: "room:connect",
-        description: error.description
-      })
-      return
-    }
-
     handleServerError(error)
-    router.back()
   },
 
   disconnect(reason) {
