@@ -41,7 +41,7 @@ export const useCreateRoomAction = () => {
         const errorData = data as { activeSessionMode: GameMode } | null
 
         if (errorData?.activeSessionMode !== "SINGLE") {
-          router.push("/game/reconnect")
+          router.push("/game/multiplayer")
           toast.warning(message, { description })
           return
         }
