@@ -47,15 +47,10 @@ export const joinedRoomSchema = roomSchema
 export const runningRoomSchema = roomSchema
   .omit({ status: true, guest: true, session: true })
   .extend({
-    status: z.literal(roomStatus.enum.running),
-    guest: roomPlayerSchema,
-    session: multiClientSessionSchema
-  })
-
-export const cancelledRoomSchema = roomSchema
-  .omit({ status: true, guest: true, session: true })
-  .extend({
-    status: z.literal(roomStatus.enum.cancelled),
+    status: z.enum([
+      roomStatus.enum.running,
+      roomStatus.enum.cancelled
+    ]),
     guest: roomPlayerSchema,
     session: multiClientSessionSchema
   })
@@ -76,8 +71,7 @@ export type Room = z.infer<typeof roomSchema>
 export type WaitingRoom = z.infer<typeof waitingRoomSchema>
 export type JoinedRoom = z.infer<typeof joinedRoomSchema>
 export type RunningRoom = z.infer<typeof runningRoomSchema>
-export type CancelledRoom = z.infer<typeof cancelledRoomSchema>
 export type FinishedRoom = z.infer<typeof finishedRoomSchema>
 
+export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | FinishedRoom
 export type WaitingRoomVariants = WaitingRoom | JoinedRoom
-export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | CancelledRoom | FinishedRoom

@@ -9,7 +9,7 @@ import { roomHeaderMap } from "@/config/room-settings"
 import { getRendererSessionStats } from "@/lib/util/stats"
 
 // icons
-import { Share2, X } from "lucide-react"
+import { Share2 } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -30,7 +30,10 @@ import { useRoomStore } from "@/components/provider/room-store-provider"
 const RoomScreen = () => {
   const { handleCopy } = useCopy({ showToast: true })
 
-  // TODO: implement session reconnection
+  // TODO: implement session close/leave (in "CASUAL")
+  // TODO: implement "COMPETITIVE" session close/leave & reconnection system
+  //  - More information: `/socket-api/events/_disconnect`
+
   const room = useRoomStore((state) => state.room)
   const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
   const roomClose = useRoomStore((state) => state.roomClose)

@@ -1,5 +1,5 @@
 // types
-import type { CancelledRoom, JoinedRoom } from "@repo/schema/room"
+import type { JoinedRoom, RunningRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -68,7 +68,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
 
-      const cancelledRoom: CancelledRoom = {
+      const cancelledRoom: RunningRoom = {
         ...room,
         status: "cancelled",
         connectionStatus: ownerIsOnline || guestIsOnline ? "half_online" : "offline",
@@ -87,7 +87,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
           ? ""
           : "",
         data: cancelledRoom
-      } satisfies SocketResponse<CancelledRoom>)
+      } satisfies SocketResponse<RunningRoom>)
 
       // TODO: From this point, the session is "cancelled".
       // - if `session.type === CASUAL`
