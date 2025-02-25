@@ -34,19 +34,17 @@ const RoomLeaveButton = ({
   ...props
 }: RoomLeaveButtonProps) => {  
   return (
-    <GlowingOverlay className="h-[3.25rem] mx-auto"
-      overlayProps={{ className: "inset-0 bg-muted-foreground opacity-40 dark:opacity-5 blur-md" }}
+    <GlowingOverlay className="h-14 mx-auto"
+      overlayProps={{ className: "bg-muted-foreground opacity-85 dark:opacity-65 blur-md" }}
     >
-      <Button className={cn("z-10 relative size-full px-4 flex-col rounded-full text-muted/85 bg-muted-foreground/70 shadow-muted-foreground/40 dark:shadow-muted-foreground/15 shadow-md hover:bg-muted-foreground/75 transition-none", className)}
+      <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-muted transition-none", className)}
         variant="ghost"
         size="icon"
         onClick={handleCloseOrLeave}
         disabled={isReady || roomStatus === "ready" || disabled}
         {...props}
       >
-        <DoorClosed className="size-4 sm:size-5 shrink-0"
-          strokeWidth={2.25}
-        />
+        <DoorClosed className="size-4 sm:size-5 shrink-0" strokeWidth={2.25} />
 
         <span className="text-sm font-heading">
           {action === "leave" ? "Leave room" : "Close room"}

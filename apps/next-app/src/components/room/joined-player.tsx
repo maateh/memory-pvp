@@ -30,7 +30,7 @@ const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerP
   const isOffline = player.connection.status === "offline"
 
   return (
-    <HoverActionOverlay className={cn("pt-4 pb-8 flex flex-col items-center justify-center gap-y-2 relative", {
+    <HoverActionOverlay className={cn("py-4 flex flex-col items-center justify-center gap-y-2 relative", {
       "opacity-40": isOffline
     })}
       hoverAction={handleKick}
