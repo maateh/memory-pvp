@@ -25,6 +25,7 @@ type RoomAction = {
   roomClose: () => Promise<void>
   roomReady: () => Promise<void>
   roomKick: () => Promise<void>
+  sessionClose: () => Promise<void>
 }
 
 type RoomListener = {
@@ -36,6 +37,7 @@ type RoomListener = {
   roomReadied: (response: SocketResponse<JoinedRoom | RunningRoom>) => Promise<void>
   sessionStartingFailed: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<RunningRoom>) => void
+  sessionClosed: (response: SocketResponse) => void
   connectError: (error: ExtendedSocketError<ServerError>) => void
   disconnect: (reason: Socket.DisconnectReason) => void
 }
@@ -161,6 +163,27 @@ export const roomStore = ({
     } finally { toast.dismiss("room:kick") }
   },
 
+  async sessionClose() {
+    toast.loading("Closing session...", { id: "session:close" })
+
+    try {
+      // TODO: implement session:close
+
+      const {
+        message,
+        description,
+        error
+      }: SocketResponse = await socket.emitWithAck("session:close", {})
+
+      if (error) {
+        throw ServerError.parser(error)
+      }
+    } catch (err) {
+      handleServerError(err as ServerError)
+      logError(err)
+    } finally { toast.dismiss("session:close") }
+  },
+
   /* Listeners */
   roomConnected({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
@@ -260,6 +283,13 @@ export const roomStore = ({
 
     set({ room })
     toast.success(message, { description })
+  },
+
+  sessionClosed({ message, description, error }) {
+    if (error) return handleServerError(error)
+
+    toast.warning(message, { description })
+    router.replace("/game/setup")
   },
 
   connectError({ data: error }) {

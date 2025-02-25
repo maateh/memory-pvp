@@ -26,7 +26,8 @@ import {
   roomClose,
   roomKick,
   sessionCreated,
-  sessionStartingFailed
+  sessionStartingFailed,
+  sessionClose
 } from "@/events/room"
 
 const app = express()
@@ -67,6 +68,7 @@ io.on("connection", (_socket) => {
   socket.on("room:kick", roomKick(socket))
   socket.on("session:starting:failed", sessionStartingFailed(socket))
   socket.on("session:created", sessionCreated(socket))
+  socket.on("session:close", sessionClose(socket))
 
   socket.on("connection:clear", connectionClear(socket))
   socket.on("disconnect", disconnect(socket))
