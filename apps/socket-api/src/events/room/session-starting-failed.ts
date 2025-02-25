@@ -12,16 +12,6 @@ import { io } from "@/server"
 // error
 import { ServerError } from "@repo/server/error"
 
-export const sessionStarting: SocketEventHandler = (socket) => async () => {
-  console.log("DEBUG - session:starting -> ", socket.id)
-
-  const { roomSlug } = socket.ctx.connection
-
-  io.to(roomSlug).emit("session:starting", {
-    message: "Initializing game session..."
-  } satisfies SocketResponse)
-}
-
 export const sessionStartingFailed: SocketEventHandler = (socket) => async () => {
   console.log("DEBUG - session:starting:failed -> ", socket.id)
 

@@ -34,7 +34,6 @@ type RoomListener = {
   roomClosed: (response: SocketResponse) => void
   roomKicked: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom | RunningRoom>) => Promise<void>
-  sessionStarting: (response: SocketResponse) => void
   sessionStartingFailed: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<RunningRoom>) => void
   connectError: (error: ExtendedSocketError<ServerError>) => void
@@ -107,7 +106,7 @@ export const roomStore = ({
   },
 
   async roomReady() {
-    toast.loading("Update your status...", { id: "room:ready" })
+    toast.loading("Updating your status...", { id: "room:ready" })
 
     try {
       const {
@@ -223,8 +222,6 @@ export const roomStore = ({
       currentPlayerId !== room.owner.id
     ) return
 
-    socket.emit("session:starting")
-
     try {
       const { serverError } = await createMultiSession({
         settings: room.settings,
@@ -233,10 +230,7 @@ export const roomStore = ({
       }) || {}
 
       if (serverError) {
-        ServerError.throw({
-          ...serverError,
-          description: serverError.description || "Failed to initialize game session."
-        })
+        ServerError.throw(serverError)
       }
 
       socket.emit("session:created")
@@ -245,17 +239,11 @@ export const roomStore = ({
 
       handleServerError(err as ServerError)
       logError(err)
-    } finally { toast.dismiss("session:starting") }
-  },
-
-  sessionStarting({ message, description, error }) {
-    if (error) return handleServerError(error)
-    
-    toast.loading(message, { id: "session:starting", description })
+    }
   },
 
   sessionStartingFailed({ message, description, error }) {
-    toast.dismiss("session:starting")
+    toast.dismiss("room:readied")
 
     if (error) handleServerError(error)
     else toast.warning(message, { description })
@@ -268,7 +256,6 @@ export const roomStore = ({
 
     toast.dismiss("room:ready:response")
     toast.dismiss("room:readied")
-    toast.dismiss("session:starting")
     toast.dismiss("session:created")      
 
     set({ room })
