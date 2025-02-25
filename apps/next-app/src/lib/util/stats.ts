@@ -32,7 +32,7 @@ import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Time
  * @returns {RendererStatsMap<RendererSessionStatKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
 export function getRendererSessionStats(
-  session: ClientSession,
+  session: Pick<ClientSession, "type" | "mode" | "tableSize" | "stats" | "startedAt">,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
   const stats: RendererStatsMap<RendererSessionStatKeys> = {
@@ -93,7 +93,7 @@ export function getRendererSessionStats(
  * @returns {RendererStatsMap<RendererPlayerStatKeys>} - A map of stats ready to be rendered with optional filtering by the provided keys.
  */
 export function getRendererPlayerStats(
-  player: ClientPlayer,
+  player: Pick<ClientPlayer, "tag" | "stats">,
   keys?: RendererPlayerStatKeys[]
 ): RendererStatsMap<RendererPlayerStatKeys> {
   const stats: RendererStatsMap<RendererPlayerStatKeys> = {
