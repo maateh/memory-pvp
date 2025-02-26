@@ -167,13 +167,7 @@ export const roomStore = ({
     toast.loading("Closing session...", { id: "session:close" })
 
     try {
-      // TODO: implement session:close
-
-      const {
-        message,
-        description,
-        error
-      }: SocketResponse = await socket.emitWithAck("session:close", {})
+      const { error }: SocketResponse = await socket.emitWithAck("session:close", {})
 
       if (error) {
         throw ServerError.parser(error)

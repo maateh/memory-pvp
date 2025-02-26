@@ -1,6 +1,9 @@
 // types
 import type { RunningRoom } from "@repo/schema/room"
 
+// db
+import { updateSessionStatus } from "@repo/server/db-session-mutation"
+
 // redis
 import { redis } from "@repo/server/redis"
 import { getRoom } from "@repo/server/redis-commands-throwable"
@@ -30,22 +33,31 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
+    if (room.session.type === "COMPETITIVE") {
+      // TODO: implement closing "COMPETITIVE" game sessions
+      //  - More information at "/events/_disconnect"
+
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_STATUS_CONFLICT",
+        message: "(WIP) Failed to close session.",
+        description: "You cannot close competitive multiplayer sessions right now."
+      })
+    }
+
     await Promise.all([
+      updateSessionStatus(room.session, playerId, "abandon"),
       redis.del(playerConnectionKey(room.owner.id)),
       redis.del(playerConnectionKey(room.guest.id)),
       redis.json.del(roomKey(roomSlug))
     ])
 
-    if (room.session.type === "CASUAL") {
-      // TODO: close the room and abandon the session without point losses
-
-      io.to(roomSlug).emit("session:closed", {
-        message: `Session has been closed by ${playerTag}.`,
-        description: "Since this was a casual match it will not affect your ranking scores."
-      } satisfies SocketResponse)
-    } else {
-      // TODO: implement closing "COMPETITIVE" game sessions
-    }
+    io.to(roomSlug).emit("session:closed", {
+      message: `Session has been closed by ${playerTag}.`,
+      description: room.session.type === "CASUAL"
+        ? "Since this was a casual match it will not affect your ranking scores."
+        : "Disconnected player will lose points based on the session state."
+    } satisfies SocketResponse)
   } catch (err) {
     response({
       message: "Failed to close session.",

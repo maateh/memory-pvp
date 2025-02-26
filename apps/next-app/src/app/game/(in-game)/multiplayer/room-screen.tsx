@@ -20,7 +20,8 @@ import { GlowingOverlay, StatisticItem, StatisticList } from "@/components/share
 import {
   JoinedPlayer,
   RoomLeaveButton,
-  RoomReadyButton
+  RoomReadyButton,
+  SessionCloseButton
 } from "@/components/room"
 
 // hooks
@@ -40,6 +41,7 @@ const RoomScreen = () => {
   const roomLeave = useRoomStore((state) => state.roomLeave)
   const roomKick = useRoomStore((state) => state.roomKick)
   const roomReady = useRoomStore((state) => state.roomReady)
+  const sessionClose = useRoomStore((state) => state.sessionClose)
 
   const HeaderIcon = roomHeaderMap[room.status].Icon
 
@@ -130,6 +132,7 @@ const RoomScreen = () => {
         <Separator className="mt-1.5 bg-border/10" />
       </div>
 
+      {/* TODO: show these action buttons based on room status and that the session can be closed or not */}
       <div className="space-y-10 sm:space-y-12">
         <RoomReadyButton
           connectionStatus={room.connectionStatus}
@@ -144,6 +147,8 @@ const RoomScreen = () => {
           roomStatus={room.status}
           isReady={currentRoomPlayer.ready}
         />
+
+        <SessionCloseButton handleSessionClose={sessionClose} />
       </div>
     </div>
   )
