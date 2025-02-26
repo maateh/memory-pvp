@@ -12,8 +12,8 @@ import { roomKey, sessionKey } from "@repo/server/redis-keys"
 import { getActiveRoom } from "@repo/server/redis-commands"
 
 // db
+import { updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
-import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
 import {

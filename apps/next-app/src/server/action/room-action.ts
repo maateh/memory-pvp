@@ -10,8 +10,8 @@ import { getActiveRoom, getRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // db
+import { updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
-import { updateSessionStatus } from "@/server/db/mutation/session-mutation"
 
 // actions
 import { playerActionClient } from "@/server/action"

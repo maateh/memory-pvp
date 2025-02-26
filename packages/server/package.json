@@ -6,6 +6,7 @@
   "exports": {
     "./error": "./src/error/error.ts",
     "./db": "./src/db/index.ts",
+    "./db-session-mutation": "./src/db/mutation/session-mutation.ts",
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@repo/db": "workspace:*",
+    "@repo/helper": "workspace:*",
     "@upstash/redis": "^1.34.3"
   },
   "devDependencies": {
