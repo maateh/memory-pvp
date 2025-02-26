@@ -2,7 +2,7 @@
 import type { PlayerConnection } from "@repo/schema/player-connection"
 
 // db
-import { db } from "@/server"
+import { db } from "@repo/server/db"
 
 // redis
 import { redis } from "@repo/server/redis"

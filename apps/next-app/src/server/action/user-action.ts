@@ -7,7 +7,7 @@ import type { User } from "@repo/db"
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 
 type SignedInParams = {
   redirectToSignIn?: boolean

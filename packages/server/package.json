@@ -5,15 +5,17 @@
   "private": true,
   "exports": {
     "./error": "./src/error/error.ts",
-    "./util": "./src/util/index.ts",
+    "./db": "./src/db/index.ts",
     "./redis": "./src/redis/redis.ts",
     "./redis-settings": "./src/redis/settings.ts",
     "./redis-commands": "./src/redis/commands/index.ts",
     "./redis-commands-throwable": "./src/redis/commands/throwable/index.ts",
     "./redis-keys": "./src/redis/keys.ts",
+    "./util": "./src/util/index.ts",
     "./socket-types": "./src/types/socket.ts"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "@upstash/redis": "^1.34.3"
   },
   "devDependencies": {

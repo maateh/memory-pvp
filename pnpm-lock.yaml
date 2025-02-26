@@ -271,6 +271,9 @@ importers:
 
   packages/server:
     dependencies:
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../database
       '@upstash/redis':
         specifier: ^1.34.3
         version: 1.34.3

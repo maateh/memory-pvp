@@ -4,7 +4,7 @@ import { createSafeActionClient, DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-
 import { auth } from "@clerk/nextjs/server"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { getActiveSession } from "@/server/db/query/session-query"
 
 // redis

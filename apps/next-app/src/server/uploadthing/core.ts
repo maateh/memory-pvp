@@ -8,7 +8,7 @@ import { createUploadthing } from "uploadthing/next"
 import { UploadThingError } from "uploadthing/server"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 
 // config

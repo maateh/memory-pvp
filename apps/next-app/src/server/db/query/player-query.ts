@@ -4,7 +4,7 @@ import type { ClientPlayer } from "@repo/schema/player"
 import type { PlayerFilterQuery, PlayerSortQuery } from "@/lib/schema/query/player-query"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 
 // helpers

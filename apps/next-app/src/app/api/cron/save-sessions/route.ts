@@ -6,7 +6,7 @@ import { redis } from "@repo/server/redis"
 import { sessionKey } from "@repo/server/redis-keys"
 
 // db
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 
 const ROUTE_PREFIX = '[API | GET - /cron/save-sessions]'
 

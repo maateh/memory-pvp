@@ -6,7 +6,7 @@ import { headers } from "next/headers"
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server"
 
 // prisma
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 
 export async function verifyWebhook(req: Request): Promise<WebhookEvent> {
   const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET

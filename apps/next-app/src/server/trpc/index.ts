@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from "@trpc/server"
 
 // server
 import { ServerError } from "@repo/server/error"
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { redis } from "@repo/server/redis"
 
 export const createTRPCContext = cache(

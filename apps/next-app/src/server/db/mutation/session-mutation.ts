@@ -3,7 +3,7 @@ import type { GameSession } from "@repo/db"
 import type { BaseClientSession } from "@repo/schema/session"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 
 // helpers
 import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"

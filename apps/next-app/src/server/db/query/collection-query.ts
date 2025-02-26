@@ -9,7 +9,7 @@ import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/qu
 import { collectionSortQuery } from "@/lib/schema/query/collection-query"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 
 // helpers

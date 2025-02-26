@@ -7,8 +7,8 @@ import type { RoomVariants } from "@repo/schema/room"
 // socket
 import { Server } from "socket.io"
 
-// prisma
-import { PrismaClient } from "@repo/db"
+// server
+import { disconnectPrisma } from "@repo/server/db"
 
 // middlewares
 import {
@@ -33,7 +33,6 @@ import {
 const app = express()
 const server = http.createServer(app)
 
-export const db = new PrismaClient()
 export const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000"
@@ -79,4 +78,16 @@ server.listen(port, () => {
   console.info('memory/socket server is running on PORT', port)
 
   // FIXME: bulk remove every `memory:connections` hashes from redis
+})
+
+process.on("SIGINT", async () => {
+  console.info("Shutting down...")
+  await disconnectPrisma()
+  server.close(() => process.exit(0))
+})
+
+process.on("SIGTERM", async () => {
+  console.info("Shutting down...")
+  await disconnectPrisma()
+  server.close(() => process.exit(0))
 })

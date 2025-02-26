@@ -3,7 +3,7 @@ import type { GameMode, GameType, TableSize } from "@repo/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // server
-import { db } from "@/server/db"
+import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 import { getPlayers } from "@/server/db/query/player-query"
 import { getRandomCollection } from "@/server/db/query/collection-query"
