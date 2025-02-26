@@ -5,7 +5,7 @@ import type { FilterOptions } from "@/lib/types/query"
 import type { CollectionFilter, CollectionFilterFields } from "./types"
 
 // config
-import { tableSizePlaceholders } from "@/config/game-settings"
+import { tableSizePlaceholders } from "@repo/config/game"
 
 // utils
 import { cn } from "@/lib/util"

@@ -4,7 +4,7 @@ import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 import type { CollectionListingMetadata } from "./collection-listing"
 
 // config
-import { tableSizePlaceholders } from "@/config/game-settings"
+import { tableSizePlaceholders } from "@repo/config/game"
 
 // icons
 import { CalendarCheck, CalendarCheck2, Dices } from "lucide-react"

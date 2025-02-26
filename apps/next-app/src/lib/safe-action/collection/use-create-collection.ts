@@ -9,7 +9,7 @@ import { createCollection } from "@/server/action/collection-action"
 
 // config
 import { collectionSizeEndpointMap } from "@/config/collection-settings"
-import { tableSizePlaceholders } from "@/config/game-settings"
+import { tableSizePlaceholders } from "@repo/config/game"
 
 // utils
 import { handleServerError } from "@/lib/util/error"

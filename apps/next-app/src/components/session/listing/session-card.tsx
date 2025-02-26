@@ -8,7 +8,7 @@ import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/config/game-settings"
+} from "@repo/config/game"
 
 // icons
 import { CalendarCheck, CalendarClock, Dices, ExternalLink, Gamepad2, StepForward } from "lucide-react"

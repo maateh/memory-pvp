@@ -1,0 +1,17 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "exports": {
+    "./game": "./src/game-settings.ts"
+  },
+  "dependencies": {
+    "lucide-react": "^0.429.0"
+  },
+  "devDependencies": {
+    "@repo/db": "workspace:*",
+    "@repo/ts-config": "workspace:*",
+    "@types/node": "^22.10.4"
+  }
+}

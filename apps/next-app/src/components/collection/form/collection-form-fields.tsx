@@ -6,7 +6,7 @@ import type { ExpandedRouteConfig } from "uploadthing/types"
 import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
 
 // config
-import { tableSizePlaceholders } from "@/config/game-settings"
+import { tableSizePlaceholders } from "@repo/config/game"
 
 // icons
 import { ImagePlus, Loader2 } from "lucide-react"

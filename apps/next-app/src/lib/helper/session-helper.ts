@@ -6,7 +6,7 @@ import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
 
 // config
-import { freeFlipsMultiplier, tableSizeMap } from "@/config/game-settings"
+import { freeFlipsMultiplier, tableSizeMap } from "@repo/config/game"
 
 /**
  * Generates a unique slug for a game session based on its type and mode.

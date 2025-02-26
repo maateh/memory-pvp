@@ -5,7 +5,7 @@ import type { CardCollectionWithCardsWithUser } from "@repo/db/types"
 import type { UploadRouter } from "@/server/uploadthing/core"
 
 // config
-import { tableSizeMap } from "@/config/game-settings"
+import { tableSizeMap } from "@repo/config/game"
 
 /** `uploadthing` endpoints based on table size */
 export const collectionSizeEndpointMap: Record<TableSize, keyof UploadRouter> = {

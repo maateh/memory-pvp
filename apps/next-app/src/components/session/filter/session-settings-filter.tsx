@@ -16,7 +16,7 @@ import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/config/game-settings"
+} from "@repo/config/game"
 
 // icons
 import { ChevronRightCircle } from "lucide-react"

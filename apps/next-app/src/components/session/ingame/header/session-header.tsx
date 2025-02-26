@@ -8,7 +8,7 @@ import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/config/game-settings"
+} from "@repo/config/game"
 
 // icons
 import { Dices, Gamepad2 } from "lucide-react"

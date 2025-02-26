@@ -10,7 +10,7 @@ import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/config/game-settings"
+} from "@repo/config/game"
 
 // utils
 import { pickFields } from "@/lib/util/parser"

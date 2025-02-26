@@ -7,7 +7,7 @@ import {
   gameModePlaceholders,
   gameTypePlaceholders,
   tableSizePlaceholders
-} from "@/config/game-settings"
+} from "@repo/config/game"
 
 // shadcn
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"

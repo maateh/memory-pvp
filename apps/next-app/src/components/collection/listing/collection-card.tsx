@@ -5,7 +5,7 @@ import type { CollectionListingMetadata } from "./collection-listing"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // config
-import { tableSizePlaceholders } from "@/config/game-settings"
+import { tableSizePlaceholders } from "@repo/config/game"
 
 // utils
 import { cn } from "@/lib/util"
