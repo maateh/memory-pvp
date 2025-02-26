@@ -4,7 +4,7 @@ import type { ClientPlayer } from "@repo/schema/player"
 import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
 // helpers
-import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
+import { calculatePlayerSessionScore } from "@repo/helper/session"
 
 // utils
 import { cn } from "@/lib/util"

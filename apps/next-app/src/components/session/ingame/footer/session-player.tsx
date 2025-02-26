@@ -7,7 +7,7 @@ import type { ClientSession } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 
 // helpers
-import { calculatePlayerSessionScore, getFreeFlips } from "@/lib/helper/session-helper"
+import { calculatePlayerSessionScore, getFreeFlips } from "@repo/helper/session"
 
 // utils
 import { cn } from "@/lib/util"

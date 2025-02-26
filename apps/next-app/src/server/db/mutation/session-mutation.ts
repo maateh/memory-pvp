@@ -6,7 +6,7 @@ import type { BaseClientSession } from "@repo/schema/session"
 import { db } from "@repo/server/db"
 
 // helpers
-import { calculatePlayerSessionScore } from "@/lib/helper/session-helper"
+import { calculatePlayerSessionScore } from "@repo/helper/session"
 
 /**
  * Updates the status of a game session and updates player statistics accordingly.

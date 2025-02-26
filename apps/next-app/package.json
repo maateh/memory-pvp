@@ -29,6 +29,7 @@
     "@radix-ui/react-tooltip": "^1.1.3",
     "@repo/config": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/helper": "workspace:*",
     "@repo/schema": "workspace:*",
     "@repo/server": "workspace:*",
     "@repo/ts-config": "workspace:*",
