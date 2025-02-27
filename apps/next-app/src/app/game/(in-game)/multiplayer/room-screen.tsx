@@ -31,10 +31,6 @@ import { useRoomStore } from "@/components/provider/room-store-provider"
 const RoomScreen = () => {
   const { handleCopy } = useCopy({ showToast: true })
 
-  // TODO: implement session close/leave (in "CASUAL")
-  // TODO: implement "COMPETITIVE" session close/leave & reconnection system
-  //  - More information: `/socket-api/events/_disconnect`
-
   const room = useRoomStore((state) => state.room)
   const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
   const roomClose = useRoomStore((state) => state.roomClose)
@@ -123,7 +119,7 @@ const RoomScreen = () => {
           {room.status !== "waiting" && (
             <JoinedPlayer
               player={room.guest}
-              disableKick={currentRoomPlayer.role === "guest"}
+              disableKick={currentRoomPlayer.role === "guest" || room.status !== "joined"}
               handleKick={roomKick}
             />
           )}
@@ -132,23 +128,35 @@ const RoomScreen = () => {
         <Separator className="mt-1.5 bg-border/10" />
       </div>
 
-      {/* TODO: show these action buttons based on room status and that the session can be closed or not */}
       <div className="space-y-10 sm:space-y-12">
-        <RoomReadyButton
-          connectionStatus={room.connectionStatus}
-          roomStatus={room.status}
-          isReady={currentRoomPlayer.ready}
-          handleReady={roomReady}
-        />
+        {(room.status !== "cancelled" || room.connectionStatus === "online") && (
+          <RoomReadyButton
+            connectionStatus={room.connectionStatus}
+            roomStatus={room.status}
+            isReady={currentRoomPlayer.ready}
+            handleReady={roomReady}
+          />
+        )}
 
-        <RoomLeaveButton
-          action={currentRoomPlayer.id === room.owner.id ? "close" : "leave"}
-          handleCloseOrLeave={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
-          roomStatus={room.status}
-          isReady={currentRoomPlayer.ready}
-        />
+        {room.status !== "cancelled" && room.status !== "running" && (
+          <RoomLeaveButton
+            action={currentRoomPlayer.id === room.owner.id ? "close" : "leave"}
+            handleCloseOrLeave={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
+            roomStatus={room.status}
+            isReady={currentRoomPlayer.ready}
+          />
+        )}
 
-        <SessionCloseButton handleSessionClose={sessionClose} />
+        {room.status === "cancelled" && room.connectionStatus === "half_online" && (
+          <SessionCloseButton
+            handleSessionClose={sessionClose}
+            otherConnection={
+              currentRoomPlayer.id === room.owner.id
+                ? room.guest.connection
+                : room.owner.connection
+            }
+          />
+        )}
       </div>
     </div>
   )

@@ -46,7 +46,6 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
       roomReadied,
       sessionStartingFailed,
       sessionStarted,
-      sessionClosed,
       connectError,
       disconnect
     } = store.getState()
@@ -61,7 +60,6 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
     socket.on("room:readied", roomReadied)
     socket.on("session:starting:failed", sessionStartingFailed)
     socket.on("session:started", sessionStarted)
-    socket.on("session:closed", sessionClosed)
 
     socket.on("connect_error", connectError)
     socket.on("disconnect", disconnect)
@@ -77,7 +75,6 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
       socket.off("room:readied", roomReadied)
       socket.off("session:starting:failed", sessionStartingFailed)
       socket.off("session:started", sessionStarted)
-      socket.off("session:closed", sessionClosed)
 
       socket.off("connect_error", connectError)
       socket.off("disconnect", disconnect)

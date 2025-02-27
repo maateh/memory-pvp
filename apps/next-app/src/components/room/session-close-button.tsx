@@ -1,5 +1,13 @@
 "use client"
 
+import { useMemo } from "react"
+
+// types
+import type { PlayerConnection } from "@repo/schema/player-connection"
+
+// helpers
+import { reconnectionTimeExpired } from "@repo/helper/connection"
+
 // utils
 import { cn } from "@/lib/util"
 
@@ -13,25 +21,32 @@ import { Button } from "@/components/ui/button"
 import { GlowingOverlay } from "@/components/shared"
 
 type SessionCloseButtonProps = {
+  otherConnection: PlayerConnection
   handleSessionClose: () => void
 } & Omit<React.ComponentProps<typeof Button>, "tooltip" | "variant" | "size" | "onClick">
 
 const SessionCloseButton = ({
+  otherConnection,
   handleSessionClose,
   className,
   ...props
 }: SessionCloseButtonProps) => {
-  // TODO:
-  // - create proper design
-  // - if `session.type === "COMPETITIVE"`
-  //   -> enable button only if the connected user is able to close the session
-  //   -> otherwise show timer until session can be closed
+  // TODO: timer
+  const reconnectionExpired = useMemo<boolean>(() => {
+    return reconnectionTimeExpired(otherConnection)
+  }, [otherConnection])
+
+  props.disabled = reconnectionExpired || props.disabled
 
   return (
-    <GlowingOverlay className="size-20 sm:size-24 mx-auto"
-      overlayProps={{ className: "bg-destructive opacity-85 dark:opacity-65 blur-md" }}
+    <GlowingOverlay className="h-20 w-28 sm:h-24 sm:w-32 mx-auto"
+      overlayProps={{
+        className: cn("bg-destructive opacity-85 dark:opacity-65 blur-md", {
+          "bg-destructive/65": props.disabled
+        })
+      }}
     >
-      <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-muted transition-none", className)}
+      <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-destructive-foreground transition-none disabled:opacity-60", className)}
         variant="ghost"
         size="icon"
         onClick={handleSessionClose}
