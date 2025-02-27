@@ -13,7 +13,6 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
   console.log("DEBUG - room:leave -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
-  socket.ctx.connection = undefined!
 
   try {
     const room = await getRoom<WaitingRoomVariants>(roomSlug)
@@ -42,6 +41,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
       redis.json.set(roomKey(roomSlug), "$", waitingRoom, { xx: true }),
       redis.lpush(waitingRoomsKey, roomSlug)
     ])
+    socket.ctx.connection = undefined!
 
     socket.leave(roomSlug)
     socket.broadcast.to(roomSlug).emit("room:left", {

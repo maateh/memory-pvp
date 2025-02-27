@@ -13,7 +13,6 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
   console.log("DEBUG - room:close -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
-  socket.ctx.connection = undefined!
 
   try {
     const room = await getRoom<WaitingRoomVariants>(roomSlug)
@@ -34,6 +33,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
         ? redis.lrem(waitingRoomsKey, 1, roomSlug)
         : redis.del(playerConnectionKey(room.guest.id))
     ])
+    socket.ctx.connection = undefined!
 
     if (room.status !== "waiting") {
       socket.broadcast.to(roomSlug).emit("room:closed", {

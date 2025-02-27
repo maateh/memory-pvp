@@ -22,7 +22,6 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
   console.log("DEBUG - session:close -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
-  socket.ctx.connection = undefined!
 
   try {
     const room = await getRoom<RunningRoom>(roomSlug, runningRoomSchema)
@@ -55,6 +54,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       redis.del(playerConnectionKey(room.guest.id)),
       redis.json.del(roomKey(roomSlug))
     ])
+    socket.ctx.connection = undefined!
 
     response({
       message: `Session has been closed by ${playerTag}.`,
