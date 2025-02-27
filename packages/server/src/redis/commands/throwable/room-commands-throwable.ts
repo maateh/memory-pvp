@@ -1,4 +1,5 @@
 // types
+import type { ZodSchema } from "zod"
 import type { RoomVariants } from "@repo/schema/room"
 
 // redis
@@ -18,21 +19,38 @@ import { ServerError } from "../../../error/error"
  * - If the room is not found, a `ServerError` is thrown indicating that the session room has been closed.
  * 
  * @param {string} roomSlug - The unique identifier of the room to fetch.
+ * @param {ZodSchema<R>} schema - Optional zod schema for data validation.
  * @returns {Promise<R>} - The requested room data.
  * @throws {ServerError} - If the room is not found in Redis.
  */
 export async function getRoom<R extends RoomVariants = RoomVariants>(
-  roomSlug: string
+  roomSlug: string,
+  schema?: ZodSchema<R>
 ): Promise<R> {
   const room = await getRoom_unthrowable<R>(roomSlug)
-  if (room) return room
 
-  ServerError.throw({
-    thrownBy: "REDIS",
-    key: "ROOM_NOT_FOUND",
-    message: "Room not found.",
-    description: "Sorry, but this room is probably already closed."
-  })
+  if (!room) {
+    ServerError.throw({
+      thrownBy: "REDIS",
+      key: "ROOM_NOT_FOUND",
+      message: "Room not found.",
+      description: "Sorry, but this room is probably already closed."
+    })
+  }
+
+  if (!schema) return room
+
+  const { data: parsedRoom, success } = await schema.spa(room)
+  if (!parsedRoom || !success) {
+    ServerError.throw({
+      thrownBy: "REDIS",
+      key: "VALIDATION_FAILED",
+      message: "Room validation failed.",
+      description: "Room data appears to be corrupted. Please contact an administrator."
+    })
+  }
+
+  return parsedRoom
 }
 
 /**

@@ -9,6 +9,9 @@ import { redis } from "@repo/server/redis"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
+// schemas
+import { runningRoomSchema } from "@repo/schema/room"
+
 // helpers
 import { reconnectionTimeExpired } from "@repo/helper/connection"
 
@@ -22,7 +25,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
   socket.ctx.connection = undefined!
 
   try {
-    const room = await getRoom<RunningRoom>(roomSlug)
+    const room = await getRoom<RunningRoom>(roomSlug, runningRoomSchema)
 
     if (room.status !== "cancelled") {
       ServerError.throw({
