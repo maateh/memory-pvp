@@ -12,7 +12,8 @@ export const onlinePlayer = (
   ...opts,
   status: "online",
   socketId,
-  connectedAt: new Date()
+  connectedAt: new Date(),
+  disconnectedAt: null
 })
 
 export const offlinePlayer = (
@@ -20,6 +21,7 @@ export const offlinePlayer = (
 ): OfflinePlayerConnection => ({
   ...opts,
   status: "offline",
+  disconnectedAt: new Date(),
   socketId: null,
   connectedAt: null
 })

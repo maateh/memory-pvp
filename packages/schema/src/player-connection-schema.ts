@@ -12,11 +12,13 @@ export const playerConnectionOpts = z.object({
 export const onlinePlayerConnection = playerConnectionOpts.extend({
   status: z.literal(playerConnectionStatus.enum.online),
   socketId: z.string(),
-  connectedAt: z.coerce.date()
+  connectedAt: z.coerce.date(),
+  disconnectedAt: z.null()
 })
 
 export const offlinePlayerConnection = playerConnectionOpts.extend({
   status: z.literal(playerConnectionStatus.enum.offline),
+  disconnectedAt: z.coerce.date(),
   socketId: z.null(),
   connectedAt: z.null()
 })
