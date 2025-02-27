@@ -4,6 +4,7 @@
   "license": "MIT",
   "private": true,
   "exports": {
+    "./connection": "./src/connection-helper.ts",
     "./session": "./src/session-helper.ts"
   },
   "dependencies": {

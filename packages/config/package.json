@@ -4,6 +4,7 @@
   "license": "MIT",
   "private": true,
   "exports": {
+    "./connection": "./src/connection-settings.ts",
     "./game": "./src/game-settings.ts"
   },
   "dependencies": {
