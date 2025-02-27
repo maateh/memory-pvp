@@ -83,26 +83,11 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
       socket.broadcast.to(room.slug).emit("room:disconnected", {
         message: `${playerTag} has disconnected.`,
-        description: currentPlayerKey === "owner"
-          ? ""
-          : "",
+        description: room.session.type === "CASUAL"
+          ? "If you don't want to wait for the player to reconnect, close the session."
+          : "Please wait at least 5 minutes for the other player to reconnect. After that, you can claim this session as a win.",
         data: cancelledRoom
       } satisfies SocketResponse<RunningRoom>)
-
-      // TODO: From this point, the session is "cancelled".
-      // - if `session.type === CASUAL`
-      //   -> Session can be abandoned anytime by the player who still connected without point losses.
-      // 
-      // - if `session.type === COMPETITIVE`
-      //   -> Session can be abandoned by the player who still connected but
-      //      only if the other player will not reconnect under 5 minutes.
-      //      This case, the connected player can claim the session as a win,
-      //      and the other player will lose points.
-      //   -> If the disconnected player reconnects the session will continue normally.
-    }
-
-    if (room.status === "finished") {
-      // Note: i guess nothing should be done here, so it's just a reminder to think about it later
     }
   } catch (err) {
     console.error(err)
