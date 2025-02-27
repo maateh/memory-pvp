@@ -9,8 +9,8 @@ import { redis } from "@repo/server/redis"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
-// server
-import { io } from "@/server"
+// helpers
+import { reconnectionTimeExpired } from "@repo/helper/connection"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -33,15 +33,16 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    if (room.session.type === "COMPETITIVE") {
-      // TODO: implement closing "COMPETITIVE" game sessions
-      //  - More information at "/events/_disconnect"
-
+    const otherPlayer = room.owner.id === playerId ? room.guest : room.owner
+    if (
+      room.session.type === "COMPETITIVE" &&
+      !reconnectionTimeExpired(otherPlayer.connection)
+    ) {
       ServerError.throw({
         thrownBy: "SOCKET_API",
         key: "ROOM_STATUS_CONFLICT",
-        message: "(WIP) Failed to close session.",
-        description: "You cannot close competitive multiplayer sessions right now."
+        message: "Session cannot be closed right now.",
+        description: "Please wait until the reconnection time of the disconnected player expires."
       })
     }
 
@@ -52,13 +53,14 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       redis.json.del(roomKey(roomSlug))
     ])
 
-    io.to(roomSlug).emit("session:closed", {
+    response({
       message: `Session has been closed by ${playerTag}.`,
       description: room.session.type === "CASUAL"
         ? "Since this was a casual match it will not affect your ranking scores."
         : "Disconnected player will lose points based on the session state."
-    } satisfies SocketResponse)
+    })
   } catch (err) {
+    console.log({err})
     response({
       message: "Failed to close session.",
       error: ServerError.parser(err)
