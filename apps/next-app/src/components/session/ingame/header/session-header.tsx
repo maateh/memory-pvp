@@ -51,7 +51,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
-        <SessionTimer timer={session.stats.timer} />
+        <SessionTimer startedAt={session.startedAt} />
 
         {session.status !== 'OFFLINE' && (
           <>

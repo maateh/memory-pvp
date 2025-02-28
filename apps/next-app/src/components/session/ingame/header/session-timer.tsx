@@ -1,7 +1,5 @@
 "use client"
 
-import { useRef } from "react"
-
 // utils
 import { formatTimer } from "@/lib/util/game"
 
@@ -9,15 +7,13 @@ import { formatTimer } from "@/lib/util/game"
 import { useTimer } from "@/hooks/use-timer"
 
 type SessionTimerProps = {
-  timer: number
+  startedAt: Date
 }
 
-const SessionTimer = ({ timer }: SessionTimerProps) => {
-  const initialTimerRef = useRef<number>(timer)
-
-  // FIXME: `useTimer` needs to be reworked to count by date -> `session.startedAt`
+const SessionTimer = ({ startedAt }: SessionTimerProps) => {
   const { timerInMs } = useTimer({
-    initialInMs: initialTimerRef.current * 1000
+    timerType: "increase",
+    referenceDate: startedAt
   })
 
   return (
