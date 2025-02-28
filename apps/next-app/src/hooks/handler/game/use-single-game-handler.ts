@@ -4,16 +4,16 @@ import { useEffect, useRef } from "react"
 import type { ClientSessionCard } from "@repo/schema/session"
 
 // hooks
-import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
-type UseGameHandlerProps = {
+type UseSingleGameHandlerProps = {
   onIngameUpdate?: () => void
   onHeartbeat?: () => Promise<void>
   onBeforeUnload?: (event: BeforeUnloadEvent) => Promise<void>
   onFinish: () => Promise<void> | void | never
 }
 
-type UseGameHandlerReturn = {
+type UseSingleGameHandlerReturn = {
   handleCardFlip: (clickedCard: ClientSessionCard) => void
 }
 
@@ -21,7 +21,7 @@ type UseGameHandlerReturn = {
  * Custom hook to manage game session handling, including card flips,
  * sending heartbeats, session updates, and game completion.
  * 
- * @param {UseGameHandlerProps} props - The props containing callbacks for session updates, heartbeat, before unload, and finish events.
+ * @param {UseSingleGameHandlerProps} props - The props containing callbacks for session updates, heartbeat, before unload, and finish events.
  * 
  * - `onIngameUpdate`: Called for updates during the game.
  * - `onHeartbeat`: Periodically sends a heartbeat to keep the session alive in online 'Single' mode.
@@ -39,22 +39,21 @@ type UseGameHandlerReturn = {
  * 3. **Session management**:
  *    - Registers the session, tracks game progress, and triggers the finish logic when the game is over.
  * 
- * @returns {UseGameHandlerReturn} - An object containing:
+ * @returns {UseSingleGameHandlerReturn} - An object containing:
  * - `handleCardFlip`: Function to handle card flipping logic.
  */
-export const useGameHandler = ({
+export const useSingleGameHandler = ({
   onIngameUpdate,
   onHeartbeat,
   onBeforeUnload,
   onFinish
-}: UseGameHandlerProps): UseGameHandlerReturn => {
-  const session = useSingleSessionStore((state) => state.session)
+}: UseSingleGameHandlerProps): UseSingleGameHandlerReturn => {
+  const session = useSessionStore((state) => state.session)
 
   /** Initialize required states and handlers for the game. */
-  const syncState = useSingleSessionStore((state) => state.syncState)
-  const handleFlipUpdate = useSingleSessionStore((state) => state.handleFlipUpdate)
-  const handleMatchUpdate = useSingleSessionStore((state) => state.handleMatchUpdate)
-  const handleUnmatchUpdate = useSingleSessionStore((state) => state.handleUnmatchUpdate)
+  const sessionCardFlip = useSessionStore((state) => state.sessionCardFlip)
+  const sessionCardMatch = useSessionStore((state) => state.sessionCardMatch)
+  const sessionCardUnmatch = useSessionStore((state) => state.sessionCardUnmatch)
 
   /**
    * Flips the clicked memory card and handles matching logic.
@@ -71,17 +70,19 @@ export const useGameHandler = ({
       && clickedCard.matchedBy === null
 
     if (!flippable) return
+    sessionCardFlip(clickedCard)
 
     const flipped: PrismaJson.SessionCardMetadata[] = [
       ...session.flipped,
       { id: clickedCard.id, key: clickedCard.key }
     ]
-    handleFlipUpdate(clickedCard)
 
     if (flipped.length < 2) return
 
-    if (flipped[0].id === flipped[1].id) handleMatchUpdate()
-    else handleUnmatchUpdate()
+    const pairingAction = flipped[0].id === flipped[1].id
+      ? sessionCardMatch
+      : sessionCardUnmatch
+    setTimeout(pairingAction, 1000)
   }
 
   /**
@@ -114,17 +115,18 @@ export const useGameHandler = ({
    * - It's useful in online 'Single' mode to ensure that the
    *   session remains active by sending periodic heartbeats.
    */
-  useEffect(() => {
-    if (!heartbeatRef.current || syncState !== 'OUT_OF_SYNC') return
+  // FIXME: implement synchronization status and indicator
+  // useEffect(() => {
+  //   if (!heartbeatRef.current || syncState !== 'OUT_OF_SYNC') return
 
-    const heartbeatInterval = setInterval(() => {
-      heartbeatRef.current?.()
-    }, 5000)
+  //   const heartbeatInterval = setInterval(() => {
+  //     heartbeatRef.current?.()
+  //   }, 5000)
 
-    return () => {
-      clearInterval(heartbeatInterval)
-    }
-  }, [syncState])
+  //   return () => {
+  //     clearInterval(heartbeatInterval)
+  //   }
+  // }, [syncState])
 
   /**
    * Handles session updates and game completion.

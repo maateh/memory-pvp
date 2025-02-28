@@ -10,14 +10,14 @@ import { saveSessionToStorage } from "@/lib/util/storage"
 import { SessionHeader, MemoryTable } from "@/components/session/ingame"
 
 // hooks
-import { useGameHandler } from "@/hooks/handler/game/use-game-handler"
-import { useSingleSessionStore } from "@/components/provider/single-session-store-provider"
+import { useSingleGameHandler } from "@/hooks/handler/game/use-single-game-handler"
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
 const OfflineGameHandler = () => {
   const router = useRouter()
-  const session = useSingleSessionStore((state) => state.session)
+  const session = useSessionStore((state) => state.session)
 
-  const { handleCardFlip } = useGameHandler({
+  const { handleCardFlip } = useSingleGameHandler({
     onIngameUpdate: () => {
       if (session) saveSessionToStorage(session)
     },

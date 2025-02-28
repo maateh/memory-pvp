@@ -6,12 +6,13 @@ import { toast } from "sonner"
 
 // config
 import { offlineSessionMetadata } from "@/config/session-settings"
+import { offlinePlayerMetadata } from "@/config/player-settings"
 
 // utils
 import { getSessionFromStorage } from "@/lib/util/storage"
 
 // providers
-import { SingleSessionStoreProvider } from "@/components/provider"
+import { SessionStoreProvider } from "@/components/provider"
 
 // components
 import { SessionLoader } from "@/components/session/ingame"
@@ -37,12 +38,15 @@ const OfflineSessionLoader = () => {
   }
 
   return (
-    <SingleSessionStoreProvider initialSession={{
-      ...session.current,
-      ...offlineSessionMetadata
-    }}>
+    <SessionStoreProvider
+      initialSession={{
+        ...session.current,
+        ...offlineSessionMetadata
+      }}
+      currentPlayer={offlinePlayerMetadata}
+    >
       <OfflineGameHandler />
-    </SingleSessionStoreProvider>
+    </SessionStoreProvider>
   )
 }
 
