@@ -61,7 +61,7 @@ const RoomScreen = () => {
     <div className="flex-1 flex flex-col items-center justify-around gap-y-8">
       <div className="px-4 mb-2 text-center leading-8">
         <GlowingOverlay className="size-6 mx-auto mb-2"
-          overlayProps={{ className: "bg-muted-foreground opacity-85 dark:opacity-50 inset-0" }}
+          overlayProps={{ className: "bg-muted-foreground opacity-85 dark:opacity-50" }}
         >
           <HeaderIcon className="size-full shrink-0 text-muted-foreground"
             strokeWidth={2.25}

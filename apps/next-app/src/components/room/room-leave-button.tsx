@@ -44,7 +44,7 @@ const RoomLeaveButton = ({
         disabled={isReady || roomStatus === "ready" || disabled}
         {...props}
       >
-        <DoorClosed className="size-4 sm:size-5 shrink-0" strokeWidth={2.25} />
+        <DoorClosed className="size-4 sm:size-5 shrink-0 mt-2" strokeWidth={2.25} />
 
         <span className="text-sm font-heading">
           {action === "leave" ? "Leave room" : "Close room"}

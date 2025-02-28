@@ -17,7 +17,7 @@ const GlowingOverlay = ({
 
       {/* Glowing overlay */}
       <div {...overlayProps}
-        className={cn("absolute -inset-y-1.5 size-full rounded-full opacity-50 blur-lg bg-secondary", overlayProps?.className)}
+        className={cn("absolute inset-0 size-full rounded-full opacity-50 blur-lg bg-secondary", overlayProps?.className)}
       />
     </div>
   )
