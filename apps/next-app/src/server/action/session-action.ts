@@ -108,6 +108,7 @@ export const createSingleSession = playerActionClient
         status: "RUNNING",
         flipped: [],
         cards: generateSessionCards(collection),
+        currentTurn: ctx.player.id,
         stats: {
           timer: 0,
           flips: { [ctx.player.id]: 0 },
@@ -167,6 +168,7 @@ export const createMultiSession = playerActionClient
         status: "RUNNING",
         flipped: [],
         cards: generateSessionCards(collection),
+        currentTurn: Math.random() < 0.5 ? ctx.player.id : guestId,
         stats: {
           timer: 0,
           flips: {

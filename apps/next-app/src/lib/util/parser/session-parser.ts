@@ -27,7 +27,7 @@ export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'slug', 'collectionId',
   'owner', 'guest',
   'type', 'mode', 'tableSize', 'status',
-  'stats', 'flipped', 'cards',
+  'stats', 'flipped', 'cards', 'currentTurn',
   'startedAt', 'updatedAt', 'continuedAt', 'closedAt'
 ] as const
 

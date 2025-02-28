@@ -58,7 +58,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','clerkId','username','emai
 
 export const PlayerProfileScalarFieldEnumSchema = z.enum(['id','tag','color','isActive','userId','stats','createdAt','updatedAt']);
 
-export const GameSessionScalarFieldEnumSchema = z.enum(['id','slug','type','mode','tableSize','status','stats','cards','flipped','collectionId','ownerId','guestId','continuedAt','closedAt','startedAt','updatedAt']);
+export const GameSessionScalarFieldEnumSchema = z.enum(['id','slug','type','mode','tableSize','status','stats','cards','flipped','currentTurn','collectionId','ownerId','guestId','continuedAt','closedAt','startedAt','updatedAt']);
 
 export const ResultScalarFieldEnumSchema = z.enum(['id','flips','matches','score','playerId','sessionId','createdAt','updatedAt']);
 
@@ -149,6 +149,7 @@ export const GameSessionSchema = z.object({
    * [SessionCardMetadata]
    */
   flipped: JsonValueSchema.array(),
+  currentTurn: z.string(),
   collectionId: z.string().nullable(),
   ownerId: z.string().nullable(),
   guestId: z.string().nullable(),

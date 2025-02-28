@@ -57,6 +57,7 @@ export const baseClientSessionSchema = z.object({
   stats: sessionStatsSchema,
   cards: z.array(clientSessionCard),
   flipped: z.array(sessionCardMetadata),
+  currentTurn: z.string(),
 
   startedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
