@@ -79,10 +79,8 @@ export const useSingleGameHandler = ({
 
     if (flipped.length < 2) return
 
-    const pairingAction = flipped[0].id === flipped[1].id
-      ? sessionCardMatch
-      : sessionCardUnmatch
-    setTimeout(pairingAction, 1000)
+    if (flipped[0].id === flipped[1].id) sessionCardMatch()
+    else setTimeout(sessionCardUnmatch, 800)
   }
 
   /**
