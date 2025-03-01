@@ -12,19 +12,25 @@ import MultiGameHandler from "./multi-game-handler"
 import RoomScreen from "./room-screen"
 
 // providers
-import { MultiSessionStoreProvider } from "@/components/provider"
+import { MultiEventStoreProvider, SessionStoreProvider } from "@/components/provider"
 
 // hooks
 import { useRoomStore } from "@/components/provider/room-store-provider"
 
 const MultiSessionLoader = () => {
   const room = useRoomStore((state) => state.room)
+  const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
 
   if (room.status === "running") {
     return (
-      <MultiSessionStoreProvider initialSession={room.session}>
-        <MultiGameHandler />
-      </MultiSessionStoreProvider>
+      <SessionStoreProvider
+        currentPlayer={currentRoomPlayer}
+        initialSession={room.session}
+      >
+        <MultiEventStoreProvider>
+          <MultiGameHandler />
+        </MultiEventStoreProvider>
+      </SessionStoreProvider>
     )
   }
 
