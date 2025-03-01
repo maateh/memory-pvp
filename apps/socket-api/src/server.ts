@@ -29,6 +29,7 @@ import {
   sessionStartingFailed,
   sessionClose
 } from "@/events/room"
+import { sessionCardFlip } from "@/events/session"
 
 const app = express()
 const server = http.createServer(app)
@@ -68,6 +69,8 @@ io.on("connection", (_socket) => {
   socket.on("session:starting:failed", sessionStartingFailed(socket))
   socket.on("session:created", sessionCreated(socket))
   socket.on("session:close", sessionClose(socket))
+
+  socket.on("session:card:flip", sessionCardFlip(socket))
 
   socket.on("connection:clear", connectionClear(socket))
   socket.on("disconnect", disconnect(socket))
