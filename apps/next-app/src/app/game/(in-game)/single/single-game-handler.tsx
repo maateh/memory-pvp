@@ -11,7 +11,7 @@ import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
-import { useSingleGameHandler } from "@/hooks/handler/game/use-single-game-handler"
+import { useSingleplayerGameHandler } from "@/hooks/handler/use-singleplayer-game-handler"
 import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
 
 const SingleGameHandler = () => {
@@ -20,19 +20,21 @@ const SingleGameHandler = () => {
   const { executeAsync: executeFinishSession } = useFinishSessionAction()
   const { executeAsync: executeStoreSession } = useStoreSessionAction()
 
-  const { handleCardFlip } = useSingleGameHandler({
-    onHeartbeat: async () => {
+  const { handleCardFlip } = useSingleplayerGameHandler({
+    async onHeartbeat() {
       try {
         await executeStoreSession(session)
       } catch (err) {
         logError(err)
       }
     },
-    onBeforeUnload: async () => {
+
+    async onBeforeUnload() {
       const payload = JSON.stringify(session)
       navigator.sendBeacon('/api/session/closed', payload)
     },
-    onFinish: async () => {
+
+    async onFinish() {
       try {
         await executeFinishSession({
           clientSession: {

@@ -10,26 +10,24 @@ import { saveSessionToStorage } from "@/lib/util/storage"
 import { SessionHeader, MemoryTable } from "@/components/session/ingame"
 
 // hooks
-import { useSingleGameHandler } from "@/hooks/handler/game/use-single-game-handler"
 import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useSingleplayerGameHandler } from "@/hooks/handler/use-singleplayer-game-handler"
 
 const OfflineGameHandler = () => {
   const router = useRouter()
   const session = useSessionStore((state) => state.session)
 
-  const { handleCardFlip } = useSingleGameHandler({
-    onIngameUpdate: () => {
-      if (session) saveSessionToStorage(session)
-    },
-    onFinish: () => {
-      if (session) saveSessionToStorage(session)
+  const { handleCardFlip } = useSingleplayerGameHandler({
+    onIngameUpdate() { saveSessionToStorage(session) },
 
-      toast.success('You finished your offline game session!', {
+    onFinish() {
+      saveSessionToStorage(session)
+
+      router.replace("/game/summary/offline")
+      toast.success("You finished your offline game session!", {
         description: "You will be redirected to save the results if you want.",
         id: '_' /** Note: prevent re-render by adding a custom id. */
       })
-
-      router.replace('/game/summary/offline')
     }
   })
 
