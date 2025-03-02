@@ -24,8 +24,7 @@ const SessionStoreProvider = ({ initialSession, currentPlayer, children }: Sessi
   const [store] = useState(
     sessionStore({
       initialSession,
-      currentPlayer,
-      hasCurrentTurn: currentPlayer.id === initialSession.currentTurn
+      currentPlayer
     })
   )
 

@@ -8,7 +8,6 @@ import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
 type SessionState = {
   session: ClientSession
   currentPlayer: ClientPlayer
-  hasCurrentTurn: boolean
 }
 
 type SessionAction = {
@@ -26,18 +25,15 @@ export type SessionStore = SessionState & SessionAction
 type SessionStoreProps = {
   initialSession: ClientSession
   currentPlayer: ClientPlayer
-  hasCurrentTurn: boolean
 }
 
 export const sessionStore = ({
   initialSession,
-  currentPlayer,
-  hasCurrentTurn
+  currentPlayer
 }: SessionStoreProps) => () => createStore<SessionStore>((set) => ({
   /* States */
   session: initialSession,
   currentPlayer,
-  hasCurrentTurn,
 
   /* Actions */
   setState: set,
@@ -48,7 +44,7 @@ export const sessionStore = ({
         id: clickedCard.id,
         key: clickedCard.key
       }]
-      
+
       ++session.stats.flips[currentPlayer.id]
 
       return { session }
