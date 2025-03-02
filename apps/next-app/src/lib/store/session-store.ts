@@ -48,10 +48,8 @@ export const sessionStore = ({
         id: clickedCard.id,
         key: clickedCard.key
       }]
-
-      if (session.flipped.length === 1) {
-        ++session.stats.flips[currentPlayer.id]  
-      }
+      
+      ++session.stats.flips[currentPlayer.id]
 
       return { session }
     })

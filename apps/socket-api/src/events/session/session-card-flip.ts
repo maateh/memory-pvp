@@ -105,15 +105,13 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
     key: clickedCard.key
   }]
 
+  ++session.stats.flips[playerId]
+
   session.currentTurn = mode === "COOP"
     ? owner.id === playerId ? guest.id : owner.id
     : playerId
 
-  if (session.flipped.length === 1) {
-    ++session.stats.flips[playerId]
-    return "flipped"
-  }
-  return "pairing"
+  return session.flipped.length === 1 ? "flipped" : "pairing"
 }
 
 function handleCardPairing({
