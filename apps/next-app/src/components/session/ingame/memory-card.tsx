@@ -44,13 +44,20 @@ type MemoryCardWrapperProps = {
 
 const MemoryCardWrapper = ({ card, isFlipped, onClick, children }: MemoryCardWrapperProps) => {
   return (
-    <div className={cn("rounded-xl w-full max-w-40 mx-auto aspect-square cursor-pointer [perspective:1000px] transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-border/40", {
-      "shadow-lg shadow-secondary/65 hover:shadow-secondary/75": isFlipped,
-      "shadow-lg shadow-border/60 hover:shadow-border/70": card.matchedBy
+    <div className={cn("rounded-xl w-full max-w-40 mx-auto aspect-square cursor-pointer [perspective:1000px] transition-transform duration-300 ease-in-out", {
+      "bg-secondary/25 shadow-lg shadow-secondary/65 hover:shadow-secondary/75": isFlipped,
+      "hover:scale-105 hover:shadow-lg hover:shadow-border/40": !card.matchedBy,
+      "scale-90 opacity-80 shadow-lg duration-1000": card.matchedBy
     })}
       onClick={onClick}
     >
-      <div className={cn("relative size-full transition-transform duration-600 [transform-style:preserve-3d]", {
+      {isFlipped && (
+        <div className="absolute inset-0 -z-10 rounded-3xl animate-pulse-glow">
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-secondary/45 dark:from-secondary/25 to-secondary/95 dark:to-secondary/70 blur-xl animate-spin-slow" />
+        </div>
+      )}
+
+      <div className={cn("relative size-full transition-transform duration-500 [transform-style:preserve-3d]", {
         "[transform:rotateY(180deg)]": isFlipped || card.matchedBy
       })}>
         {children}
@@ -66,8 +73,8 @@ type MemoryCardContentWrapperProps = {
 
 const MemoryCardContentWrapper = ({ className, children }: MemoryCardContentWrapperProps) => {
   return (
-    <Card className="rounded-xl size-full absolute [backface-visibility:hidden] last:[transform:rotateY(180deg)]">
-      <CardContent className={cn("rounded-xl p-0 size-full", className)}>
+    <Card className="rounded-2xl size-full absolute bg-transparent/0 [backface-visibility:hidden] last:[transform:rotateY(180deg)]">
+      <CardContent className={cn("rounded-2xl p-0 size-full", className)}>
         {children}
       </CardContent>
     </Card>

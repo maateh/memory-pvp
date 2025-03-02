@@ -91,11 +91,21 @@ const config = withUt({
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+				"pulse-glow": {
+          "0%, 100%": { opacity: "0.65" },
+          "50%": { opacity: "1" },
+        },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+				"pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "spin-slow": "spin-slow 6s linear infinite"
   		}
   	}
   },
