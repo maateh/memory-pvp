@@ -9,8 +9,9 @@ import { getRoom } from "@repo/server/redis-commands-throwable"
 // server
 import { io } from "@/server"
 
-// error
+// utils
 import { ServerError } from "@repo/server/error"
+import { getCurrentPlayerKey } from "@/utils/player"
 
 export const roomReady: SocketEventHandler<
   unknown,
@@ -32,10 +33,7 @@ export const roomReady: SocketEventHandler<
       })
     }
 
-    const currentPlayerKey: keyof Pick<
-      JoinedRoom,
-      "guest" | "owner"
-    > = room.owner.id === playerId ? "owner" : "guest"
+    const currentPlayerKey = getCurrentPlayerKey(room.owner.id, playerId)
     const currentPlayer = room[currentPlayerKey]
     const otherPlayer = currentPlayerKey === "owner" ? room.guest : room.owner
 

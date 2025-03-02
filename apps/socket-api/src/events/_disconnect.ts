@@ -8,6 +8,7 @@ import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // utils
 import { offlinePlayer } from "@repo/server/util"
+import { getCurrentPlayerKey } from "@/utils/player"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
@@ -20,6 +21,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
   try {
     const room = await getRoom(roomSlug)
+    const currentPlayerKey = getCurrentPlayerKey(room.owner.id, playerId)
 
     if (room.status === "waiting") {
       room.connectionStatus = "offline"
@@ -33,7 +35,6 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     }
 
     if (room.status === "joined" || room.status === "ready") {
-      const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
       room[currentPlayerKey].connection = offlineConnection
 
       const ownerIsOnline = room.owner.connection.status === "online"
@@ -62,7 +63,6 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     }
 
     if (room.status === "running" || room.status === "cancelled") {
-      const currentPlayerKey: "owner" | "guest" = room.owner.id === playerId ? "owner" : "guest"
       room[currentPlayerKey].connection = offlineConnection
 
       const ownerIsOnline = room.owner.connection.status === "online"
