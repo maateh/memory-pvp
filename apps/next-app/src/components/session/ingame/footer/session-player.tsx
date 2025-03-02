@@ -22,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 // components
 import { UserAvatar } from "@/components/user"
 import { PlayerBadge } from "@/components/player"
-import { StatisticBadge } from "@/components/shared"
+import { GlowingOverlay, StatisticBadge } from "@/components/shared"
 
 type SessionPlayerProps = {
   session: ClientSession
@@ -37,7 +37,17 @@ const SessionPlayer = ({ session, player, flipOrder }: SessionPlayerProps) => {
   const flips = session.stats.flips[player.id]
 
   return (
-    <div className={cn("w-full flex justify-between items-center gap-x-3", { "flex-row-reverse": flipOrder })}>
+    <GlowingOverlay className={cn("w-full flex justify-between items-center gap-x-3 hover:scale-100", {
+      "flex-row-reverse": flipOrder
+    })}
+      overlayProps={{
+        className: cn("bg-accent opacity-30 dark:opacity-10 blur-md rounded-3xl", {
+          "animate-in slide-in-from-right fade-in-40 dark:fade-in-15 duration-500": session.owner.id === player.id,
+          "animate-in slide-in-from-left fade-in-40 dark:fade-in-15 duration-500": session.mode !== "SINGLE" && session.guest.id === player.id
+        })
+      }}
+      disableOverlay={session.currentTurn !== player.id}
+    >
       <div className="space-y-1.5">
         <div className={cn("flex items-center gap-x-2", { "flex-row-reverse": flipOrder })}>
           <UserAvatar user={{
@@ -92,7 +102,7 @@ const SessionPlayer = ({ session, player, flipOrder }: SessionPlayerProps) => {
           </Badge>
         )}
       </div>
-    </div>
+    </GlowingOverlay>
   )
 }
 

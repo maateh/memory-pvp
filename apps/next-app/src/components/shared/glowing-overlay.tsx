@@ -2,10 +2,12 @@
 import { cn } from "@/lib/util"
 
 type GlowingOverlayProps = {
+  disableOverlay?: boolean
   overlayProps?: React.ComponentProps<"div">
 } & React.ComponentProps<"div">
 
 const GlowingOverlay = ({
+  disableOverlay = false,
   overlayProps,
   className,
   children,
@@ -16,9 +18,11 @@ const GlowingOverlay = ({
       {children}
 
       {/* Glowing overlay */}
-      <div {...overlayProps}
-        className={cn("absolute inset-0 size-full rounded-full opacity-50 blur-lg bg-secondary", overlayProps?.className)}
-      />
+      {!disableOverlay && (
+        <div {...overlayProps}
+          className={cn("absolute inset-0 size-full rounded-full opacity-50 blur-lg bg-secondary", overlayProps?.className)}
+        />
+      )}
     </div>
   )
 }
