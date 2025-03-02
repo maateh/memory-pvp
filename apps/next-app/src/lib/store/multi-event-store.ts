@@ -2,9 +2,11 @@ import { createStore } from "zustand"
 import { toast } from "sonner"
 
 // types
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
 import type { ClientSessionCard, MultiClientSession } from "@repo/schema/session"
+import type { SessionCardFlipValidation } from "@repo/schema/room-validation"
 import type { SessionStore } from "./session-store"
 
 // utils
@@ -19,13 +21,15 @@ type MultiEventListener = {
   sessionCardFlipped: (response: SocketResponse<MultiClientSession>) => void
   sessionCardMatched: (response: SocketResponse<MultiClientSession>) => void
   sessionCardUnmatched: (response: SocketResponse<MultiClientSession>) => void
-  sessionFinished: (response: SocketResponse) => void
+  sessionFinished: (response: SocketResponse<string>) => void
 }
 
 export type MultiEventStore = MultiEventAction & MultiEventListener
 
 type MultiEventStoreProps = {
   socket: Socket,
+  router: AppRouterInstance
+  optimisticCardFlip: (clickedCard: ClientSessionCard) => void
   setStoreState: (
     partial: SessionStore | Partial<SessionStore> | ((state: SessionStore) => SessionStore | Partial<SessionStore>),
     replace?: boolean | undefined
@@ -34,16 +38,18 @@ type MultiEventStoreProps = {
 
 export const multiEventStore = ({
   socket,
+  router,
+  optimisticCardFlip,
   setStoreState
 }: MultiEventStoreProps) => () => createStore<MultiEventStore>(() => ({
   /* Actions */
   async sessionCardFlip(clickedCard) {
-    try {
-      // TODO: add `SessionCardFlipValidation` schema
+    optimisticCardFlip(clickedCard)
 
+    try {
       const { error }: SocketResponse = await socket.emitWithAck("session:card:flip", {
         clickedCard
-      } satisfies { clickedCard: ClientSessionCard })
+      } satisfies SessionCardFlipValidation)
 
       if (error) {
         throw ServerError.parser(error)
@@ -57,28 +63,23 @@ export const multiEventStore = ({
   /* Listeners */
   sessionCardFlipped({ data: session, error }) {
     if (error || !session) return handleServerError(error)
-    
-    // TODO: returned data type is not final here
     setStoreState({ session })
   },
 
   sessionCardMatched({ data: session, error }) {
     if (error || !session) return handleServerError(error)
-    
-    // TODO: returned data type is not final here
     setStoreState({ session })
   },
 
   sessionCardUnmatched({ data: session, error }) {
     if (error || !session) return handleServerError(error)
-    
-    // TODO: returned data type is not final here
-    setStoreState({ session })
+    setTimeout(() => setStoreState({ session }), 800)
   },
 
-  sessionFinished({ message, description, error }) {
+  sessionFinished({ data: roomSlug, message, description, error }) {
     if (error) return handleServerError(error)
 
-    // TODO: handle session finished
+    toast.success(message, { description })
+    router.replace(`/game/summary/${roomSlug}`)
   },
 }))

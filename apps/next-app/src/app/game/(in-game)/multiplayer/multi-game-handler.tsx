@@ -4,10 +4,13 @@
 import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
 
 // hooks
-import { useMultiSessionStore } from "@/components/provider/multi-session-store-provider"
+import { useSessionStore } from "@/components/provider/session-store-provider"
+import { useMultiGameHandler } from "@/hooks/handler/game/use-multi-game-handler"
 
 const MultiGameHandler = () => {
-  const session = useMultiSessionStore((state) => state.session)
+  const session = useSessionStore((state) => state.session)
+
+  const { handleCardFlip } = useMultiGameHandler()
 
   return (
     <>
@@ -15,7 +18,7 @@ const MultiGameHandler = () => {
 
       <MemoryTable
         session={session}
-        handleCardFlip={() => {}}
+        handleCardFlip={handleCardFlip}
       />
 
       <SessionFooter session={session} />

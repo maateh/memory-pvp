@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useStore } from "zustand"
 
 // types
@@ -21,13 +22,17 @@ type MultiEventStoreProviderProps = {
 }
 
 const MultiEventStoreProvider = ({ children }: MultiEventStoreProviderProps) => {
+  const router = useRouter()
   const { socket } = useSocketService()
 
+  const optimisticCardFlip = useSessionStore((state) => state.sessionCardFlip)
   const setStoreState = useSessionStore((state) => state.setState)
 
   const [store] = useState(
     multiEventStore({
       socket,
+      router,
+      optimisticCardFlip,
       setStoreState
     })
   )
