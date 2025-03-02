@@ -16,6 +16,7 @@ import { io } from "@/server"
 
 // utils
 import { ServerError } from "@repo/server/error"
+import { getCurrentPlayerKey, getOtherPlayerKey } from "@/utils/player"
 import { validate } from "@/utils/validate"
 
 export const sessionCardFlip: SocketEventHandler<
@@ -98,8 +99,6 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
   playerId,
   session
 }: SessionHandlerOptions): "flipped" | "pairing" {
-  const { owner, guest, mode } = session
-
   session.flipped = [...session.flipped, {
     id: clickedCard.id,
     key: clickedCard.key
@@ -107,9 +106,11 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
 
   ++session.stats.flips[playerId]
 
-  session.currentTurn = mode === "COOP"
-    ? owner.id === playerId ? guest.id : owner.id
-    : playerId
+  if (session.mode === "COOP" && session.flipped.length === 1) {
+    session.currentTurn = session.currentTurn === playerId
+      ? session[getOtherPlayerKey(session.owner.id, playerId)].id
+      : session[getCurrentPlayerKey(session.owner.id, playerId)].id
+  }
 
   return session.flipped.length === 1 ? "flipped" : "pairing"
 }
@@ -118,15 +119,17 @@ function handleCardPairing({
   playerId,
   session
 }: SessionHandlerOptions): "matched" | "unmatched" {
-  const { cards, flipped, owner, guest, mode } = session
-    
+  const { flipped } = session
   session.flipped = []
-  session.currentTurn = mode === "PVP"
-    ? owner.id === playerId ? guest.id : owner.id
-    : playerId
+
+  if (session.mode === "PVP") {
+    session.currentTurn = session.currentTurn === playerId
+      ? session[getOtherPlayerKey(session.owner.id, playerId)].id
+      : session[getCurrentPlayerKey(session.owner.id, playerId)].id
+  }
   
   if (flipped[0].id === flipped[1].id) {
-    session.cards = cards.map(
+    session.cards = session.cards.map(
       (card) => card.id === flipped[0].id
         ? { ...card, matchedBy: playerId }
         : card
