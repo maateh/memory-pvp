@@ -304,7 +304,7 @@ export const saveOfflineSession = protectedActionClient
   .schema(saveOfflineGameValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { playerId } = parsedInput
-    const { collectionId, ...clientSession } = parsedInput.clientSession
+    const { collectionId, owner, currentTurn, ...clientSession } = parsedInput.clientSession
 
     const playerAmount = await ctx.db.playerProfile.count({
       where: {
@@ -338,11 +338,12 @@ export const saveOfflineSession = protectedActionClient
     const { slug } = await ctx.db.gameSession.create({
       data: {
         ...clientSession,
-        stats,
         slug: generateSessionSlug({ type: "CASUAL", mode: "SINGLE" }, true),
         type: "CASUAL",
         mode: "SINGLE",
         status: "OFFLINE",
+        currentTurn: playerId,
+        stats,
         closedAt: new Date(),
         collection: {
           connect: { id: collectionId }

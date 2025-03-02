@@ -69,6 +69,7 @@ export const useCreateOfflineSession = () => {
       ),
       collectionId: settings.collectionId,
       owner: offlinePlayerMetadata,
+      currentTurn: offlinePlayerMetadata.id,
       stats: {
         timer: 0,
         flips: {
