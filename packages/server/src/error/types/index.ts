@@ -29,7 +29,8 @@ export type CauseKey =
   "ROOM_NOT_FOUND" |
   "PLAYER_CONNECTION_NOT_FOUND" |
   "ROOM_STATUS_CONFLICT" |
-  "SESSION_ALREADY_STARTED"
+  "SESSION_ALREADY_STARTED" |
+  "CARD_FLIP_CONFLICT"
 
 export type ServerErrorOpts<T = unknown> = {
   thrownBy?: ThrownBy
