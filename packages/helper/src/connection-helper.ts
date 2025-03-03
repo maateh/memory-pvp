@@ -5,10 +5,14 @@ import type { PlayerConnection } from "@repo/schema/player-connection"
 import { RECONNECTION_TIMEOUT } from "@repo/config/connection"
 
 /**
- * TODO: write doc
+ * Checks if the reconnection time for a disconnected player has expired.
+ *
+ * - Returns `false` if the player is currently online.
+ * - Calculates the time difference between now and when the player disconnected.
+ * - If the difference exceeds `RECONNECTION_TIMEOUT`, the function returns `true`.
  * 
- * @param connection 
- * @returns 
+ * @param {PlayerConnection} connection - The player's connection status and timestamps.
+ * @returns {boolean} - `true` if the player has exceeded the allowed reconnection time, otherwise `false`.
  */
 export function reconnectionTimeExpired(
   connection: PlayerConnection

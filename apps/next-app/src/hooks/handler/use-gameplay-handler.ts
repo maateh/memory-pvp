@@ -10,9 +10,16 @@ export type UseGameplayHandlerProps = {
 }
 
 /**
- * TODO: write doc
- * 
- * @param props
+ * Custom React hook for handling gameplay-related events.
+ *
+ * - Triggers the `onFinish` callback when all cards are matched (game over).
+ * - Calls `onIngameUpdate` when the session updates (e.g., card flips, matches).
+ * - Listens for browser tab/window close events and executes `onBeforeUnload` if provided.
+ *
+ * @param {UseGameplayHandlerProps} props - Configuration options for gameplay event handling.
+ * @param {() => void} [props.onIngameUpdate] - Callback triggered when the session state updates.
+ * @param {(event: BeforeUnloadEvent) => void} [props.onBeforeUnload] - Callback triggered when the tab is about to close.
+ * @param {() => Promise<void> | void | never} props.onFinish - Callback triggered when the game finishes (all cards matched).
  */
 export function useGameplayHandler({ onIngameUpdate, onBeforeUnload, onFinish }: UseGameplayHandlerProps) {
   const session = useSessionStore((state) => state.session)

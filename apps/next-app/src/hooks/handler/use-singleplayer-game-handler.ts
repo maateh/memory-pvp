@@ -16,10 +16,19 @@ type UseSingleplayerGameHandlerReturn = {
 }
 
 /**
- * TODO: write doc
- * 
- * @param props
- * @returns {UseSingleplayerGameHandlerReturn}
+ * Custom React hook to manage single-player game mechanics.
+ *
+ * - Uses `useGameplayHandler` to handle in-game updates, finishing conditions, and tab close events.
+ * - Uses `useHeartbeatListener` to synchronize game state at a regular interval.
+ * - Provides `handleCardFlip` to manage the logic of flipping cards and checking for matches.
+ *
+ * @param {UseSingleplayerGameHandlerProps} props - Configuration options for the single-player game handler.
+ * @param {() => void} [props.onIngameUpdate] - Callback triggered when the session state updates.
+ * @param {(event: BeforeUnloadEvent) => void} [props.onBeforeUnload] - Callback triggered when the tab is about to close.
+ * @param {() => Promise<void> | void | never} props.onFinish - Callback triggered when the game finishes (all cards matched).
+ * @param {() => Promise<void> | void} [props.onHeartbeat] - Optional callback for periodic session synchronization.
+ *
+ * @returns {UseSingleplayerGameHandlerReturn} - An object containing `handleCardFlip` to manage card flipping logic.
  */
 export function useSingleplayerGameHandler({
   onIngameUpdate,

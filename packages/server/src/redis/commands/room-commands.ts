@@ -28,10 +28,14 @@ export async function getWaitingRooms(): Promise<WaitingRoom[]> {
 }
 
 /**
- * TODO: write doc
+ * Retrieves the active room associated with a player's connection.
  * 
- * @param playerId 
- * @returns 
+ * - Fetches the `roomSlug` from Redis using the player's connection key.
+ * - If a `roomSlug` exists, retrieves the full room data using `getRoom`.
+ * - Returns `null` if the player is not associated with any active room.
+ *
+ * @param {string} playerId - The unique identifier of the player.
+ * @returns {Promise<R | null>} - The room data if the player is in an active room, otherwise `null`.
  */
 export async function getActiveRoom<R extends RoomVariants>(
   playerId: string
