@@ -1,12 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useTheme } from "next-themes"
 import { toast } from "sonner"
-
-// types
-import type { ClientSession } from "@repo/schema/session"
-import type { UseThemeProps } from "@/lib/types/theme"
 
 // config
 import {
@@ -18,9 +13,10 @@ import {
 // utils
 import { clearSessionFromStorage } from "@/lib/util/storage"
 import { logError } from "@/lib/util/error"
+import { cn } from "@/lib/util"
 
 // icons
-import { Dices, DoorOpen, Gamepad2, Menu, Moon, Sun } from "lucide-react"
+import { Dices, DoorOpen, Gamepad2, Info, Menu } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
@@ -32,18 +28,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
 
 // hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useAbandonSessionAction } from "@/lib/safe-action/session"
 
-type SessionActionsDropdownProps = {
-  session: ClientSession
-}
-
-const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
+const SessionActionsDropdown = ({
+  className,
+  variant = "ghost",
+  size = "icon",
+  ...props
+}: React.ComponentProps<typeof Button>) => {
   const router = useRouter()
-  const { theme, setTheme } = useTheme() as UseThemeProps
+  const session = useSessionStore((state) => state.session)
 
   const {
     executeAsync: executeAbandonSession,
@@ -51,12 +48,12 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
   } = useAbandonSessionAction()
 
   const handleAbandonSession = async () => {
-    if (session.status === 'OFFLINE') {
+    if (session.status === "OFFLINE") {
       clearSessionFromStorage()
     
-      router.replace('/game/setup')
-      toast.info('Offline session has been abandoned.', {
-        description: 'Abandoned offline sessions are not saved.'
+      router.replace("/game/setup")
+      toast.info("Offline session closed.", {
+        description: "Closed offline sessions are not saved."
       })
       return
     }
@@ -71,29 +68,25 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="p-1 sm:p-1.5"
-          variant="ghost"
-          size="icon"
+        <Button className={cn("p-1 sm:p-1.5", className)}
+          variant={variant}
+          size={size}
+          {...props}
         >
-          <Menu className="size-6" />
+          <Menu className="size-6 shrink-0" />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
-      <DropdownMenuLabel className="flex items-center justify-between gap-x-8">
-          <div className="flex items-center gap-x-2">
-            <Separator className="h-4 w-1 rounded-full bg-border/50"
-              orientation="vertical"
-            />
-
-            <p className="pt-0.5 text-base font-normal font-heading tracking-wider">
-              Manage session
-            </p>
-          </div>
-
-          <Gamepad2 className="size-4" strokeWidth={1.5} />
+        <DropdownMenuLabel className="flex items-center gap-x-2">
+          <Info className="size-4 shrink-0 text-muted-foreground" />
+          <span className="mt-1 text-foreground/85 text-sm font-heading">
+            Session info
+          </span>
         </DropdownMenuLabel>
 
-        <DropdownMenuItem className="w-fit py-1 ml-auto"
+        {/* FIXME: display in layout */}
+        {/* <DropdownMenuItem className="w-fit py-1 ml-auto"
           variant="muted"
           onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
         >
@@ -103,14 +96,12 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
 
           <Sun className="size-3.5 transition-all dark:hidden" />
           <Moon className="size-3.5 transition-all hidden dark:block" />
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="cursor-default sm:hidden"
-          variant="muted"
-        >
-          <Gamepad2 className="size-4" />
+        <DropdownMenuItem className="cursor-default" variant="muted">
+          <Gamepad2 className="size-4 shrink-0" />
 
           <span className="text-foreground font-medium small-caps">
             {gameTypePlaceholders[session.type].label}
@@ -119,10 +110,8 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
           </span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="cursor-default sm:hidden"
-          variant="muted"
-        >
-          <Dices className="size-4" />
+        <DropdownMenuItem className="cursor-default" variant="muted">
+          <Dices className="size-4 shrink-0" />
 
           <span className="text-foreground font-medium capitalize small-caps">
             {tableSizePlaceholders[session.tableSize].label}
@@ -132,15 +121,15 @@ const SessionActionsDropdown = ({ session }: SessionActionsDropdownProps) => {
           </span>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator className="sm:hidden" />
+        <DropdownMenuSeparator />
 
         <DropdownMenuItem
           variant="destructive"
           onClick={handleAbandonSession}
-          disabled={abandonSessionStatus === 'executing'}
+          disabled={abandonSessionStatus === "executing"}
         >
-          <DoorOpen className="size-4" />
-          <span>Abandon game</span>
+          <DoorOpen className="size-4 shrink-0" />
+          <span>Close session</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

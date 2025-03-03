@@ -29,7 +29,7 @@ const SessionHeader = () => {
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-background/65 md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
-        <SessionActionsDropdown session={session} />
+        <SessionActionsDropdown />
 
         <Separator className="h-4 sm:h-5 w-1 bg-border/50 rounded-full"
           orientation="vertical"
