@@ -79,7 +79,9 @@ export const multiEventStore = ({
   sessionFinished({ data: roomSlug, message, description, error }) {
     if (error) return handleServerError(error)
 
+    toast.dismiss("session:finished")
     toast.success(message, { description })
+
     router.replace(`/game/summary/${roomSlug}`)
   },
 }))

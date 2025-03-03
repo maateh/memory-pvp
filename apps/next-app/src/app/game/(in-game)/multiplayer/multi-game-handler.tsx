@@ -39,7 +39,7 @@ const MultiGameHandler = () => {
 
   useGameplayHandler({
     onFinish() {
-      toast.loading("Finishing session...")
+      toast.loading("Finishing session...", { id: "session:finished" })
     }
   })
 
