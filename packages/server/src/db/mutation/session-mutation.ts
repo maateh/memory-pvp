@@ -57,6 +57,7 @@ export async function updateSessionStatus(
     db.gameSession.update({
       where: { slug },
       data: {
+        stats,
         status: action === "finish" ? "FINISHED" : "ABANDONED",
         closedAt: new Date(),
         results: {
