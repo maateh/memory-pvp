@@ -3,11 +3,12 @@ import { createStore } from "zustand"
 // types
 import type { ClientPlayer } from "@repo/schema/player"
 import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
+import type { SyncStatus } from "@/components/shared/sync-indicator"
 
-// TODO: add `syncStatus`
 type SessionState = {
   session: ClientSession
   currentPlayer: ClientPlayer
+  syncStatus: SyncStatus
 }
 
 type SessionAction = {
@@ -34,6 +35,7 @@ export const sessionStore = ({
   /* States */
   session: initialSession,
   currentPlayer,
+  syncStatus: "synchronized",
 
   /* Actions */
   setState: set,
@@ -62,7 +64,7 @@ export const sessionStore = ({
       session.flipped = []
       ++session.stats.matches[currentPlayer.id]
 
-      return { session }
+      return { session, syncStatus: "out_of_sync" }
     })
   },
 

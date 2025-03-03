@@ -28,6 +28,7 @@ export function useSingleplayerGameHandler({
   onHeartbeat
 }: UseSingleplayerGameHandlerProps): UseSingleplayerGameHandlerReturn {
   const session = useSessionStore((state) => state.session)
+  const syncStatus = useSessionStore((state) => state.syncStatus)
 
   const sessionCardFlip = useSessionStore((state) => state.sessionCardFlip)
   const sessionCardMatch = useSessionStore((state) => state.sessionCardMatch)
@@ -64,8 +65,7 @@ export function useSingleplayerGameHandler({
   useGameplayHandler({ onIngameUpdate, onBeforeUnload, onFinish })
 
   useHeartbeatListener({
-    // TODO: disabled if session is synchronized
-    disabled: !onHeartbeat || true,
+    disabled: !onHeartbeat || syncStatus === "synchronized",
     onHeartbeat: onHeartbeat ? onHeartbeat : () => {}
   })
 

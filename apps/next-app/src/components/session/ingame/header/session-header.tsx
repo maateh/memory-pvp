@@ -22,11 +22,16 @@ import { SessionInfoBadge } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
 import SessionTimer from "./session-timer"
 
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
+
 type SessionHeaderProps = {
   session: ClientSession
 }
 
 const SessionHeader = ({ session }: SessionHeaderProps) => {
+  const syncStatus = useSessionStore((state) => state.syncStatus)
+
   return (
     <header className="relative w-full min-h-14 mx-auto py-3 px-2.5 flex items-center justify-between gap-x-5 bg-background/65 md:px-5 md:rounded-b-2xl md:max-w-2xl">
       <div className="flex items-center gap-x-1.5 absolute sm:static">
@@ -60,8 +65,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
               orientation="vertical"
             />
 
-            {/* TODO: add real state */}
-            <SyncIndicator status="synchronized" />
+            <SyncIndicator status={syncStatus} />
           </>
         )}
       </div>

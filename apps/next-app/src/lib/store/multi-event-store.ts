@@ -44,6 +44,7 @@ export const multiEventStore = ({
 }: MultiEventStoreProps) => () => createStore<MultiEventStore>(() => ({
   /* Actions */
   async sessionCardFlip(clickedCard) {
+    setStoreState({ syncStatus: "synchronizing" })
     optimisticCardFlip(clickedCard)
 
     try {
@@ -63,16 +64,20 @@ export const multiEventStore = ({
   /* Listeners */
   sessionCardFlipped({ data: session, error }) {
     if (error || !session) return handleServerError(error)
-    setStoreState({ session })
+
+    setStoreState({ session, syncStatus: "synchronized" })
   },
 
   sessionCardMatched({ data: session, error }) {
     if (error || !session) return handleServerError(error)
-    setStoreState({ session })
+
+    setStoreState({ session, syncStatus: "synchronized" })
   },
 
   sessionCardUnmatched({ data: session, error }) {
     if (error || !session) return handleServerError(error)
+
+    setStoreState({ syncStatus: "synchronized" })
     setTimeout(() => setStoreState({ session }), 800)
   },
 
