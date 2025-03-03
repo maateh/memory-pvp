@@ -17,6 +17,7 @@ import { Dices, Gamepad2 } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { SyncIndicator } from "@/components/shared"
 import { SessionInfoBadge } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
 import SessionTimer from "./session-timer"
@@ -53,13 +54,14 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
         <SessionTimer startedAt={session.startedAt} />
 
-        {session.status !== 'OFFLINE' && (
+        {session.status !== "OFFLINE" && (
           <>
             <Separator className="h-4 sm:h-[1.125rem] w-1 bg-border/50 rounded-full"
               orientation="vertical"
             />
 
-            {/* FIXME: <SessionSyncMarker /> */}
+            {/* TODO: add real state */}
+            <SyncIndicator status="synchronized" />
           </>
         )}
       </div>
