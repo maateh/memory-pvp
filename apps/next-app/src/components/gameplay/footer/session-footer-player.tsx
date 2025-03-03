@@ -50,7 +50,7 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
           "animate-in slide-in-from-left fade-in-40 dark:fade-in-15 duration-500": session.mode !== "SINGLE" && session.guest.id === player.id
         })
       }}
-      disableOverlay={session.currentTurn !== player.id}
+      disableOverlay={session.mode === "SINGLE" || session.currentTurn !== player.id}
     >
       <div className="space-y-1.5">
         <div className={cn("flex items-center gap-x-2", { "flex-row-reverse": flipOrder })}>
