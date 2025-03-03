@@ -85,19 +85,6 @@ const SessionActionsDropdown = ({
           </span>
         </DropdownMenuLabel>
 
-        {/* FIXME: display in layout */}
-        {/* <DropdownMenuItem className="w-fit py-1 ml-auto"
-          variant="muted"
-          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        >
-          <span className="text-xs">
-            Toggle theme
-          </span>
-
-          <Sun className="size-3.5 transition-all dark:hidden" />
-          <Moon className="size-3.5 transition-all hidden dark:block" />
-        </DropdownMenuItem> */}
-
         <DropdownMenuSeparator />
 
         <DropdownMenuItem className="cursor-default" variant="muted">
