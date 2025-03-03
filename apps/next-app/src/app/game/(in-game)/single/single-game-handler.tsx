@@ -7,7 +7,7 @@ import { validateCardMatches } from "@/lib/helper/session-helper"
 import { logError } from "@/lib/util/error"
 
 // components
-import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
+import { MemoryTable, SessionFooter, SessionHeader } from "@/components/gameplay"
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
@@ -50,14 +50,13 @@ const SingleGameHandler = () => {
 
   return (
     <>
-      <SessionHeader session={session} />
+      <SessionHeader />
 
       <MemoryTable
-        session={session}
         handleCardFlip={handleCardFlip}
       />
 
-      <SessionFooter session={session} />
+      <SessionFooter />
     </>
   )
 }

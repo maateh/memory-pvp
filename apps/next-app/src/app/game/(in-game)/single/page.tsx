@@ -9,7 +9,7 @@ import { SessionStoreProvider } from "@/components/provider"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
-import { SessionLoader } from "@/components/session/ingame"
+import { SessionLoader } from "@/components/gameplay"
 import SingleGameHandler from "./single-game-handler"
 
 const SingleGamePage = () => {

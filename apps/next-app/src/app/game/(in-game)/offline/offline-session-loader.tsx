@@ -15,7 +15,7 @@ import { getSessionFromStorage } from "@/lib/util/storage"
 import { SessionStoreProvider } from "@/components/provider"
 
 // components
-import { SessionLoader } from "@/components/session/ingame"
+import { SessionLoader } from "@/components/gameplay"
 import OfflineGameHandler from "./offline-game-handler"
 
 const OfflineSessionLoader = () => {

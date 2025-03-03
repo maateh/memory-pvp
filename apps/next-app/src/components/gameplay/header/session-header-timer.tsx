@@ -6,11 +6,11 @@ import { formatTimer } from "@/lib/util/game"
 // hooks
 import { useTimer } from "@/hooks/use-timer"
 
-type SessionTimerProps = {
+type SessionHeaderTimerProps = {
   startedAt: Date
 }
 
-const SessionTimer = ({ startedAt }: SessionTimerProps) => {
+const SessionHeaderTimer = ({ startedAt }: SessionHeaderTimerProps) => {
   const { timerInMs } = useTimer({
     timerType: "increase",
     referenceDate: startedAt
@@ -27,4 +27,4 @@ const SessionTimer = ({ startedAt }: SessionTimerProps) => {
   )
 }
 
-export default SessionTimer
+export default SessionHeaderTimer

@@ -1,23 +1,18 @@
-// types
-import type { ClientSession } from "@repo/schema/session"
-
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
-import SessionPlayer from "./session-player"
+import SessionFooterPlayer from "./session-footer-player"
 
-type SessionFooterProps = {
-  session: ClientSession
-}
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
 
-const SessionFooter = ({ session }: SessionFooterProps) => {
+const SessionFooter = () => {
+  const session = useSessionStore((state) => state.session)
+
   return (
     <footer className="w-full min-h-16 mx-auto py-3 px-3 flex flex-col items-center justify-center gap-x-4 bg-background/65 md:px-6 md:flex-row md:rounded-t-3xl md:max-w-screen-md lg:max-w-[896px]">
-      <SessionPlayer
-        session={session}
-        player={session.owner}
-      />
+      <SessionFooterPlayer player={session.owner} />
 
       {session.mode !== 'SINGLE' && (
         <>
@@ -29,8 +24,7 @@ const SessionFooter = ({ session }: SessionFooterProps) => {
             orientation="vertical"
           />
 
-          <SessionPlayer
-            session={session}
+          <SessionFooterPlayer
             player={session.guest}
             flipOrder
           />

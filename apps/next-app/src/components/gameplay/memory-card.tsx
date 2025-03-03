@@ -10,7 +10,7 @@ import { cn } from "@/lib/util"
 import { Card, CardContent } from "@/components/ui/card"
 
 type MemoryCardProps = {
-  card: Pick<ClientSessionCard, 'matchedBy' | 'imageUrl'>
+  card: Pick<ClientSessionCard, "matchedBy" | "imageUrl">
   isFlipped: boolean
   onClick: () => void
 }

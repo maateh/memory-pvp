@@ -1,8 +1,5 @@
 "use client"
 
-// types
-import type { ClientSession } from "@repo/schema/session"
-
 // config
 import {
   gameModePlaceholders,
@@ -20,16 +17,13 @@ import { Separator } from "@/components/ui/separator"
 import { SyncIndicator } from "@/components/shared"
 import { SessionInfoBadge } from "@/components/session"
 import SessionActionsDropdown from "./session-actions-dropdown"
-import SessionTimer from "./session-timer"
+import SessionHeaderTimer from "./session-header-timer"
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
 
-type SessionHeaderProps = {
-  session: ClientSession
-}
-
-const SessionHeader = ({ session }: SessionHeaderProps) => {
+const SessionHeader = () => {
+  const session = useSessionStore((state) => state.session)
   const syncStatus = useSessionStore((state) => state.syncStatus)
 
   return (
@@ -57,7 +51,7 @@ const SessionHeader = ({ session }: SessionHeaderProps) => {
       </div>
 
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
-        <SessionTimer startedAt={session.startedAt} />
+        <SessionHeaderTimer startedAt={session.startedAt} />
 
         {session.status !== "OFFLINE" && (
           <>

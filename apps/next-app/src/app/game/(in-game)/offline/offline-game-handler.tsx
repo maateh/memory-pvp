@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { saveSessionToStorage } from "@/lib/util/storage"
 
 // components
-import { SessionHeader, MemoryTable } from "@/components/session/ingame"
+import { SessionHeader, MemoryTable } from "@/components/gameplay"
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
@@ -33,10 +33,9 @@ const OfflineGameHandler = () => {
 
   return (
     <>
-      <SessionHeader session={session} />
+      <SessionHeader />
 
       <MemoryTable
-        session={session}
         handleCardFlip={handleCardFlip}
       />
     </>

@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { ClientSessionCard } from "@repo/schema/session"
 
 // components
-import { MemoryTable, SessionFooter, SessionHeader } from "@/components/session/ingame"
+import { MemoryTable, SessionFooter, SessionHeader } from "@/components/gameplay"
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
@@ -45,14 +45,13 @@ const MultiGameHandler = () => {
 
   return (
     <>
-      <SessionHeader session={session} />
+      <SessionHeader />
 
       <MemoryTable
-        session={session}
         handleCardFlip={handleCardFlip}
       />
 
-      <SessionFooter session={session} />
+      <SessionFooter />
     </>
   )
 }

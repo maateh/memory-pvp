@@ -24,13 +24,17 @@ import { UserAvatar } from "@/components/user"
 import { PlayerBadge } from "@/components/player"
 import { GlowingOverlay, StatisticBadge } from "@/components/shared"
 
-type SessionPlayerProps = {
-  session: ClientSession
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
+
+type SessionFooterPlayerProps = {
   player: ClientPlayer
   flipOrder?: boolean
 }
 
-const SessionPlayer = ({ session, player, flipOrder }: SessionPlayerProps) => {
+const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) => {
+  const session = useSessionStore((state) => state.session)
+
   const freeFlips = useMemo(() => getFreeFlips(session), [session])
   const score = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
 
@@ -124,5 +128,5 @@ const SessionPlayerSkeleton = ({ flipOrder }: { flipOrder?: boolean }) => (
   </div>
 )
 
-export default SessionPlayer
+export default SessionFooterPlayer
 export { SessionPlayerSkeleton }

@@ -8,7 +8,7 @@ import { getActiveRoom } from "@repo/server/redis-commands"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
-import { SessionLoader } from "@/components/session/ingame"
+import { SessionLoader } from "@/components/gameplay"
 
 // providers
 import { RoomStoreProvider } from "@/components/provider"
