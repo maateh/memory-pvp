@@ -8,11 +8,14 @@ import { sessionCardFlipValidation } from "@repo/schema/room-validation"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { roomKey } from "@repo/server/redis-keys"
+import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // server
 import { io } from "@/server"
+
+// helpers
+import { updateSessionStatus } from "@repo/server/db-session-mutation"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -80,7 +83,21 @@ export const sessionCardFlip: SocketEventHandler<
       data: session
     } satisfies SocketResponse<MultiClientSession>)
 
-    // TODO: implement session finish
+    const isOver = session.cards.every((card) => card.matchedBy !== null)
+    if (!isOver) return
+
+    await Promise.all([
+      updateSessionStatus(session, playerId, "finish"),
+      redis.del(playerConnectionKey(room.owner.id)),
+      redis.del(playerConnectionKey(room.guest.id)),
+      redis.json.del(roomKey(roomSlug))
+    ])
+
+    io.to(roomSlug).emit("session:finished", {
+      message: "Session finished!",
+      description: "Let's see the results...",
+      data: roomSlug
+    } satisfies SocketResponse<string>)
   } catch (err) {
     console.log(err)
     response({
