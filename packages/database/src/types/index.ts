@@ -6,7 +6,7 @@ import {
   cardCollectionWithCardsWithUser,
   gameSessionWithPlayersWithAvatarWithCollectionWithCards,
   playerProfileWithUserAvatar
-} from "../schema"
+} from "@/schema"
 
 export type PlayerProfileWithUserAvatar = z.infer<typeof playerProfileWithUserAvatar>
 export type CardCollectionWithCards = z.infer<typeof cardCollectionWithCards>

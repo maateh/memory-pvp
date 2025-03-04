@@ -9,7 +9,7 @@ import {
 } from "@repo/db/zod"
 
 // validations
-import { clientPlayerSchema } from "./player-schema"
+import { clientPlayerSchema } from "@/player-schema"
 
 /* Base schemas */
 export const sessionSettings = z.object({

@@ -4,7 +4,10 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "incremental": true,
-    "composite": true
+    "composite": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]

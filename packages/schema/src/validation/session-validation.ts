@@ -6,9 +6,9 @@ import {
   sessionCard,
   sessionSettings,
   offlineClientSessionSchema
-} from "../session-schema"
-import { roomSettings } from "../room-schema"
-import { createRoomValidation } from "./room-validation"
+} from "@/session-schema"
+import { roomSettings } from "@/room-schema"
+import { createRoomValidation } from "@/validation/room-validation"
 
 /* Forms / API validations */
 export const createSingleSessionValidation = z.object({

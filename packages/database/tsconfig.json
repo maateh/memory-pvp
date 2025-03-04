@@ -5,6 +5,9 @@
     "composite": true,
     "rootDir": "./src",
     "outDir": "./dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]

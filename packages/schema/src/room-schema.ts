@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 // schemas
-import { roomPlayerSchema } from "./room-player-schema"
-import { multiClientSessionSchema, sessionSettings } from "./session-schema"
+import { roomPlayerSchema } from "@/room-player-schema"
+import { multiClientSessionSchema, sessionSettings } from "@/session-schema"
 
 /* Base schemas */
 export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "cancelled", "finished"])

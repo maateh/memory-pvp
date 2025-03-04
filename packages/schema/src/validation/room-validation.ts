@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 // schemas
-import { roomSettings } from "../room-schema"
-import { clientSessionCard } from "../session-schema"
+import { roomSettings } from "@/room-schema"
+import { clientSessionCard } from "@/session-schema"
 
 /* Forms / API validations */
 export const createRoomValidation = z.object({

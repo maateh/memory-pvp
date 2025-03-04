@@ -6,7 +6,7 @@
   "scripts": {
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
-    "build": "tsc",
+    "build": "tsc && tsc-alias -p tsconfig.json",
     "dev": "tsc --watch --preserveWatchOutput",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
@@ -28,6 +28,7 @@
     "@types/node": "^22.10.4",
     "prisma": "^5.20.0",
     "prisma-json-types-generator": "^3.1.1",
+    "tsc-alias": "^1.8.10",
     "zod-prisma-types": "^3.2.4"
   }
 }

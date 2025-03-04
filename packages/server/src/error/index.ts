@@ -1,6 +1,6 @@
 // types
-import type { CauseKey, ThrownBy, ServerErrorOpts } from "./types"
-import type { ExtendedSocketError } from "../types/socket"
+import type { CauseKey, ThrownBy, ServerErrorOpts } from "@/error/types"
+import type { ExtendedSocketError } from "@/types/socket"
 
 export class ServerError {
   public readonly thrownBy: ThrownBy

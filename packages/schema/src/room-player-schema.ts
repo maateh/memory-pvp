@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 // schemas
-import { clientPlayerSchema } from "./player-schema"
-import { playerConnection } from "./player-connection-schema"
+import { clientPlayerSchema } from "@/player-schema"
+import { playerConnection } from "@/player-connection-schema"
 
 export const roomPlayerRole = z.enum(["owner", "guest"])
 

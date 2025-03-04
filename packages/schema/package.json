@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias -p tsconfig.json",
     "dev": "tsc --watch --preserveWatchOutput",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx only-allow pnpm",
@@ -22,6 +22,7 @@
     "@repo/db": "workspace:*"
   },
   "devDependencies": {
-    "@repo/ts-config": "workspace:*"
+    "@repo/ts-config": "workspace:*",
+    "tsc-alias": "^1.8.10"
   }
 }

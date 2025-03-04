@@ -2,8 +2,8 @@
 import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { redis } from ".."
-import { playerConnectionKey, roomKey, waitingRoomsKey } from "../keys"
+import { redis } from "@/redis"
+import { playerConnectionKey, roomKey, waitingRoomsKey } from "@/redis/keys"
 
 /**
  * Retrieves a list of waiting rooms from Redis.

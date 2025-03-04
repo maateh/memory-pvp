@@ -7,7 +7,7 @@ import {
   MemoryCardSchema,
   PlayerProfileSchema,
   UserSchema
-} from "./generated"
+} from "@/schema/generated"
 
 // schemas - json
 import {
@@ -15,7 +15,7 @@ import {
   sessionCard,
   sessionCardMetadata,
   sessionStats
-} from "./json"
+} from "@/schema/json"
 
 export const playerProfileWithUserAvatar = PlayerProfileSchema
   .omit({ stats: true })

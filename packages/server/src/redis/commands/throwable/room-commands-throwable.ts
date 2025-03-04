@@ -6,10 +6,10 @@ import type { RoomVariants } from "@repo/schema/room"
 import {
   getRoom as getRoom_unthrowable,
   getRoomByField as getRoomByField_unthrowable
-} from "../room-commands"
+} from "@/redis/commands/room-commands"
 
 // utils
-import { ServerError } from "../../../error"
+import { ServerError } from "@/error"
 
 /**
  * Retrieves a specific room from Redis based on its slug.
