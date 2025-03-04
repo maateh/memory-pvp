@@ -3,17 +3,24 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
   "exports": {
-    "./error": "./src/error/error.ts",
-    "./db": "./src/db/index.ts",
-    "./db-session-mutation": "./src/db/mutation/session-mutation.ts",
-    "./redis": "./src/redis/redis.ts",
-    "./redis-settings": "./src/redis/settings.ts",
-    "./redis-commands": "./src/redis/commands/index.ts",
-    "./redis-commands-throwable": "./src/redis/commands/throwable/index.ts",
-    "./redis-keys": "./src/redis/keys.ts",
-    "./util": "./src/util/index.ts",
-    "./socket-types": "./src/types/socket.ts"
+    "./error": "./dist/error/error.js",
+    "./db": "./dist/db/index.js",
+    "./db-session-mutation": "./dist/db/mutation/session-mutation.js",
+    "./redis": "./dist/redis/redis.js",
+    "./redis-settings": "./dist/redis/settings.js",
+    "./redis-commands": "./dist/redis/commands/index.js",
+    "./redis-commands-throwable": "./dist/redis/commands/throwable/index.js",
+    "./redis-keys": "./dist/redis/keys.js",
+    "./util": "./dist/util/index.js",
+    "./socket-types": "./dist/types/socket.js"
   },
   "dependencies": {
     "@repo/db": "workspace:*",

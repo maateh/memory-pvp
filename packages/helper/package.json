@@ -3,9 +3,16 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
   "exports": {
-    "./connection": "./src/connection-helper.ts",
-    "./session": "./src/session-helper.ts"
+    "./connection": "./dist/connection-helper.js",
+    "./session": "./dist/session-helper.js"
   },
   "dependencies": {
     "@repo/config": "workspace:*",

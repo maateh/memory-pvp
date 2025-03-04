@@ -2,14 +2,21 @@
   "name": "@repo/schema",
   "version": "0.0.0",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
   "exports": {
-    "./session": "./src/session-schema.ts",
-    "./player": "./src/player-schema.ts",
-    "./player-connection": "./src/player-connection-schema.ts",
-    "./room": "./src/room-schema.ts",
-    "./room-player": "./src/room-player-schema.ts",
-    "./session-validation": "./src/validation/session-validation.ts",
-    "./room-validation": "./src/validation/room-validation.ts"
+    "./session": "./dist/session-schema.js",
+    "./player": "./dist/player-schema.js",
+    "./player-connection": "./dist/player-connection-schema.js",
+    "./room": "./dist/room-schema.js",
+    "./room-player": "./dist/room-player-schema.js",
+    "./session-validation": "./dist/validation/session-validation.js",
+    "./room-validation": "./dist/validation/room-validation.js"
   },
   "dependencies": {
     "@repo/db": "workspace:*"

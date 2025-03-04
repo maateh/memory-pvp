@@ -1,15 +1,9 @@
 {
-  "extends": "@repo/ts-config/base.json",
+  "extends": "@repo/ts-config/packages.json",
   "compilerOptions": {
-    "incremental": true,
-    "composite": true,
-    "rootDir": "./",
-    "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
-  "include": [
-    "**/*.ts",
-    "**/*.d.ts"
-  ],
+  "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
