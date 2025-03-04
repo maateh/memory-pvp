@@ -2,7 +2,7 @@
 import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { redis } from "../redis"
+import { redis } from ".."
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "../keys"
 
 /**

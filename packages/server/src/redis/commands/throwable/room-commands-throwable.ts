@@ -9,7 +9,7 @@ import {
 } from "../room-commands"
 
 // utils
-import { ServerError } from "../../../error/error"
+import { ServerError } from "../../../error"
 
 /**
  * Retrieves a specific room from Redis based on its slug.

@@ -9,16 +9,16 @@ export class ServerError {
   public readonly description?: string | undefined
   public readonly data?: unknown
 
-  public readonly name: 'ServerError'
+  public readonly name: "ServerError"
 
   constructor(opts: ServerErrorOpts) {
-    this.thrownBy = opts.thrownBy || 'UNKNOWN'
-    this.key = opts.key || 'UNKNOWN'
+    this.thrownBy = opts.thrownBy || "UNKNOWN"
+    this.key = opts.key || "UNKNOWN"
     this.data = opts.data
     this.message = opts.message
     this.description = opts.description
 
-    this.name = 'ServerError'
+    this.name = "ServerError"
   }
 
   static throw(error: ServerErrorOpts): never {

@@ -1,4 +1,4 @@
-import type { ServerError } from "../error/error"
+import type { ServerError } from "../error"
 
 export type SocketResponse<T = unknown> = {
   message: string
