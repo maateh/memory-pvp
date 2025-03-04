@@ -6,7 +6,7 @@ import {
   sessionCard,
   sessionCardMetadata,
   sessionStats
-} from "../schema/json"
+} from "../../schema/json"
 
 declare global {
   namespace PrismaJson {

@@ -7,7 +7,7 @@ import {
   MemoryCardSchema,
   PlayerProfileSchema,
   UserSchema
-} from "../generated/zod"
+} from "./generated"
 
 // schemas - json
 import {

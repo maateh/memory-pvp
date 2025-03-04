@@ -9,6 +9,7 @@ generator json {
 
 generator zod {
   provider               = "zod-prisma-types"
+  output                 = "../src/schema/generated"
   createInputTypes       = false
   addInputTypeValidation = false
   addIncludeType         = false

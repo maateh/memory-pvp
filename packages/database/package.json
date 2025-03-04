@@ -3,17 +3,22 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
-  "exports": {
-    ".": "./prisma/db.ts",
-    "./types": "./prisma/types/index.ts",
-    "./schema": "./prisma/schema/index.ts",
-    "./json-schema": "./prisma/schema/json.ts",
-    "./json-types": "./prisma/types/json.ts",
-    "./zod": "./prisma/generated/zod/index.ts"
-  },
   "scripts": {
     "db:generate": "prisma generate",
-    "db:push": "prisma db push --skip-generate"
+    "db:push": "prisma db push --skip-generate",
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./types": "./dist/types/index.js",
+    "./json-types": "./dist/types/json/index.js",
+    "./schema": "./dist/schema/index.js",
+    "./json-schema": "./dist/schema/json/index.js",
+    "./zod": "./dist/schema/generated/index.js"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0"
