@@ -56,6 +56,8 @@ export const multiEventStore = ({
         throw ServerError.parser(error)
       }
     } catch (err) {
+      if (!socket.active) return
+
       handleServerError(err as ServerError)
       logError(err)
     }
@@ -84,6 +86,7 @@ export const multiEventStore = ({
   sessionFinished({ data: roomSlug, message, description, error }) {
     if (error) return handleServerError(error)
 
+    socket.emit("connection:clear")
     toast.dismiss("session:finished")
     toast.success(message, { description })
 
