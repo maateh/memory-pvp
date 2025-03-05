@@ -16,6 +16,7 @@ import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action
 
 const SingleGameHandler = () => {
   const session = useSessionStore((state) => state.session)
+  const setStoreState = useSessionStore((state) => state.setState)
 
   const { executeAsync: executeFinishSession } = useFinishSessionAction()
   const { executeAsync: executeStoreSession } = useStoreSessionAction()
@@ -35,6 +36,8 @@ const SingleGameHandler = () => {
     },
 
     async onFinish() {
+      setStoreState({ syncStatus: "synchronized" })
+
       try {
         await executeFinishSession({
           clientSession: {
