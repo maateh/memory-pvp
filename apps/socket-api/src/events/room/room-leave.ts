@@ -7,6 +7,7 @@ import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
 import { ServerError } from "@repo/server/error"
+import { getCurrentPlayerKey } from "@/utils/player"
 
 export const roomLeave: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:leave -> ", socket.id)
@@ -22,6 +23,15 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
         key: "ROOM_STATUS_CONFLICT",
         message: "Failed to leave room.",
         description: "You can only leave room if the status is waiting."
+      })
+    }
+
+    if (getCurrentPlayerKey(room.owner.id, playerId) === "owner") {
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_ACCESS_DENIED",
+        message: "Failed to leave room.",
+        description: "As the owner of this room, you can only close it."
       })
     }
 

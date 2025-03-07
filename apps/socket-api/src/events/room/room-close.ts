@@ -1,10 +1,13 @@
+// types
+import type { WaitingRoomVariants } from "@repo/schema/room"
+
 // redis
 import { closeRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
 import { ServerError } from "@repo/server/error"
-import { WaitingRoomVariants } from "@repo/schema/room"
+import { getCurrentPlayerKey } from "@/utils/player"
 
 export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:close -> ", socket.id)
@@ -16,10 +19,19 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
   
     if (room.status !== "waiting" && room.status !== "joined") {
       ServerError.throw({
-        thrownBy: "REDIS",
+        thrownBy: "SOCKET_API",
         key: "ROOM_STATUS_CONFLICT",
         message: "Failed to close room.",
         description: "You can only close room if the status is waiting."
+      })
+    }
+
+    if (getCurrentPlayerKey(room.owner.id, playerId) === "guest") {
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "ROOM_ACCESS_DENIED",
+        message: "Failed to close room.",
+        description: "You are only a guest of this room, so you cannot close it."
       })
     }
 
