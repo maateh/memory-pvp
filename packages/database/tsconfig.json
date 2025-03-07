@@ -9,6 +9,7 @@
       "@/*": ["./src/*"]
     }
   },
+  "tsc-alias": { "watch": true },
   "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
