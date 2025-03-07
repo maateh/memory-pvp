@@ -83,9 +83,12 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
   roomSlug: string,
   field: F
 ): Promise<R[F] | null> {
-  return await redis.json.get<R[F]>(
+  const fieldValue = await redis.json.get<(R[F])[]>(
     roomKey(roomSlug), `$.${field as string}`
   )
+
+  if (!fieldValue || !fieldValue.length) return null
+  return fieldValue[0]
 }
 
 /**
