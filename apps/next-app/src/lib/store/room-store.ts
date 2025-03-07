@@ -286,20 +286,6 @@ export const roomStore = ({
   },
 
   connectError({ data: error }) {
-    if (!socket.connected) {
-      toast.warning("Failed to connect to the server.", {
-        id: "room:connect",
-        description: "Socket server is not available. Please come back later.",
-        duration: 10000,
-        onAutoClose() { router.replace("/dashboard") },
-        action: {
-          label: "Dashboard",
-          onClick() { router.replace("/dashboard") }
-        }
-      })
-      return
-    }
-
     if (error?.key === "CLERK_TOKEN_EXPIRED") {
       toast.warning(error.message, {
         id: "room:connect",
@@ -309,6 +295,20 @@ export const roomStore = ({
         action: {
           label: "Reconnect",
           onClick() { window.location.reload() }
+        }
+      })
+      return
+    }
+
+    if (!socket.connected) {
+      toast.warning("Failed to connect to the server.", {
+        id: "room:connect",
+        description: "Socket server is not available. Please come back later.",
+        duration: 10000,
+        onAutoClose() { router.replace("/dashboard") },
+        action: {
+          label: "Dashboard",
+          onClick() { router.replace("/dashboard") }
         }
       })
       return
