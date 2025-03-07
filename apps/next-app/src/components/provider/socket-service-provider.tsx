@@ -27,6 +27,7 @@ const SocketServiceProvider = ({ authToken, children }: SocketServiceProviderPro
     return io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
       auth: { token: authToken },
       ackTimeout: 7000,
+      reconnectionAttempts: 3,
       autoConnect: false
     })
   })
