@@ -4,12 +4,14 @@ import { toast } from "sonner"
 // types
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
+import type { ToastT } from "sonner"
 import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
 import type { RoomPlayer } from "@repo/schema/room-player"
 import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
 // server
 import { createMultiSession } from "@/server/action/session-action"
+import { leaveOrCloseRoom } from "@/server/action/room-action"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -301,16 +303,101 @@ export const roomStore = ({
     }
 
     if (!socket.connected) {
-      toast.warning("Failed to connect to the server.", {
-        id: "room:connect",
-        description: "Socket server is not available. Please come back later.",
-        duration: 10000,
-        onAutoClose() { router.replace("/dashboard") },
-        action: {
-          label: "Dashboard",
-          onClick() { router.replace("/dashboard") }
+      const toastId = "room:connect"
+      const message = "Failed to connect to the server."
+
+      const onAutoClose: ToastT["onAutoClose"] = () => {
+        router.replace("/dashboard")
+        toast.info("Redirecting to the dashboard...", {
+          id: toastId,
+          description: "Please try to reconnect later.",
+          action: {
+            label: "Reconnect",
+            onClick() { router.push("/game/multiplayer") }
+          }
+        })
+      }
+
+      if (initialRoom.status === "waiting" || initialRoom.status === "joined") {
+        const currentPlayerKey: "owner" | "guest" = currentPlayerId === initialRoom.owner.id ? "owner" : "guest"
+
+        toast.warning(message, {
+          id: toastId,
+          description: `You can ${currentPlayerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
+          duration: 10000,
+          onAutoClose,
+          action: {
+            label: currentPlayerKey === "owner" ? "Close" : "Leave",
+            async onClick() {
+              toast.dismiss(toastId)
+              toast.loading(`${currentPlayerKey === "owner" ? "Closing" : "Leaving"} room...`, {
+                id: "room:leave"
+              })
+
+              try {
+                const { serverError } = await leaveOrCloseRoom() || {}
+  
+                if (serverError) {
+                  handleServerError(serverError, `Failed to ${currentPlayerKey === "owner" ? "close" : "leave"} the room. Please try again later.`)
+                  return
+                }
+
+                toast.success(`You have ${currentPlayerKey === "owner" ? "closed" : "left"} the room.`, {
+                  id: "room:leave",
+                  description: "This will not affect your ranking scores."
+                })
+              } catch (err) {
+                logError(err)
+              } finally { toast.dismiss(toastId) }
+            }
+          }
+        })
+      }
+
+      if (initialRoom.status === "running" || initialRoom.status === "cancelled") {
+        const description = "Do you want to force close this session?"
+
+        if (initialRoom.session.type === "COMPETITIVE") {
+          description.concat(" You will lose ranking scores.")
         }
-      })
+
+        toast.warning(message, {
+          id: toastId,
+          description,
+          duration: 10000,
+          onAutoClose,
+          action: {
+            label: "Force close",
+            async onClick() {
+              toast.dismiss(toastId)
+              toast.loading("Force closing session...", { id: "session:close" })
+
+              try {
+                // TODO: implement `forceCloseSession` server action
+                // const { serverError } = await forceCloseSession() || {}
+
+                // if (serverError) {
+                //   handleServerError(serverError, "Failed to force close session. Please try again later.")
+                //   return
+                // }
+
+                // toast.success("You have force closed the session.", {
+                //   id: "session:close",
+                //   description: initialRoom.session.type === "CASUAL"
+                //     ? "This had no effect on your ranking scores."
+                //     : "You have lost the maximum amount of ranking scores."
+                // })
+
+                toast.warning("Feature is currently under development.", {
+                  description: "Force closing session has not been implemented yet."
+                })
+              } catch (err) {
+                logError(err)
+              } finally { toast.dismiss(toastId) }
+            }
+          }
+        })
+      }
       return
     }
 
