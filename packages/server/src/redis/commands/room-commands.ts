@@ -1,9 +1,12 @@
 // types
-import type { RoomVariants, WaitingRoom } from "@repo/schema/room"
+import type { RoomVariants, RunningRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
 import { redis } from "@/redis"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@/redis/keys"
+
+// db
+import { updateSessionStatus } from "@/db/mutation/session-mutation"
 
 /**
  * Retrieves a list of waiting rooms from Redis.
@@ -83,4 +86,73 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
   return await redis.json.get<R[F]>(
     roomKey(roomSlug), `$.${field as string}`
   )
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param room
+ * @param playerId 
+ * @returns 
+ */
+export async function leaveRoom(
+  room: WaitingRoomVariants,
+  playerId: string
+): Promise<WaitingRoom | null> {
+  if (room.status === "joined") room.guest = undefined!
+
+  const waitingRoom: WaitingRoom = {
+    ...room,
+    status: "waiting",
+    connectionStatus: room.owner.connection.status === "online" ? "half_online" : "offline",
+    owner: { ...room.owner, ready: false }
+  }
+
+  await Promise.all([
+    redis.del(playerConnectionKey(playerId)),
+    redis.json.set(roomKey(room.slug), "$", waitingRoom, { xx: true }),
+    redis.lpush(waitingRoomsKey, room.slug)
+  ])
+
+  return waitingRoom
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param room
+ * @param playerId 
+ * @returns 
+ */
+export async function closeRoom(
+  room: WaitingRoomVariants,
+  playerId: string
+): Promise<void> {
+  await Promise.all([
+    redis.del(playerConnectionKey(playerId)),
+    redis.json.del(roomKey(room.slug)),
+    room.status === "waiting"
+      ? redis.lrem(waitingRoomsKey, 1, room.slug)
+      : redis.del(playerConnectionKey(room.guest.id))
+  ])
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param room 
+ * @param playerId 
+ * @param action 
+ */
+export async function closeSession(
+  room: RunningRoom,
+  playerId: string,
+  action: "finish" | "abandon"
+): Promise<void> {
+  await Promise.all([
+    updateSessionStatus(room.session, playerId, action),
+    redis.del(playerConnectionKey(room.owner.id)),
+    redis.del(playerConnectionKey(room.guest.id)),
+    redis.json.del(roomKey(room.slug))
+  ])
 }

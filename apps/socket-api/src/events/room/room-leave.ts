@@ -2,9 +2,8 @@
 import type { WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
-import { redis } from "@repo/server/redis"
+import { leaveRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
-import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
 import { ServerError } from "@repo/server/error"
@@ -25,22 +24,8 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
         description: "You can only leave room if the status is waiting."
       })
     }
-    
-    
-    if (room.status === "joined") room.guest = undefined!
 
-    const waitingRoom: WaitingRoom = {
-      ...room,
-      status: "waiting",
-      connectionStatus: room.owner.connection.status === "online" ? "half_online" : "offline",
-      owner: { ...room.owner, ready: false }
-    }
-
-    await Promise.all([
-      redis.del(playerConnectionKey(playerId)),
-      redis.json.set(roomKey(roomSlug), "$", waitingRoom, { xx: true }),
-      redis.lpush(waitingRoomsKey, roomSlug)
-    ])
+    const waitingRoom = await leaveRoom(room, playerId)
     socket.ctx.connection = undefined!
 
     socket.leave(roomSlug)

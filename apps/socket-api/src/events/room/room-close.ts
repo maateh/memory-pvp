@@ -1,13 +1,10 @@
-// types
-import type { WaitingRoomVariants } from "@repo/schema/room"
-
 // redis
-import { redis } from "@repo/server/redis"
+import { closeRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
-import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
 import { ServerError } from "@repo/server/error"
+import { WaitingRoomVariants } from "@repo/schema/room"
 
 export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - room:close -> ", socket.id)
@@ -16,23 +13,17 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
 
   try {
     const room = await getRoom<WaitingRoomVariants>(roomSlug)
-
+  
     if (room.status !== "waiting" && room.status !== "joined") {
       ServerError.throw({
-        thrownBy: "SOCKET_API",
+        thrownBy: "REDIS",
         key: "ROOM_STATUS_CONFLICT",
         message: "Failed to close room.",
         description: "You can only close room if the status is waiting."
       })
     }
 
-    await Promise.all([
-      redis.del(playerConnectionKey(playerId)),
-      redis.json.del(roomKey(roomSlug)),
-      room.status === "waiting"
-        ? redis.lrem(waitingRoomsKey, 1, roomSlug)
-        : redis.del(playerConnectionKey(room.guest.id))
-    ])
+    await closeRoom(room, playerId)
     socket.ctx.connection = undefined!
 
     if (room.status !== "waiting") {

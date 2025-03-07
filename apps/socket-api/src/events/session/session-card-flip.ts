@@ -8,14 +8,12 @@ import { sessionCardFlipValidation } from "@repo/schema/room-validation"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
+import { roomKey } from "@repo/server/redis-keys"
+import { closeSession } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // server
 import { io } from "@/server"
-
-// helpers
-import { updateSessionStatus } from "@repo/server/db-session-mutation"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -86,12 +84,7 @@ export const sessionCardFlip: SocketEventHandler<
     const isOver = session.cards.every((card) => card.matchedBy !== null)
     if (!isOver) return
 
-    await Promise.all([
-      updateSessionStatus(session, playerId, "finish"),
-      redis.del(playerConnectionKey(room.owner.id)),
-      redis.del(playerConnectionKey(room.guest.id)),
-      redis.json.del(roomKey(roomSlug))
-    ])
+    await closeSession({ ...room, session }, playerId, "finish")
 
     io.to(roomSlug).emit("session:finished", {
       message: "Session finished!",
@@ -99,7 +92,6 @@ export const sessionCardFlip: SocketEventHandler<
       data: roomSlug
     } satisfies SocketResponse<string>)
   } catch (err) {
-    console.log(err)
     response({
       message: "Failed to flip card.",
       error: ServerError.parser(err)

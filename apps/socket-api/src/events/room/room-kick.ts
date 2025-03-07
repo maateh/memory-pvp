@@ -2,9 +2,8 @@
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { redis } from "@repo/server/redis"
+import { leaveRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
-import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // error
 import { ServerError } from "@repo/server/error"
@@ -38,19 +37,7 @@ export const roomKick: SocketEventHandler<
       })
     }
     
-    const waitingRoom: WaitingRoom = {
-      ...room,
-      status: "waiting",
-      connectionStatus: "half_online",
-      owner: { ...room.owner, ready: false }
-    }
-
-    await Promise.all([
-      redis.del(playerConnectionKey(guest.id)),
-      redis.json.set(roomKey(roomSlug), "$", waitingRoom, { xx: true }),
-      redis.lpush(waitingRoomsKey, roomSlug)
-    ])
-
+    const waitingRoom = await leaveRoom({ ...room, guest }, guest.id)
     socket.broadcast.to(roomSlug).emit("room:kicked", {
       message: `${playerTag} has kicked you out of the room.`,
       description: "This will not affect your ranking scores."
@@ -62,6 +49,7 @@ export const roomKick: SocketEventHandler<
       data: waitingRoom
     })
   } catch (err) {
+    console.log(err)
     response({
       message: "Failed to kick player.",
       error: ServerError.parser(err)

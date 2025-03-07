@@ -1,13 +1,9 @@
 // types
 import type { RunningRoom } from "@repo/schema/room"
 
-// db
-import { updateSessionStatus } from "@repo/server/db-session-mutation"
-
 // redis
-import { redis } from "@repo/server/redis"
+import { closeSession } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
-import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // schemas
 import { runningRoomSchema } from "@repo/schema/room"
@@ -17,6 +13,7 @@ import { reconnectionTimeExpired } from "@repo/helper/connection"
 
 // utils
 import { ServerError } from "@repo/server/error"
+import { getOtherPlayerKey } from "@/utils/player"
 
 export const sessionClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - session:close -> ", socket.id)
@@ -35,10 +32,10 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    const otherPlayer = room.owner.id === playerId ? room.guest : room.owner
+    const otherPlayerKey = getOtherPlayerKey(room.owner.id, playerId)
     if (
       room.session.type === "COMPETITIVE" &&
-      !reconnectionTimeExpired(otherPlayer.connection)
+      !reconnectionTimeExpired(room[otherPlayerKey].connection)
     ) {
       ServerError.throw({
         thrownBy: "SOCKET_API",
@@ -48,12 +45,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    await Promise.all([
-      updateSessionStatus(room.session, playerId, "abandon"),
-      redis.del(playerConnectionKey(room.owner.id)),
-      redis.del(playerConnectionKey(room.guest.id)),
-      redis.json.del(roomKey(roomSlug))
-    ])
+    await closeSession(room, playerId, "abandon")
     socket.ctx.connection = undefined!
 
     response({
@@ -63,7 +55,6 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
         : "Disconnected player will lose points based on the session state."
     })
   } catch (err) {
-    console.log({err})
     response({
       message: "Failed to close session.",
       error: ServerError.parser(err)
