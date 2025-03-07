@@ -6,7 +6,7 @@ import { redirect, RedirectType } from "next/navigation"
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { getActiveRoom, getRoom } from "@repo/server/redis-commands"
+import { closeRoom, getActiveRoom, getRoom, leaveRoom } from "@repo/server/redis-commands"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // db
@@ -14,7 +14,7 @@ import { updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
 
 // actions
-import { playerActionClient } from "@/server/action"
+import { playerActionClient, roomActionClient } from "@/server/action"
 
 // schemas
 import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-validation"
@@ -206,4 +206,25 @@ export const joinRoom = playerActionClient
     ])
 
     redirect("/game/multiplayer")
+  })
+
+export const leaveOrCloseRoom = roomActionClient
+  .action(async ({ ctx }) => {
+    // TODO: move `currentPlayerKey` util to shared packages
+    const currentPlayerKey: "owner" | "guest" = ctx.player.id === ctx.activeRoom.owner.id ? "owner" : "guest"
+
+    if (ctx.activeRoom.status !== "waiting" && ctx.activeRoom.status !== "joined") {
+      ServerError.throwInAction({
+        key: "ROOM_STATUS_CONFLICT",
+        message: `Failed to ${currentPlayerKey === "owner" ? "close" : "leave"} the room.`,
+        description: `"You can only ${currentPlayerKey === "owner" ? "close" : "leave"} the room if the status is waiting."`
+      })
+    }
+
+    const leaveOrCloseCommand = currentPlayerKey === "owner"
+      ? closeRoom
+      : leaveRoom
+
+    await leaveOrCloseCommand(ctx.activeRoom, ctx.player.id)
+    redirect("/game/setup")
   })
