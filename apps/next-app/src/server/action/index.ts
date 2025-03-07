@@ -9,6 +9,7 @@ import { getActiveSession } from "@/server/db/query/session-query"
 
 // redis
 import { redis } from "@repo/server/redis"
+import { getActiveRoom } from "@repo/server/redis-commands"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -35,7 +36,7 @@ export const actionClient = createSafeActionClient({
 }).use(async ({ next }) => next({ ctx: { db, redis } }))
 
 /**
- * Extends the action client to enforce user authentication.
+ * Extends the `actionClient` to enforce user authentication.
  * 
  * - Verifies the user using the clerk authentication service.
  * - Fetches the associated user record from the database.
@@ -65,7 +66,7 @@ export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
 })
 
 /**
- * Extends the protected action client to validate the active player profile.
+ * Extends the `protectedActionClient` to find the active player profile.
  * 
  * - Checks if the authenticated user has an active player profile in the database.
  * - Throws an `ActionError` if no active player profile is found.
@@ -89,7 +90,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
 })
 
 /**
- * Extends the player action client to enforce active game session validation.
+ * Extends the `playerActionClient` to find active game session.
  * 
  * - Checks if the active player is currently in a running game session.
  * - Verifies access to the game session for the authenticated user.
@@ -107,4 +108,47 @@ export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) 
   }
 
   return next({ ctx: { activeSession } })
+})
+
+/**
+ * Extends the `playerActionClient` to find active session room.
+ * 
+ * - Checks if the active player is currently in a running game session.
+ * - Verifies access to the game session for the authenticated user.
+ * - Throws an `ActionError` if no active session is found or access is denied.
+ */
+export const roomActionClient = playerActionClient.use(async ({ ctx, next }) => {
+  const activeRoom = await getActiveRoom(ctx.player.id)
+
+  if (!activeRoom) {
+    ServerError.throwInAction({
+      key: "ROOM_NOT_FOUND",
+      message: "Active room not found.",
+      description: "You have not joined any session rooms."
+    })
+  }
+
+  if (activeRoom.status === "waiting" && activeRoom.owner.id !== ctx.player.id) {
+    ServerError.throw({
+      thrownBy: "SOCKET_API",
+      key: "ROOM_ACCESS_DENIED",
+      message: "You have no access to this room.",
+      description: "Please try creating or joining a new room."
+    })
+  }
+
+  if (
+    activeRoom.status !== "waiting" &&
+    activeRoom.owner.id !== ctx.player.id &&
+    activeRoom.guest.id !== ctx.player.id
+  ) {
+    ServerError.throw({
+      thrownBy: "SOCKET_API",
+      key: "ROOM_ACCESS_DENIED",
+      message: "You have no access to this room.",
+      description: "Please try creating or joining a new room."
+    })
+  }
+
+  return next({ ctx: { activeRoom } })
 })
