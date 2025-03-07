@@ -1,0 +1,36 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "build": "tsc && tsc-alias",
+    "dev": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"tsc-alias --watch\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "prisma generate",
+    "check-types": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./types": "./dist/types/index.js",
+    "./json-types": "./dist/types/json/index.js",
+    "./schema": "./dist/schema/index.js",
+    "./json-schema": "./dist/schema/json/index.js",
+    "./zod": "./dist/schema/generated/index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*",
+    "@types/node": "^22.10.4",
+    "concurrently": "^9.1.2",
+    "prisma": "^5.20.0",
+    "prisma-json-types-generator": "^3.1.1",
+    "tsc-alias": "^1.8.10",
+    "zod-prisma-types": "^3.2.4"
+  }
+}

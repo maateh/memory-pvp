@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator json {
+  provider  = "prisma-json-types-generator"
+  namespace = "PrismaJson"
+}
+
+generator zod {
+  provider               = "zod-prisma-types"
+  output                 = "../src/schema/generated"
+  createInputTypes       = false
+  addInputTypeValidation = false
+  addIncludeType         = false
+  addSelectType          = false
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId  String  @unique
+  username String
+  email    String  @unique
+  imageUrl String?
+
+  playerProfiles PlayerProfile[]
+  collections    CardCollection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PlayerProfile {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  tag      String  @unique
+  color    String
+  isActive Boolean
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  sessions      GameSession[] @relation("SessionOwner")
+  guestSessions GameSession[] @relation("SessionGuest")
+
+  results Result[]
+  /// [PlayerStats]
+  stats   Json     @default("{ \"score\": 0, \"timer\": 0, \"flips\": 0, \"matches\": 0, \"sessions\": 0 }")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GameSession {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  slug String @unique
+
+  type      GameType
+  mode      GameMode
+  tableSize TableSize
+
+  status GameStatus
+
+  /// [SessionStats]
+  stats Json
+
+  /// [SessionCard]
+  cards       Json[]
+  /// [SessionCardMetadata]
+  flipped     Json[]
+  currentTurn String @db.ObjectId
+
+  collection   CardCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  collectionId String?         @db.ObjectId
+
+  owner   PlayerProfile? @relation("SessionOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String?        @db.ObjectId
+
+  guest   PlayerProfile? @relation("SessionGuest", fields: [guestId], references: [id], onDelete: SetNull)
+  guestId String?        @db.ObjectId
+
+  results Result[]
+
+  continuedAt DateTime?
+  closedAt    DateTime?
+
+  startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Result {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  flips   Int
+  matches Int
+  score   Int?
+
+  player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId String        @db.ObjectId
+
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String      @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MemoryCard {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  utKey String @unique
+
+  imageUrl String
+
+  collection   CardCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collectionId String         @db.ObjectId
+}
+
+model CardCollection {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name        String
+  description String
+  tableSize   TableSize
+
+  cards    MemoryCard[]
+  sessions GameSession[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ENUMS
+enum GameStatus {
+  RUNNING
+  FINISHED
+  ABANDONED
+  OFFLINE
+}
+
+enum GameType {
+  CASUAL
+  COMPETITIVE
+}
+
+enum GameMode {
+  SINGLE
+  PVP
+  COOP
+}
+
+enum TableSize {
+  SMALL
+  MEDIUM
+  LARGE
+}

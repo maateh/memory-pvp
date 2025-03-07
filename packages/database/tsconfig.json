@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/ts-config/packages.json",
+  "compilerOptions": {
+    "incremental": true,
+    "composite": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "tsc-alias": { "watch": true },
+  "include": ["**/*.ts", "**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

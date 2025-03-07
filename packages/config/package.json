@@ -1,0 +1,25 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
+  "exports": {
+    "./connection": "./dist/connection-settings.js",
+    "./game": "./dist/game-settings.js"
+  },
+  "dependencies": {
+    "lucide-react": "^0.429.0"
+  },
+  "devDependencies": {
+    "@repo/db": "workspace:*",
+    "@repo/ts-config": "workspace:*",
+    "@types/node": "^22.10.4"
+  }
+}

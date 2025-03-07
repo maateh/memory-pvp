@@ -1,0 +1,36 @@
+{
+  "name": "@repo/server",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "dev": "concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"tsc-alias --watch\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx only-allow pnpm",
+    "check-types": "tsc --noEmit"
+  },
+  "exports": {
+    "./error": "./dist/error/index.js",
+    "./db": "./dist/db/index.js",
+    "./db-session-mutation": "./dist/db/mutation/session-mutation.js",
+    "./redis": "./dist/redis/index.js",
+    "./redis-settings": "./dist/redis/settings.js",
+    "./redis-commands": "./dist/redis/commands/index.js",
+    "./redis-commands-throwable": "./dist/redis/commands/throwable/index.js",
+    "./redis-keys": "./dist/redis/keys.js",
+    "./socket-types": "./dist/types/socket.js"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "@repo/helper": "workspace:*",
+    "@upstash/redis": "^1.34.3"
+  },
+  "devDependencies": {
+    "@repo/schema": "workspace:*",
+    "@repo/ts-config": "workspace:*",
+    "@types/node": "^22.10.4",
+    "concurrently": "^9.1.2",
+    "tsc-alias": "^1.8.10"
+  }
+}

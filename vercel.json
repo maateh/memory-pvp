@@ -9,9 +9,5 @@
       "schedule": "0 12 */1 * *"
     }
   ],
-  "git": {
-    "deploymentEnabled": {
-      "main": false
-    }
-  }
+  "framework": "nextjs"
 }
