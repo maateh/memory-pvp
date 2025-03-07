@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 
 // types
 import type { DefaultValues } from "react-hook-form"
@@ -14,6 +15,9 @@ import { useClerk } from "@clerk/nextjs"
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
 import { sessionFormValidation } from "@repo/schema/session-validation"
+
+// utils
+import { logError } from "@/lib/util/error"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"
@@ -56,11 +60,11 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   })
 
   const {
-    execute: createSingleSession,
+    executeAsync: createSingleSession,
     status: createSingleSessionStatus
   } = useCreateSingleSessionAction()
   const {
-    execute: createWaitingRoom,
+    executeAsync: createWaitingRoom,
     status: createRoomActionStatus
   } = useCreateRoomAction()
   const { execute: createOfflineSession } = useCreateOfflineSession()
@@ -68,12 +72,23 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   const handleSubmit = (values: SessionFormValidation) => {
     const { settings, forceStart } = values
 
-    if (settings.mode === "SINGLE") {
-      createSingleSession({ settings, forceStart })
+    if (settings.type === "COMPETITIVE") {
+      toast.warning("Ranked mode is not available.", {
+        description: "Currently, you can only play in Casual because the ranked system is under development."
+      })
       return
     }
 
-    createWaitingRoom({ settings })
+    try {
+      if (settings.mode === "SINGLE") {
+        createSingleSession({ settings, forceStart })
+        return
+      }
+  
+      createWaitingRoom({ settings })
+    } catch (err) {
+      logError(err)
+    }
   }
 
   const type = form.watch("settings.type")

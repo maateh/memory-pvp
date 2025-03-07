@@ -51,6 +51,14 @@ export const createSingleSession = playerActionClient
     const { forceStart } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
 
+    if (settings.type === "COMPETITIVE") {
+      ServerError.throwInAction({
+        key: "UNKNOWN",
+        message: "Ranked mode is not available.",
+        description: "Currently, you can only play in Casual because the ranked system is under development."
+      })
+    }
+
     /* Checks if there is any ongoing session */
     const activeSession = await getActiveSession(ctx.player.id)
 
