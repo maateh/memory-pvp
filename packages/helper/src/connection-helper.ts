@@ -29,6 +29,18 @@ export function reconnectionTimeExpired(
   return false
 }
 
+/**
+ * Creates an online player connection object.
+ * 
+ * - Sets the player's status to `"online"`.
+ * - Assigns the provided `socketId` to track the active session.
+ * - Sets `connectedAt` to the current timestamp.
+ * - Sets `disconnectedAt` to `null` since the player is online.
+ *
+ * @param {PlayerConnectionOpts} opts - The player connection options, including player details.
+ * @param {string} socketId - The unique socket ID for the player's active connection.
+ * @returns {OnlinePlayerConnection} - A structured representation of an online player connection.
+ */
 export function onlinePlayerConnection(
   opts: PlayerConnectionOpts,
   socketId: string
@@ -42,6 +54,17 @@ export function onlinePlayerConnection(
   }
 }
 
+/**
+ * Creates an offline player connection object.
+ * 
+ * - Sets the player's status to `"offline"`.
+ * - Assigns `disconnectedAt` to the current timestamp.
+ * - Clears `socketId` by setting it to `null`.
+ * - Clears `connectedAt` by setting it to `null`.
+ *
+ * @param {PlayerConnectionOpts} opts - The player connection options, including player details.
+ * @returns {OfflinePlayerConnection} - A structured representation of an offline player connection.
+ */
 export function offlinePlayerConnection(
   opts: PlayerConnectionOpts
 ): OfflinePlayerConnection {

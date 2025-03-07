@@ -89,11 +89,17 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
 }
 
 /**
- * TODO: write doc
+ * Updates the room state when a player leaves.
  * 
- * @param room
- * @param playerId 
- * @returns 
+ * - Removes the guest if applicable.
+ * - Resets the room to `"waiting"` status.
+ * - Updates the owner's readiness and connection status.
+ * - Removes the player’s connection from Redis.
+ * - Saves the updated room and re-adds it to the waiting list.
+ *
+ * @param {WaitingRoomVariants} room - The room being left.
+ * @param {string} playerId - The leaving player's ID.
+ * @returns {Promise<WaitingRoom | null>} - The updated room or `null` if failed.
  */
 export async function leaveRoom(
   room: WaitingRoomVariants,
@@ -118,11 +124,16 @@ export async function leaveRoom(
 }
 
 /**
- * TODO: write doc
+ * Closes the room and cleans up related data.
  * 
- * @param room
- * @param playerId 
- * @returns 
+ * - Removes the player's connection from Redis.
+ * - Deletes the room data from Redis.
+ * - If the room is in `"waiting"` status, removes it from the waiting rooms list.
+ * - If the room is not in `"waiting"`, also removes the guest's connection.
+ *
+ * @param {WaitingRoomVariants} room - The room to be closed.
+ * @param {string} playerId - The ID of the player requesting to close the room.
+ * @returns {Promise<void>} - Resolves once the room and connections are deleted.
  */
 export async function closeRoom(
   room: WaitingRoomVariants,
@@ -138,11 +149,16 @@ export async function closeRoom(
 }
 
 /**
- * TODO: write doc
+ * Closes the session and handles player connections based on the specified action.
  * 
- * @param room 
- * @param playerId 
- * @param action 
+ * - Updates the session status based on the specified action.
+ * - Deletes player connections for both the owner and the guest.
+ * - Removes the room data from Redis.
+ *
+ * @param {RunningRoom} room - The room to be closed.
+ * @param {string} playerId - The ID of the player initiating the closure.
+ * @param {("finish" | "abandon")} action - The action to perform (finish or abandon the session).
+ * @returns {Promise<void>} - Resolves once the session and connections are updated.
  */
 export async function closeSession(
   room: RunningRoom,
