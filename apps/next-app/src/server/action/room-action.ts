@@ -20,11 +20,11 @@ import { playerActionClient, roomActionClient } from "@/server/action"
 import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-validation"
 
 // helpers
+import { offlinePlayerConnection } from "@repo/helper/connection"
 import { generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
 import { ServerError } from "@repo/server/error"
-import { offlinePlayer } from "@repo/server/util"
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const createRoom = playerActionClient
@@ -84,7 +84,7 @@ export const createRoom = playerActionClient
     }
 
     const slug = generateSessionSlug(settings)
-    const connection = offlinePlayer({
+    const connection = offlinePlayerConnection({
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
       roomSlug: slug,
@@ -181,7 +181,7 @@ export const joinRoom = playerActionClient
       })
     }
 
-    const connection = offlinePlayer({
+    const connection = offlinePlayerConnection({
       playerId: ctx.player.id,
       playerTag: ctx.player.tag,
       roomSlug: room.slug,

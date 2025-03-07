@@ -19,7 +19,6 @@
     "./redis-commands": "./dist/redis/commands/index.js",
     "./redis-commands-throwable": "./dist/redis/commands/throwable/index.js",
     "./redis-keys": "./dist/redis/keys.js",
-    "./util": "./dist/util/index.js",
     "./socket-types": "./dist/types/socket.js"
   },
   "dependencies": {

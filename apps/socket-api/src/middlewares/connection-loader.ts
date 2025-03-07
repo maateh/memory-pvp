@@ -8,9 +8,11 @@ import { db } from "@repo/server/db"
 import { redis } from "@repo/server/redis"
 import { playerConnectionKey } from "@repo/server/redis-keys"
 
-// utils
+// error
 import { ServerError } from "@repo/server/error"
-import { onlinePlayer } from "@repo/server/util"
+
+// helpers
+import { onlinePlayerConnection } from "@repo/helper/connection"
 
 export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
   const { clerkId, ...ctx } = socket.ctx || {}
@@ -43,7 +45,7 @@ export const connectionLoader: SocketMiddlewareFn = async (socket, next) => {
       })
     }
 
-    const onlineConnection = onlinePlayer(connection, socket.id)
+    const onlineConnection = onlinePlayerConnection(connection, socket.id)
     await redis.hset(playerConnectionKey(player.id), onlineConnection)
 
     socket.ctx = { ...ctx, clerkId, connection: onlineConnection }

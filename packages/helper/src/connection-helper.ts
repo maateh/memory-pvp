@@ -1,5 +1,10 @@
 // types
-import type { PlayerConnection } from "@repo/schema/player-connection"
+import type {
+  OfflinePlayerConnection,
+  OnlinePlayerConnection,
+  PlayerConnection,
+  PlayerConnectionOpts
+} from "@repo/schema/player-connection"
 
 // config
 import { RECONNECTION_TIMEOUT } from "@repo/config/connection"
@@ -22,4 +27,29 @@ export function reconnectionTimeExpired(
   const difference = Date.now() - Date.parse(connection.disconnectedAt.toString())
   if (difference >= RECONNECTION_TIMEOUT) return true
   return false
+}
+
+export function onlinePlayerConnection(
+  opts: PlayerConnectionOpts,
+  socketId: string
+): OnlinePlayerConnection {
+  return {
+    ...opts,
+    status: "online",
+    socketId,
+    connectedAt: new Date(),
+    disconnectedAt: null
+  }
+}
+
+export function offlinePlayerConnection(
+  opts: PlayerConnectionOpts
+): OfflinePlayerConnection {
+  return {
+    ...opts,
+    status: "offline",
+    disconnectedAt: new Date(),
+    socketId: null,
+    connectedAt: null
+  }
 }

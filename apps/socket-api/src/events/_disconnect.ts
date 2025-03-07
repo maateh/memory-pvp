@@ -6,8 +6,10 @@ import { redis } from "@repo/server/redis"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
+// helpers
+import { offlinePlayerConnection } from "@repo/helper/connection"
+
 // utils
-import { offlinePlayer } from "@repo/server/util"
 import { getCurrentPlayerKey } from "@/utils/player"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
@@ -17,7 +19,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
   if (!socket.ctx.connection) return
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
-  const offlineConnection = offlinePlayer(socket.ctx.connection)
+  const offlineConnection = offlinePlayerConnection(socket.ctx.connection)
 
   try {
     const room = await getRoom(roomSlug)
