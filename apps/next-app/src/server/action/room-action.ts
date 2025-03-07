@@ -21,6 +21,7 @@ import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-vali
 
 // helpers
 import { offlinePlayerConnection } from "@repo/helper/connection"
+import { currentPlayerKey } from "@repo/helper/player"
 import { generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
@@ -210,18 +211,17 @@ export const joinRoom = playerActionClient
 
 export const leaveOrCloseRoom = roomActionClient
   .action(async ({ ctx }) => {
-    // TODO: move `currentPlayerKey` util to shared packages
-    const currentPlayerKey: "owner" | "guest" = ctx.player.id === ctx.activeRoom.owner.id ? "owner" : "guest"
+    const playerKey = currentPlayerKey(ctx.activeRoom.owner.id, ctx.player.id)
 
     if (ctx.activeRoom.status !== "waiting" && ctx.activeRoom.status !== "joined") {
       ServerError.throwInAction({
         key: "ROOM_STATUS_CONFLICT",
-        message: `Failed to ${currentPlayerKey === "owner" ? "close" : "leave"} the room.`,
-        description: `"You can only ${currentPlayerKey === "owner" ? "close" : "leave"} the room if the status is waiting."`
+        message: `Failed to ${playerKey === "owner" ? "close" : "leave"} the room.`,
+        description: `"You can only ${playerKey === "owner" ? "close" : "leave"} the room if the status is waiting."`
       })
     }
 
-    const leaveOrCloseCommand = currentPlayerKey === "owner"
+    const leaveOrCloseCommand = playerKey === "owner"
       ? closeRoom
       : leaveRoom
 

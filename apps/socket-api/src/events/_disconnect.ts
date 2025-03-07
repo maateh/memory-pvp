@@ -8,9 +8,7 @@ import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
 // helpers
 import { offlinePlayerConnection } from "@repo/helper/connection"
-
-// utils
-import { getCurrentPlayerKey } from "@/utils/player"
+import { currentPlayerKey } from "@repo/helper/player"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
   console.info("DEBUG - disconnect -> ", socket.id)
@@ -23,7 +21,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
   try {
     const room = await getRoom(roomSlug)
-    const currentPlayerKey = getCurrentPlayerKey(room.owner.id, playerId)
+    const playerKey = currentPlayerKey(room.owner.id, playerId)
 
     if (room.status === "waiting") {
       room.connectionStatus = "offline"
@@ -37,7 +35,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     }
 
     if (room.status === "joined" || room.status === "ready") {
-      room[currentPlayerKey].connection = offlineConnection
+      room[playerKey].connection = offlineConnection
 
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
@@ -57,7 +55,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
       socket.broadcast.to(room.slug).emit("room:disconnected", {
         message: `${playerTag} has disconnected.`,
-        description: currentPlayerKey === "owner"
+        description: playerKey === "owner"
           ? "You can leave the room without losing any ranking scores."
           : "You can kick the player out of the room if you don't want to wait any longer.",
         data: joinedRoom
@@ -65,7 +63,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     }
 
     if (room.status === "running" || room.status === "cancelled") {
-      room[currentPlayerKey].connection = offlineConnection
+      room[playerKey].connection = offlineConnection
 
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"

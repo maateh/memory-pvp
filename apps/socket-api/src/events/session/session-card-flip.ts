@@ -12,12 +12,16 @@ import { roomKey } from "@repo/server/redis-keys"
 import { closeSession } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
+// error
+import { ServerError } from "@repo/server/error"
+
 // server
 import { io } from "@/server"
 
+// helpers
+import { currentPlayerKey, otherPlayerKey } from "@repo/helper/player"
+
 // utils
-import { ServerError } from "@repo/server/error"
-import { getCurrentPlayerKey, getOtherPlayerKey } from "@/utils/player"
 import { validate } from "@/utils/validate"
 
 export const sessionCardFlip: SocketEventHandler<
@@ -117,8 +121,8 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
 
   if (session.mode === "COOP" && session.flipped.length === 1) {
     session.currentTurn = session.currentTurn === playerId
-      ? session[getOtherPlayerKey(session.owner.id, playerId)].id
-      : session[getCurrentPlayerKey(session.owner.id, playerId)].id
+      ? session[otherPlayerKey(session.owner.id, playerId)].id
+      : session[currentPlayerKey(session.owner.id, playerId)].id
   }
 
   return session.flipped.length === 1 ? "flipped" : "pairing"
@@ -133,8 +137,8 @@ function handleCardPairing({
 
   if (session.mode === "PVP") {
     session.currentTurn = session.currentTurn === playerId
-      ? session[getOtherPlayerKey(session.owner.id, playerId)].id
-      : session[getCurrentPlayerKey(session.owner.id, playerId)].id
+      ? session[otherPlayerKey(session.owner.id, playerId)].id
+      : session[currentPlayerKey(session.owner.id, playerId)].id
   }
   
   if (flipped[0].id === flipped[1].id) {

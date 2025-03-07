@@ -10,11 +10,14 @@ import type { RoomPlayer } from "@repo/schema/room-player"
 import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
 // server
+import { ServerError } from "@repo/server/error"
 import { createMultiSession } from "@/server/action/session-action"
 import { leaveOrCloseRoom } from "@/server/action/room-action"
 
+// helpers
+import { currentPlayerKey } from "@repo/helper/player"
+
 // utils
-import { ServerError } from "@repo/server/error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 type RoomState = {
@@ -319,18 +322,18 @@ export const roomStore = ({
       }
 
       if (initialRoom.status === "waiting" || initialRoom.status === "joined") {
-        const currentPlayerKey: "owner" | "guest" = currentPlayerId === initialRoom.owner.id ? "owner" : "guest"
+        const playerKey = currentPlayerKey(initialRoom.owner.id, currentPlayerId)
 
         toast.warning(message, {
           id: toastId,
-          description: `You can ${currentPlayerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
+          description: `You can ${playerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
           duration: 10000,
           onAutoClose,
           action: {
-            label: currentPlayerKey === "owner" ? "Close" : "Leave",
+            label: playerKey === "owner" ? "Close" : "Leave",
             async onClick() {
               toast.dismiss(toastId)
-              toast.loading(`${currentPlayerKey === "owner" ? "Closing" : "Leaving"} room...`, {
+              toast.loading(`${playerKey === "owner" ? "Closing" : "Leaving"} room...`, {
                 id: "room:leave"
               })
 
@@ -338,11 +341,11 @@ export const roomStore = ({
                 const { serverError } = await leaveOrCloseRoom() || {}
   
                 if (serverError) {
-                  handleServerError(serverError, `Failed to ${currentPlayerKey === "owner" ? "close" : "leave"} the room. Please try again later.`)
+                  handleServerError(serverError, `Failed to ${playerKey === "owner" ? "close" : "leave"} the room. Please try again later.`)
                   return
                 }
 
-                toast.success(`You have ${currentPlayerKey === "owner" ? "closed" : "left"} the room.`, {
+                toast.success(`You have ${playerKey === "owner" ? "closed" : "left"} the room.`, {
                   id: "room:leave",
                   description: "This will not affect your ranking scores."
                 })

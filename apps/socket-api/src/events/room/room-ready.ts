@@ -9,9 +9,11 @@ import { getRoom } from "@repo/server/redis-commands-throwable"
 // server
 import { io } from "@/server"
 
-// utils
+// error
 import { ServerError } from "@repo/server/error"
-import { getCurrentPlayerKey } from "@/utils/player"
+
+// helpers
+import { currentPlayerKey } from "@repo/helper/player"
 
 export const roomReady: SocketEventHandler<
   unknown,
@@ -33,11 +35,11 @@ export const roomReady: SocketEventHandler<
       })
     }
 
-    const currentPlayerKey = getCurrentPlayerKey(room.owner.id, playerId)
-    const currentPlayer = room[currentPlayerKey]
-    const otherPlayer = currentPlayerKey === "owner" ? room.guest : room.owner
+    const playerKey = currentPlayerKey(room.owner.id, playerId)
+    const currentPlayer = room[playerKey]
+    const otherPlayer = playerKey === "owner" ? room.guest : room.owner
 
-    room[currentPlayerKey].ready = !currentPlayer.ready
+    room[playerKey].ready = !currentPlayer.ready
     if (room.owner.ready && room.guest.ready) {
       room.status = room.status === "joined" ? "ready" : "running"
     }

@@ -5,6 +5,9 @@ import { useMemo } from "react"
 // settings
 import { roomHeaderMap } from "@/config/room-settings"
 
+// helpers
+import { otherPlayerKey } from "@repo/helper/player"
+
 // utils
 import { getRendererSessionStats } from "@/lib/util/stats"
 
@@ -150,11 +153,7 @@ const RoomScreen = () => {
         {room.status === "cancelled" && room.connectionStatus === "half_online" && (
           <SessionCloseButton
             handleSessionClose={sessionClose}
-            otherConnection={
-              currentRoomPlayer.id === room.owner.id
-                ? room.guest.connection
-                : room.owner.connection
-            }
+            otherConnection={room[otherPlayerKey(room.owner.id, currentRoomPlayer.id)].connection}
           />
         )}
       </div>

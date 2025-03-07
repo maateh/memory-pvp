@@ -2,9 +2,11 @@
 import { redis } from "@repo/server/redis"
 import { roomKey } from "@repo/server/redis-keys"
 
+// helpers
+import { currentPlayerKey } from "@repo/helper/player"
+
 // utils
 import { ServerError } from "@repo/server/error"
-import { getCurrentPlayerKey } from "@/utils/player"
 
 export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
   const { connection, room, ...ctx } = socket.ctx || {}
@@ -29,7 +31,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     }
 
     const { playerId } = connection
-    const currentPlayerKey = getCurrentPlayerKey(room.owner.id, playerId)
+    const playerKey = currentPlayerKey(room.owner.id, playerId)
 
     if (room.status === "waiting") {
       room.connectionStatus = "half_online"
@@ -38,7 +40,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     }
   
     if (room.status === "joined" || room.status === "ready") {
-      room[currentPlayerKey].connection = connection
+      room[playerKey].connection = connection
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
 
@@ -51,7 +53,7 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     }
   
     if (room.status === "running" || room.status === "cancelled") {
-      room[currentPlayerKey].connection = connection
+      room[playerKey].connection = connection
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
 

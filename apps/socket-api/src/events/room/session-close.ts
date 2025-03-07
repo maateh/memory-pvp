@@ -8,12 +8,12 @@ import { getRoom } from "@repo/server/redis-commands-throwable"
 // schemas
 import { runningRoomSchema } from "@repo/schema/room"
 
+// error
+import { ServerError } from "@repo/server/error"
+
 // helpers
 import { reconnectionTimeExpired } from "@repo/helper/connection"
-
-// utils
-import { ServerError } from "@repo/server/error"
-import { getOtherPlayerKey } from "@/utils/player"
+import { otherPlayerKey } from "@repo/helper/player"
 
 export const sessionClose: SocketEventHandler = (socket) => async (_, response) => {
   console.log("DEBUG - session:close -> ", socket.id)
@@ -32,10 +32,10 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    const otherPlayerKey = getOtherPlayerKey(room.owner.id, playerId)
+    const playerKey = otherPlayerKey(room.owner.id, playerId)
     if (
       room.session.type === "COMPETITIVE" &&
-      !reconnectionTimeExpired(room[otherPlayerKey].connection)
+      !reconnectionTimeExpired(room[playerKey].connection)
     ) {
       ServerError.throw({
         thrownBy: "SOCKET_API",

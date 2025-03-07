@@ -12,7 +12,8 @@
   },
   "exports": {
     "./connection": "./dist/connection-helper.js",
-    "./session": "./dist/session-helper.js"
+    "./session": "./dist/session-helper.js",
+    "./player": "./dist/player-helper.js"
   },
   "dependencies": {
     "@repo/config": "workspace:*",
