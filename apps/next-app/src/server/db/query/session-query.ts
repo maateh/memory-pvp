@@ -4,12 +4,18 @@ import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@r
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
 
+// db
+import { db } from "@repo/server/db"
+
+// redis
+import { redis } from "@repo/server/redis"
+import { sessionKey } from "@repo/server/redis-keys"
+
+// actions
+import { signedIn } from "@/server/action/user-action"
+
 // schema
 import { sessionSortQuery } from "@/lib/schema/query/session-query"
-
-// server
-import { db } from "@repo/server/db"
-import { signedIn } from "@/server/action/user-action"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
@@ -139,7 +145,16 @@ export async function getActiveClientSession(
   playerId?: string
 ): Promise<ClientSession | null> {
   const activeSession = await getActiveSession(playerId)
-
   if (!activeSession) return null
+
+  /**
+   * Note: Yep, that makes no sense. Will be reworked after singleplayer
+   * and multiplayer sessions are managed individually.
+   * 
+   * https://github.com/maateh/memory-pvp/issues/19
+   */
+  const storedSession = await redis.get<ClientSession>(sessionKey(activeSession.slug))
+  if (storedSession) return storedSession
+
   return parseSchemaToClientSession(activeSession)
 }
