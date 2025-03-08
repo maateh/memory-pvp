@@ -30,13 +30,6 @@ export const createMultiSessionValidation = z.object({
   guestId: z.string()
 })
 
-export const saveSessionValidation = z.object({
-  clientSession: baseClientSessionSchema.omit({
-    owner: true,
-    guest: true
-  })
-})
-
 export const finishSessionSchema = z.object({
   clientSession: baseClientSessionSchema
     .omit({ status: true, cards: true })
@@ -67,7 +60,6 @@ export const saveOfflineGameValidation = z.object({
 export type CreateSingleSessionValidation = z.infer<typeof createSingleSessionValidation>
 export type SessionFormValidation = z.infer<typeof sessionFormValidation>
 export type CreateMultiSessionValidation = z.infer<typeof createMultiSessionValidation>
-export type SaveSessionValidation = z.infer<typeof saveSessionValidation>
 export type FinishSessionValidation = z.infer<typeof finishSessionSchema>
 export type AbandonSessionValidation = z.infer<typeof abandonSessionValidation>
 export type SaveOfflineGameValidation = z.infer<typeof saveOfflineGameValidation>

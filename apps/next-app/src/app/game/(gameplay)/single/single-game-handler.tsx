@@ -30,11 +30,6 @@ const SingleGameHandler = () => {
       }
     },
 
-    async onBeforeUnload() {
-      const payload = JSON.stringify(session)
-      navigator.sendBeacon('/api/session/closed', payload)
-    },
-
     async onFinish() {
       setStoreState({ syncStatus: "synchronized" })
 

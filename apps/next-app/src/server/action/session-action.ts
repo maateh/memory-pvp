@@ -34,8 +34,7 @@ import {
   createMultiSessionValidation,
   createSingleSessionValidation,
   finishSessionSchema,
-  saveOfflineGameValidation,
-  saveSessionValidation
+  saveOfflineGameValidation
 } from "@repo/schema/session-validation"
 
 // helpers
@@ -239,21 +238,6 @@ export const storeSession = sessionActionClient
     }
 
     return session
-  })
-
-export const saveSession = sessionActionClient
-  .schema(saveSessionValidation)
-  .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
-
-    await ctx.redis.del(sessionKey(ctx.activeSession.slug))
-    const session = await ctx.db.gameSession.update({
-      where: { id: ctx.activeSession.id },
-      data: clientSession,
-      include: sessionSchemaFields
-    })
-
-    return parseSchemaToClientSession(session)
   })
 
 export const finishSession = sessionActionClient
