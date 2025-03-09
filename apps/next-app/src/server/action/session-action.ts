@@ -19,7 +19,7 @@ import { getActiveSession } from "@/server/db/query/session-query"
 import {
   playerActionClient,
   protectedActionClient,
-  sessionActionClient
+  soloSessionActionClient
 } from "@/server/action"
 
 // config
@@ -59,31 +59,20 @@ export const createSingleSession = playerActionClient
     }
 
     /* Checks if there is any ongoing session */
-    const activeSession = await getActiveSession(ctx.player.id)
+    const activeSession = await getActiveSession("SINGLE", ctx.player.id)
 
-    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
+    /* Throws server error with 'ACTIVE_SESSION' key if active (singleplayer) session found. */
     if (activeSession && !forceStart) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
         data: { activeSessionMode: activeSession.mode },
         message: "Active game session found.",
-        description: activeSession.mode === "SINGLE"
-          ? "Would you like to continue the ongoing session or start a new one?"
-          : "Please finish your active multiplayer session, before you start a new one."
+        description: "Would you like to continue the ongoing session or start a new one?"
       })
     }
 
     /* Abandons active session if 'forceStart' is applied. */
     if (activeSession && forceStart) {
-      /* Note: multiplayer sessions can only be closed manually by the player. */
-      if (activeSession.mode !== "SINGLE") {
-        ServerError.throwInAction({
-          key: "FORCE_START_NOT_ALLOWED",
-          message: "Force start not allowed.",
-          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
-        })
-      }
-
       await updateSessionStatus(
         parseSchemaToClientSession(activeSession),
         ctx.player.id,
@@ -141,8 +130,8 @@ export const createMultiSession = playerActionClient
     const { slug, guestId } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
 
-    const activeSession = await getActiveSession(ctx.player.id)
-    const guestActiveSession = await getActiveSession(guestId)
+    const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
+    const guestActiveSession = await getActiveSession(["COOP", "PVP"], guestId)
 
     if (activeSession || guestActiveSession) {
       ServerError.throwInAction({
@@ -220,7 +209,7 @@ export const createMultiSession = playerActionClient
     }
   })
 
-export const storeSession = sessionActionClient
+export const storeSession = soloSessionActionClient
   .schema(clientSessionSchema)
   .action(async ({ ctx, parsedInput: session }) => {
     const response = await ctx.redis.set(
@@ -240,7 +229,7 @@ export const storeSession = sessionActionClient
     return session
   })
 
-export const finishSession = sessionActionClient
+export const finishSession = soloSessionActionClient
   .schema(finishSessionSchema)
   .action(async ({ ctx, parsedInput }) => {
     const { clientSession } = parsedInput
@@ -259,7 +248,7 @@ export const finishSession = sessionActionClient
     redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
   })
 
-export const abandonSession = sessionActionClient
+export const abandonSession = soloSessionActionClient
   .schema(abandonSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     let { clientSession } = parsedInput

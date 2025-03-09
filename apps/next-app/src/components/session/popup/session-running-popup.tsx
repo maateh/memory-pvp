@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 
 // types
+import type { GameMode } from "@repo/db"
 import type { ClientSession } from "@repo/schema/session"
 
 // db
@@ -27,12 +28,18 @@ import SessionRunningPopupActions from "./session-running-popup-actions"
 type SessionRunningPopupProps = ({
   renderer: "trigger"
   session: ClientSession
+  matchFormat?: never
+} | ({
+  renderer: "router"
+  matchFormat: GameMode
+  session?: never
 } | {
   renderer: "router"
-  session?: ClientSession
-}) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
+  session: ClientSession
+  matchFormat?: never
+})) & Omit<React.ComponentProps<typeof PopupTrigger>, "renderer">
 
-const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopupProps) => {
+const SessionRunningPopup = ({ renderer, session, matchFormat, ...props }: SessionRunningPopupProps) => {
   return (
     <Popup renderer={renderer}>
       <PopupTrigger renderer={renderer} {...props} />
@@ -48,9 +55,9 @@ const SessionRunningPopup = ({ renderer, session, ...props }: SessionRunningPopu
 
         {session && <SessionRunningPopupContent session={session} />}
 
-        {renderer === 'router' && !session && (
+        {renderer === "router" && !session && (
           <Suspense fallback={<SessionRunningPopupSkeleton />}>
-            <Await promise={getActiveClientSession()}>
+            <Await promise={getActiveClientSession(matchFormat)}>
               {(session) => session ? (
                 <SessionRunningPopupContent session={session} />
               ) : (
@@ -91,7 +98,7 @@ const SessionRunningPopupContent = ({ session }: { session: ClientSession }) => 
 
 const SessionRunningPopupSkeleton = () => (
   <StatisticList className="w-full mx-auto p-4">
-    {Array(6).fill('').map((_, index) => (
+    {Array(6).fill("").map((_, index) => (
       <Skeleton className="w-40 h-12 bg-destructive/10 rounded-2xl"
         key={index}
       />

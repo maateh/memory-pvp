@@ -17,7 +17,7 @@ import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useCreateRoomAction = () => {
   const router = useRouter()
-  const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
+  const setCache = useCacheStore<SessionFormValuesCache, "set">((state) => state.set)
 
   return useAction(createRoom, {
     onExecute() {
@@ -35,19 +35,12 @@ export const useCreateRoomAction = () => {
         id: "room:connect"
       })
     },
-    onError({ error, input: values }) {
-      if (error.serverError?.key === 'ACTIVE_SESSION') {
-        const { message, description, data = null } = error.serverError
-        const errorData = data as { activeSessionMode: GameMode } | null
+    onError({ error }) {
+      if (error.serverError?.key === "ACTIVE_SESSION") {
+        const { message, description } = error.serverError
 
-        if (errorData?.activeSessionMode !== "SINGLE") {
-          router.push("/game/multiplayer")
-          toast.warning(message, { description })
-          return
-        }
-
-        setCache(values)
-        router.push('/game/setup/warning')
+        toast.warning(message, { description })
+        router.push("/game/multiplayer")
         return
       }
 

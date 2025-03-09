@@ -1,4 +1,5 @@
 // types
+import type { GameMode } from "@repo/db"
 import type { ClientSession } from "@repo/schema/session"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
@@ -104,10 +105,12 @@ export async function getClientSession({ id, slug }: {
  * - Searches for a game session that is currently in the "RUNNING" state.
  * - Returns the session with all relevant data, including players, avatars, collection, and cards.
  * 
- * @param {string} [playerId] - The ID of the player whose active session should be retrieved.
+ * @param {GameMode | GameMode[]} matchFormat - The match format of the session.
+ * @param {string} playerId - The ID of the player whose active session should be retrieved.
  * @returns {Promise<GameSessionWithPlayersWithAvatarWithCollectionWithCards | null>} - The active game session or `null` if none exists.
  */
 export async function getActiveSession(
+  matchFormat: GameMode | GameMode[],
   playerId?: string
 ): Promise<GameSessionWithPlayersWithAvatarWithCollectionWithCards | null> {
   if (!playerId) {
@@ -122,6 +125,7 @@ export async function getActiveSession(
   return await db.gameSession.findFirst({
     where: {
       status: "RUNNING",
+      mode: typeof matchFormat === "string" ? matchFormat : { in: matchFormat },
       OR: [
         { ownerId: playerId },
         { guestId: playerId }
@@ -138,13 +142,15 @@ export async function getActiveSession(
  * - If an active session exists, it is parsed into a `ClientSession` format.
  * - Returns `null` if no active session is found.
  * 
- * @param {string} [playerId] - The ID of the player whose active session should be retrieved.
+ * @param {GameMode | GameMode[]} matchFormat - The match format of the session.
+ * @param {string} playerId - The ID of the player whose active session should be retrieved.
  * @returns {Promise<ClientSession | null>} - The active game session in a client-friendly format or `null` if none exists.
  */
 export async function getActiveClientSession(
+  matchFormat: GameMode | GameMode[],
   playerId?: string
 ): Promise<ClientSession | null> {
-  const activeSession = await getActiveSession(playerId)
+  const activeSession = await getActiveSession(matchFormat, playerId)
   if (!activeSession) return null
 
   /**
@@ -153,8 +159,10 @@ export async function getActiveClientSession(
    * 
    * https://github.com/maateh/memory-pvp/issues/19
    */
-  const storedSession = await redis.get<ClientSession>(sessionKey(activeSession.slug))
-  if (storedSession) return storedSession
+  if (matchFormat === "SINGLE") {
+    const storedSession = await redis.get<ClientSession>(sessionKey(activeSession.slug))
+    if (storedSession) return storedSession
+  }
 
   return parseSchemaToClientSession(activeSession)
 }

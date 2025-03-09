@@ -17,38 +17,32 @@ import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 export const useCreateSingleSessionAction = () => {
   const router = useRouter()
-  const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
+  const setCache = useCacheStore<SessionFormValuesCache, "set">((state) => state.set)
 
   return useAction(createSingleSession, {
     onSuccess({ input: { settings, forceStart } }) {
       if (forceStart) {
-        toast.warning('Previous session has been abandoned.', {
-          description: 'Session is saved, but cannot be continued.'
+        toast.warning("Previous session has been abandoned.", {
+          description: "Session is saved, but cannot be continued."
         })
       }
 
       const { type, mode, tableSize } = settings
-      toast.success('Game session started!', {
+      toast.success("Game session started!", {
         description: `${type} | ${mode} | ${tableSize}`
       })
     },
     onError({ error, input: values }) {
       if (error.serverError?.key === "ACTIVE_SESSION") {
-        const { message, description, data = null } = error.serverError
-
-        const errorData = data as { activeSessionMode: GameMode } | null
-        if (errorData?.activeSessionMode !== "SINGLE") {
-          router.push("/game/multiplayer")
-          toast.warning(message, { description })
-          return
-        }
+        const { message, description } = error.serverError
 
         setCache(values)
-        router.push('/game/setup/warning')
+        toast.warning(message, { description })
+        router.push(`/game/setup/warning?matchFormat=SINGLE`)
         return
       }
 
-      handleServerError(error.serverError, 'Failed to start game session. Please try again later.')
+      handleServerError(error.serverError, "Failed to start game session. Please try again later.")
     }
   })
 }

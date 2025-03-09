@@ -96,8 +96,8 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
  * - Verifies access to the game session for the authenticated user.
  * - Throws an `ActionError` if no active session is found or access is denied.
  */
-export const sessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
-  const activeSession = await getActiveSession(ctx.player.id)
+export const soloSessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
+  const activeSession = await getActiveSession("SINGLE", ctx.player.id)
 
   if (!activeSession) {
     ServerError.throwInAction({

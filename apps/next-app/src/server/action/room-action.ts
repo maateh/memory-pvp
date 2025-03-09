@@ -41,37 +41,14 @@ export const createRoom = playerActionClient
       })
     }
 
-    /* Checks if there is any ongoing session */
-    const activeSession = await getActiveSession(ctx.player.id)
-
-    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
-    if (activeSession && !forceStart) {
+    /* Throws server error with 'ACTIVE_SESSION' key if active (multiplayer) session found. */
+    const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
+    if (activeSession) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
-        data: { activeSessionMode: activeSession.mode },
         message: "Active game session found.",
-        description: activeSession.mode === "SINGLE"
-          ? "Would you like to continue the ongoing session or start a new one?"
-          : "Please finish your active multiplayer session, before you start a new one."
+        description: "Please finish your multiplayer session, before you start a new one."
       })
-    }
-
-    /* Abandons active session if 'forceStart' is applied. */
-    if (activeSession && forceStart) {
-      /* Note: multiplayer sessions can only be closed manually by the player. */
-      if (activeSession.mode !== "SINGLE") {
-        ServerError.throwInAction({
-          key: "FORCE_START_NOT_ALLOWED",
-          message: "Force start not allowed.",
-          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
-        })
-      }
-
-      await updateSessionStatus(
-        parseSchemaToClientSession(activeSession),
-        ctx.player.id,
-        "abandon"
-      )
     }
 
     /* Throws server error with 'ACTIVE_ROOM' key if active room found. */
@@ -127,7 +104,7 @@ export const joinRoom = playerActionClient
     const { roomSlug, forceJoin } = parsedInput
 
     /* Checks if there is any ongoing session */
-    const activeSession = await getActiveSession(ctx.player.id)
+    const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
 
     /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
     if (activeSession && !forceJoin) {

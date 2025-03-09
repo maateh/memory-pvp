@@ -8,7 +8,7 @@ import { offlineSessionMetadata } from "@/config/session-settings"
 import { SessionRunningPopup } from "@/components/session/popup"
 import { RedirectFallback } from "@/components/shared"
 
-const OfflineSessionWarning = () => {
+const OfflineSessionWarningPopup = () => {
   const session = getSessionFromStorage()
 
   if (!session) {
@@ -32,4 +32,4 @@ const OfflineSessionWarning = () => {
   )
 }
 
-export default OfflineSessionWarning
+export default OfflineSessionWarningPopup

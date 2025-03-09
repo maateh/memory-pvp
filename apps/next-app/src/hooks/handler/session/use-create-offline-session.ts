@@ -19,7 +19,7 @@ import { useCacheStore } from "@/hooks/store/use-cache-store"
 export const useCreateOfflineSession = () => {
   const router = useRouter()
 
-  const setCache = useCacheStore<SessionFormValuesCache, 'set'>((state) => state.set)
+  const setCache = useCacheStore<SessionFormValuesCache, "set">((state) => state.set)
 
   /**
    * Executes the logic for starting an offline game session based on the provided session values and card collection.
@@ -35,8 +35,8 @@ export const useCreateOfflineSession = () => {
    */
   const execute = ({ collection, settings, forceStart }: SessionFormValuesCache): void => {
     /* Checks if the values are valid for an offline session */
-    if (settings.type !== 'CASUAL' || settings.mode !== 'SINGLE') {
-      toast.warning('Not supported in Offline mode!', {
+    if (settings.type !== "CASUAL" || settings.mode !== "SINGLE") {
+      toast.warning("Not supported in Offline mode!", {
         description: "You can only play Casual and Single mode in offline."
       })
       return
@@ -45,13 +45,13 @@ export const useCreateOfflineSession = () => {
     /* Checks if there is any ongoing offline session */
     if (getSessionFromStorage() && !forceStart) {
       setCache({ settings, collection, forceStart })
-      router.push('/game/setup/warning/offline')
+      router.push("/game/setup/warning?matchFormat=OFFLINE")
       return
     }
 
     /* Checks if card collection is selected or not */
     if (!settings.collectionId || !collection) {
-      toast.warning('Missing card collection!', {
+      toast.warning("Missing card collection!", {
         description: "If you want to play in Offline, you need to select a card collection in advanced."
       })
       return
@@ -82,10 +82,10 @@ export const useCreateOfflineSession = () => {
     })
 
     /* Redirects the user to the game page */
-    if (forceStart) router.replace('/game/offline')
-    else router.push('/game/offline')
+    if (forceStart) router.replace("/game/offline")
+    else router.push("/game/offline")
 
-    toast.success('Game started in offline mode!', {
+    toast.success("Game started in offline mode!", {
       description: `${settings.type} | ${settings.mode} | ${settings.tableSize}`
     })
   }

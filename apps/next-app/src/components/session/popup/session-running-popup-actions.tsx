@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
 // types
@@ -25,8 +25,8 @@ type SessionRunningPopupActionsProps = {
 }
 
 const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {
-  const pathname = usePathname()
-  const isOffline = pathname === '/game/setup/warning/offline'
+  const params = useSearchParams()
+  const isOffline = params.get("matchFormat") === "OFFLINE"
 
   const {
     executeAsync: createSingleSession,
@@ -43,7 +43,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
   const {
     settings,
     collection
-  } = useCacheStore<SessionFormValuesCache, 'cache'>((state) => state.cache) || {}
+  } = useCacheStore<SessionFormValuesCache, "cache">((state) => state.cache) || {}
 
   const handleForceStart = async () => {
     if (!settings) {
