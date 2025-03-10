@@ -2,10 +2,10 @@ import { z } from "zod"
 
 // schemas
 import { sortKeys } from "@/lib/schema/query"
-import { clientPlayerSchema } from "@repo/schema/player"
+import { clientPlayer } from "@repo/schema/player"
 
 /* Query filters */
-export const playerFilterQuery = clientPlayerSchema.pick({
+export const playerFilterQuery = clientPlayer.pick({
   id: true,
   tag: true,
   color: true,

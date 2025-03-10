@@ -10,7 +10,7 @@ import { playerActionClient, protectedActionClient } from "@/server/action"
 import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 
 // validations
-import { playerTagSchema } from "@repo/schema/player"
+import { playerTag } from "@repo/schema/player"
 import {
   createPlayerValidation,
   updatePlayerValidation
@@ -65,7 +65,7 @@ export const createPlayer = protectedActionClient
   })
 
 export const selectPlayerAsActive = playerActionClient
-  .schema(playerTagSchema)
+  .schema(playerTag)
   .action(async ({ ctx, parsedInput: tag }) => {
     await ctx.db.playerProfile.updateMany({
       where: {
@@ -128,7 +128,7 @@ export const updatePlayer = playerActionClient
   })
 
 export const deletePlayer = playerActionClient
-  .schema(playerTagSchema)
+  .schema(playerTag)
   .action(async ({ ctx, parsedInput: tag }) => {
     const playerIsActive = await ctx.db.playerProfile.findUnique({
       where: {

@@ -3,7 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { MultiClientSession } from "@repo/schema/session"
+import type { MultiplayerClientSession } from "@repo/schema/session"
 import type { JoinedRoom, RunningRoom } from "@repo/schema/room"
 
 // redis
@@ -28,13 +28,13 @@ import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
-import { clientSessionSchema } from "@repo/schema/session"
+import { clientSession } from "@repo/schema/session"
 import {
-  abandonSessionValidation,
-  createMultiSessionValidation,
-  createSingleSessionValidation,
-  finishSessionSchema,
-  saveOfflineGameValidation
+  abandonSoloSessionValidation,
+  createMultiplayerSessionValidation,
+  createSoloSessionValidation,
+  finishSoloSessionValidation,
+  saveOfflineSessionValidation
 } from "@repo/schema/session-validation"
 
 // helpers
@@ -45,7 +45,7 @@ import { ServerError } from "@repo/server/error"
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const createSingleSession = playerActionClient
-  .schema(createSingleSessionValidation)
+  .schema(createSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { forceStart } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
@@ -125,7 +125,7 @@ export const createSingleSession = playerActionClient
   })
 
 export const createMultiSession = playerActionClient
-  .schema(createMultiSessionValidation)
+  .schema(createMultiplayerSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { slug, guestId } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
@@ -195,7 +195,7 @@ export const createMultiSession = playerActionClient
     const room: RunningRoom = {
       ...activeRoom,
       status: "running",
-      session: parseSchemaToClientSession(session) as MultiClientSession
+      session: parseSchemaToClientSession(session) as MultiplayerClientSession
     }
 
     const response = await redis.json.set(roomKey(room.slug), "$", room, { xx: true })
@@ -210,7 +210,7 @@ export const createMultiSession = playerActionClient
   })
 
 export const storeSession = soloSessionActionClient
-  .schema(clientSessionSchema)
+  .schema(clientSession)
   .action(async ({ ctx, parsedInput: session }) => {
     const response = await ctx.redis.set(
       sessionKey(ctx.activeSession.slug),
@@ -230,7 +230,7 @@ export const storeSession = soloSessionActionClient
   })
 
 export const finishSession = soloSessionActionClient
-  .schema(finishSessionSchema)
+  .schema(finishSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { clientSession } = parsedInput
 
@@ -249,12 +249,12 @@ export const finishSession = soloSessionActionClient
   })
 
 export const abandonSession = soloSessionActionClient
-  .schema(abandonSessionValidation)
+  .schema(abandonSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     let { clientSession } = parsedInput
 
     if (!clientSession) {
-      const validation = await abandonSessionValidation.safeParseAsync(ctx.activeSession)
+      const validation = await abandonSoloSessionValidation.safeParseAsync(ctx.activeSession)
 
       if (!validation.success) {
         ServerError.throwInAction({
@@ -282,7 +282,7 @@ export const abandonSession = soloSessionActionClient
   })
 
 export const saveOfflineSession = protectedActionClient
-  .schema(saveOfflineGameValidation)
+  .schema(saveOfflineSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { playerId } = parsedInput
     const { collectionId, owner, currentTurn, ...clientSession } = parsedInput.clientSession
