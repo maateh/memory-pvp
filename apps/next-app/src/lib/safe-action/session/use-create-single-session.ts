@@ -38,7 +38,7 @@ export const useCreateSingleSessionAction = () => {
 
         setCache(values)
         toast.warning(message, { description })
-        router.push(`/game/setup/warning?matchFormat=SINGLE`)
+        router.push(`/game/setup/warning?format=SINGLE`)
         return
       }
 

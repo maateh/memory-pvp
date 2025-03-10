@@ -45,7 +45,7 @@ export const useCreateOfflineSession = () => {
     /* Checks if there is any ongoing offline session */
     if (getSessionFromStorage() && !forceStart) {
       setCache({ settings, collection, forceStart })
-      router.push("/game/setup/warning?matchFormat=OFFLINE")
+      router.push("/game/setup/warning?format=OFFLINE")
       return
     }
 

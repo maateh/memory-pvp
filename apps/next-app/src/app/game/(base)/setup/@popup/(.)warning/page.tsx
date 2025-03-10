@@ -14,18 +14,18 @@ const OfflineSessionWarningPopup = dynamic(() => import("./offline-session-warni
 
 type SessionRunningPopupPageProps = {
   searchParams: {
-    matchFormat: GameMode | "OFFLINE"
+    format: GameMode | "OFFLINE"
   }
 }
 
 const SessionRunningPopupPage = ({ searchParams }: SessionRunningPopupPageProps) => {
-  if (searchParams.matchFormat === "OFFLINE") {
+  if (searchParams.format === "OFFLINE") {
     return <OfflineSessionWarningPopup />
   }
 
   return (
     <SessionRunningPopup
-      matchFormat={searchParams.matchFormat}
+      format={searchParams.format}
       renderer="router"
     />
   )

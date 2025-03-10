@@ -26,7 +26,7 @@ type SessionRunningPopupActionsProps = {
 
 const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {
   const params = useSearchParams()
-  const isOffline = params.get("matchFormat") === "OFFLINE"
+  const isOffline = params.get("format") === "OFFLINE"
 
   const {
     executeAsync: createSingleSession,

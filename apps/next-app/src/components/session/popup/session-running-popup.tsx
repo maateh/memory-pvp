@@ -28,18 +28,18 @@ import SessionRunningPopupActions from "./session-running-popup-actions"
 type SessionRunningPopupProps = ({
   renderer: "trigger"
   session: ClientSession
-  matchFormat?: never
+  format?: never
 } | ({
   renderer: "router"
-  matchFormat: GameMode
+  format: GameMode
   session?: never
 } | {
   renderer: "router"
   session: ClientSession
-  matchFormat?: never
+  format?: never
 })) & Omit<React.ComponentProps<typeof PopupTrigger>, "renderer">
 
-const SessionRunningPopup = ({ renderer, session, matchFormat, ...props }: SessionRunningPopupProps) => {
+const SessionRunningPopup = ({ renderer, session, format, ...props }: SessionRunningPopupProps) => {
   return (
     <Popup renderer={renderer}>
       <PopupTrigger renderer={renderer} {...props} />
@@ -57,7 +57,7 @@ const SessionRunningPopup = ({ renderer, session, matchFormat, ...props }: Sessi
 
         {renderer === "router" && !session && (
           <Suspense fallback={<SessionRunningPopupSkeleton />}>
-            <Await promise={getActiveClientSession(matchFormat)}>
+            <Await promise={getActiveClientSession(format)}>
               {(session) => session ? (
                 <SessionRunningPopupContent session={session} />
               ) : (
