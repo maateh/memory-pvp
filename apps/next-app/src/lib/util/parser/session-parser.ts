@@ -26,15 +26,15 @@ import { pickFields } from "@/lib/util/parser"
 export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'slug', 'collectionId',
   'owner', 'guest',
-  'type', 'mode', 'tableSize', 'status',
+  'status', 'mode', 'format', 'tableSize',
   'stats', 'flipped', 'cards', 'currentTurn',
-  'startedAt', 'updatedAt', 'continuedAt', 'closedAt'
+  'startedAt', 'updatedAt', 'closedAt'
 ] as const
 
 export const offlineSessionKeys: (keyof OfflineClientSession)[] = [
   'collectionId', 'owner', 'tableSize',
   'stats', 'flipped', 'cards',
-  'startedAt', 'updatedAt', 'continuedAt'
+  'startedAt', 'updatedAt'
 ] as const
 
 /**
@@ -49,7 +49,7 @@ export function parseSchemaToClientSession(
   const filteredSession = pickFields(session, clientSessionKeys)
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
 
-  const baseClientSession: Omit<ClientSession, "mode" | "guest"> = {
+  const { format, mode, ...clientSession }: Omit<BaseClientSession, "guest"> = {
     ...filteredSession,
     collectionId: sessionCollection.id,
     cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),
@@ -58,13 +58,18 @@ export function parseSchemaToClientSession(
       : deletedPlayerPlaceholder
   }
 
-  if (session.mode === "SINGLE") {
-    return { ...baseClientSession, mode: "SINGLE" }
+  if (format === "OFFLINE") {
+    return { ...clientSession, format, mode: "CASUAL" }
+  }
+
+  if (format === "SOLO") {
+    return { ...clientSession, format, mode }
   }
 
   return {
-    ...baseClientSession,
-    mode: session.mode,
+    ...clientSession,
+    format,
+    mode,
     guest: session.guest
       ? parseSchemaToClientPlayer(session.guest)
       : deletedPlayerPlaceholder
