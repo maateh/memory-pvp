@@ -34,7 +34,7 @@ export const clientSessionKeys: (keyof BaseClientSession)[] = [
 
 export const offlineSessionStorageKeys: (keyof OfflineSessionStorage)[] = [
   'collectionId', 'tableSize',
-  'owner', 'stats',
+  'stats',
   'flipped', 'cards',
   'startedAt', 'updatedAt'
 ] as const
