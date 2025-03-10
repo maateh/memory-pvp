@@ -73,6 +73,27 @@ export const multiplayerClientSession = baseClientSession
 export const clientSession = singleplayerClientSession
   .or(multiplayerClientSession)
 
+export const offlineSessionStorage = offlineClientSession
+  .omit({
+    slug: true,
+    status: true,
+    mode: true,
+    format: true,
+    owner: true,
+    currentTurn: true,
+    closedAt: true
+  })
+
+export const offlineSessionMetadata = offlineClientSession
+  .pick({
+    slug: true,
+    status: true,
+    mode: true,
+    format: true,
+    owner: true,
+    currentTurn: true
+  })
+
 export type SessionSettings = z.infer<typeof sessionSettings>
 export type ClientSessionCard = z.infer<typeof clientSessionCard>
 
@@ -81,3 +102,6 @@ export type OfflineClientSession = z.infer<typeof offlineClientSession>
 export type SoloClientSession = z.infer<typeof soloClientSession>
 export type MultiplayerClientSession = z.infer<typeof multiplayerClientSession>
 export type ClientSession = z.infer<typeof clientSession>
+
+export type OfflineSessionStorage = z.infer<typeof offlineSessionStorage>
+export type OfflineSessionMetadata = z.infer<typeof offlineSessionMetadata>

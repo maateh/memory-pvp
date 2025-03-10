@@ -3,7 +3,8 @@ import type { Prisma } from "@repo/db"
 import type {
   BaseClientSession,
   ClientSession,
-  OfflineClientSession
+  OfflineClientSession,
+  OfflineSessionStorage
 } from "@repo/schema/session"
 import type { SessionFilterQuery } from "@/lib/schema/query/session-query"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
@@ -31,9 +32,10 @@ export const clientSessionKeys: (keyof BaseClientSession)[] = [
   'startedAt', 'updatedAt', 'closedAt'
 ] as const
 
-export const offlineSessionKeys: (keyof OfflineClientSession)[] = [
-  'collectionId', 'owner', 'tableSize',
-  'stats', 'flipped', 'cards',
+export const offlineSessionStorageKeys: (keyof OfflineSessionStorage)[] = [
+  'collectionId', 'tableSize',
+  'owner', 'stats',
+  'flipped', 'cards',
   'startedAt', 'updatedAt'
 ] as const
 

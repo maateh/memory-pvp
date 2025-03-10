@@ -10,6 +10,13 @@ import {
 import { roomSettings } from "@/room-schema"
 import { createRoomValidation } from "@/validation/room-validation"
 
+export const createOfflineSessionValidation = z.object({
+  settings: sessionSettings
+    .omit({ format: true })
+    .extend({ format: z.literal(sessionSettings.shape.format.enum.OFFLINE) }),
+  forceStart: z.coerce.boolean().optional()
+})
+
 export const createSoloSessionValidation = z.object({
   settings: sessionSettings
     .omit({ format: true })
@@ -19,7 +26,8 @@ export const createSoloSessionValidation = z.object({
 
 export const sessionFormValidation = z.object({
   settings: createSoloSessionValidation.shape.settings
-    .or(createRoomValidation.shape.settings),
+    .or(createRoomValidation.shape.settings)
+    .or(createOfflineSessionValidation.shape.settings),
   forceStart: z.coerce.boolean().optional()
 })
 
@@ -56,6 +64,7 @@ export const saveOfflineSessionValidation = z.object({
     })
 })
 
+export type CreateOfflineSessionValidation = z.infer<typeof createOfflineSessionValidation>
 export type CreateSoloSessionValidation = z.infer<typeof createSoloSessionValidation>
 export type SessionFormValidation = z.infer<typeof sessionFormValidation>
 export type CreateMultiplayerSessionValidation = z.infer<typeof createMultiplayerSessionValidation>
