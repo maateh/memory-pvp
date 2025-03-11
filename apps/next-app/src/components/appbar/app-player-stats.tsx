@@ -27,7 +27,7 @@ const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
   const { state, isMobile } = useSidebar()
 
   const stats = useMemo(() => getRendererPlayerStats(activePlayer, [
-    'score', 'sessions', 'timer', 'flips', 'matches'
+    "elo", "sessions", "totalTime", "avgTime", "flips", "matches"
   ]), [activePlayer])
 
   return (

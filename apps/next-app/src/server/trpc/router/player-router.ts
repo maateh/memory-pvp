@@ -55,23 +55,27 @@ export const playerProfileRouter = createTRPCRouter({
         }
       })
     
-      return sessions.reduce((sum, { stats, results }) => {
+      const playerStats = sessions.reduce((sum, { stats, results }) => {
         const result = results.find((result) => result.player.id === playerId)
-        const score = result?.score || 0
+        const gainedElo = result?.gainedElo || 0
 
         return {
           ...sum,
-          score: sum.score + score,
-          timer: sum.timer + stats.timer,
+          elo: sum.elo + gainedElo,
+          totalTime: sum.totalTime + stats.timer,
+          avgTime: 0, // TODO: calculate `avgTime`
           flips: sum.flips + stats.flips[playerId],
           matches: sum.matches + stats.matches[playerId]
         }
       }, {
         sessions: sessions.length,
-        score: 0,
-        timer: 0,
+        elo: 0,
+        totalTime: 0,
+        avgTime: 0,
         flips: 0,
         matches: 0
       } satisfies PrismaJson.PlayerStats)
+
+      return playerStats
     })
 })

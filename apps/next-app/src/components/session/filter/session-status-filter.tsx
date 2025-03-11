@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // types
-import type { GameStatus } from "@repo/db"
+import type { SessionStatus } from "@repo/db"
 import type { FilterService, FilterOptions } from "@/lib/types/query"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 import type {
@@ -22,7 +22,7 @@ import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
 const options: FilterOptions<SessionStatusFilterFields> = {
-  status: ["RUNNING", "FINISHED", "ABANDONED", "OFFLINE"]
+  status: ["RUNNING", "FINISHED", "CLOSED", "FORCE_CLOSED"]
 }
 
 type SessionStatusFilterProps = {
@@ -38,8 +38,8 @@ const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionSta
     return filterService === 'store' ? filterStore : filterParams
   }, [filterService, filterStore, filterParams])
 
-  const handleSelectStatus = (status: GameStatus) => {
-    if (filterService === 'store' || filterService === 'mixed') {
+  const handleSelectStatus = (status: SessionStatus) => {
+    if (filterService === "store" || filterService === "mixed") {
       setFilterStore<TSessionStatusFilter>((state) => {
         const filter = state[filterKey]
   
@@ -52,8 +52,8 @@ const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionSta
       })
     }
 
-    if (filterService === 'params' || filterService === 'mixed') {
-      toggleFilterParam('status', status)
+    if (filterService === "params" || filterService === "mixed") {
+      toggleFilterParam("status", status)
     }
   }
 

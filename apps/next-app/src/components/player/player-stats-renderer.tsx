@@ -37,7 +37,7 @@ const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
   const playerStats = useMemo(() => getRendererPlayerStats({
     ...player,
     stats
-  }, ['score', 'sessions', 'timer', 'flips', 'matches']), [player, stats])
+  }, ["elo", "sessions", "totalTime", "avgTime", "flips", "matches"]), [player, stats])
 
   return (
     <ul className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
