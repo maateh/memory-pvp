@@ -90,27 +90,6 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
 })
 
 /**
- * Extends the `playerActionClient` to find active game session.
- * 
- * - Checks if the active player is currently in a running game session.
- * - Verifies access to the game session for the authenticated user.
- * - Throws an `ActionError` if no active session is found or access is denied.
- */
-export const soloSessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
-  const activeSession = await getActiveSession("SOLO", ctx.player.id)
-
-  if (!activeSession) {
-    ServerError.throwInAction({
-      key: "SESSION_NOT_FOUND",
-      message: "Game session not found.",
-      description: "You are currently not participating in any game session."
-    })
-  }
-
-  return next({ ctx: { activeSession } })
-})
-
-/**
  * Extends the `playerActionClient` to find active session room.
  * 
  * - Checks if the active player is currently in a running game session.
@@ -151,4 +130,47 @@ export const roomActionClient = playerActionClient.use(async ({ ctx, next }) => 
   }
 
   return next({ ctx: { activeRoom } })
+})
+
+/**
+ * Extends the `playerActionClient` to find active game session.
+ * 
+ * - Checks if the active player is currently in a running game session.
+ * - Verifies access to the game session for the authenticated user.
+ * - Throws an `ActionError` if no active session is found or access is denied.
+ */
+export const soloSessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
+  const activeSession = await getActiveSession("SOLO", ctx.player.id)
+
+  if (!activeSession) {
+    ServerError.throwInAction({
+      key: "SESSION_NOT_FOUND",
+      message: "Solo game session not found.",
+      description: "You are currently not participating in any solo game session."
+    })
+  }
+
+  return next({ ctx: { activeSession } })
+})
+
+export const multiplayerSessionActionClient = roomActionClient.use(async ({ ctx, next }) => {
+  if (ctx.activeRoom.status !== "running" && ctx.activeRoom.status !== "cancelled") {
+    ServerError.throwInAction({
+      key: "ROOM_STATUS_CONFLICT",
+      message: "Action cannot be executed.",
+      description: "You can only do this if the room status is running or cancelled."
+    })
+  }
+
+  const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
+
+  if (!activeSession) {
+    ServerError.throwInAction({
+      key: "SESSION_NOT_FOUND",
+      message: "Multiplayer game session not found.",
+      description: "You are currently not participating in any multiplayer game session."
+    })
+  }
+
+  return next({ ctx: { activeRoom: ctx.activeRoom, activeSession } })
 })

@@ -12,6 +12,7 @@ import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/s
 // actions
 import {
   createMultiplayerSession,
+  forceCloseMultiplayerSession,
   leaveOrCloseRoom
 } from "@/server/action/session/multiplayer-action"
 
@@ -307,106 +308,117 @@ export const roomStore = ({
       return
     }
 
-    if (!socket.connected) {
-      const toastId = "room:connect"
-      const message = "Failed to connect to the server."
+    if (socket.connected) return handleServerError(error)
 
-      const onAutoClose: ToastT["onAutoClose"] = () => {
-        router.replace("/dashboard")
-        toast.info("Redirecting to the dashboard...", {
-          id: toastId,
-          description: "Please try to reconnect later.",
-          action: {
-            label: "Reconnect",
-            onClick() { router.push("/game/multiplayer") }
-          }
-        })
-      }
+    const toastId = "room:connect"
+    const message = "Failed to connect to the server."
 
-      if (initialRoom.status === "waiting" || initialRoom.status === "joined") {
-        const playerKey = currentPlayerKey(initialRoom.owner.id, currentPlayerId)
-
-        toast.warning(message, {
-          id: toastId,
-          description: `You can ${playerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
-          duration: 10000,
-          onAutoClose,
-          action: {
-            label: playerKey === "owner" ? "Close" : "Leave",
-            async onClick() {
-              toast.dismiss(toastId)
-              toast.loading(`${playerKey === "owner" ? "Closing" : "Leaving"} room...`, {
-                id: "room:leave"
-              })
-
-              try {
-                const { serverError } = await leaveOrCloseRoom() || {}
-  
-                if (serverError) {
-                  handleServerError(serverError, `Failed to ${playerKey === "owner" ? "close" : "leave"} the room. Please try again later.`)
-                  return
-                }
-
-                toast.success(`You have ${playerKey === "owner" ? "closed" : "left"} the room.`, {
-                  id: "room:leave",
-                  description: "This will not affect your ranking scores."
-                })
-              } catch (err) {
-                logError(err)
-              } finally { toast.dismiss(toastId) }
-            }
-          }
-        })
-      }
-
-      if (initialRoom.status === "running" || initialRoom.status === "cancelled") {
-        const description = "Do you want to force close this session?"
-
-        if (initialRoom.session.mode === "RANKED") {
-          description.concat(" You will lose ranking scores.")
+    const onAutoClose: ToastT["onAutoClose"] = () => {
+      router.replace("/dashboard")
+      toast.info("Redirecting to the dashboard...", {
+        id: toastId,
+        description: "Please try to reconnect later.",
+        action: {
+          label: "Reconnect",
+          onClick() { router.push("/game/multiplayer") }
         }
-
-        toast.warning(message, {
-          id: toastId,
-          description,
-          duration: 10000,
-          onAutoClose,
-          action: {
-            label: "Force close",
-            async onClick() {
-              toast.dismiss(toastId)
-              toast.loading("Force closing session...", { id: "session:close" })
-
-              try {
-                // TODO: implement `forceCloseSession` server action
-                // const { serverError } = await forceCloseSession() || {}
-
-                // if (serverError) {
-                //   handleServerError(serverError, "Failed to force close session. Please try again later.")
-                //   return
-                // }
-
-                // toast.success("You have force closed the session.", {
-                //   id: "session:close",
-                //   description: initialRoom.session.mode === "CASUAL"
-                //     ? "This had no effect on your ranking scores."
-                //     : "You have lost the maximum amount of ranking scores."
-                // })
-
-                toast.warning("Feature is currently under development.", {
-                  description: "Force closing session has not been implemented yet."
-                })
-              } catch (err) {
-                logError(err)
-              } finally { toast.dismiss(toastId) }
-            }
-          }
-        })
-      }
-      return
+      })
     }
 
-    handleServerError(error)
+    if (initialRoom.status === "waiting" || initialRoom.status === "joined") {
+      const playerKey = currentPlayerKey(initialRoom.owner.id, currentPlayerId)
+
+      toast.warning(message, {
+        id: toastId,
+        description: `You can ${playerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
+        duration: 10000,
+        onAutoClose,
+        action: {
+          label: playerKey === "owner" ? "Close room" : "Leave room",
+          async onClick() {
+            toast.dismiss(toastId)
+
+            const loadingMessage = playerKey === "owner"
+              ? "Closing room..."
+              : "Leaving room..."
+            toast.loading(loadingMessage, { id: "room:leave" })
+
+            try {
+              const { serverError } = await leaveOrCloseRoom() || {}
+
+              if (serverError) {
+                handleServerError(serverError, `Failed to ${playerKey === "owner" ? "close" : "leave"} the room. Please try again later.`)
+                return
+              }
+
+              toast.success(`You have ${playerKey === "owner" ? "closed" : "left"} the room.`, {
+                id: "room:left",
+                description: "This will not affect your ranking scores."
+              })
+            } catch (err) {
+              logError(err)
+            } finally {
+              toast.dismiss(toastId)
+              toast.dismiss("room:leave")
+            }
+          }
+        }
+      })
+    }
+
+    if (initialRoom.status === "running" || initialRoom.status === "cancelled") {
+      const description = "Do you want to force close this session?"
+
+      if (initialRoom.session.mode === "RANKED") {
+        description.concat(" You will lose ranking scores.")
+      }
+
+      toast.warning(message, {
+        id: toastId,
+        description,
+        duration: 10000,
+        onAutoClose,
+        action: {
+          label: "Force close",
+          async onClick() {
+            toast.dismiss(toastId)
+            toast.loading("Force closing session...", { id: "session:close" })
+
+            try {
+              const { serverError } = await forceCloseMultiplayerSession() || {}
+              if (serverError) throw ServerError.parser(serverError)
+
+              toast.success("You have force closed the session.", {
+                id: "session:closed",
+                description: initialRoom.session.mode === "CASUAL"
+                  ? "This had no effect on your ranking scores."
+                  : "You have lost the maximum amount of ranking scores."
+              })
+            } catch (err) {
+              const error = err as ServerError
+
+              if (
+                error.key === "SESSION_NOT_FOUND" ||
+                error.key === "ROOM_NOT_FOUND"
+              ) {
+                router.replace(`/game/summary/${initialRoom.slug}`)
+                toast.warning("Multiplayer session and room not found.", {
+                  id: "session:close:error",
+                  description: "This game session has already been closed."
+                })
+                return
+              }
+
+              handleServerError(error, "Failed to force close session. Please try again later.")
+              logError(error)
+            } finally {
+              toast.dismiss(toastId)
+              toast.dismiss("session:close")
+            }
+          }
+        }
+      })
+    }
   },
 
   disconnect(reason) {
@@ -416,6 +428,7 @@ export const roomStore = ({
     ) return
 
     toast.warning("Connection has been lost with the server.", {
+      id: "room:disconnect",
       description: "Your session has been likely cancelled. Please reconnect."
     })
   }
