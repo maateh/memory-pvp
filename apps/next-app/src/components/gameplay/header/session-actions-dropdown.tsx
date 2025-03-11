@@ -5,8 +5,8 @@ import { toast } from "sonner"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -48,7 +48,7 @@ const SessionActionsDropdown = ({
   } = useAbandonSessionAction()
 
   const handleAbandonSession = async () => {
-    if (session.status === "OFFLINE") {
+    if (session.format === "OFFLINE") {
       clearSessionFromStorage()
     
       router.replace("/game/setup")
@@ -91,9 +91,9 @@ const SessionActionsDropdown = ({
           <Gamepad2 className="size-4 shrink-0" />
 
           <span className="text-foreground font-medium small-caps">
-            {gameTypePlaceholders[session.type].label}
+            {sessionModePlaceholders[session.mode].label}
           </span> / <span className="text-foreground/85 small-caps">
-            {gameModePlaceholders[session.mode].label}
+            {matchFormatPlaceholders[session.format].label}
           </span>
         </DropdownMenuItem>
 

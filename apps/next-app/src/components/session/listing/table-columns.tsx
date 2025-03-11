@@ -6,8 +6,8 @@ import type { ClientSession } from "@repo/schema/session"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -47,25 +47,25 @@ export const columns: ColumnDef<ClientSession>[] = [
     },
   },
   {
-    id: "Type / Mode",
-    accessorKey: "type",
+    id: "Settings",
+    accessorKey: "mode",
     enableHiding: true,
     header() {
       return (
         <DataTableColumnSortingHeader
-          header="Type / Mode"
-          sortValueKey="type"
+          header="Settings"
+          sortValueKey="mode"
         />
       )
     },
     cell({ row }) {
-      const session = row.original
+      const { mode, format } = row.original
 
       return (
         <SessionInfoBadge
           Icon={Gamepad2}
-          label={gameTypePlaceholders[session.type].label}
-          subLabel={gameModePlaceholders[session.mode].label}
+          label={sessionModePlaceholders[mode].label}
+          subLabel={matchFormatPlaceholders[format].label}
         />
       )
     },
@@ -103,7 +103,7 @@ export const columns: ColumnDef<ClientSession>[] = [
       const session = row.original
       const players = [session.owner]
 
-      if (session.mode !== "SINGLE") {
+      if (session.format === "PVP" || session.format === "COOP") {
         players.push(session.guest)
       }
 

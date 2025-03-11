@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { GameMode } from "@repo/db"
+import type { MatchFormat } from "@repo/db"
 import type { ClientSession } from "@repo/schema/session"
 
 // db
@@ -31,7 +31,7 @@ type SessionRunningPopupProps = ({
   format?: never
 } | ({
   renderer: "router"
-  format: GameMode
+  format: MatchFormat
   session?: never
 } | {
   renderer: "router"
@@ -91,7 +91,7 @@ const SessionRunningPopupContent = ({ session }: { session: ClientSession }) => 
     <Separator className="w-5/6 mx-auto mt-4 bg-border/15" />
 
     <PopupFooter variant="action" size="sm">
-      <SessionRunningPopupActions activeSessionMode={session.mode} />
+      <SessionRunningPopupActions activeSessionFormat={session.format} />
     </PopupFooter>
   </div>
 )

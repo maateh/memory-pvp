@@ -97,7 +97,7 @@ export const playerActionClient = protectedActionClient.use(async ({ ctx, next }
  * - Throws an `ActionError` if no active session is found or access is denied.
  */
 export const soloSessionActionClient = playerActionClient.use(async ({ ctx, next }) => {
-  const activeSession = await getActiveSession("SINGLE", ctx.player.id)
+  const activeSession = await getActiveSession("SOLO", ctx.player.id)
 
   if (!activeSession) {
     ServerError.throwInAction({

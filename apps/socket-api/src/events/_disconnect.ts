@@ -83,7 +83,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
 
       socket.broadcast.to(room.slug).emit("room:disconnected", {
         message: `${playerTag} has disconnected.`,
-        description: room.session.type === "CASUAL"
+        description: room.session.mode === "CASUAL"
           ? "If you don't want to wait for the player to reconnect, close the session."
           : "Please wait at least 5 minutes for the other player to reconnect. After that, you can claim this session as a win.",
         data: cancelledRoom

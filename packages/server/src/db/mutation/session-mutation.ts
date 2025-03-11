@@ -9,10 +9,12 @@ import { db } from "@repo/server/db"
 import { calculatePlayerSessionScore } from "@repo/helper/session"
 
 /**
+ * @deprecated - Will be replaced by another mutation, called `closeSession`
+ * 
  * Updates the status of a game session and updates player statistics accordingly.
  * 
  * - Updates player statistics such as score, timer, flips, matches, and session count.
- * - Updates the game session status to either "FINISHED" or "ABANDONED".
+ * - Updates the game session status to either `FINISHED` or `ABANDONED`.
  * - Stores the session results for each player.
  * 
  * @param {BaseClientSession} clientSession - The session data to update.
@@ -21,14 +23,14 @@ import { calculatePlayerSessionScore } from "@repo/helper/session"
  * @returns {Promise<GameSession>} - The updated game session.
  */
 export async function updateSessionStatus(
-  clientSession: Pick<BaseClientSession, "slug" | "type" | "mode" | "tableSize" | "owner" | "guest" | "stats">,
+  clientSession: Pick<BaseClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
   currentPlayerId: string,
   action: "finish" | "abandon"
 ): Promise<GameSession> {
-  const { slug, mode, owner, guest, stats } = clientSession
+  const { slug, format, owner, guest, stats } = clientSession
 
   const players = [owner]
-  if (mode !== "SINGLE") players.push(guest!)
+  if (format === "PVP" || format === "COOP") players.push(guest!)
 
   /* Updates the statistics of session players */
   const operations = players.map(
@@ -36,16 +38,17 @@ export async function updateSessionStatus(
       where: { id: player.id },
       data: {
         stats: {
-          score: player.stats.score + (calculatePlayerSessionScore(
+          elo: player.stats.elo + (calculatePlayerSessionScore(
             clientSession,
             player.id,
-            mode === "PVP" && action === "abandon"
+            format === "PVP" && action === "abandon"
               ? player.id === currentPlayerId ? "abandon" : "finish"
               : action
           ) || 0),
-          timer: player.stats.timer + stats.timer,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
+          avgTime: 0, // Note: Will be used in the elo system.
+          totalTime: player.stats.totalTime + stats.timer,
           sessions: ++player.stats.sessions
         }
       }
@@ -58,18 +61,19 @@ export async function updateSessionStatus(
       where: { slug },
       data: {
         stats,
-        status: action === "finish" ? "FINISHED" : "ABANDONED",
+        status: action === "finish" ? "FINISHED" : "CLOSED",
         closedAt: new Date(),
         results: {
           createMany: {
             data: players.map((player) => ({
               playerId: player.id,
+              gainedElo: 0, // Note: Will be used in the elo system.
               flips: stats.flips[player.id],
               matches: stats.matches[player.id],
               score: calculatePlayerSessionScore(
                 clientSession,
                 player.id,
-                mode === "PVP" && action === "abandon"
+                format === "PVP" && action === "abandon"
                   ? player.id === currentPlayerId ? "abandon" : "finish"
                   : action
               )

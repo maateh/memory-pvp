@@ -360,7 +360,7 @@ export const roomStore = ({
       if (initialRoom.status === "running" || initialRoom.status === "cancelled") {
         const description = "Do you want to force close this session?"
 
-        if (initialRoom.session.type === "COMPETITIVE") {
+        if (initialRoom.session.mode === "RANKED") {
           description.concat(" You will lose ranking scores.")
         }
 
@@ -386,7 +386,7 @@ export const roomStore = ({
 
                 // toast.success("You have force closed the session.", {
                 //   id: "session:close",
-                //   description: initialRoom.session.type === "CASUAL"
+                //   description: initialRoom.session.mode === "CASUAL"
                 //     ? "This had no effect on your ranking scores."
                 //     : "You have lost the maximum amount of ranking scores."
                 // })

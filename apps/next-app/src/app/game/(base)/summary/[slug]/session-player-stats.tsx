@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { StatisticItem, StatisticList } from "@/components/shared"
 
-type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, 'score' | 'timer' | 'matches' | 'flips'>
+type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, "elo" | "totalTime" | "matches" | "flips">
 
 type SessionPlayerStatsProps = {
   player: ClientPlayer
@@ -25,22 +25,15 @@ type SessionPlayerStatsProps = {
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  const score = calculatePlayerSessionScore(
+  const elo = calculatePlayerSessionScore(
     session,
     player.id,
-    session.status === 'FINISHED' ? 'finish' : 'abandon'
-  )
+    session.status === "FINISHED" ? "finish" : "abandon"
+  ) || 0
 
-  const sessionPlayerStats = {
-    score: score || 0,
-    flips: session.stats.flips[player.id],
-    matches: session.stats.matches[player.id],
-    timer: formatTimer(session.stats.timer * 1000)
-  }
-
-  /* Note: only `COMPETITIVE` sessions have score values */
-  const scoreKey: Array<SessionPlayerStatKeys> = score ? ['score'] : []
-  const stats = getRendererPlayerStats(player, [...scoreKey, 'flips', 'matches', 'timer'])
+  /* Note: only `RANKED` sessions have elo values */
+  const eloKey: Array<SessionPlayerStatKeys> = elo ? ["elo"] : []
+  const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "totalTime"])
 
   return (
     <div>
@@ -55,14 +48,19 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
       <StatisticList className="w-fit mx-auto grid sm:grid-cols-2">
         {Object.values(stats).map(({ key, ...stat }) => (
           <StatisticItem className="w-full mx-auto max-w-48"
-            variant={key === 'score' ? (sessionPlayerStats.score) < 0 ? 'destructive' : 'default' : 'default'}
+            variant={key === "elo" ? elo < 0 ? "destructive" : "default" : "default"}
             size="sm"
             statistic={{
               ...stat,
               data: renderStatData({
                 key: key as SessionPlayerStatKeys,
                 data: stat.data,
-                sessionPlayerStats
+                sessionPlayerStats: {
+                  elo,
+                  flips: session.stats.flips[player.id],
+                  matches: session.stats.matches[player.id],
+                  totalTime: formatTimer(session.stats.timer * 1000)
+                }
               })
             }}
             key={key}
@@ -76,9 +74,9 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
 /* Local utils */
 type RenderStatDataParams = {
   key: SessionPlayerStatKeys
-  data: RendererStat['data']
-  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, 'timer'>> & {
-    timer: string
+  data: RendererStat["data"]
+  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, "totalTime">> & {
+    totalTime: string
   }
 }
 
@@ -99,7 +97,7 @@ type RenderStatDataParams = {
 function renderStatData({ key, data, sessionPlayerStats }: RenderStatDataParams): React.ReactNode {
   let sessionPlayerStat: number | string = sessionPlayerStats[key]
 
-  if (typeof sessionPlayerStat === 'number' && sessionPlayerStat > 0) {
+  if (typeof sessionPlayerStat === "number" && sessionPlayerStat > 0) {
     sessionPlayerStat = `+${sessionPlayerStat}`
   }
 
@@ -107,7 +105,7 @@ function renderStatData({ key, data, sessionPlayerStats }: RenderStatDataParams)
     <p className="flex items-center gap-x-1">
       {data}
       <span className={cn("text-accent", {
-        "text-destructive": key === 'score' && (sessionPlayerStats.score) < 0
+        "text-destructive": key === "elo" && (sessionPlayerStats.elo) < 0
       })}>
         ({sessionPlayerStat})
       </span>

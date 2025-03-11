@@ -2,8 +2,8 @@
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -38,8 +38,8 @@ const SessionHeader = () => {
         <div className="hidden sm:flex flex-wrap items-center gap-x-2 gap-y-1">
           <SessionInfoBadge
             Icon={Gamepad2}
-            label={gameTypePlaceholders[session.type].label}
-            subLabel={gameModePlaceholders[session.mode].label}
+            label={sessionModePlaceholders[session.mode].label}
+            subLabel={matchFormatPlaceholders[session.format].label}
           />
 
           <SessionInfoBadge
@@ -53,7 +53,7 @@ const SessionHeader = () => {
       <div className="flex items-center justify-center gap-x-2 ml-auto sm:flex-row-reverse">
         <SessionHeaderTimer startedAt={session.startedAt} />
 
-        {session.status !== "OFFLINE" && (
+        {session.format !== "OFFLINE" && (
           <>
             <Separator className="h-4 sm:h-[1.125rem] w-1 bg-border/50 rounded-full"
               orientation="vertical"

@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 
 // types
-import type { GameMode } from "@repo/db"
+import type { MatchFormat } from "@repo/db"
 
 // components
 import { PopupLoader } from "@/components/popup"
@@ -14,7 +14,7 @@ const OfflineSessionWarningPopup = dynamic(() => import("./offline-session-warni
 
 type SessionRunningPopupPageProps = {
   searchParams: {
-    format: GameMode | "OFFLINE"
+    format: MatchFormat
   }
 }
 

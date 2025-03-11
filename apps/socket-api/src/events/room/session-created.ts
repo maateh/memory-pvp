@@ -17,11 +17,11 @@ export const sessionCreated: SocketEventHandler = (socket) => async () => {
 
   try {
     const room = await getRoom<RunningRoom>(roomSlug)
-    const { type, mode, tableSize } = room.settings
+    const { mode, format, tableSize } = room.settings
 
     io.to(roomSlug).emit("session:started", {
       message: "The game session has started!",
-      description: `${type} | ${mode} | ${tableSize}`,
+      description: `${mode} | ${format} | ${tableSize}`,
       data: room
     } satisfies SocketResponse<RunningRoom>)
   } catch (err) {

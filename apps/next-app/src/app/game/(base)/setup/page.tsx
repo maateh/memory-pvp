@@ -1,5 +1,5 @@
 // prisma
-import type { GameMode, GameType, TableSize } from "@repo/db"
+import type { SessionMode, MatchFormat, TableSize } from "@repo/db"
 import type { ClientCardCollection } from "@/lib/schema/collection-schema"
 
 // server
@@ -21,8 +21,8 @@ import { SessionForm } from "@/components/session/form"
 
 type BaseGameSetupPageProps = {
   searchParams: Partial<{
-    type: GameType
-    mode: GameMode
+    mode: SessionMode
+    format: MatchFormat
     tableSize: TableSize
     collectionId: string
   }>

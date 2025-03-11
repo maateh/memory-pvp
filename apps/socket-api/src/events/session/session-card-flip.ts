@@ -1,5 +1,5 @@
 // types
-import type { MultiClientSession, ClientSessionCard } from "@repo/schema/session"
+import type { MultiplayerClientSession, ClientSessionCard } from "@repo/schema/session"
 import type { RunningRoom } from "@repo/schema/room"
 import type { SessionCardFlipValidation } from "@repo/schema/room-validation"
 
@@ -68,7 +68,7 @@ export const sessionCardFlip: SocketEventHandler<
     io.to(roomSlug).emit("session:card:flipped", {
       message: `Card flipped | ${clickedCard.id}/${clickedCard.key}`,
       data: session
-    } satisfies SocketResponse<MultiClientSession>)
+    } satisfies SocketResponse<MultiplayerClientSession>)
 
     if (actionKey !== "pairing") return
 
@@ -83,7 +83,7 @@ export const sessionCardFlip: SocketEventHandler<
         flipped[1].id}/${flipped[1].key
       }`,
       data: session
-    } satisfies SocketResponse<MultiClientSession>)
+    } satisfies SocketResponse<MultiplayerClientSession>)
 
     const isOver = session.cards.every((card) => card.matchedBy !== null)
     if (!isOver) return
@@ -105,7 +105,7 @@ export const sessionCardFlip: SocketEventHandler<
 
 type SessionHandlerOptions = {
   playerId: string
-  session: MultiClientSession
+  session: MultiplayerClientSession
 }
 
 function handleCardFlip(clickedCard: ClientSessionCard, {
@@ -119,7 +119,7 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
 
   ++session.stats.flips[playerId]
 
-  if (session.mode === "COOP" && session.flipped.length === 1) {
+  if (session.format === "COOP" && session.flipped.length === 1) {
     session.currentTurn = session.currentTurn === playerId
       ? session[otherPlayerKey(session.owner.id, playerId)].id
       : session[currentPlayerKey(session.owner.id, playerId)].id
@@ -135,7 +135,7 @@ function handleCardPairing({
   const { flipped } = session
   session.flipped = []
 
-  if (session.mode === "PVP") {
+  if (session.format === "PVP") {
     session.currentTurn = session.currentTurn === playerId
       ? session[otherPlayerKey(session.owner.id, playerId)].id
       : session[currentPlayerKey(session.owner.id, playerId)].id

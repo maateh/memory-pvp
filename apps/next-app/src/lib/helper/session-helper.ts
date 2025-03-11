@@ -23,16 +23,16 @@ import { tableSizeMap } from "@repo/config/game"
  * @returns {string} - The generated slug in the format `xx-yyy_xxxxxxxx`.
  */
 export function generateSessionSlug(
-  session: Pick<ClientSession, 'type' | 'mode'>,
+  session: Pick<ClientSession, "mode" | "format">,
   isOffline: boolean = false
 ): string {
-  const { type, mode } = session
+  const { mode, format } = session
 
   /*
    * Creates a prefix by slicing then merging the first
-   * characters of session 'type' and 'mode'.
+   * characters of session `mode` and `format`.
    */
-  let prefix = `${type.slice(0, 2).toLowerCase()}-${mode.slice(0, 3).toLowerCase()}`
+  let prefix = `${mode.slice(0, 2).toLowerCase()}-${format.slice(0, 3).toLowerCase()}`
 
   if (isOffline) {
     prefix = 'off'

@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
 // types
@@ -21,13 +20,10 @@ import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
 import { useCreateRoomAction } from "@/lib/safe-action/room"
 
 type SessionRunningPopupActionsProps = {
-  activeSessionMode: ClientSession["mode"]
+  activeSessionFormat: ClientSession["format"]
 }
 
-const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {
-  const params = useSearchParams()
-  const isOffline = params.get("format") === "OFFLINE"
-
+const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopupActionsProps) => {
   const {
     executeAsync: createSingleSession,
     status: createSingleSessionStatus
@@ -53,7 +49,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
       return
     }
 
-    if (isOffline) {
+    if (settings.format === "OFFLINE") {
       createOfflineSession({
         settings,
         collection,
@@ -63,7 +59,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
     }
 
     try {
-      if (settings.mode === "SINGLE") {
+      if (settings.format === "SOLO") {
         await createSingleSession({ settings, forceStart: true })
       } else {
         await createWaitingRoom({ settings, forceStart: true })
@@ -73,10 +69,20 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
     }
   }
 
-  const href = isOffline ? "/game/offline"
-    : activeSessionMode === "SINGLE"
+  const continueText = activeSessionFormat === "OFFLINE" ? "Continue offline"
+    : activeSessionFormat === "SOLO"
+      ? "Continue session"
+      : "Reconnect"
+
+  const continueHref = activeSessionFormat === "OFFLINE" ? "/game/offline"
+    : activeSessionFormat === "SOLO"
       ? "/game/single"
       : "/game/multiplayer"
+
+  const startText = settings?.format === "OFFLINE" ? "Start new game (Offline)"
+    : settings?.format === "SOLO"
+      ? "Start new game"
+      : "Create new room"
 
   return (
     <>
@@ -85,8 +91,8 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
         disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
         asChild
       >
-        <Link href={href} replace>
-          {activeSessionMode === "SINGLE" ? "Continue session": "Reconnect"}
+        <Link href={continueHref} replace>
+          {continueText}
         </Link>
       </Button>
 
@@ -95,7 +101,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
         onClick={handleForceStart}
         disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
       >
-        {settings?.mode === "SINGLE" ? "Start new game": "Create new room"}
+        {startText}
       </Button>
     </>
   )

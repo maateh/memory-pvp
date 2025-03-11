@@ -7,8 +7,8 @@ import type { RendererStatsMap, RendererSessionStatKeys, RendererPlayerStatKeys 
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -17,7 +17,18 @@ import { pickFields } from "@/lib/util/parser"
 import { formatTimer } from "@/lib/util/game"
 
 // icons
-import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Timer } from "lucide-react"
+import {
+  CalendarClock,
+  Dices,
+  Gamepad2,
+  Hash,
+  ScanEye,
+  Sigma,
+  Spade,
+  Star, 
+  Timer,
+  TimerReset
+} from "lucide-react"
 
 /**
  * Generates a map of game session statistics, each stat paired with an icon, label, and formatted data for rendering.
@@ -32,15 +43,15 @@ import { CalendarClock, Dices, Gamepad2, Hash, ScanEye, Sigma, Spade, Star, Time
  * @returns {RendererStatsMap<RendererSessionStatKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
 export function getRendererSessionStats(
-  session: Pick<ClientSession, "type" | "mode" | "tableSize" | "stats" | "startedAt">,
+  session: Pick<ClientSession, "mode" | "format" | "tableSize" | "stats" | "startedAt">,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
   const stats: RendererStatsMap<RendererSessionStatKeys> = {
     typeMode: {
       key: "typeMode",
       Icon: Gamepad2,
-      label: gameTypePlaceholders[session.type].label,
-      data: gameModePlaceholders[session.mode].label
+      label: sessionModePlaceholders[session.mode].label,
+      data: matchFormatPlaceholders[session.format].label
     },
     tableSize: {
       key: "tableSize",
@@ -103,17 +114,23 @@ export function getRendererPlayerStats(
       label: "Player Tag",
       data: player.tag
     },
-    score: {
-      key: "score",
+    elo: {
+      key: "elo",
       Icon: Star,
       label: "Total Score",
-      data: `${player.stats.score} points`
+      data: `${player.stats.elo} points`
     },
-    timer: {
-      key: "timer",
+    avgTime: {
+      key: "avgTime",
+      Icon: TimerReset,
+      label: "Average Time",
+      data: `${formatTimer(player.stats.avgTime * 1000)}`
+    },
+    totalTime: {
+      key: "totalTime",
       Icon: Timer,
       label: "Playtime",
-      data: `${formatTimer(player.stats.timer * 1000)}`
+      data: `${formatTimer(player.stats.totalTime * 1000)}`
     },
     flips: {
       key: "flips",

@@ -4,8 +4,8 @@ import type { WaitingRoom } from "@repo/schema/room"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -39,8 +39,8 @@ const WaitingRoomCard = ({ guestPlayer, room }: WaitingRoomCardProps) => {
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <SessionInfoBadge className="text-xs max-lg:px-2"
             Icon={Gamepad2}
-            label={gameTypePlaceholders[room.settings.type].label}
-            subLabel={gameModePlaceholders[room.settings.mode].label}
+            label={sessionModePlaceholders[room.settings.mode].label}
+            subLabel={matchFormatPlaceholders[room.settings.format].label}
           />
 
           <SessionInfoBadge className="text-xs max-lg:px-2"

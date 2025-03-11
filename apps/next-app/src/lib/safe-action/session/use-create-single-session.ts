@@ -3,7 +3,6 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // types
-import type { GameMode } from "@repo/db"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
@@ -27,9 +26,9 @@ export const useCreateSingleSessionAction = () => {
         })
       }
 
-      const { type, mode, tableSize } = settings
+      const { mode, format, tableSize } = settings
       toast.success("Game session started!", {
-        description: `${type} | ${mode} | ${tableSize}`
+        description: `${mode} | ${format} | ${tableSize}`
       })
     },
     onError({ error, input: values }) {
