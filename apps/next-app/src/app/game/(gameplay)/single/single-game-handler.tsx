@@ -1,5 +1,8 @@
 "use client"
 
+// types
+import type { SoloClientSession } from "@repo/schema/session"
+
 // helpers
 import { validateCardMatches } from "@/lib/helper/session-helper"
 
@@ -12,19 +15,24 @@ import { MemoryTable, SessionFooter, SessionHeader } from "@/components/gameplay
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useSingleplayerGameHandler } from "@/hooks/handler/use-singleplayer-game-handler"
-import { useFinishSessionAction, useStoreSessionAction } from "@/lib/safe-action/session"
+import {
+  useFinishSoloSessionAction,
+  useStoreSoloSessionAction
+} from "@/lib/safe-action/session/singleplayer"
 
 const SingleGameHandler = () => {
   const session = useSessionStore((state) => state.session)
   const setStoreState = useSessionStore((state) => state.setState)
 
-  const { executeAsync: executeFinishSession } = useFinishSessionAction()
-  const { executeAsync: executeStoreSession } = useStoreSessionAction()
+  const { executeAsync: finishSoloSession } = useFinishSoloSessionAction()
+  const { executeAsync: storeSoloSession } = useStoreSoloSessionAction()
 
   const { handleCardFlip } = useSingleplayerGameHandler({
     async onHeartbeat() {
       try {
-        await executeStoreSession(session)
+        await storeSoloSession({
+          clientSession: session as SoloClientSession
+        })
       } catch (err) {
         logError(err)
       }
@@ -34,7 +42,7 @@ const SingleGameHandler = () => {
       setStoreState({ syncStatus: "synchronized" })
 
       try {
-        await executeFinishSession({
+        await finishSoloSession({
           clientSession: {
             ...session,
             cards: validateCardMatches(session.cards)

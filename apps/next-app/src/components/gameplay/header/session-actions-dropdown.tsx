@@ -31,7 +31,7 @@ import {
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
-import { useAbandonSessionAction } from "@/lib/safe-action/session"
+import { useForceCloseSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
 
 const SessionActionsDropdown = ({
   className,
@@ -43,11 +43,11 @@ const SessionActionsDropdown = ({
   const session = useSessionStore((state) => state.session)
 
   const {
-    executeAsync: executeAbandonSession,
-    status: abandonSessionStatus
-  } = useAbandonSessionAction()
+    executeAsync: forceCloseSoloSession,
+    status: forceCloseSoloSessionStatus
+  } = useForceCloseSoloSessionAction()
 
-  const handleAbandonSession = async () => {
+  const handleCloseSession = async () => {
     if (session.format === "OFFLINE") {
       clearSessionFromStorage()
     
@@ -59,7 +59,7 @@ const SessionActionsDropdown = ({
     }
 
     try {
-      await executeAbandonSession({ clientSession: session })
+      await forceCloseSoloSession({ clientSession: session })
     } catch (err) {
       logError(err)
     }
@@ -112,8 +112,8 @@ const SessionActionsDropdown = ({
 
         <DropdownMenuItem
           variant="destructive"
-          onClick={handleAbandonSession}
-          disabled={abandonSessionStatus === "executing"}
+          onClick={handleCloseSession}
+          disabled={forceCloseSoloSessionStatus === "executing"}
         >
           <DoorOpen className="size-4 shrink-0" />
           <span>Close session</span>

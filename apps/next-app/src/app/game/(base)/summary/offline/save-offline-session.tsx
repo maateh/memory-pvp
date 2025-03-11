@@ -26,7 +26,7 @@ import { PlayerBadge } from "@/components/player"
 import { PlayerProfileForm } from "@/components/player/form"
 
 // hooks
-import { useSaveOfflineSessionAction } from "@/lib/safe-action/session"
+import { useSaveOfflineSessionAction } from "@/lib/safe-action/session/singleplayer"
 import { toast } from "sonner"
 
 type SaveOfflineSessionProps = {

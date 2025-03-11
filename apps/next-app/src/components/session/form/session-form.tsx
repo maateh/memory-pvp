@@ -32,9 +32,9 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
-import { useCreateSoloSessionAction } from "@/lib/safe-action/session"
-import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type SessionFormValuesCache = {
   collection?: ClientCardCollection | null
@@ -60,6 +60,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     }
   })
 
+  const { execute: createOfflineSession } = useCreateOfflineSession()
   const {
     executeAsync: createSoloSession,
     status: createSoloSessionStatus
@@ -68,7 +69,6 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     executeAsync: createWaitingRoom,
     status: createWaitingRoomStatus
   } = useCreateRoomAction()
-  const { execute: createOfflineSession } = useCreateOfflineSession()
 
   const handleSubmit = async (values: SessionFormValidation) => {
     const { settings, forceStart } = values

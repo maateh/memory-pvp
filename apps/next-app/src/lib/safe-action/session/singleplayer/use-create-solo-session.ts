@@ -8,7 +8,7 @@ import type { MatchFormat, SessionMode } from "@repo/db"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // actions
-import { createSoloSession } from "@/server/action/session-action"
+import { createSoloSession } from "@/server/action/session/singleplayer-action"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -24,22 +24,27 @@ export const useCreateSoloSessionAction = () => {
   const setCache = useCacheStore<SessionFormValuesCache, "set">((state) => state.set)
 
   return useAction(createSoloSession, {
-    onExecute() { toast.loading("Creating session...", { id: "session:create" }) },
-    onSettled() { toast.dismiss("session:create") },
+    onExecute() {
+      toast.loading("Creating session...", { id: "session:create" })
+    },
+    onSettled() {
+      toast.dismiss("session:create")
+    },
     onSuccess({ input: { settings, forceStart } }) {
       toast.dismiss("session:create:error")
 
       if (forceStart) {
         toast.warning("Active solo session has been force closed.", {
           id: "session:force_closed",
-          description: activeMode === "CASUAL"
-            ? "This will not affect your ranking scores."
-            : "You might lose ELO because this was a ranked match."
+          description:
+            activeMode === "CASUAL"
+              ? "This will not affect your ranking scores."
+              : "You might lose ELO because this was a ranked match."
         })
       }
 
       const { mode, format, tableSize } = settings
-      toast.success("Game session started!", {
+      toast.success("Solo game session started!", {
         id: "session:created",
         description: `${mode} | ${format} | ${tableSize}`
       })
@@ -63,7 +68,7 @@ export const useCreateSoloSessionAction = () => {
         return
       }
 
-      handleServerError(error.serverError, "Failed to start solo session. Please try again later.")
+      handleServerError(error.serverError, "Failed to start solo game session. Please try again later.")
     }
   })
 }

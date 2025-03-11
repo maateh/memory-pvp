@@ -16,8 +16,8 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
-import { useCreateSoloSessionAction } from "@/lib/safe-action/session"
-import { useCreateRoomAction } from "@/lib/safe-action/room"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type SessionRunningPopupActionsProps = {
   activeSessionFormat: ClientSession["format"]

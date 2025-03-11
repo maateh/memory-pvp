@@ -5,7 +5,8 @@ import { sessionCard } from "@repo/db/json-schema"
 import {
   baseClientSession,
   sessionSettings,
-  offlineSessionStorage
+  offlineSessionStorage,
+  soloClientSession
 } from "@/session-schema"
 import { roomSettings } from "@/room-schema"
 import { createRoomValidation } from "@/validation/room-validation"
@@ -37,6 +38,10 @@ export const createMultiplayerSessionValidation = z.object({
   guestId: z.string()
 })
 
+export const storeSoloSessionValidation = z.object({
+  clientSession: soloClientSession
+})
+
 export const finishSoloSessionValidation = z.object({
   clientSession: baseClientSession
     .omit({ status: true, cards: true })
@@ -47,10 +52,9 @@ export const finishSoloSessionValidation = z.object({
     })
 })
 
-export const abandonSoloSessionValidation = z.object({
+export const forceCloseSoloSessionValidation = z.object({
   clientSession: baseClientSession
     .omit({ status: true })
-    .optional()
 })
 
 export const saveOfflineSessionValidation = z.object({
@@ -69,5 +73,5 @@ export type CreateSoloSessionValidation = z.infer<typeof createSoloSessionValida
 export type SessionFormValidation = z.infer<typeof sessionFormValidation>
 export type CreateMultiplayerSessionValidation = z.infer<typeof createMultiplayerSessionValidation>
 export type FinishSoloSessionValidation = z.infer<typeof finishSoloSessionValidation>
-export type AbandonSoloSessionValidation = z.infer<typeof abandonSoloSessionValidation>
+export type ForceCloseSoloSessionValidation = z.infer<typeof forceCloseSoloSessionValidation>
 export type SaveOfflineSessionValidation = z.infer<typeof saveOfflineSessionValidation>
