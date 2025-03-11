@@ -88,7 +88,7 @@ export const sessionCardFlip: SocketEventHandler<
     const isOver = session.cards.every((card) => card.matchedBy !== null)
     if (!isOver) return
 
-    await closeSession({ ...room, session }, playerId, "finish")
+    await closeSession({ ...room, session }, playerId, "FINISHED")
 
     io.to(roomSlug).emit("session:finished", {
       message: "Session finished!",

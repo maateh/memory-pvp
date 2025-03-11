@@ -1,4 +1,5 @@
 // types
+import type { SessionStatus } from "@repo/db"
 import type { RoomVariants, RunningRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
@@ -6,7 +7,7 @@ import { redis } from "@/redis"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@/redis/keys"
 
 // db
-import { updateSessionStatus } from "@/db/mutation/session-mutation"
+import { closeSession as closeSessionMutation } from "@/db/mutation/session-mutation"
 
 /**
  * Retrieves a list of waiting rooms from Redis.
@@ -166,10 +167,10 @@ export async function closeRoom(
 export async function closeSession(
   room: RunningRoom,
   playerId: string,
-  action: "finish" | "abandon"
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<void> {
   await Promise.all([
-    updateSessionStatus(room.session, playerId, action),
+    closeSessionMutation(room.session, playerId, status),
     redis.del(playerConnectionKey(room.owner.id)),
     redis.del(playerConnectionKey(room.guest.id)),
     redis.json.del(roomKey(room.slug))

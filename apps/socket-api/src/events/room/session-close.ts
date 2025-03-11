@@ -45,7 +45,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    await closeSession(room, playerId, "abandon")
+    await closeSession(room, playerId, "CLOSED")
     socket.ctx.connection = undefined!
 
     response({
