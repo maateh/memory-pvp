@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
-import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session"
 import { useCreateRoomAction } from "@/lib/safe-action/room"
 
 type SessionRunningPopupActionsProps = {
@@ -25,9 +25,9 @@ type SessionRunningPopupActionsProps = {
 
 const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopupActionsProps) => {
   const {
-    executeAsync: createSingleSession,
-    status: createSingleSessionStatus
-  } = useCreateSingleSessionAction()
+    executeAsync: createSoloSession,
+    status: createSoloSessionStatus
+  } = useCreateSoloSessionAction()
 
   const {
     executeAsync: createWaitingRoom,
@@ -60,7 +60,7 @@ const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopup
 
     try {
       if (settings.format === "SOLO") {
-        await createSingleSession({ settings, forceStart: true })
+        await createSoloSession({ settings, forceStart: true })
       } else {
         await createWaitingRoom({ settings, forceStart: true })
       }
@@ -88,7 +88,7 @@ const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopup
     <>
       <Button
         variant="outline"
-        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
+        disabled={createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
         asChild
       >
         <Link href={continueHref} replace>
@@ -99,7 +99,7 @@ const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopup
       <Button
         variant="destructive"
         onClick={handleForceStart}
-        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
+        disabled={createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
       >
         {startText}
       </Button>

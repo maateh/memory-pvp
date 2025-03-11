@@ -32,7 +32,7 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
-import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session"
 import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 
@@ -61,12 +61,12 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
   })
 
   const {
-    executeAsync: createSingleSession,
-    status: createSingleSessionStatus
-  } = useCreateSingleSessionAction()
+    executeAsync: createSoloSession,
+    status: createSoloSessionStatus
+  } = useCreateSoloSessionAction()
   const {
     executeAsync: createWaitingRoom,
-    status: createRoomActionStatus
+    status: createWaitingRoomStatus
   } = useCreateRoomAction()
   const { execute: createOfflineSession } = useCreateOfflineSession()
 
@@ -87,7 +87,7 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
 
     try {
       if (settings.format === "SOLO") {
-        await createSingleSession({ settings, forceStart })
+        await createSoloSession({ settings, forceStart })
         return
       }
   
@@ -148,13 +148,13 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
           size="lg"
           disabled={
             !clerkUser
-              || createSingleSessionStatus === "executing"
-              || createRoomActionStatus === "executing"
+              || createSoloSessionStatus === "executing"
+              || createWaitingRoomStatus === "executing"
               || !collectionId
               || !collection
           }
         >
-          {createSingleSessionStatus === "executing" || createRoomActionStatus === "executing" ? (
+          {createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing" ? (
             <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
           ) : (
             <SubmitIcon className="size-5 sm:size-6 shrink-0" />

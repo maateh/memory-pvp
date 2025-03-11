@@ -12,7 +12,7 @@ import { roomKey, sessionKey } from "@repo/server/redis-keys"
 import { getActiveRoom } from "@repo/server/redis-commands"
 
 // db
-import { updateSessionStatus } from "@repo/server/db-session-mutation"
+import { closeSession, updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
 
 // actions
@@ -44,13 +44,13 @@ import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-
 import { ServerError } from "@repo/server/error"
 import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
-export const createSingleSession = playerActionClient
+export const createSoloSession = playerActionClient
   .schema(createSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { forceStart } = parsedInput
     const { collectionId, ...settings } = parsedInput.settings
 
-    if (settings.type === "COMPETITIVE") {
+    if (settings.mode === "RANKED") {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Ranked mode is not available.",
@@ -58,45 +58,49 @@ export const createSingleSession = playerActionClient
       })
     }
 
-    /* Checks if there is any ongoing session */
-    const activeSession = await getActiveSession("SINGLE", ctx.player.id)
+    const activeSession = await getActiveSession("SOLO", ctx.player.id)
 
-    /* Throws server error with 'ACTIVE_SESSION' key if active (singleplayer) session found. */
+    /* Throws server error with `ACTIVE_SESSION` key if active session found. */
     if (activeSession && !forceStart) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
-        data: { activeSessionMode: activeSession.mode },
-        message: "Active game session found.",
-        description: "Would you like to continue the ongoing session or start a new one?"
+        data: {
+          mode: activeSession.mode,
+          format: activeSession.format
+        },
+        message: "Active solo session found.",
+        description: "Would you like to continue that session or start a new one?"
       })
     }
 
-    /* Abandons active session if 'forceStart' is applied. */
+    /* Force closes active session if `forceStart` is applied. */
     if (activeSession && forceStart) {
-      await updateSessionStatus(
+      await closeSession(
         parseSchemaToClientSession(activeSession),
         ctx.player.id,
-        "abandon"
+        "FORCE_CLOSED"
       )
     }
 
+    /* Finding collection with the specified `collectionId` */
     const collection = await ctx.db.cardCollection.findUnique({
       where: { id: collectionId },
-      include: {
-        user: true,
-        cards: true
-      }
+      include: { user: true, cards: true }
     })
 
+    /**
+     * Throws server error with `COLLECTION_NOT_FOUND` key if
+     * collection not found with the specified `collectionId`.
+     */
     if (!collection) {
       ServerError.throwInAction({
         key: "COLLECTION_NOT_FOUND",
         message: "Sorry, but we can't find the card collection you selected.",
-        description: "Please, select another card collection or try again later."
+        description: "Please, select another collection or try again later."
       })
     }
 
-    /* Creates the game session then redirects the user to the game page */
+    /* Creates the game session, then redirects the user to the game page */
     await ctx.db.gameSession.create({
       data: {
         ...settings,
