@@ -5,7 +5,7 @@ import { sessionCard } from "@repo/db/json-schema"
 import {
   baseClientSession,
   sessionSettings,
-  offlineClientSession
+  offlineSessionStorage
 } from "@/session-schema"
 import { roomSettings } from "@/room-schema"
 import { createRoomValidation } from "@/validation/room-validation"
@@ -55,8 +55,8 @@ export const abandonSoloSessionValidation = z.object({
 
 export const saveOfflineSessionValidation = z.object({
   playerId: z.string(),
-  clientSession: offlineClientSession
-    .omit({ cards: true })
+  clientSession: offlineSessionStorage
+    .omit({ cards: true, updatedAt: true })
     .extend({
       cards: z.array(sessionCard.extend({
         matchedBy: z.string()

@@ -296,16 +296,16 @@ export const saveOfflineSession = protectedActionClient
   .schema(saveOfflineSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { playerId } = parsedInput
-    const { collectionId, owner, currentTurn, ...clientSession } = parsedInput.clientSession
+    const { collectionId, ...clientSession } = parsedInput.clientSession
 
-    const playerAmount = await ctx.db.playerProfile.count({
+    const player = await ctx.db.playerProfile.findFirst({
       where: {
         userId: ctx.user.id,
         id: playerId
       }
     })
 
-    if (playerAmount === 0) {
+    if (!player) {
       ServerError.throwInAction({
         key: "PLAYER_PROFILE_NOT_FOUND",
         message: "Player profile not found.",
@@ -330,19 +330,15 @@ export const saveOfflineSession = protectedActionClient
     const { slug } = await ctx.db.gameSession.create({
       data: {
         ...clientSession,
-        slug: generateSessionSlug({ type: "CASUAL", mode: "SINGLE" }, true),
-        type: "CASUAL",
-        mode: "SINGLE",
-        status: "OFFLINE",
-        currentTurn: playerId,
         stats,
+        slug: generateSessionSlug({ mode: "CASUAL", format: "OFFLINE" }, true),
+        status: "FINISHED",
+        mode: "CASUAL",
+        format: "OFFLINE",
+        currentTurn: player.id,
         closedAt: new Date(),
-        collection: {
-          connect: { id: collectionId }
-        },
-        owner: {
-          connect: { id: playerId }
-        }
+        collection: { connect: { id: collectionId } },
+        owner: { connect: { id: player.id } }
       }
     })
 
