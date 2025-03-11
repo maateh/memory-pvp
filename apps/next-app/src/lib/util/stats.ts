@@ -94,7 +94,7 @@ export function getRendererSessionStats(
 /**
  * Generates a map of player statistics, each stat paired with an icon, label, and formatted data for rendering.
  * 
- * - The stats include player tag, score, playtime, card flips, matches, and the number of sessions played.
+ * - The stats include player tag, elo, playtime, card flips, matches, and the number of sessions played.
  * - Each entry consists of a label, icon, and formatted value, making it easy to display in a UI.
  * - If the `keys` argument is provided, only the corresponding stats will be included in the result.
  * 
@@ -117,8 +117,8 @@ export function getRendererPlayerStats(
     elo: {
       key: "elo",
       Icon: Star,
-      label: "Total Score",
-      data: `${player.stats.elo} points`
+      label: "Elo",
+      data: `${player.stats.elo} Elo`
     },
     avgTime: {
       key: "avgTime",

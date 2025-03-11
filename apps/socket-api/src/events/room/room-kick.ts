@@ -40,12 +40,12 @@ export const roomKick: SocketEventHandler<
     const waitingRoom = await leaveRoom({ ...room, guest }, guest.id)
     socket.broadcast.to(roomSlug).emit("room:kicked", {
       message: `${playerTag} has kicked you out of the room.`,
-      description: "This will not affect your ranking scores."
+      description: "This will not affect your Elo points."
     } satisfies SocketResponse)
 
     response({
       message: `You kicked ${guest.tag} out of the room.`,
-      description: "This will not affect your ranking scores.",
+      description: "This will not affect your Elo points.",
       data: waitingRoom
     })
   } catch (err) {

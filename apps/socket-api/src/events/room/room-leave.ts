@@ -49,7 +49,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
 
     response({
       message: "You have left the room.",
-      description: "This will not affect your ranking scores."
+      description: "This will not affect your Elo points."
     })
   } catch (err) {
     response({

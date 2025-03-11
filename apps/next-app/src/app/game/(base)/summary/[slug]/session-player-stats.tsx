@@ -85,7 +85,7 @@ type RenderStatDataParams = {
  * 
  * - This function returns a React node displaying the stat's value along with any changes during the session.
  * - If the session-specific stat is a positive number, it is prefixed with a '+' sign to indicate an increase.
- * - If the key is 'score' and the score value is negative, the stat is styled with a 'destructive' color to indicate a negative impact.
+ * - If the key is 'elo' and its value is negative, the stat is styled with a 'destructive' color to indicate a negative impact.
  * 
  * @param {RenderStatDataParams} params - The parameters for rendering the stat.
  * @param {PlayerStatsKeys} params.key - The key representing the specific statistic.

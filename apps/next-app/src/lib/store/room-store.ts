@@ -330,7 +330,7 @@ export const roomStore = ({
 
       toast.warning(message, {
         id: toastId,
-        description: `You can ${playerKey === "owner" ? "close" : "leave"} the room without losing any ranking scores.`,
+        description: `You can ${playerKey === "owner" ? "close" : "leave"} the room without losing Elo points.`,
         duration: 10000,
         onAutoClose,
         action: {
@@ -353,7 +353,7 @@ export const roomStore = ({
 
               toast.success(`You have ${playerKey === "owner" ? "closed" : "left"} the room.`, {
                 id: "room:left",
-                description: "This will not affect your ranking scores."
+                description: "This will not affect your Elo points."
               })
             } catch (err) {
               logError(err)
@@ -370,7 +370,7 @@ export const roomStore = ({
       const description = "Do you want to force close this session?"
 
       if (initialRoom.session.mode === "RANKED") {
-        description.concat(" You will lose ranking scores.")
+        description.concat(" You will lose Elo points.")
       }
 
       toast.warning(message, {
@@ -391,8 +391,8 @@ export const roomStore = ({
               toast.success("You have force closed the session.", {
                 id: "session:closed",
                 description: initialRoom.session.mode === "CASUAL"
-                  ? "This had no effect on your ranking scores."
-                  : "You have lost the maximum amount of ranking scores."
+                  ? "This had no effect on your Elo points."
+                  : "You have lost the maximum amount of points."
               })
             } catch (err) {
               const error = err as ServerError

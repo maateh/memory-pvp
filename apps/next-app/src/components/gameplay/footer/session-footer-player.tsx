@@ -36,7 +36,7 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
   const session = useSessionStore((state) => state.session)
 
   const freeFlips = useMemo(() => getFreeFlips(session), [session])
-  const score = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
+  const elo = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
 
   const flips = session.stats.flips[player.id]
 
@@ -69,7 +69,7 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
         >
           <span className="small-caps tracking-wider">Rank / </span>
           <span className="text-xs font-semibold dark:font-medium">
-            {player.stats.elo} scores
+            {player.stats.elo} Elo
           </span>
         </StatisticBadge>
       </div>
@@ -93,15 +93,15 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
           </p>
         </Badge>
 
-        {score !== null && (
+        {elo !== null && (
           <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
-            variant={score >= 0 ? 'accent' : 'destructive'}
+            variant={elo >= 0 ? 'accent' : 'destructive'}
           >
-            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": score < 0 })} />
+            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": elo < 0 })} />
   
             <p className="space-x-1">
               <span className="text-sm font-light small-caps">Session</span>
-              <span className="text-xs font-semibold">/ {score} scores</span>
+              <span className="text-xs font-semibold">/ {elo} Elo</span>
             </p>
           </Badge>
         )}

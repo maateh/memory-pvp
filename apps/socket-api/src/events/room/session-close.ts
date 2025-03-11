@@ -51,8 +51,8 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
     response({
       message: `Session has been closed by ${playerTag}.`,
       description: room.session.mode === "CASUAL"
-        ? "Since this was a casual match it will not affect your ranking scores."
-        : "Disconnected player will lose points based on the session state."
+        ? "This will not affect your Elo points."
+        : "Disconnected player will lose Elo based on the session state."
     })
   } catch (err) {
     response({

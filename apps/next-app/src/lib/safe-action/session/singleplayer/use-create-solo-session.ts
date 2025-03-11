@@ -38,8 +38,8 @@ export const useCreateSoloSessionAction = () => {
           id: "session:force_closed",
           description:
             activeMode === "CASUAL"
-              ? "This will not affect your ranking scores."
-              : "You might lose ELO because this was a ranked match."
+              ? "This will not affect your Elo points."
+              : "You might lose some Elo because this was a ranked match."
         })
       }
 
