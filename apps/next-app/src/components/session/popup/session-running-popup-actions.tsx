@@ -61,9 +61,14 @@ const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopup
     try {
       if (settings.format === "SOLO") {
         await createSoloSession({ settings, forceStart: true })
-      } else {
-        await createWaitingRoom({ settings, forceStart: true })
+        return
       }
+
+      /**
+       * Note: This part of the code will probably never be reached, because
+       * currently there is no option to force start a multiplayer session.
+       */
+      await createWaitingRoom({ settings })
     } catch (err) {
       logError(err)
     }

@@ -5,13 +5,11 @@ import { roomSettings } from "@/room-schema"
 import { clientSessionCard } from "@/session-schema"
 
 export const createRoomValidation = z.object({
-  settings: roomSettings,
-  forceStart: z.coerce.boolean().optional()
+  settings: roomSettings
 })
 
 export const joinRoomValidation = z.object({
-  roomSlug: z.string(),
-  forceJoin: z.coerce.boolean().optional()
+  roomSlug: z.string()
 })
 
 export const sessionCardFlipValidation = z.object({

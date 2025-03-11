@@ -1,6 +1,6 @@
 "use server"
 
-import { redirect, RedirectType } from "next/navigation"
+import { redirect } from "next/navigation"
 
 // types
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
@@ -10,7 +10,6 @@ import { closeRoom, getActiveRoom, getRoom, leaveRoom } from "@repo/server/redis
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 
 // db
-import { updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
 
 // actions
@@ -26,14 +25,13 @@ import { generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
 import { ServerError } from "@repo/server/error"
-import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 
 export const createRoom = playerActionClient
   .schema(createRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { settings, forceStart } = parsedInput
+    const { settings } = parsedInput
 
-    if (settings.type === "COMPETITIVE") {
+    if (settings.mode === "RANKED") {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Ranked mode is not available.",
@@ -41,7 +39,7 @@ export const createRoom = playerActionClient
       })
     }
 
-    /* Throws server error with 'ACTIVE_SESSION' key if active (multiplayer) session found. */
+    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
     const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
     if (activeSession) {
       ServerError.throwInAction({
@@ -89,51 +87,25 @@ export const createRoom = playerActionClient
       ctx.redis.lpush(waitingRoomsKey, room.slug)
     ])
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
-    redirect("/game/multiplayer", forceStart ? RedirectType.replace : RedirectType.push)
+    redirect("/game/multiplayer")
   })
 
 export const joinRoom = playerActionClient
   .schema(joinRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { roomSlug, forceJoin } = parsedInput
+    const { roomSlug } = parsedInput
 
     /* Checks if there is any ongoing session */
     const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
 
     /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
-    if (activeSession && !forceJoin) {
+    if (activeSession) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
         data: { activeSessionMode: activeSession.mode },
-        message: "Active game session found.",
-        description: activeSession.mode === "SINGLE"
-          ? "Would you like to force close your ongoing session and join the room?"
-          : "Please finish your active multiplayer session, before you start a new one."
+        message: "Active multiplayer session found.",
+        description: "Please finish your session, before you start a new one."
       })
-    }
-
-    /* Abandons active session if 'forceJoin' is applied. */
-    if (activeSession && forceJoin) {
-      /* Note: multiplayer sessions can only be closed manually by the player. */
-      if (activeSession.mode !== "SINGLE") {
-        ServerError.throwInAction({
-          key: "FORCE_START_NOT_ALLOWED",
-          message: "Force start not allowed.",
-          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
-        })
-      }
-
-      await updateSessionStatus(
-        parseSchemaToClientSession(activeSession),
-        ctx.player.id,
-        "abandon"
-      )
     }
 
     /* Throws server error with 'ACTIVE_ROOM' key if active room found. */
