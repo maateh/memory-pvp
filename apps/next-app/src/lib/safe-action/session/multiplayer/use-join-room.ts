@@ -3,7 +3,7 @@ import { useAction } from "next-safe-action/hooks"
 import { toast } from "sonner"
 
 // actions
-import { joinRoom } from "@/server/action/room-action"
+import { joinRoom } from "@/server/action/session/multiplayer-action"
 
 // utils
 import { handleServerError } from "@/lib/util/error"
@@ -12,8 +12,12 @@ export const useJoinRoomAction = () => {
   const router = useRouter()
 
   return useAction(joinRoom, {
-    onExecute() { toast.loading("Joining room...", { id: "room:join" }) },
-    onSettled() { toast.dismiss("room:join") },
+    onExecute() {
+      toast.loading("Joining room...", { id: "room:join" })
+    },
+    onSettled() {
+      toast.dismiss("room:join")
+    },
     onSuccess() {
       toast.dismiss("room:join:error")
 
@@ -23,10 +27,7 @@ export const useJoinRoomAction = () => {
       })
     },
     onError({ error }) {
-      if (
-        error.serverError?.key === "ACTIVE_SESSION" ||
-        error.serverError?.key === "ACTIVE_ROOM"
-      ) {
+      if (error.serverError?.key === "ACTIVE_SESSION" || error.serverError?.key === "ACTIVE_ROOM") {
         const { message, description } = error.serverError
 
         toast.warning(message, {
@@ -35,7 +36,9 @@ export const useJoinRoomAction = () => {
           duration: 10000,
           action: {
             label: "Reconnect",
-            onClick() { router.push("/game/multiplayer") }
+            onClick() {
+              router.push("/game/multiplayer")
+            }
           }
         })
         return

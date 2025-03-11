@@ -10,8 +10,10 @@ import type { RoomPlayer } from "@repo/schema/room-player"
 import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
 // actions
-import { createMultiplayerSession } from "@/server/action/session-action"
-import { leaveOrCloseRoom } from "@/server/action/room-action"
+import {
+  createMultiplayerSession,
+  leaveOrCloseRoom
+} from "@/server/action/session/multiplayer-action"
 
 // helpers
 import { currentPlayerKey } from "@repo/helper/player"
