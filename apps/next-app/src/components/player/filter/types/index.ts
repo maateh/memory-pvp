@@ -3,10 +3,8 @@ import type { PlayerFilterQuery, PlayerSortQuery } from "@/lib/schema/query/play
 
 /* Filter types */
 export type PlayerFilterFields = Required<PlayerFilterQuery>
-
 export type PlayerFilter = Filter<PlayerFilterFields>
 
 /* Sort types */
 export type PlayerSortFields = Required<PlayerSortQuery>
-
 export type PlayerSort = Sort<PlayerSortFields>

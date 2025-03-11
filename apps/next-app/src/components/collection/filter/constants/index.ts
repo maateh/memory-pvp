@@ -4,19 +4,19 @@ import type { CollectionSort } from "../types"
 
 export const collectionSortOptions: SortOptions<CollectionSort> = {
   name: {
-    sortValueKey: 'name',
-    label: 'Name'
+    sortValueKey: "name",
+    label: "Name"
   },
   tableSize: {
-    sortValueKey: 'tableSize',
-    label: 'Size'
+    sortValueKey: "tableSize",
+    label: "Size"
   },
   createdAt: {
-    sortValueKey: 'createdAt',
-    label: 'Created at'
+    sortValueKey: "createdAt",
+    label: "Created at"
   },
   updatedAt: {
-    sortValueKey: 'updatedAt',
-    label: 'Updated at'
+    sortValueKey: "updatedAt",
+    label: "Updated at"
   }
 }

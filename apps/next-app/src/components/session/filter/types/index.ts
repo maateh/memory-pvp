@@ -5,10 +5,10 @@ import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/se
 export type SessionFilterFields = Required<SessionFilterQuery>
 export type SessionFilter = Filter<SessionFilterFields>
 
-export type SessionSettingsFilterFields = Pick<SessionFilterFields, 'type' | 'mode' | 'tableSize'>
+export type SessionSettingsFilterFields = Pick<SessionFilterFields, "mode" | "format" | "tableSize">
 export type SessionSettingsFilter = Filter<SessionSettingsFilterFields>
 
-export type SessionStatusFilterFields = Pick<SessionFilterFields, 'status'>
+export type SessionStatusFilterFields = Pick<SessionFilterFields, "status">
 export type SessionStatusFilter = Filter<SessionStatusFilterFields>
 
 /* Sort types */

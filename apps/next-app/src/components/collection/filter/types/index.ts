@@ -3,10 +3,8 @@ import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/qu
 
 /* Filter types */
 export type CollectionFilterFields = Required<CollectionFilterQuery>
-
 export type CollectionFilter = Filter<CollectionFilterFields>
 
 /* Sort types */
 export type CollectionSortFields = Required<CollectionSortQuery>
-
 export type CollectionSort = Sort<CollectionSortFields>
