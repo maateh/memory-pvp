@@ -128,7 +128,7 @@ export const createSoloSession = playerActionClient
     redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
-export const createMultiSession = playerActionClient
+export const createMultiplayerSession = playerActionClient
   .schema(createMultiplayerSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { slug, guestId } = parsedInput
@@ -140,19 +140,21 @@ export const createMultiSession = playerActionClient
     if (activeSession || guestActiveSession) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
-        message: "Active game session found.",
-        description: "Multiplayer session cannot be started as long as one of the players in the room has another active session."
+        message: "Active multiplayer session found.",
+        description: "Session cannot be started as long as one of the players is in another multiplayer session."
       })
     }
 
+    /* Finding collection with the specified `collectionId` */
     const collection = await ctx.db.cardCollection.findUnique({
       where: { id: collectionId },
-      include: {
-        user: true,
-        cards: true
-      }
+      include: { user: true, cards: true }
     })
-
+  
+    /**
+     * Throws server error with `COLLECTION_NOT_FOUND` key if
+     * collection not found with the specified `collectionId`.
+     */
     if (!collection) {
       ServerError.throwInAction({
         key: "COLLECTION_NOT_FOUND",
@@ -161,6 +163,7 @@ export const createMultiSession = playerActionClient
       })
     }
 
+    /* Create the multiplayer game session */
     const session = await ctx.db.gameSession.create({
       data: {
         ...settings,
@@ -187,7 +190,10 @@ export const createMultiSession = playerActionClient
       include: sessionSchemaFields
     })
 
+    /* Gets the player's active room. */
     const activeRoom = await getActiveRoom<JoinedRoom>(ctx.player.id)
+
+    /* Throws server error with `ROOM_NOT_FOUND` key if active room not found. */
     if (!activeRoom) {
       ServerError.throwInAction({
         key: "ROOM_NOT_FOUND",
@@ -196,14 +202,15 @@ export const createMultiSession = playerActionClient
       })
     }
 
+    /* Updates the `JoinedRoom` room variant to a `RunningRoom` variant. */
     const room: RunningRoom = {
       ...activeRoom,
       status: "running",
       session: parseSchemaToClientSession(session) as MultiplayerClientSession
     }
 
+    /* Throws server error with `UNKNOWN` key if failed to store the updated room data. */
     const response = await redis.json.set(roomKey(room.slug), "$", room, { xx: true })
-
     if (response !== "OK") {
       ServerError.throwInAction({
         key: "UNKNOWN",

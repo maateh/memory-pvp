@@ -9,15 +9,15 @@ import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-ty
 import type { RoomPlayer } from "@repo/schema/room-player"
 import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
-// server
-import { ServerError } from "@repo/server/error"
-import { createMultiSession } from "@/server/action/session-action"
+// actions
+import { createMultiplayerSession } from "@/server/action/session-action"
 import { leaveOrCloseRoom } from "@/server/action/room-action"
 
 // helpers
 import { currentPlayerKey } from "@repo/helper/player"
 
 // utils
+import { ServerError } from "@repo/server/error"
 import { handleServerError, logError } from "@/lib/util/error"
 
 type RoomState = {
@@ -251,7 +251,7 @@ export const roomStore = ({
     ) return
 
     try {
-      const { serverError } = await createMultiSession({
+      const { serverError } = await createMultiplayerSession({
         settings: room.settings,
         slug: room.slug,
         guestId: room.guest.id
