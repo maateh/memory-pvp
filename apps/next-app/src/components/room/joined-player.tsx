@@ -26,7 +26,7 @@ type JoinedPlayerProps = {
 }
 
 const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerProps) => {
-  const { score } = getRendererPlayerStats(player, ["score"])
+  const { elo: eloStat } = getRendererPlayerStats(player, ["elo"])
   const isOffline = player.connection.status === "offline"
 
   return (
@@ -57,9 +57,9 @@ const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerP
       
       <PlayerBadge size="lg" player={player} />
       
-      <StatisticBadge className={cn({ "opacity-80": player.stats.score < 0 })}
-        variant={player.stats.score < 0 ? "destructive" : "accent"}
-        statistic={score}
+      <StatisticBadge className={cn({ "opacity-80": player.stats.elo < 0 })}
+        variant={player.stats.elo < 0 ? "destructive" : "accent"}
+        statistic={eloStat}
       />
 
       <BadgeWithIcon className={cn("gap-x-1 opacity-90", {
