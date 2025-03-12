@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { DefaultValues } from "react-hook-form"
-import type { CreatePlayerValidation } from "@/lib/schema/validation/player-validation"
+import type { CreatePlayerValidation } from "@repo/schema/player-validation"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createPlayerValidation } from "@/lib/schema/validation/player-validation"
+import { createPlayerValidation } from "@repo/schema/player-validation"
 
 // utils
 import { logError } from "@/lib/util/error"

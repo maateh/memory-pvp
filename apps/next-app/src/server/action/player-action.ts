@@ -14,7 +14,7 @@ import { playerTag } from "@repo/schema/player"
 import {
   createPlayerValidation,
   updatePlayerValidation
-} from "@/lib/schema/validation/player-validation"
+} from "@repo/schema/player-validation"
 
 export const createPlayer = protectedActionClient
   .schema(createPlayerValidation)

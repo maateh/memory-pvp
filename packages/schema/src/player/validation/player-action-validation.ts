@@ -3,7 +3,6 @@ import { z } from "zod"
 // schemas
 import { playerColor, playerTag } from "@repo/schema/player"
 
-/* Form / API validations */
 export const createPlayerValidation = z.object({
   tag: playerTag,
   color: playerColor

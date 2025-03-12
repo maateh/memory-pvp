@@ -11,6 +11,7 @@
   },
   "exports": {
     "./player": "./dist/player/index.js",
+    "./player-validation": "./dist/player/validation/index.js",
     "./room": "./dist/room/index.js",
     "./room-validation": "./dist/room/validation/index.js",
     "./session": "./dist/session/index.js",
