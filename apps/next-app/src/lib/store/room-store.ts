@@ -6,7 +6,7 @@ import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.
 import type { Socket } from "socket.io-client"
 import type { ToastT } from "sonner"
 import type { ExtendedSocketError, SocketResponse } from "@repo/server/socket-types"
-import type { RoomPlayer } from "@repo/schema/room-player"
+import type { RoomPlayer } from "@repo/schema/player"
 import type { RoomVariants, JoinedRoom, WaitingRoom, RunningRoom } from "@repo/schema/room"
 
 // actions

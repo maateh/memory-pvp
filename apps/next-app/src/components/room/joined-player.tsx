@@ -1,8 +1,7 @@
 "use client"
 
 // types
-import type { RoomStatus } from "@repo/schema/room"
-import type { RoomPlayer } from "@repo/schema/room-player"
+import type { RoomPlayer } from "@repo/schema/player"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"
