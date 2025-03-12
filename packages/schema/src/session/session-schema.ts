@@ -9,7 +9,6 @@ import {
   TableSizeSchema
 } from "@repo/db/zod"
 import { clientPlayer } from "@/player"
-import { offlineClientSession } from "@/session"
 
 export const sessionSettings = z.object({
   mode: SessionModeSchema,
@@ -43,31 +42,6 @@ export const baseClientSession = z.object({
   closedAt: z.coerce.date().optional().nullable()
 })
 
-// TODO: these last two might be better to move directly to the next application
-export const offlineSessionStorage = offlineClientSession
-  .omit({
-    slug: true,
-    status: true,
-    mode: true,
-    format: true,
-    owner: true,
-    currentTurn: true,
-    closedAt: true
-  })
-
-export const offlineSessionMetadata = offlineClientSession
-  .pick({
-    slug: true,
-    status: true,
-    mode: true,
-    format: true,
-    owner: true,
-    currentTurn: true
-  })
-
 export type SessionSettings = z.infer<typeof sessionSettings>
 export type ClientSessionCard = z.infer<typeof clientSessionCard>
 export type BaseClientSession = z.infer<typeof baseClientSession>
-
-export type OfflineSessionStorage = z.infer<typeof offlineSessionStorage>
-export type OfflineSessionMetadata = z.infer<typeof offlineSessionMetadata>
