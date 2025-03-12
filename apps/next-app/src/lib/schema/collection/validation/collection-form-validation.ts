@@ -4,13 +4,13 @@ import { z } from "zod"
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
 
 // schemas
-import { collectionCardImageSchema } from "@/lib/schema/collection"
+import { collectionCardImage } from "@/lib/schema/collection"
 
 // validations
 import { createCollectionUtValidation } from "@repo/schema/collection-validation"
 
-export const createClientCollectionValidation = createCollectionUtValidation
-  .extend({ images: z.array(collectionCardImageSchema) })
+export const collectionFormValidation = createCollectionUtValidation
+  .extend({ images: z.array(collectionCardImage) })
   .superRefine((collection, ctx) => {
     const { tableSize, images } = collection
 
@@ -34,4 +34,4 @@ export const createClientCollectionValidation = createCollectionUtValidation
     }
   })
 
-export type CreateClientCardCollectionValidation = z.infer<typeof createClientCollectionValidation>
+export type CollectionFormValidation = z.infer<typeof collectionFormValidation>

@@ -7,7 +7,7 @@ import {
   collectionMaxFileSizeInBytes
 } from "@/config/collection-settings"
 
-export const collectionCardImageSchema = z.custom<File>()
+export const collectionCardImage = z.custom<File>()
   .refine((file: File) => file.size <= collectionMaxFileSizeInBytes, {
     message: `Maximum image size is ${collectionMaxFileSize}`
   })
@@ -15,4 +15,4 @@ export const collectionCardImageSchema = z.custom<File>()
     message: "Uploaded image file format is not supported."
   })
 
-export type CollectionCardImage = z.infer<typeof collectionCardImageSchema>
+export type CollectionCardImage = z.infer<typeof collectionCardImage>
