@@ -2,7 +2,7 @@ import { z } from "zod"
 
 // schemas
 import { sortKeys } from "@/lib/schema/query"
-import { clientCollectionSchema } from "@/lib/schema/collection-schema"
+import { clientCollectionSchema } from "@repo/schema/collection"
 
 /* Query filters */
 export const collectionFilterQuery = clientCollectionSchema

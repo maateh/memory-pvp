@@ -2,7 +2,7 @@ import Link from "next/link"
 
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"

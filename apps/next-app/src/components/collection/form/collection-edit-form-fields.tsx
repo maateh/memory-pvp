@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { UpdateCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { UpdateCardCollectionValidation } from "@repo/schema/collection-validation"
 
 // shadcn
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"

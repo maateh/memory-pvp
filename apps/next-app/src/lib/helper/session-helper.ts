@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 // types
 import type { MemoryCard } from "@repo/db"
 import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // config
 import { tableSizeMap } from "@repo/config/game"

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { UploadThingError } from "uploadthing/server"
 
 // types
-import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { CreateClientCardCollectionValidation } from "@/lib/schema/collection/validation"
 
 // config
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
@@ -14,7 +14,7 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createClientCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import { createClientCollectionValidation } from "@/lib/schema/collection/validation"
 
 // components
 import { Form } from "@/components/shared"

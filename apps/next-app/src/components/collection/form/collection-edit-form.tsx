@@ -3,15 +3,15 @@
 import { useForm } from "react-hook-form"
 
 // types
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
-import type { UpdateCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { ClientCardCollection } from "@repo/schema/collection"
+import type { UpdateCardCollectionValidation } from "@repo/schema/collection-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { updateCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import { updateCollectionValidation } from "@repo/schema/collection-validation"
 
 // icons
 import { Edit3, Loader2 } from "lucide-react"

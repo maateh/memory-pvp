@@ -3,7 +3,7 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
 import type { ExpandedRouteConfig } from "uploadthing/types"
-import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { CreateClientCardCollectionValidation } from "@/lib/schema/collection/validation"
 
 // config
 import { tableSizePlaceholders } from "@repo/config/game"

@@ -4,7 +4,7 @@ import { useState } from "react"
 
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // react-table
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
