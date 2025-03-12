@@ -13,7 +13,7 @@ import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-pars
 // validations
 import {
   createCollectionValidation,
-  deleteCollectionSchema,
+  deleteCollectionValidation,
   updateCollectionValidation
 } from "@repo/schema/collection-validation"
 
@@ -86,7 +86,7 @@ export const updateCollection = protectedActionClient
   })
 
 export const deleteCollection = protectedActionClient
-  .schema(deleteCollectionSchema)
+  .schema(deleteCollectionValidation)
   .action(async ({ ctx, parsedInput }) => {
     const { id } = parsedInput
 

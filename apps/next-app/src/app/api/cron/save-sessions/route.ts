@@ -1,5 +1,5 @@
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 
 // redis
 import { redis } from "@repo/server/redis"
@@ -54,11 +54,11 @@ export async function GET(req: Request) {
  * - Scans for keys matching the pattern 'session:*', retrieves corresponding session data, and aggregates 
  *   them into a list of `ClientGameSession[]`.
  * 
- * @returns {Promise<ClientSession[]>} - A promise that resolves to an array of client game sessions.
+ * @returns {Promise<ClientSessionVariants[]>} - A promise that resolves to an array of client game sessions.
  */
-async function getSessionsFromRedis(): Promise<ClientSession[]> {
+async function getSessionsFromRedis(): Promise<ClientSessionVariants[]> {
   let cursor = 0
-  const sessions: ClientSession[] = []
+  const sessions: ClientSessionVariants[] = []
 
   do {
     const [newCursor, sessionKeys] = await redis.scan(cursor, {
@@ -68,7 +68,7 @@ async function getSessionsFromRedis(): Promise<ClientSession[]> {
 
 
     if (sessionKeys.length > 0) {
-      const data = await redis.mget<ClientSession[]>(sessionKeys)
+      const data = await redis.mget<ClientSessionVariants[]>(sessionKeys)
       sessions.push(...data)
     }
 

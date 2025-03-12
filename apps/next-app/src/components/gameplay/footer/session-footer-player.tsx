@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 
 // helpers

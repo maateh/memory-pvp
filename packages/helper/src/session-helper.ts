@@ -1,5 +1,5 @@
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSession as ClientSessionVariants } from "@repo/schema/session"
 
 // config
 import { freeFlipsMultiplier, tableSizeMap } from "@repo/config/game"
@@ -18,7 +18,7 @@ import { freeFlipsMultiplier, tableSizeMap } from "@repo/config/game"
  * @returns {number | null} - The calculated free flips based on the session's settings, or `null` if not applicable.
  */
 export function getFreeFlips(
-  session: Pick<ClientSession, "mode" | "format" | "tableSize">
+  session: Pick<ClientSessionVariants, "mode" | "format" | "tableSize">
 ): number | null {
   const { mode, format, tableSize } = session
 
@@ -53,7 +53,7 @@ export function getFreeFlips(
  * @returns {number | null} - The player's calculated score, or `null` if scoring is not applicable.
  */
 export function calculatePlayerSessionScore(
-  session: Pick<ClientSession, "mode" | "format" | "tableSize" | "stats">,
+  session: Pick<ClientSessionVariants, "mode" | "format" | "tableSize" | "stats">,
   playerId: string,
   action: "finish" | "abandon" = "finish"
 ): number | null {

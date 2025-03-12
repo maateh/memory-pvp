@@ -1,6 +1,6 @@
 // types
 import type { GameSession, SessionStatus } from "@repo/db"
-import type { BaseClientSession } from "@repo/schema/session"
+import type { ClientSession } from "@repo/schema/session"
 
 // server
 import { db } from "@repo/server/db"
@@ -14,7 +14,7 @@ import { db } from "@repo/server/db"
  * @returns 
  */
 export async function closeSession(
-  clientSession: Pick<BaseClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
+  clientSession: Pick<ClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
   currentPlayerId: string,
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<GameSession> {

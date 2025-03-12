@@ -1,6 +1,6 @@
 // types
 import type { MatchFormat } from "@repo/db"
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
@@ -37,13 +37,13 @@ import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parse
  * - Converts each session to the `ClientGameSession` format.
  * 
  * @param {Object} input - The filter and sort criteria for retrieving sessions.
- * @returns {Promise<ClientSession[]>} - An array of parsed sessions, or an empty array if no user is signed in.
+ * @returns {Promise<ClientSessionVariants[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
 export async function getClientSessions({ filter, sort, pagination }: {
   filter: SessionFilterQuery
   sort: SessionSortQuery
   pagination: PaginationParams
-}): Promise<Pagination<ClientSession>> {
+}): Promise<Pagination<ClientSessionVariants>> {
   const user = await signedIn()
   if (!user) return paginationWrapper([], 0, pagination)
 
@@ -70,7 +70,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
  * - Transforms the session data into a client-friendly format using `parseSchemaToClientSession`.
  * 
  * @param {Object} filter - Filter to find the game session by `id` or `slug`.
- * @returns {Promise<ClientSession | null>} - The client-friendly game session or `null` if not found or unauthorized.
+ * @returns {Promise<ClientSessionVariants | null>} - The client-friendly game session or `null` if not found or unauthorized.
  */
 export async function getClientSession({ id, slug }: {
   id: string
@@ -78,7 +78,7 @@ export async function getClientSession({ id, slug }: {
 } | {
   slug: string
   id?: never
-}): Promise<ClientSession | null> {
+}): Promise<ClientSessionVariants | null> {
   const user = await signedIn()
   if (!user) return null
 
@@ -144,12 +144,12 @@ export async function getActiveSession(
  * 
  * @param {MatchFormat | MatchFormat[]} format - The match format of the session.
  * @param {string} playerId - The ID of the player whose active session should be retrieved.
- * @returns {Promise<ClientSession | null>} - The active game session in a client-friendly format or `null` if none exists.
+ * @returns {Promise<ClientSessionVariants | null>} - The active game session in a client-friendly format or `null` if none exists.
  */
 export async function getActiveClientSession(
   format: MatchFormat | MatchFormat[],
   playerId?: string
-): Promise<ClientSession | null> {
+): Promise<ClientSessionVariants | null> {
   const activeSession = await getActiveSession(format, playerId)
   if (!activeSession) return null
 
@@ -160,7 +160,7 @@ export async function getActiveClientSession(
    * https://github.com/maateh/memory-pvp/issues/19
    */
   if (format === "SOLO") {
-    const storedSession = await redis.get<ClientSession>(sessionKey(activeSession.slug))
+    const storedSession = await redis.get<ClientSessionVariants>(sessionKey(activeSession.slug))
     if (storedSession) return storedSession
   }
 

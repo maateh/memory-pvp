@@ -2,31 +2,32 @@ import { z } from "zod"
 
 // schemas
 import {
-  collectionDescriptionSchema,
-  collectionNameSchema
+  collectionDescription,
+  collectionName
 } from "@/collection"
 
 // validations
 import { createCollectionUtValidation } from "@/collection/validation"
 
-export const createCollectionValidation = createCollectionUtValidation.extend({
+export const createCollectionValidation = z.object({
   utImages: z.array(
     z.object({
       utKey: z.string(),
       imageUrl: z.string().url({ message: "Card image URL is invalid." })
     })
   )
-})
+}).extend(createCollectionUtValidation.shape)
 
 export const updateCollectionValidation = z.object({
   id: z.string(),
-  name: collectionNameSchema.optional(),
-  description: collectionDescriptionSchema.optional()
+  name: collectionName.optional(),
+  description: collectionDescription.optional()
 })
 
-export const deleteCollectionSchema = z.object({
+export const deleteCollectionValidation = z.object({
   id: z.string()
 })
 
-export type CreateCardCollectionValidation = z.infer<typeof createCollectionValidation>
-export type UpdateCardCollectionValidation = z.infer<typeof updateCollectionValidation>
+export type CreateCollectionValidation = z.infer<typeof createCollectionValidation>
+export type UpdateCollectionValidation = z.infer<typeof updateCollectionValidation>
+export type DeleteCollectionValidation = z.infer<typeof deleteCollectionValidation>

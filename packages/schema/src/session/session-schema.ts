@@ -21,7 +21,7 @@ export const clientSessionCard = sessionCard.extend({
   imageUrl: z.string()
 })
 
-export const baseClientSession = z.object({
+export const clientSession = z.object({
   slug: z.string(),
   collectionId: z.string(),
 
@@ -44,4 +44,4 @@ export const baseClientSession = z.object({
 
 export type SessionSettings = z.infer<typeof sessionSettings>
 export type ClientSessionCard = z.infer<typeof clientSessionCard>
-export type BaseClientSession = z.infer<typeof baseClientSession>
+export type ClientSession = z.infer<typeof clientSession>

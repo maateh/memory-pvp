@@ -1,5 +1,5 @@
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
@@ -21,7 +21,7 @@ type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, "elo" | "totalTime"
 
 type SessionPlayerStatsProps = {
   player: ClientPlayer
-  session: ClientSession
+  session: ClientSessionVariants
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {

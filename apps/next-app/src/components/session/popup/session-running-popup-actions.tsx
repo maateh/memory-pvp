@@ -4,7 +4,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // utils
@@ -20,7 +20,7 @@ import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplay
 import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type SessionRunningPopupActionsProps = {
-  activeSessionFormat: ClientSession["format"]
+  activeSessionFormat: ClientSessionVariants["format"]
 }
 
 const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopupActionsProps) => {

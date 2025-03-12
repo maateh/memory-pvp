@@ -4,7 +4,7 @@ import { z } from "zod"
 import { sessionCard } from "@repo/db/json-schema"
 import { roomSettings } from "@/room"
 import {
-  baseClientSession,
+  clientSession,
   sessionSettings,
   offlineSessionStorage,
   soloClientSession
@@ -28,7 +28,7 @@ export const storeSoloSessionValidation = z.object({
 })
 
 export const finishSoloSessionValidation = z.object({
-  clientSession: baseClientSession
+  clientSession: clientSession
     .omit({ status: true, cards: true })
     .extend({
       cards: z.array(sessionCard.extend({
@@ -38,7 +38,7 @@ export const finishSoloSessionValidation = z.object({
 })
 
 export const forceCloseSoloSessionValidation = z.object({
-  clientSession: baseClientSession
+  clientSession: clientSession
     .omit({ status: true })
 })
 

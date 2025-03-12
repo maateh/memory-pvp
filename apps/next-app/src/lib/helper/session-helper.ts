@@ -2,7 +2,7 @@ import { nanoid } from "nanoid"
 
 // types
 import type { MemoryCard } from "@repo/db"
-import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
+import type { ClientSessionVariants, ClientSessionCard } from "@repo/schema/session"
 import type { ClientCardCollection } from "@repo/schema/collection"
 
 // config
@@ -23,7 +23,7 @@ import { tableSizeMap } from "@repo/config/game"
  * @returns {string} - The generated slug in the format `xx-yyy_xxxxxxxx`.
  */
 export function generateSessionSlug(
-  session: Pick<ClientSession, "mode" | "format">,
+  session: Pick<ClientSessionVariants, "mode" | "format">,
   isOffline: boolean = false
 ): string {
   const { mode, format } = session

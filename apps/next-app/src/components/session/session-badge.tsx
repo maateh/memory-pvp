@@ -1,5 +1,5 @@
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 
 // utils
 import { cn } from "@/lib/util"
@@ -13,7 +13,7 @@ import { SessionStatusIndicator } from "@/components/session"
 import { CustomTooltip } from "@/components/shared"
 
 type SessionBadgeProps = {
-  session: Pick<ClientSession, 'slug' | 'status'>
+  session: Pick<ClientSessionVariants, 'slug' | 'status'>
 } & React.ComponentProps<typeof Badge>
 
 const SessionBadge = ({

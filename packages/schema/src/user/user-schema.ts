@@ -1,11 +1,11 @@
 import { z } from "zod"
 
 /* Base schemas */
-export const clientUserSchema = z.object({
+export const clientUser = z.object({
   username: z.string(),
   imageUrl: z.string().nullable().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 })
 
-export type ClientUser = z.infer<typeof clientUserSchema>
+export type ClientUser = z.infer<typeof clientUser>

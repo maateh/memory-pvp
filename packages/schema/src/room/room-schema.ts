@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 // schemas
-import { roomPlayerSchema } from "@/player"
+import { roomPlayer } from "@/player"
 import { multiplayerClientSession, sessionSettings } from "@/session"
 
 export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "cancelled", "finished"])
@@ -16,12 +16,12 @@ export const roomSettings = sessionSettings
     ])
   })
 
-export const roomSchema = z.object({
+export const room = z.object({
   slug: z.string(),
   status: roomStatus,
   connectionStatus: roomConnectionStatus,
-  owner: roomPlayerSchema,
-  guest: roomPlayerSchema.nullable(),
+  owner: roomPlayer,
+  guest: roomPlayer.nullable(),
   settings: roomSettings,
   session: multiplayerClientSession.nullable(),
   createdAt: z.coerce.date()
@@ -31,4 +31,4 @@ export const roomSchema = z.object({
 export type RoomStatus = z.infer<typeof roomStatus>
 export type RoomConnectionStatus = z.infer<typeof roomConnectionStatus>
 export type RoomSettings = z.infer<typeof roomSettings>
-export type Room = z.infer<typeof roomSchema>
+export type Room = z.infer<typeof room>

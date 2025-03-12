@@ -1,47 +1,47 @@
 import { z } from "zod"
 
 // schemas
-import { roomPlayerSchema } from "@/player"
-import { roomSchema, roomStatus } from "@/room"
+import { roomPlayer } from "@/player"
+import { room, roomStatus } from "@/room"
 import { multiplayerClientSession } from "@/session"
 
-export const waitingRoomSchema = roomSchema
+export const waitingRoom = room
   .omit({ status: true, guest: true, session: true })
   .extend({ status: z.literal(roomStatus.enum.waiting) })
 
-export const joinedRoomSchema = roomSchema
+export const joinedRoom = room
   .omit({ status: true, guest: true, session: true })
   .extend({
     status: z.enum([
       roomStatus.enum.joined,
       roomStatus.enum.ready
     ]),
-    guest: roomPlayerSchema
+    guest: roomPlayer
   })
 
-export const runningRoomSchema = roomSchema
+export const runningRoom = room
   .omit({ status: true, guest: true, session: true })
   .extend({
     status: z.enum([
       roomStatus.enum.running,
       roomStatus.enum.cancelled
     ]),
-    guest: roomPlayerSchema,
+    guest: roomPlayer,
     session: multiplayerClientSession
   })
 
-export const finishedRoomSchema = roomSchema
+export const finishedRoom = room
   .omit({ status: true, guest: true, session: true })
   .extend({
     status: z.literal(roomStatus.enum.finished),
-    guest: roomPlayerSchema,
+    guest: roomPlayer,
     session: multiplayerClientSession
   })
 
-export type WaitingRoom = z.infer<typeof waitingRoomSchema>
-export type JoinedRoom = z.infer<typeof joinedRoomSchema>
-export type RunningRoom = z.infer<typeof runningRoomSchema>
-export type FinishedRoom = z.infer<typeof finishedRoomSchema>
+export type WaitingRoom = z.infer<typeof waitingRoom>
+export type JoinedRoom = z.infer<typeof joinedRoom>
+export type RunningRoom = z.infer<typeof runningRoom>
+export type FinishedRoom = z.infer<typeof finishedRoom>
 
 export type RoomVariants = WaitingRoom | JoinedRoom | RunningRoom | FinishedRoom
 export type WaitingRoomVariants = WaitingRoom | JoinedRoom

@@ -2,10 +2,10 @@ import { z } from "zod"
 
 // schemas
 import { sortKeys } from "@/lib/schema/query"
-import { baseClientSession } from "@repo/schema/session"
+import { clientSession } from "@repo/schema/session"
 
 /* Query filters */
-export const sessionFilterQuery = baseClientSession
+export const sessionFilterQuery = clientSession
   .pick({
     slug: true,
     collectionId: true,
@@ -18,7 +18,7 @@ export const sessionFilterQuery = baseClientSession
   .partial()
 
 export const sessionSortQuery = z.record(
-  baseClientSession.pick({
+  clientSession.pick({
     slug: true,
     mode: true,
     format: true,

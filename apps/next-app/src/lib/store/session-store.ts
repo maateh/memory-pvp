@@ -2,11 +2,11 @@ import { createStore } from "zustand"
 
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-import type { ClientSession, ClientSessionCard } from "@repo/schema/session"
+import type { ClientSessionVariants, ClientSessionCard } from "@repo/schema/session"
 import type { SyncStatus } from "@/components/shared/sync-indicator"
 
 type SessionState = {
-  session: ClientSession
+  session: ClientSessionVariants
   currentPlayer: ClientPlayer
   syncStatus: SyncStatus
 }
@@ -24,7 +24,7 @@ type SessionAction = {
 export type SessionStore = SessionState & SessionAction
 
 type SessionStoreProps = {
-  initialSession: ClientSession
+  initialSession: ClientSessionVariants
   currentPlayer: ClientPlayer
 }
 

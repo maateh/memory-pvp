@@ -1,7 +1,7 @@
 import { formatDistance } from "date-fns"
 
 // types
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 import type { RendererStatsMap, RendererSessionStatKeys, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
@@ -37,13 +37,13 @@ import {
  * - Each entry consists of a label, icon, and formatted value, making it easy to display in a UI.
  * - If the `keys` argument is provided, only the corresponding session stats will be included in the result.
  * 
- * @param {ClientSession} session - The session whose statistics are being processed.
+ * @param {ClientSessionVariants} session - The session whose statistics are being processed.
  * @param {RendererSessionStatKeys[]} [keys] - Optional list of specific stat keys to include in the result.
  * 
  * @returns {RendererStatsMap<RendererSessionStatKeys>} - A map of stats ready to be rendered, optionally filtered by the provided keys.
  */
 export function getRendererSessionStats(
-  session: Pick<ClientSession, "mode" | "format" | "tableSize" | "stats" | "startedAt">,
+  session: Pick<ClientSessionVariants, "mode" | "format" | "tableSize" | "stats" | "startedAt">,
   keys?: RendererSessionStatKeys[]
 ): RendererStatsMap<RendererSessionStatKeys> {
   const stats: RendererStatsMap<RendererSessionStatKeys> = {

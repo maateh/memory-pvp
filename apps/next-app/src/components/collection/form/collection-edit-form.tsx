@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 
 // types
 import type { ClientCardCollection } from "@repo/schema/collection"
-import type { UpdateCardCollectionValidation } from "@repo/schema/collection-validation"
+import type { UpdateCollectionValidation } from "@repo/schema/collection-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
@@ -31,7 +31,7 @@ type CollectionEditFormProps = {
 }
 
 const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
-  const form = useForm<UpdateCardCollectionValidation>({
+  const form = useForm<UpdateCollectionValidation>({
     resolver: zodResolver(updateCollectionValidation),
     defaultValues: collection
   })
@@ -41,7 +41,7 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
     status: updateCollectionStatus
   } = useUpdateCollectionAction()
 
-  const handleExecute = async (values: UpdateCardCollectionValidation) => {
+  const handleExecute = async (values: UpdateCollectionValidation) => {
     if (
       values.name === collection.name &&
       values.description === collection.description
@@ -59,7 +59,7 @@ const CollectionEditForm = ({ collection }: CollectionEditFormProps) => {
   }
 
   return (
-    <Form<UpdateCardCollectionValidation>
+    <Form<UpdateCollectionValidation>
       className="mt-5"
       form={form}
       onSubmit={handleExecute}

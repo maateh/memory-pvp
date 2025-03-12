@@ -2,36 +2,34 @@ import { z } from "zod"
 
 // schemas
 import { TableSizeSchema } from "@repo/db/zod"
-import { clientUserSchema } from "@/user"
+import { clientUser } from "@/user"
 
-/* Base schemas */
-export const collectionNameSchema = z.string()
+export const collectionName = z.string()
   .min(4, { message: "Collection name is too short." })
   .max(28, { message: "Collection name is too long." })
 
-export const collectionDescriptionSchema = z.string()
+export const collectionDescription = z.string()
   .min(8, { message: "Collection description is too short." })
   .max(128, { message: "Collection description is too long." })
 
-/* Client base schemas */
-export const clientMemoryCardSchema = z.object({
+export const clientMemoryCard = z.object({
   id: z.string(),
   imageUrl: z.string()
 })
 
-export const clientCollectionSchema = z.object({
+export const clientCardCollection = z.object({
   id: z.string(),
-  name: collectionNameSchema,
-  description: collectionDescriptionSchema,
+  name: collectionName,
+  description: collectionDescription,
   tableSize: TableSizeSchema,
-  user: clientUserSchema,
-  cards: z.array(clientMemoryCardSchema),
+  user: clientUser,
+  cards: z.array(clientMemoryCard),
 
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date()
 })
 
-export type CollectionName = z.infer<typeof collectionNameSchema>
-export type CollectionDescription = z.infer<typeof collectionDescriptionSchema>
-export type ClientMemoryCard = z.infer<typeof clientMemoryCardSchema>
-export type ClientCardCollection = z.infer<typeof clientCollectionSchema>
+export type CollectionName = z.infer<typeof collectionName>
+export type CollectionDescription = z.infer<typeof collectionDescription>
+export type ClientMemoryCard = z.infer<typeof clientMemoryCard>
+export type ClientCardCollection = z.infer<typeof clientCardCollection>
