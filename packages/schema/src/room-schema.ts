@@ -2,18 +2,17 @@ import { z } from "zod"
 
 // schemas
 import { roomPlayerSchema } from "@/room-player-schema"
-import { multiClientSessionSchema, sessionSettings } from "@/session-schema"
+import { multiplayerClientSession, sessionSettings } from "@/session-schema"
 
-/* Base schemas */
 export const roomStatus = z.enum(["waiting", "joined", "ready", "running", "cancelled", "finished"])
 export const roomConnectionStatus = z.enum(["offline", "half_online", "online"])
 
 export const roomSettings = sessionSettings
-  .omit({ mode: true })
+  .omit({ format: true })
   .extend({
-    mode: z.enum([
-      sessionSettings.shape.mode.enum.COOP,
-      sessionSettings.shape.mode.enum.PVP
+    format: z.enum([
+      sessionSettings.shape.format.enum.COOP,
+      sessionSettings.shape.format.enum.PVP
     ])
   })
 
@@ -24,7 +23,7 @@ export const roomSchema = z.object({
   owner: roomPlayerSchema,
   guest: roomPlayerSchema.nullable(),
   settings: roomSettings,
-  session: multiClientSessionSchema.nullable(),
+  session: multiplayerClientSession.nullable(),
   createdAt: z.coerce.date()
   // TODO: add & track `updatedAt`
 })
@@ -52,7 +51,7 @@ export const runningRoomSchema = roomSchema
       roomStatus.enum.cancelled
     ]),
     guest: roomPlayerSchema,
-    session: multiClientSessionSchema
+    session: multiplayerClientSession
   })
 
 export const finishedRoomSchema = roomSchema
@@ -60,7 +59,7 @@ export const finishedRoomSchema = roomSchema
   .extend({
     status: z.literal(roomStatus.enum.finished),
     guest: roomPlayerSchema,
-    session: multiClientSessionSchema
+    session: multiplayerClientSession
   })
 
 export type RoomStatus = z.infer<typeof roomStatus>

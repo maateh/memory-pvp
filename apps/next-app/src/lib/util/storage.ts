@@ -1,8 +1,8 @@
 // types
-import type { OfflineClientSession } from "@repo/schema/session"
+import type { OfflineSessionStorage } from "@repo/schema/session"
 
 // constants
-import { offlineSessionKeys } from "@/lib/util/parser/session-parser"
+import { offlineSessionStorageKeys } from "@/lib/util/parser/session-parser"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
@@ -14,10 +14,10 @@ const STORAGE_KEY = "CLIENT_GAME_SESSION"
  * Retrieves the game session from localStorage.
  * - Does nothing if running in a non-browser environment.
  * 
- * @returns {OfflineClientSession | null} - The parsed session data or `null` if not found.
+ * @returns {OfflineSessionStorage | null} - The parsed session data or `null` if not found.
  * - Returns `null` if running in a non-browser environment or if the session doesn't exist.
  */
-export function getSessionFromStorage(): OfflineClientSession | null {
+export function getSessionFromStorage(): OfflineSessionStorage | null {
   if (typeof window === 'undefined') return null
 
   const rawSession = localStorage.getItem(STORAGE_KEY)
@@ -30,13 +30,13 @@ export function getSessionFromStorage(): OfflineClientSession | null {
  * Saves the game session to localStorage.
  * - Does nothing if running in a non-browser environment.
  * 
- * @param {OfflineClientSession} session - The session data to be saved.
- * @returns {OfflineClientSession | void} - Returns the session or void if in a non-browser environment.
+ * @param {OfflineSessionStorage} session - The session data to be saved.
+ * @returns {OfflineSessionStorage | void} - Returns the session or void if in a non-browser environment.
  */
-export function saveSessionToStorage(session: OfflineClientSession): OfflineClientSession | void {
+export function saveSessionToStorage(session: OfflineSessionStorage): OfflineSessionStorage | void {
   if (typeof window === 'undefined') return
 
-  const offlineSession = pickFields(session, offlineSessionKeys)
+  const offlineSession = pickFields(session, offlineSessionStorageKeys)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(offlineSession))
 }
 

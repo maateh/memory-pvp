@@ -34,10 +34,10 @@ const SessionBadge = ({
           <p className="mt-0.5 font-heading font-normal tracking-wide">
             Session status:
             <span className={cn("ml-1 text-lg font-semibold small-caps", {
-              "text-yellow-500 dark:text-yellow-200": session.status === 'RUNNING',
-              "text-secondary": session.status === 'FINISHED',
-              "text-destructive": session.status === 'ABANDONED',
-              "text-muted-foreground": session.status === 'OFFLINE'
+              "text-yellow-500 dark:text-yellow-200": session.status === "RUNNING",
+              "text-secondary": session.status === "FINISHED",
+              "text-destructive": session.status === "CLOSED",
+              "text-muted-foreground": session.status === "FORCE_CLOSED"
             })}>
               {session.status.toLowerCase()}
             </span>
@@ -46,10 +46,10 @@ const SessionBadge = ({
       )}
     >
       <Badge className={cn("gap-x-2.5 border text-sm text-foreground/80 font-heading font-normal hover:bg-inherit/5", {
-        "bg-yellow-500/10 border-yellow-500/15": session.status === 'RUNNING',
-        "bg-secondary/10 border-secondary/15": session.status === 'FINISHED',
-        "bg-destructive/10 border-destructive/15": session.status === 'ABANDONED',
-        "bg-muted/10 border-muted-foreground/15": session.status === 'OFFLINE'
+        "bg-yellow-500/10 border-yellow-500/15": session.status === "RUNNING",
+        "bg-secondary/10 border-secondary/15": session.status === "FINISHED",
+        "bg-destructive/10 border-destructive/15": session.status === "CLOSED",
+        "bg-muted/10 border-muted-foreground/15": session.status === "FORCE_CLOSED"
       }, className)}
         variant={variant}
         {...props}

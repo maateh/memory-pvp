@@ -5,8 +5,8 @@ import type { ClientSession } from "@repo/schema/session"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -38,8 +38,8 @@ const SessionCard = ({ session }: SessionCardProps) => {
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <SessionInfoBadge className="max-lg:px-2"
             Icon={Gamepad2}
-            label={gameTypePlaceholders[session.type].label}
-            subLabel={gameModePlaceholders[session.mode].label}
+            label={sessionModePlaceholders[session.mode].label}
+            subLabel={matchFormatPlaceholders[session.format].label}
           />
 
           <SessionInfoBadge className="max-lg:px-2"

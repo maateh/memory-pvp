@@ -34,7 +34,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
 
     const playerKey = otherPlayerKey(room.owner.id, playerId)
     if (
-      room.session.type === "COMPETITIVE" &&
+      room.session.mode === "RANKED" &&
       !reconnectionTimeExpired(room[playerKey].connection)
     ) {
       ServerError.throw({
@@ -45,14 +45,14 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    await closeSession(room, playerId, "abandon")
+    await closeSession(room, playerId, "CLOSED")
     socket.ctx.connection = undefined!
 
     response({
       message: `Session has been closed by ${playerTag}.`,
-      description: room.session.type === "CASUAL"
-        ? "Since this was a casual match it will not affect your ranking scores."
-        : "Disconnected player will lose points based on the session state."
+      description: room.session.mode === "CASUAL"
+        ? "This will not affect your Elo points."
+        : "Disconnected player will lose Elo based on the session state."
     })
   } catch (err) {
     response({

@@ -26,7 +26,8 @@ import { PlayerBadge } from "@/components/player"
 import { PlayerProfileForm } from "@/components/player/form"
 
 // hooks
-import { useSaveOfflineSessionAction } from "@/lib/safe-action/session"
+import { useSaveOfflineSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { toast } from "sonner"
 
 type SaveOfflineSessionProps = {
   players: ClientPlayer[]
@@ -36,16 +37,22 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
   const [playerId, setPlayerId] = useState('')
 
   const {
-    executeAsync: executeSaveOfflineSession,
+    executeAsync: saveOfflineSession,
     status: saveOfflineSessionStatus
   } = useSaveOfflineSessionAction()
 
   const handleExecute = async () => {
     const offlineSession = getSessionFromStorage()
-    if (!offlineSession) return
+
+    if (!offlineSession) {
+      toast.warning("Offline session cannot be loaded.", {
+        description: "Unable to find offline session in your storage."
+      })
+      return
+    }
 
     try {
-      await executeSaveOfflineSession({
+      await saveOfflineSession({
         playerId,
         clientSession: {
           ...offlineSession,

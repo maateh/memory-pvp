@@ -5,8 +5,8 @@ import type { WaitingRoomListingMetadata } from "./waiting-room-listing"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -40,26 +40,26 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     }
   },
   {
-    id: "Type / Mode",
+    id: "Settings",
     accessorKey: "settings",
     enableHiding: true,
     header() {
       return (
         <DataTableColumnSortingHeader
-          header="Type / Mode"
-          sortValueKey="type"
+          header="Settings"
+          sortValueKey="mode"
         />
       )
     },
     cell({ getValue }) {
-      const settings = getValue<WaitingRoom['settings']>()
+      const { mode, format } = getValue<WaitingRoom['settings']>()
 
       return (
         <SessionInfoBadge className="py-0 text-xs"
           iconProps={{ className: "size-3.5" }}
           Icon={Gamepad2}
-          label={gameTypePlaceholders[settings.type].label}
-          subLabel={gameModePlaceholders[settings.mode].label}
+          label={sessionModePlaceholders[mode].label}
+          subLabel={matchFormatPlaceholders[format].label}
         />
       )
     },

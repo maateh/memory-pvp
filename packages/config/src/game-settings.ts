@@ -1,5 +1,5 @@
 // prisma
-import type { GameMode, GameType, TableSize } from "@repo/db"
+import type { SessionMode, MatchFormat, TableSize } from "@repo/db"
 import type { LucideIcon } from "lucide-react"
 
 // icons
@@ -11,32 +11,38 @@ import {
   Sword,
   Swords,
   UserRound,
-  UsersRound
+  UsersRound,
+  WifiOff
 } from "lucide-react"
 
-type GamePlaceholderMap<K extends GameType | GameMode | TableSize, O extends Object = {}> = Record<K, {
+type GamePlaceholderMap<K extends SessionMode | MatchFormat | TableSize, O extends Object = {}> = Record<K, {
   key: K
   label: string
   Icon: LucideIcon
 } & O>
 
-export const gameTypePlaceholders: GamePlaceholderMap<GameType> = {
+export const sessionModePlaceholders: GamePlaceholderMap<SessionMode> = {
   CASUAL: {
     key: "CASUAL",
     label: "Casual",
     Icon: Gamepad2
   },
-  COMPETITIVE: {
-    key: "COMPETITIVE",
-    label: "Competitive",
+  RANKED: {
+    key: "RANKED",
+    label: "Ranked",
     Icon: Sword
   }
 } as const
 
-export const gameModePlaceholders: GamePlaceholderMap<GameMode> = {
-  SINGLE: {
-    key: "SINGLE",
-    label: "Single",
+export const matchFormatPlaceholders: GamePlaceholderMap<MatchFormat> = {
+  OFFLINE: {
+    key: "OFFLINE",
+    label: "Offline",
+    Icon: WifiOff
+  },
+  SOLO: {
+    key: "SOLO",
+    label: "Solo",
     Icon: UserRound
   },
   PVP: {
@@ -80,6 +86,6 @@ export const tableSizeMap: Record<TableSize, number> = {
 
 /**
  * Multiplier to calculate the amount of the "free flips"
- * in 'Competitive - Single or Co-Op' sessions.
+ * in 'Ranked - Solo/Multiplayer' sessions.
  */
 export const freeFlipsMultiplier = 0.75 as const

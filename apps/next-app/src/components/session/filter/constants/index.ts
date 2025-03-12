@@ -4,23 +4,23 @@ import type { SessionSort } from "../types"
 
 export const sessionSortOptions: SortOptions<SessionSort> = {
   slug: {
-    sortValueKey: 'slug',
-    label: 'Session'
+    sortValueKey: "slug",
+    label: "Session"
   },
-  type: {
-    sortValueKey: 'type',
-    label: 'Type / Mode'
+  mode: {
+    sortValueKey: "mode",
+    label: "Settings"
   },
   tableSize: {
-    sortValueKey: 'tableSize',
-    label: 'Table size'
+    sortValueKey: "tableSize",
+    label: "Table size"
   },
   startedAt: {
-    sortValueKey: 'startedAt',
-    label: 'Started at'
+    sortValueKey: "startedAt",
+    label: "Started at"
   },
   closedAt: {
-    sortValueKey: 'closedAt',
-    label: 'Closed at'
+    sortValueKey: "closedAt",
+    label: "Closed at"
   }
 }

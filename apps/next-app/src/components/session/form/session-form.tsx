@@ -18,6 +18,7 @@ import { sessionFormValidation } from "@repo/schema/session-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
+import { cn } from "@/lib/util"
 
 // icons
 import { CircleFadingPlus, Loader2, SquarePlay, WifiOff } from "lucide-react"
@@ -31,9 +32,9 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
-import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
-import { useCreateRoomAction } from "@/lib/safe-action/room"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type SessionFormValuesCache = {
   collection?: ClientCardCollection | null
@@ -51,51 +52,58 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     resolver: zodResolver(sessionFormValidation),
     defaultValues: {
       settings: {
-        type: defaultValues?.settings?.type ?? "CASUAL",
-        mode: defaultValues?.settings?.mode ?? "SINGLE",
+        mode: defaultValues?.settings?.mode ?? "CASUAL",
+        format: defaultValues?.settings?.format ?? "SOLO",
         tableSize: defaultValues?.settings?.tableSize ?? "SMALL",
-        collectionId: collection?.id,
+        collectionId: collection?.id
       }
     }
   })
 
+  const { execute: createOfflineSession } = useCreateOfflineSession()
   const {
-    executeAsync: createSingleSession,
-    status: createSingleSessionStatus
-  } = useCreateSingleSessionAction()
+    executeAsync: createSoloSession,
+    status: createSoloSessionStatus
+  } = useCreateSoloSessionAction()
   const {
     executeAsync: createWaitingRoom,
-    status: createRoomActionStatus
+    status: createWaitingRoomStatus
   } = useCreateRoomAction()
-  const { execute: createOfflineSession } = useCreateOfflineSession()
 
-  const handleSubmit = (values: SessionFormValidation) => {
+  const handleSubmit = async (values: SessionFormValidation) => {
     const { settings, forceStart } = values
 
-    if (settings.type === "COMPETITIVE") {
+    if (settings.mode === "RANKED") {
       toast.warning("Ranked mode is not available.", {
         description: "Currently, you can only play in Casual because the ranked system is under development."
       })
       return
     }
 
+    if (settings.format === "OFFLINE") {
+      createOfflineSession({ ...values, collection })
+      return
+    }
+
     try {
-      if (settings.mode === "SINGLE") {
-        createSingleSession({ settings, forceStart })
+      if (settings.format === "SOLO") {
+        await createSoloSession({ settings, forceStart })
         return
       }
   
-      createWaitingRoom({ settings })
+      await createWaitingRoom({ settings })
     } catch (err) {
       logError(err)
     }
   }
 
-  const type = form.watch("settings.type")
-  const mode = form.watch("settings.mode")
+  const format = form.watch("settings.format")
   const collectionId = form.watch("settings.collectionId")
-  
-  const SubmitIcon = mode === "SINGLE" ? SquarePlay : CircleFadingPlus
+
+  const submitText = format === "SOLO" ? "Start game"
+    : format === "OFFLINE" ? "Play offline" : "Create waiting room"
+  const SubmitIcon = format === "SOLO" ? SquarePlay
+    : format === "OFFLINE" ? WifiOff : CircleFadingPlus
 
   return (
     <Form<SessionFormValidation>
@@ -132,43 +140,26 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
       </div>
 
       <div className="mt-auto flex flex-col items-center gap-y-4">
-        <Button className="p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg"
+        <Button className={cn("p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg", {
+          // TODO: different design if format is offline
+          "": format === "OFFLINE"
+        })}
           variant="secondary"
           size="lg"
           disabled={
             !clerkUser
-              || createSingleSessionStatus === 'executing'
-              || createRoomActionStatus === 'executing'
+              || createSoloSessionStatus === "executing"
+              || createWaitingRoomStatus === "executing"
               || !collectionId
               || !collection
           }
         >
-          {createSingleSessionStatus === 'executing' || createRoomActionStatus === 'executing' ? (
+          {createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing" ? (
             <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
           ) : (
             <SubmitIcon className="size-5 sm:size-6 shrink-0" />
           )}
-
-          <span>
-            {mode === 'SINGLE' ? 'Start new game' : 'Create waiting room...'}
-          </span>
-        </Button>
-
-        <Button className="gap-x-2 rounded-2xl bg-foreground/30 hover:bg-foreground/35 text-foreground/90 text-sm font-normal sm:text-base"
-          size="sm"
-          type="button"
-          onClick={form.handleSubmit((values) => createOfflineSession({ ...values, collection }))}
-          disabled={
-            createSingleSessionStatus === 'executing'
-              || createRoomActionStatus === 'executing'
-              || type === 'COMPETITIVE'
-              || mode !== 'SINGLE'
-              || !collectionId
-              || !collection
-          }
-        >
-          <WifiOff className="size-4 sm:size-5 shrink-0" strokeWidth={1.5} />
-          <span>Start offline</span>
+          <span>{submitText}</span>
         </Button>
       </div>
     </Form>

@@ -4,8 +4,8 @@ import type { SessionFormValidation } from "@repo/schema/session-validation"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -24,7 +24,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
     <>
       <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
         <FormField
-          name="settings.type"
+          name="settings.mode"
           control={form.control}
           render={({ field }) => (
             <FormItem className="flex-1 max-w-xs">
@@ -34,10 +34,10 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
 
               <FormControl>
                 <SessionInfoSelect
-                  LabelIcon={gameTypePlaceholders[field.value].Icon}
-                  label={gameTypePlaceholders[field.value].label}
+                  LabelIcon={sessionModePlaceholders[field.value].Icon}
+                  label={sessionModePlaceholders[field.value].label}
                   options={
-                    Object.values(gameTypePlaceholders).map(({ key, label, Icon }) => ({
+                    Object.values(sessionModePlaceholders).map(({ key, label, Icon }) => ({
                       value: key,
                       label,
                       Icon
@@ -52,7 +52,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
         />
 
         <FormField
-          name="settings.mode"
+          name="settings.format"
           control={form.control}
           render={({ field }) => (
             <FormItem className="flex-1 max-w-xs">
@@ -62,10 +62,10 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
               
               <FormControl>
                 <SessionInfoSelect
-                  LabelIcon={gameModePlaceholders[field.value].Icon}
-                  label={gameModePlaceholders[field.value].label}
+                  LabelIcon={matchFormatPlaceholders[field.value].Icon}
+                  label={matchFormatPlaceholders[field.value].label}
                   options={
-                    Object.values(gameModePlaceholders).map(({ key, label, Icon }) => ({
+                    Object.values(matchFormatPlaceholders).map(({ key, label, Icon }) => ({
                       value: key,
                       label,
                       Icon

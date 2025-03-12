@@ -49,7 +49,7 @@ model PlayerProfile {
 
   results Result[]
   /// [PlayerStats]
-  stats   Json     @default("{ \"score\": 0, \"timer\": 0, \"flips\": 0, \"matches\": 0, \"sessions\": 0 }")
+  stats   Json     @default("{ \"elo\": 100, \"flips\": 0, \"matches\": 0, \"avgTime\": 0, \"totalTime\": 0, \"sessions\": 0 }")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,11 +59,10 @@ model GameSession {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   slug String @unique
 
-  type      GameType
-  mode      GameMode
+  status    SessionStatus
+  mode      SessionMode
+  format    MatchFormat
   tableSize TableSize
-
-  status GameStatus
 
   /// [SessionStats]
   stats Json
@@ -85,19 +84,17 @@ model GameSession {
 
   results Result[]
 
-  continuedAt DateTime?
-  closedAt    DateTime?
-
-  startedAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  startedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  closedAt  DateTime?
 }
 
 model Result {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  flips   Int
-  matches Int
-  score   Int?
+  gainedElo Int
+  flips     Int
+  matches   Int
 
   player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId String        @db.ObjectId
@@ -137,20 +134,21 @@ model CardCollection {
 }
 
 // ENUMS
-enum GameStatus {
+enum SessionStatus {
   RUNNING
   FINISHED
-  ABANDONED
-  OFFLINE
+  CLOSED
+  FORCE_CLOSED
 }
 
-enum GameType {
+enum SessionMode {
   CASUAL
-  COMPETITIVE
+  RANKED
 }
 
-enum GameMode {
-  SINGLE
+enum MatchFormat {
+  OFFLINE
+  SOLO
   PVP
   COOP
 }

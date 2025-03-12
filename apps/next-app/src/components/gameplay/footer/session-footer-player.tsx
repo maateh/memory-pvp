@@ -36,7 +36,7 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
   const session = useSessionStore((state) => state.session)
 
   const freeFlips = useMemo(() => getFreeFlips(session), [session])
-  const score = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
+  const elo = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
 
   const flips = session.stats.flips[player.id]
 
@@ -47,10 +47,10 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
       overlayProps={{
         className: cn("bg-accent opacity-30 dark:opacity-10 blur-md rounded-3xl", {
           "animate-in slide-in-from-right fade-in-40 dark:fade-in-15 duration-500": session.owner.id === player.id,
-          "animate-in slide-in-from-left fade-in-40 dark:fade-in-15 duration-500": session.mode !== "SINGLE" && session.guest.id === player.id
+          "animate-in slide-in-from-left fade-in-40 dark:fade-in-15 duration-500": (session.format === "PVP" || session.format === "COOP") && session.guest.id === player.id
         })
       }}
-      disableOverlay={session.mode === "SINGLE" || session.currentTurn !== player.id}
+      disableOverlay={session.format === "SOLO" || session.currentTurn !== player.id}
     >
       <div className="space-y-1.5">
         <div className={cn("flex items-center gap-x-2", { "flex-row-reverse": flipOrder })}>
@@ -63,13 +63,13 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
         </div>
 
         <StatisticBadge className="font-medium"
-          variant={player.stats.score < 0 ? 'destructive' : 'accent'}
+          variant={player.stats.elo < 0 ? 'destructive' : 'accent'}
           Icon={Trophy}
           iconProps={{ className: "size-3.5" }}
         >
           <span className="small-caps tracking-wider">Rank / </span>
           <span className="text-xs font-semibold dark:font-medium">
-            {player.stats.score} scores
+            {player.stats.elo} Elo
           </span>
         </StatisticBadge>
       </div>
@@ -93,15 +93,15 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
           </p>
         </Badge>
 
-        {score !== null && (
+        {elo !== null && (
           <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
-            variant={score >= 0 ? 'accent' : 'destructive'}
+            variant={elo >= 0 ? 'accent' : 'destructive'}
           >
-            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": score < 0 })} />
+            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": elo < 0 })} />
   
             <p className="space-x-1">
               <span className="text-sm font-light small-caps">Session</span>
-              <span className="text-xs font-semibold">/ {score} scores</span>
+              <span className="text-xs font-semibold">/ {elo} Elo</span>
             </p>
           </Badge>
         )}

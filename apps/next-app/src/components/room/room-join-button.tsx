@@ -10,7 +10,7 @@ import { PlayCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useJoinRoomAction } from "@/lib/safe-action/room"
+import { useJoinRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type RoomJoinButtonProps = {
   roomSlug: string

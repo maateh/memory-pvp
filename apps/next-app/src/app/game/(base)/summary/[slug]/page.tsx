@@ -32,14 +32,14 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
             <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 
             <div className={cn("mx-auto grid gap-x-16 gap-y-12", {
-              "lg:grid-cols-2": session.mode !== "SINGLE"
+              "lg:grid-cols-2": session.format === "PVP" || session.format === "COOP"
             })}>
               <SessionPlayerStats
                 player={session.owner}
                 session={session}
               />
 
-              {session.mode !== "SINGLE" && (
+              {(session.format === "PVP" || session.format === "COOP") && (
                 <SessionPlayerStats
                   player={session.guest}
                   session={session}

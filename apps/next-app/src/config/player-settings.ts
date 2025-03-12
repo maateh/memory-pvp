@@ -11,10 +11,11 @@ export const offlinePlayerMetadata = {
   createdAt: new Date(),
   updatedAt: new Date(),
   stats: {
-    score: 0,
-    timer: 0,
+    elo: 0,
     flips: 0,
     matches: 0,
+    avgTime: 0,
+    totalTime: 0,
     sessions: 0
   }
 } satisfies ClientPlayer
@@ -29,10 +30,11 @@ export const deletedPlayerPlaceholder = {
   createdAt: new Date(),
   updatedAt: new Date(),
   stats: {
-    score: 0,
-    timer: 0,
+    elo: 0,
     flips: 0,
     matches: 0,
+    avgTime: 0,
+    totalTime: 0,
     sessions: 0
   }
 } satisfies ClientPlayer

@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
 // types
@@ -17,21 +16,18 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
-import { useCreateSingleSessionAction } from "@/lib/safe-action/session"
-import { useCreateRoomAction } from "@/lib/safe-action/room"
+import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
 
 type SessionRunningPopupActionsProps = {
-  activeSessionMode: ClientSession["mode"]
+  activeSessionFormat: ClientSession["format"]
 }
 
-const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupActionsProps) => {
-  const params = useSearchParams()
-  const isOffline = params.get("matchFormat") === "OFFLINE"
-
+const SessionRunningPopupActions = ({ activeSessionFormat }: SessionRunningPopupActionsProps) => {
   const {
-    executeAsync: createSingleSession,
-    status: createSingleSessionStatus
-  } = useCreateSingleSessionAction()
+    executeAsync: createSoloSession,
+    status: createSoloSessionStatus
+  } = useCreateSoloSessionAction()
 
   const {
     executeAsync: createWaitingRoom,
@@ -53,7 +49,7 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
       return
     }
 
-    if (isOffline) {
+    if (settings.format === "OFFLINE") {
       createOfflineSession({
         settings,
         collection,
@@ -63,39 +59,54 @@ const SessionRunningPopupActions = ({ activeSessionMode }: SessionRunningPopupAc
     }
 
     try {
-      if (settings.mode === "SINGLE") {
-        await createSingleSession({ settings, forceStart: true })
-      } else {
-        await createWaitingRoom({ settings, forceStart: true })
+      if (settings.format === "SOLO") {
+        await createSoloSession({ settings, forceStart: true })
+        return
       }
+
+      /**
+       * Note: This part of the code will probably never be reached, because
+       * currently there is no option to force start a multiplayer session.
+       */
+      await createWaitingRoom({ settings })
     } catch (err) {
       logError(err)
     }
   }
 
-  const href = isOffline ? "/game/offline"
-    : activeSessionMode === "SINGLE"
+  const continueText = activeSessionFormat === "OFFLINE" ? "Continue offline"
+    : activeSessionFormat === "SOLO"
+      ? "Continue session"
+      : "Reconnect"
+
+  const continueHref = activeSessionFormat === "OFFLINE" ? "/game/offline"
+    : activeSessionFormat === "SOLO"
       ? "/game/single"
       : "/game/multiplayer"
+
+  const startText = settings?.format === "OFFLINE" ? "Start new game (Offline)"
+    : settings?.format === "SOLO"
+      ? "Start new game"
+      : "Create new room"
 
   return (
     <>
       <Button
         variant="outline"
-        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
+        disabled={createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
         asChild
       >
-        <Link href={href} replace>
-          {activeSessionMode === "SINGLE" ? "Continue session": "Reconnect"}
+        <Link href={continueHref} replace>
+          {continueText}
         </Link>
       </Button>
 
       <Button
         variant="destructive"
         onClick={handleForceStart}
-        disabled={createSingleSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
+        disabled={createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing"}
       >
-        {settings?.mode === "SINGLE" ? "Start new game": "Create new room"}
+        {startText}
       </Button>
     </>
   )

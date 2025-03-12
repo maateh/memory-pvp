@@ -1,84 +1,66 @@
 // types
-import type { GameSession } from "@repo/db"
+import type { GameSession, SessionStatus } from "@repo/db"
 import type { BaseClientSession } from "@repo/schema/session"
 
 // server
 import { db } from "@repo/server/db"
 
-// helpers
-import { calculatePlayerSessionScore } from "@repo/helper/session"
-
 /**
- * Updates the status of a game session and updates player statistics accordingly.
+ * TODO: write doc
  * 
- * - Updates player statistics such as score, timer, flips, matches, and session count.
- * - Updates the game session status to either "FINISHED" or "ABANDONED".
- * - Stores the session results for each player.
- * 
- * @param {BaseClientSession} clientSession - The session data to update.
- * @param {string} currentPlayerId - The player id of the player who requested this action.
- * @param {"finish" | "abandon"} action - The action to perform on the session (finishing or abandoning).
- * @returns {Promise<GameSession>} - The updated game session.
+ * @param clientSession 
+ * @param currentPlayerId 
+ * @param status 
+ * @returns 
  */
-export async function updateSessionStatus(
-  clientSession: Pick<BaseClientSession, "slug" | "type" | "mode" | "tableSize" | "owner" | "guest" | "stats">,
+export async function closeSession(
+  clientSession: Pick<BaseClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
   currentPlayerId: string,
-  action: "finish" | "abandon"
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<GameSession> {
-  const { slug, mode, owner, guest, stats } = clientSession
+  const { slug, format, owner, guest, stats } = clientSession
 
   const players = [owner]
-  if (mode !== "SINGLE") players.push(guest!)
+  if (format === "PVP" || format === "COOP") players.push(guest!)
 
   /* Updates the statistics of session players */
-  const operations = players.map(
+  const playerStatsOperations = players.map(
     (player) => db.playerProfile.update({
       where: { id: player.id },
       data: {
         stats: {
-          score: player.stats.score + (calculatePlayerSessionScore(
-            clientSession,
-            player.id,
-            mode === "PVP" && action === "abandon"
-              ? player.id === currentPlayerId ? "abandon" : "finish"
-              : action
-          ) || 0),
-          timer: player.stats.timer + stats.timer,
+          elo: 0, // TODO: calculate `elo`
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
+          avgTime: 0, // TODO: calculate `avgTime`
+          totalTime: player.stats.totalTime + stats.timer,
           sessions: ++player.stats.sessions
         }
       }
     })
   )
-  
+
   const [session] = await Promise.all([
-    /* Updates the affected game session based on the given action */
+    /* Updates the affected game session based on the given status */
     db.gameSession.update({
       where: { slug },
       data: {
         stats,
-        status: action === "finish" ? "FINISHED" : "ABANDONED",
+        status,
         closedAt: new Date(),
         results: {
           createMany: {
             data: players.map((player) => ({
               playerId: player.id,
+              gainedElo: 0, // TODO: calculate `gainedElo`
               flips: stats.flips[player.id],
-              matches: stats.matches[player.id],
-              score: calculatePlayerSessionScore(
-                clientSession,
-                player.id,
-                mode === "PVP" && action === "abandon"
-                  ? player.id === currentPlayerId ? "abandon" : "finish"
-                  : action
-              )
+              matches: stats.matches[player.id]
             }))
           }
         }
       }
     }),
-    db.$transaction(operations)
+    db.$transaction(playerStatsOperations)
   ])
 
   return session

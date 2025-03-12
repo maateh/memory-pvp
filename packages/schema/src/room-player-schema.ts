@@ -1,12 +1,12 @@
 import { z } from "zod"
 
 // schemas
-import { clientPlayerSchema } from "@/player-schema"
+import { clientPlayer } from "@/player-schema"
 import { playerConnection } from "@/player-connection-schema"
 
 export const roomPlayerRole = z.enum(["owner", "guest"])
 
-export const roomPlayerSchema = clientPlayerSchema.extend({
+export const roomPlayerSchema = clientPlayer.extend({
   ready: z.coerce.boolean(),
   role: roomPlayerRole,
   connection: playerConnection

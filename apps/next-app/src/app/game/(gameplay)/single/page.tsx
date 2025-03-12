@@ -17,7 +17,7 @@ const SingleGamePage = () => {
     <Suspense fallback={<SessionLoader />}>
       <Await promise={getPlayer({ filter: { isActive: true } })}>
         {(player) => player ? (
-          <Await promise={getActiveClientSession("SINGLE", player.id)}>
+          <Await promise={getActiveClientSession("SOLO", player.id)}>
             {(session) => session ? (
               <SessionStoreProvider
                 currentPlayer={player}

@@ -3,26 +3,41 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // types
-import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
+import type { MultiplayerClientSession } from "@repo/schema/session"
+import type { JoinedRoom, RunningRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { closeRoom, getActiveRoom, getRoom, leaveRoom } from "@repo/server/redis-commands"
+import { redis } from "@repo/server/redis"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
+import {
+  closeRoom,
+  closeSession,
+  getActiveRoom,
+  getRoom,
+  leaveRoom
+} from "@repo/server/redis-commands"
 
 // db
-import { updateSessionStatus } from "@repo/server/db-session-mutation"
 import { getActiveSession } from "@/server/db/query/session-query"
 
 // actions
-import { playerActionClient, roomActionClient } from "@/server/action"
+import {
+  multiplayerSessionActionClient,
+  playerActionClient,
+  roomActionClient
+} from "@/server/action"
 
-// schemas
+// config
+import { sessionSchemaFields } from "@/config/session-settings"
+
+// validations
+import { createMultiplayerSessionValidation } from "@repo/schema/session-validation"
 import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-validation"
 
 // helpers
-import { offlinePlayerConnection } from "@repo/helper/connection"
 import { currentPlayerKey } from "@repo/helper/player"
-import { generateSessionSlug } from "@/lib/helper/session-helper"
+import { offlinePlayerConnection } from "@repo/helper/connection"
+import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -31,9 +46,9 @@ import { parseSchemaToClientSession } from "@/lib/util/parser/session-parser"
 export const createRoom = playerActionClient
   .schema(createRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { settings, forceStart } = parsedInput
+    const { settings } = parsedInput
 
-    if (settings.type === "COMPETITIVE") {
+    if (settings.mode === "RANKED") {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Ranked mode is not available.",
@@ -41,7 +56,7 @@ export const createRoom = playerActionClient
       })
     }
 
-    /* Throws server error with 'ACTIVE_SESSION' key if active (multiplayer) session found. */
+    /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
     const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
     if (activeSession) {
       ServerError.throwInAction({
@@ -89,51 +104,25 @@ export const createRoom = playerActionClient
       ctx.redis.lpush(waitingRoomsKey, room.slug)
     ])
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
-    redirect("/game/multiplayer", forceStart ? RedirectType.replace : RedirectType.push)
+    redirect("/game/multiplayer")
   })
 
 export const joinRoom = playerActionClient
   .schema(joinRoomValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { roomSlug, forceJoin } = parsedInput
+    const { roomSlug } = parsedInput
 
     /* Checks if there is any ongoing session */
     const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
 
     /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
-    if (activeSession && !forceJoin) {
+    if (activeSession) {
       ServerError.throwInAction({
         key: "ACTIVE_SESSION",
         data: { activeSessionMode: activeSession.mode },
-        message: "Active game session found.",
-        description: activeSession.mode === "SINGLE"
-          ? "Would you like to force close your ongoing session and join the room?"
-          : "Please finish your active multiplayer session, before you start a new one."
+        message: "Active multiplayer session found.",
+        description: "Please finish your session, before you start a new one."
       })
-    }
-
-    /* Abandons active session if 'forceJoin' is applied. */
-    if (activeSession && forceJoin) {
-      /* Note: multiplayer sessions can only be closed manually by the player. */
-      if (activeSession.mode !== "SINGLE") {
-        ServerError.throwInAction({
-          key: "FORCE_START_NOT_ALLOWED",
-          message: "Force start not allowed.",
-          description: "You are not allowed to force close multiplayer sessions. Please finish it first, before you start a new one."
-        })
-      }
-
-      await updateSessionStatus(
-        parseSchemaToClientSession(activeSession),
-        ctx.player.id,
-        "abandon"
-      )
     }
 
     /* Throws server error with 'ACTIVE_ROOM' key if active room found. */
@@ -186,6 +175,98 @@ export const joinRoom = playerActionClient
     redirect("/game/multiplayer")
   })
 
+export const createMultiplayerSession = playerActionClient
+  .schema(createMultiplayerSessionValidation)
+  .action(async ({ ctx, parsedInput }) => {
+    const { slug, guestId } = parsedInput
+    const { collectionId, ...settings } = parsedInput.settings
+
+    const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
+    const guestActiveSession = await getActiveSession(["COOP", "PVP"], guestId)
+
+    if (activeSession || guestActiveSession) {
+      ServerError.throwInAction({
+        key: "ACTIVE_SESSION",
+        message: "Active multiplayer session found.",
+        description: "Session cannot be started as long as one of the players is in another multiplayer session."
+      })
+    }
+
+    /* Finding collection with the specified `collectionId` */
+    const collection = await ctx.db.cardCollection.findUnique({
+      where: { id: collectionId },
+      include: { user: true, cards: true }
+    })
+  
+    /**
+     * Throws server error with `COLLECTION_NOT_FOUND` key if
+     * collection not found with the specified `collectionId`.
+     */
+    if (!collection) {
+      ServerError.throwInAction({
+        key: "COLLECTION_NOT_FOUND",
+        message: "Sorry, but we can't find the card collection you selected.",
+        description: "Please, select another card collection or try again later."
+      })
+    }
+
+    /* Create the multiplayer game session */
+    const session = await ctx.db.gameSession.create({
+      data: {
+        ...settings,
+        slug,
+        status: "RUNNING",
+        flipped: [],
+        cards: generateSessionCards(collection),
+        currentTurn: Math.random() < 0.5 ? ctx.player.id : guestId,
+        stats: {
+          timer: 0,
+          flips: {
+            [ctx.player.id]: 0,
+            [guestId]: 0
+          },
+          matches: {
+            [ctx.player.id]: 0,
+            [guestId]: 0
+          }
+        },
+        collection: { connect: { id: collection.id } },
+        owner: { connect: { id: ctx.player.id } },
+        guest: { connect: { id: guestId } }
+      },
+      include: sessionSchemaFields
+    })
+
+    /* Gets the player's active room. */
+    const activeRoom = await getActiveRoom<JoinedRoom>(ctx.player.id)
+
+    /* Throws server error with `ROOM_NOT_FOUND` key if active room not found. */
+    if (!activeRoom) {
+      ServerError.throwInAction({
+        key: "ROOM_NOT_FOUND",
+        message: "Active room not found.",
+        description: "Something went wrong. Please create or join another room."
+      })
+    }
+
+    /* Updates the `JoinedRoom` room variant to a `RunningRoom` variant. */
+    const room: RunningRoom = {
+      ...activeRoom,
+      status: "running",
+      session: parseSchemaToClientSession(session) as MultiplayerClientSession
+    }
+
+    /* Throws server error with `UNKNOWN` key if failed to store the updated room data. */
+    const response = await redis.json.set(roomKey(room.slug), "$", room, { xx: true })
+    if (response !== "OK") {
+      ServerError.throwInAction({
+        key: "UNKNOWN",
+        message: "Failed to store game session.",
+        description: "Cache server probably not available."
+      })
+    }
+  })
+
 export const leaveOrCloseRoom = roomActionClient
   .action(async ({ ctx }) => {
     const playerKey = currentPlayerKey(ctx.activeRoom.owner.id, ctx.player.id)
@@ -204,4 +285,17 @@ export const leaveOrCloseRoom = roomActionClient
 
     await leaveOrCloseCommand(ctx.activeRoom, ctx.player.id)
     redirect("/game/setup")
+  })
+
+export const forceCloseMultiplayerSession = multiplayerSessionActionClient
+  .action(async ({ ctx }) => {
+    await closeSession(ctx.activeRoom, ctx.player.id, "FORCE_CLOSED")
+
+    /**
+     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
+     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
+     * 
+     * https://github.com/vercel/next.js/discussions/60864
+     */
+    redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })

@@ -35,9 +35,9 @@ export const useCreateOfflineSession = () => {
    */
   const execute = ({ collection, settings, forceStart }: SessionFormValuesCache): void => {
     /* Checks if the values are valid for an offline session */
-    if (settings.type !== "CASUAL" || settings.mode !== "SINGLE") {
+    if (settings.mode !== "CASUAL" && settings.format !== "OFFLINE") {
       toast.warning("Not supported in Offline mode!", {
-        description: "You can only play Casual and Single mode in offline."
+        description: "You can only play Casual mode in offline."
       })
       return
     }
@@ -45,7 +45,7 @@ export const useCreateOfflineSession = () => {
     /* Checks if there is any ongoing offline session */
     if (getSessionFromStorage() && !forceStart) {
       setCache({ settings, collection, forceStart })
-      router.push("/game/setup/warning?matchFormat=OFFLINE")
+      router.push("/game/setup/warning?format=OFFLINE")
       return
     }
 
@@ -59,17 +59,13 @@ export const useCreateOfflineSession = () => {
 
     /* Creates and stores the offline session using `localStorage` */
     saveSessionToStorage({
+      collectionId: settings.collectionId,
       tableSize: settings.tableSize,
-      startedAt: new Date(),
-      updatedAt: new Date(),
       flipped: [],
       cards: pairSessionCardsWithCollection(
         generateSessionCards(collection),
         collection.cards
       ),
-      collectionId: settings.collectionId,
-      owner: offlinePlayerMetadata,
-      currentTurn: offlinePlayerMetadata.id,
       stats: {
         timer: 0,
         flips: {
@@ -78,7 +74,9 @@ export const useCreateOfflineSession = () => {
         matches: {
           [offlinePlayerMetadata.tag]: 0
         }
-      }
+      },
+      startedAt: new Date(),
+      updatedAt: new Date()
     })
 
     /* Redirects the user to the game page */
@@ -86,7 +84,7 @@ export const useCreateOfflineSession = () => {
     else router.push("/game/offline")
 
     toast.success("Game started in offline mode!", {
-      description: `${settings.type} | ${settings.mode} | ${settings.tableSize}`
+      description: `${settings.mode} | ${settings.format} | ${settings.tableSize}`
     })
   }
 

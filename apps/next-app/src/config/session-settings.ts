@@ -1,14 +1,19 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientSession, OfflineClientSession } from "@repo/schema/session"
+import type { OfflineSessionMetadata } from "@repo/schema/session"
+
+// config
+import { offlinePlayerMetadata } from "@/config/player-settings"
 
 /* Offline session metadata */
 export const offlineSessionMetadata = {
-  slug: '_',
-  type: 'CASUAL',
-  mode: 'SINGLE',
-  status: 'OFFLINE'
-} satisfies Omit<ClientSession, keyof OfflineClientSession>
+  slug: "_offline",
+  status: "RUNNING",
+  format: "OFFLINE",
+  mode: "CASUAL",
+  owner: offlinePlayerMetadata,
+  currentTurn: offlinePlayerMetadata.id
+} satisfies OfflineSessionMetadata
 
 export const sessionSchemaFields = {
   owner: {

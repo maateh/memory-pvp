@@ -58,9 +58,9 @@ export const UserScalarFieldEnumSchema = z.enum(['id','clerkId','username','emai
 
 export const PlayerProfileScalarFieldEnumSchema = z.enum(['id','tag','color','isActive','userId','stats','createdAt','updatedAt']);
 
-export const GameSessionScalarFieldEnumSchema = z.enum(['id','slug','type','mode','tableSize','status','stats','cards','flipped','currentTurn','collectionId','ownerId','guestId','continuedAt','closedAt','startedAt','updatedAt']);
+export const GameSessionScalarFieldEnumSchema = z.enum(['id','slug','status','mode','format','tableSize','stats','cards','flipped','currentTurn','collectionId','ownerId','guestId','startedAt','updatedAt','closedAt']);
 
-export const ResultScalarFieldEnumSchema = z.enum(['id','flips','matches','score','playerId','sessionId','createdAt','updatedAt']);
+export const ResultScalarFieldEnumSchema = z.enum(['id','gainedElo','flips','matches','playerId','sessionId','createdAt','updatedAt']);
 
 export const MemoryCardScalarFieldEnumSchema = z.enum(['id','utKey','imageUrl','collectionId']);
 
@@ -70,17 +70,17 @@ export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
-export const GameStatusSchema = z.enum(['RUNNING','FINISHED','ABANDONED','OFFLINE']);
+export const SessionStatusSchema = z.enum(['RUNNING','FINISHED','CLOSED','FORCE_CLOSED']);
 
-export type GameStatusType = `${z.infer<typeof GameStatusSchema>}`
+export type SessionStatusType = `${z.infer<typeof SessionStatusSchema>}`
 
-export const GameTypeSchema = z.enum(['CASUAL','COMPETITIVE']);
+export const SessionModeSchema = z.enum(['CASUAL','RANKED']);
 
-export type GameTypeType = `${z.infer<typeof GameTypeSchema>}`
+export type SessionModeType = `${z.infer<typeof SessionModeSchema>}`
 
-export const GameModeSchema = z.enum(['SINGLE','PVP','COOP']);
+export const MatchFormatSchema = z.enum(['OFFLINE','SOLO','PVP','COOP']);
 
-export type GameModeType = `${z.infer<typeof GameModeSchema>}`
+export type MatchFormatType = `${z.infer<typeof MatchFormatSchema>}`
 
 export const TableSizeSchema = z.enum(['SMALL','MEDIUM','LARGE']);
 
@@ -131,10 +131,10 @@ export type PlayerProfile = z.infer<typeof PlayerProfileSchema>
 /////////////////////////////////////////
 
 export const GameSessionSchema = z.object({
-  type: GameTypeSchema,
-  mode: GameModeSchema,
+  status: SessionStatusSchema,
+  mode: SessionModeSchema,
+  format: MatchFormatSchema,
   tableSize: TableSizeSchema,
-  status: GameStatusSchema,
   id: z.string(),
   slug: z.string(),
   /**
@@ -153,10 +153,9 @@ export const GameSessionSchema = z.object({
   collectionId: z.string().nullable(),
   ownerId: z.string().nullable(),
   guestId: z.string().nullable(),
-  continuedAt: z.coerce.date().nullable(),
-  closedAt: z.coerce.date().nullable(),
   startedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  closedAt: z.coerce.date().nullable(),
 })
 
 export type GameSession = z.infer<typeof GameSessionSchema>
@@ -167,9 +166,9 @@ export type GameSession = z.infer<typeof GameSessionSchema>
 
 export const ResultSchema = z.object({
   id: z.string(),
+  gainedElo: z.number().int(),
   flips: z.number().int(),
   matches: z.number().int(),
-  score: z.number().int().nullable(),
   playerId: z.string(),
   sessionId: z.string(),
   createdAt: z.coerce.date(),

@@ -1,107 +1,107 @@
 import { z } from "zod"
 
 // db schemas
+import { sessionCard, sessionCardMetadata, sessionStats } from "@repo/db/json-schema"
 import {
-  GameModeSchema,
-  GameStatusSchema,
-  GameTypeSchema,
+  SessionStatusSchema,
+  SessionModeSchema,
+  MatchFormatSchema,
   TableSizeSchema
 } from "@repo/db/zod"
 
 // validations
-import { clientPlayerSchema } from "@/player-schema"
+import { clientPlayer } from "@/player-schema"
 
-/* Base schemas */
 export const sessionSettings = z.object({
-  type: GameTypeSchema,
-  mode: GameModeSchema,
+  mode: SessionModeSchema,
+  format: MatchFormatSchema,
   tableSize: TableSizeSchema,
   collectionId: z.string()
 })
 
-export const sessionCardMetadata = z.object({
-  id: z.string(),
-  key: z.coerce.number()
-})
-
-export const sessionCard = sessionCardMetadata.extend({
-  matchedBy: z.string().nullable()
-})
-
-export const sessionStatsSchema = z.object({
-  timer: z.coerce.number(),
-  flips: z.record(
-    z.string(), z.coerce.number()
-  ),
-  matches: z.record(
-    z.string(), z.coerce.number()
-  )
-})
-
-/* Client base schemas */
 export const clientSessionCard = sessionCard.extend({
   imageUrl: z.string()
 })
 
-export const baseClientSessionSchema = z.object({
+export const baseClientSession = z.object({
   slug: z.string(),
   collectionId: z.string(),
 
-  status: GameStatusSchema,
-  type: sessionSettings.shape.type,
+  status: SessionStatusSchema,
   mode: sessionSettings.shape.mode,
+  format: sessionSettings.shape.format,
   tableSize: sessionSettings.shape.tableSize,
 
-  owner: clientPlayerSchema,
-  guest: clientPlayerSchema.optional().nullable(),
-  stats: sessionStatsSchema,
+  owner: clientPlayer,
+  guest: clientPlayer.optional().nullable(),
+  stats: sessionStats,
   cards: z.array(clientSessionCard),
   flipped: z.array(sessionCardMetadata),
   currentTurn: z.string(),
 
   startedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  continuedAt: z.coerce.date().optional().nullable(),
   closedAt: z.coerce.date().optional().nullable()
 })
 
-export const singleClientSessionSchema = baseClientSessionSchema
-  .omit({ mode: true, guest: true })
+export const offlineClientSession = baseClientSession
+  .omit({ format: true, mode: true, guest: true })
   .extend({
-    mode: z.literal(sessionSettings.shape.mode.enum.SINGLE)
+    format: z.literal(sessionSettings.shape.format.enum.OFFLINE),
+    mode: z.literal(sessionSettings.shape.mode.enum.CASUAL)
   })
 
-export const multiClientSessionSchema = baseClientSessionSchema
-  .omit({ mode: true, guest: true })
+export const soloClientSession = baseClientSession
+  .omit({ format: true, guest: true })
   .extend({
-    mode: z.enum([
-      sessionSettings.shape.mode.enum.COOP,
-      sessionSettings.shape.mode.enum.PVP
+    format: z.literal(sessionSettings.shape.format.enum.SOLO)
+  })
+
+export const singleplayerClientSession = offlineClientSession
+  .or(soloClientSession)
+
+export const multiplayerClientSession = baseClientSession
+  .omit({ format: true, guest: true })
+  .extend({
+    format: z.enum([
+      sessionSettings.shape.format.enum.COOP,
+      sessionSettings.shape.format.enum.PVP
     ]),
-    guest: clientPlayerSchema
+    guest: clientPlayer
   })
 
-export const clientSessionSchema = singleClientSessionSchema
-  .or(multiClientSessionSchema)
+export const clientSession = singleplayerClientSession
+  .or(multiplayerClientSession)
 
-export const offlineClientSessionSchema = baseClientSessionSchema.omit({
-  slug: true,
-  type: true,
-  mode: true,
-  status: true,
-  guest: true,
-  closedAt: true
-})
+export const offlineSessionStorage = offlineClientSession
+  .omit({
+    slug: true,
+    status: true,
+    mode: true,
+    format: true,
+    owner: true,
+    currentTurn: true,
+    closedAt: true
+  })
+
+export const offlineSessionMetadata = offlineClientSession
+  .pick({
+    slug: true,
+    status: true,
+    mode: true,
+    format: true,
+    owner: true,
+    currentTurn: true
+  })
 
 export type SessionSettings = z.infer<typeof sessionSettings>
-export type SessionCardMetadata = z.infer<typeof sessionCardMetadata>
-export type SessionCard = z.infer<typeof sessionCard>
-export type SessionStats = z.infer<typeof sessionStatsSchema>
-
 export type ClientSessionCard = z.infer<typeof clientSessionCard>
 
-export type BaseClientSession = z.infer<typeof baseClientSessionSchema>
-export type SingleClientSession = z.infer<typeof singleClientSessionSchema>
-export type MultiClientSession = z.infer<typeof multiClientSessionSchema>
-export type ClientSession = z.infer<typeof clientSessionSchema>
-export type OfflineClientSession = z.infer<typeof offlineClientSessionSchema>
+export type BaseClientSession = z.infer<typeof baseClientSession>
+export type OfflineClientSession = z.infer<typeof offlineClientSession>
+export type SoloClientSession = z.infer<typeof soloClientSession>
+export type MultiplayerClientSession = z.infer<typeof multiplayerClientSession>
+export type ClientSession = z.infer<typeof clientSession>
+
+export type OfflineSessionStorage = z.infer<typeof offlineSessionStorage>
+export type OfflineSessionMetadata = z.infer<typeof offlineSessionMetadata>

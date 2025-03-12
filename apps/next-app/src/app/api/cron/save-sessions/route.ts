@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       return db.gameSession.update({
         where: { slug: session.slug },
         data: {
-          ...(session.mode === "SINGLE" ? session : { ...session, guest: undefined }),
+          ...(session.format === "SOLO" ? session : { ...session, guest: undefined }),
           updatedAt: new Date()
         }
       })

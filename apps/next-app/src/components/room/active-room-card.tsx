@@ -5,8 +5,8 @@ import type { RoomVariants } from "@repo/schema/room"
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -61,7 +61,7 @@ const ActiveRoomCardContent = ({ room, className, ...props }: ActiveRoomCardCont
         <div className="space-y-2">          
           <SessionBadge session={{
             slug: room.slug,
-            status: room.connectionStatus === "offline" ? "OFFLINE" : "RUNNING"
+            status: room.connectionStatus === "offline" ? "CLOSED" : "RUNNING"
           }} />
 
           <div className="flex flex-wrap gap-x-3">
@@ -86,8 +86,8 @@ const ActiveRoomCardContent = ({ room, className, ...props }: ActiveRoomCardCont
             size="sm"
             statistic={{
               Icon: Gamepad2,
-              label: gameTypePlaceholders[room.settings.type].label,
-              data: gameModePlaceholders[room.settings.mode].label
+              label: sessionModePlaceholders[room.settings.mode].label,
+              data: matchFormatPlaceholders[room.settings.format].label
             }}
           />
 

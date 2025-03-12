@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
-import type { ClientSessionCard, MultiClientSession } from "@repo/schema/session"
+import type { ClientSessionCard, MultiplayerClientSession } from "@repo/schema/session"
 import type { SessionCardFlipValidation } from "@repo/schema/room-validation"
 import type { SessionStore } from "./session-store"
 
@@ -18,9 +18,9 @@ type MultiEventAction = {
 }
 
 type MultiEventListener = {
-  sessionCardFlipped: (response: SocketResponse<MultiClientSession>) => void
-  sessionCardMatched: (response: SocketResponse<MultiClientSession>) => void
-  sessionCardUnmatched: (response: SocketResponse<MultiClientSession>) => void
+  sessionCardFlipped: (response: SocketResponse<MultiplayerClientSession>) => void
+  sessionCardMatched: (response: SocketResponse<MultiplayerClientSession>) => void
+  sessionCardUnmatched: (response: SocketResponse<MultiplayerClientSession>) => void
   sessionFinished: (response: SocketResponse<string>) => void
 }
 

@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 
 // types
-import type { GameMode, GameType, TableSize } from "@repo/db"
+import type { MatchFormat, SessionMode, TableSize } from "@repo/db"
 import type { FilterService, FilterOptions } from "@/lib/types/query"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 import type {
@@ -13,8 +13,8 @@ import type {
 
 // config
 import {
-  gameModePlaceholders,
-  gameTypePlaceholders,
+  matchFormatPlaceholders,
+  sessionModePlaceholders,
   tableSizePlaceholders
 } from "@repo/config/game"
 
@@ -30,8 +30,8 @@ import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
 const options: FilterOptions<SessionSettingsFilterFields> = {
-  type: ["CASUAL", "COMPETITIVE"],
-  mode: ["SINGLE", "PVP", "COOP"],
+  mode: ["CASUAL", "RANKED"],
+  format: ["OFFLINE", "SOLO", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
@@ -45,51 +45,51 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
   const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionSettingsFilter>()
 
   const filter: TSessionSettingsFilter = useMemo(() => {
-    return filterService === 'store' ? filterStore : filterParams
+    return filterService === "store" ? filterStore : filterParams
   }, [filterService, filterStore, filterParams])
 
-  const handleSelectType = (type: GameType) => {
-    if (filterService === 'store' || filterService === 'mixed') {
+  const handleSelectMode = (mode: SessionMode) => {
+    if (filterService === "store" || filterService === "mixed") {
       setFilterStore<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
-        if (filter.type === type) {
-          state[filterKey] = { ...filter, type: undefined }
+        if (filter.mode === mode) {
+          state[filterKey] = { ...filter, mode: undefined }
         } else {
-          state[filterKey] = { ...filter, type }
+          state[filterKey] = { ...filter, mode }
         }
   
         return { [filterKey]: state[filterKey] }
       })
     }
 
-    if (filterService === 'params' || filterService === 'mixed') {
-      toggleFilterParam('type', type)
+    if (filterService === "params" || filterService === "mixed") {
+      toggleFilterParam("mode", mode)
     }
   }
 
-  const handleSelectMode = (mode: GameMode) => {
-    if (filterService === 'store' || filterService === 'mixed') {
+  const handleSelectFormat = (format: MatchFormat) => {
+    if (filterService === "store" || filterService === "mixed") {
       setFilterStore<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
-        if (filter.mode === mode) {
-          state[filterKey] = { ...filter, mode: undefined, tableSize: undefined }
+        if (filter.format === format) {
+          state[filterKey] = { ...filter, format: undefined, tableSize: undefined }
         } else {
-          state[filterKey] = { ...filter, mode }
+          state[filterKey] = { ...filter, format }
         }
   
         return { [filterKey]: state[filterKey] }
       }) 
     }
 
-    if (filterService === 'params' || filterService === 'mixed') {
-      toggleFilterParam('mode', mode)
+    if (filterService === "params" || filterService === "mixed") {
+      toggleFilterParam("format", format)
     }
   }
 
   const handleSelectTableSize = (tableSize: TableSize) => {
-    if (filterService === 'store' || filterService === 'mixed') {
+    if (filterService === "store" || filterService === "mixed") {
       setFilterStore<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
@@ -102,8 +102,8 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
       }) 
     }
 
-    if (filterService === 'params' || filterService === 'mixed') {
-      toggleFilterParam('tableSize', tableSize)
+    if (filterService === "params" || filterService === "mixed") {
+      toggleFilterParam("tableSize", tableSize)
     }
   }
 
@@ -111,38 +111,38 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
     <Breadcrumb>
       <BreadcrumbList className="sm:gap-y-1 sm:gap-x-1.5">
         <BreadcrumbItemGroup>
-          {options.type.map((type) => (
+          {options.mode.map((mode) => (
             <BreadcrumbButton
-              onClick={() => handleSelectType(type)}
-              selected={filter.type === type}
-              key={type}
+              onClick={() => handleSelectMode(mode)}
+              selected={filter.mode === mode}
+              key={mode}
             >
-              {gameTypePlaceholders[type].label}
+              {sessionModePlaceholders[mode].label}
             </BreadcrumbButton>
           ))}
         </BreadcrumbItemGroup>
 
-        <SessionBreadcrumbSeparator showNext={!!filter.type} />
+        <SessionBreadcrumbSeparator showNext={!!filter.mode} />
 
-        {!!filter.type && (
+        {!!filter.mode && (
           <>
             <BreadcrumbItemGroup>
-              {options.mode.map((mode) => (
+              {options.format.map((format) => (
                 <BreadcrumbButton
-                  onClick={() => handleSelectMode(mode)}
-                  selected={filter.mode === mode}
-                  key={mode}
+                  onClick={() => handleSelectFormat(format)}
+                  selected={filter.format === format}
+                  key={format}
                 >
-                  {gameModePlaceholders[mode].label}
+                  {matchFormatPlaceholders[format].label}
                 </BreadcrumbButton>
               ))}
             </BreadcrumbItemGroup>
 
-            <SessionBreadcrumbSeparator showNext={!!filter.mode} />
+            <SessionBreadcrumbSeparator showNext={!!filter.format} />
           </>
         )}
 
-        {!!filter.mode && (
+        {!!filter.format && (
           <BreadcrumbItemGroup>
             {options.tableSize.map((tableSize) => (
               <BreadcrumbButton

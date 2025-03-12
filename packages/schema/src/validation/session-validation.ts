@@ -1,37 +1,49 @@
 import { z } from "zod"
 
 // schemas
+import { sessionCard } from "@repo/db/json-schema"
 import {
-  baseClientSessionSchema,
-  sessionCard,
+  baseClientSession,
   sessionSettings,
-  offlineClientSessionSchema
+  offlineSessionStorage,
+  soloClientSession
 } from "@/session-schema"
 import { roomSettings } from "@/room-schema"
 import { createRoomValidation } from "@/validation/room-validation"
 
-/* Forms / API validations */
-export const createSingleSessionValidation = z.object({
+export const createOfflineSessionValidation = z.object({
   settings: sessionSettings
-    .omit({ mode: true })
-    .extend({ mode: z.literal(sessionSettings.shape.mode.enum.SINGLE) }),
+    .omit({ format: true })
+    .extend({ format: z.literal(sessionSettings.shape.format.enum.OFFLINE) }),
+  forceStart: z.coerce.boolean().optional()
+})
+
+export const createSoloSessionValidation = z.object({
+  settings: sessionSettings
+    .omit({ format: true })
+    .extend({ format: z.literal(sessionSettings.shape.format.enum.SOLO) }),
   forceStart: z.coerce.boolean().optional()
 })
 
 export const sessionFormValidation = z.object({
-  settings: createSingleSessionValidation.shape.settings
-    .or(createRoomValidation.shape.settings),
+  settings: createSoloSessionValidation.shape.settings
+    .or(createRoomValidation.shape.settings)
+    .or(createOfflineSessionValidation.shape.settings),
   forceStart: z.coerce.boolean().optional()
 })
 
-export const createMultiSessionValidation = z.object({
+export const createMultiplayerSessionValidation = z.object({
   settings: roomSettings,
   slug: z.string(),
   guestId: z.string()
 })
 
-export const finishSessionSchema = z.object({
-  clientSession: baseClientSessionSchema
+export const storeSoloSessionValidation = z.object({
+  clientSession: soloClientSession
+})
+
+export const finishSoloSessionValidation = z.object({
+  clientSession: baseClientSession
     .omit({ status: true, cards: true })
     .extend({
       cards: z.array(sessionCard.extend({
@@ -40,16 +52,15 @@ export const finishSessionSchema = z.object({
     })
 })
 
-export const abandonSessionValidation = z.object({
-  clientSession: baseClientSessionSchema
+export const forceCloseSoloSessionValidation = z.object({
+  clientSession: baseClientSession
     .omit({ status: true })
-    .optional()
 })
 
-export const saveOfflineGameValidation = z.object({
+export const saveOfflineSessionValidation = z.object({
   playerId: z.string(),
-  clientSession: offlineClientSessionSchema
-    .omit({ cards: true })
+  clientSession: offlineSessionStorage
+    .omit({ cards: true, updatedAt: true })
     .extend({
       cards: z.array(sessionCard.extend({
         matchedBy: z.string()
@@ -57,9 +68,10 @@ export const saveOfflineGameValidation = z.object({
     })
 })
 
-export type CreateSingleSessionValidation = z.infer<typeof createSingleSessionValidation>
+export type CreateOfflineSessionValidation = z.infer<typeof createOfflineSessionValidation>
+export type CreateSoloSessionValidation = z.infer<typeof createSoloSessionValidation>
 export type SessionFormValidation = z.infer<typeof sessionFormValidation>
-export type CreateMultiSessionValidation = z.infer<typeof createMultiSessionValidation>
-export type FinishSessionValidation = z.infer<typeof finishSessionSchema>
-export type AbandonSessionValidation = z.infer<typeof abandonSessionValidation>
-export type SaveOfflineGameValidation = z.infer<typeof saveOfflineGameValidation>
+export type CreateMultiplayerSessionValidation = z.infer<typeof createMultiplayerSessionValidation>
+export type FinishSoloSessionValidation = z.infer<typeof finishSoloSessionValidation>
+export type ForceCloseSoloSessionValidation = z.infer<typeof forceCloseSoloSessionValidation>
+export type SaveOfflineSessionValidation = z.infer<typeof saveOfflineSessionValidation>

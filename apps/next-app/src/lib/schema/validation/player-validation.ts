@@ -1,18 +1,18 @@
 import { z } from "zod"
 
 // schemas
-import { playerColorSchema, playerTagSchema } from "@repo/schema/player"
+import { playerColor, playerTag } from "@repo/schema/player"
 
 /* Form / API validations */
 export const createPlayerValidation = z.object({
-  tag: playerTagSchema,
-  color: playerColorSchema
+  tag: playerTag,
+  color: playerColor
 })
 
 export const updatePlayerValidation = z.object({
-  previousTag: playerTagSchema,
-  tag: playerTagSchema.optional(),
-  color: playerColorSchema.optional()
+  previousTag: playerTag,
+  tag: playerTag.optional(),
+  color: playerColor.optional()
 })
 
 export type CreatePlayerValidation = z.infer<typeof createPlayerValidation>
