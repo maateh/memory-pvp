@@ -4,7 +4,7 @@ import type {
   OnlinePlayerConnection,
   PlayerConnection,
   PlayerConnectionOpts
-} from "@repo/schema/player-connection"
+} from "@repo/schema/player"
 
 // config
 import { RECONNECTION_TIMEOUT } from "@repo/config/connection"

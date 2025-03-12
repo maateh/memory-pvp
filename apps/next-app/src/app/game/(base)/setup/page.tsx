@@ -1,6 +1,6 @@
 // prisma
 import type { SessionMode, MatchFormat, TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // server
 import { db } from "@repo/server/db"

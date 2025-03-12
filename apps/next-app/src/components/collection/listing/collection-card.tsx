@@ -2,7 +2,7 @@ import { formatDistance } from "date-fns"
 
 // types
 import type { CollectionListingMetadata } from "./collection-listing"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // config
 import { tableSizePlaceholders } from "@repo/config/game"

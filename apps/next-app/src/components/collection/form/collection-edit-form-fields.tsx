@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { UpdateCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { UpdateCollectionValidation } from "@repo/schema/collection-validation"
 
 // shadcn
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 type CollectionEditFormFieldsProps = {
-  form: UseFormReturn<UpdateCardCollectionValidation>
+  form: UseFormReturn<UpdateCollectionValidation>
 }
 
 const CollectionEditFormFields = ({ form }: CollectionEditFormFieldsProps) => {

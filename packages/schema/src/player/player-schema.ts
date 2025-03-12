@@ -4,12 +4,12 @@ import { z } from "zod"
 import { playerStats } from "@repo/db/json-schema"
 
 export const playerTag = z.string()
-  .min(4, { message: 'Too short.' })
-  .max(16, { message: 'Too long.' })
+  .min(4, { message: "Too short." })
+  .max(16, { message: "Too long." })
 
 export const playerColor = z.string()
-  .length(7, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
-  .regex(/^#/, { message: 'Color must be a valid HEX color. e.g. #f1f1f1' })
+  .length(7, { message: "Color must be a valid HEX color. e.g. #f1f1f1" })
+  .regex(/^#/, { message: "Color must be a valid HEX color. e.g. #f1f1f1" })
 
 export const clientPlayer = z.object({
   id: z.string(),

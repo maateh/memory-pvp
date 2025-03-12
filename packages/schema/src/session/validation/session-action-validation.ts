@@ -2,33 +2,18 @@ import { z } from "zod"
 
 // schemas
 import { sessionCard } from "@repo/db/json-schema"
+import { roomSettings } from "@/room"
 import {
-  baseClientSession,
+  clientSession,
   sessionSettings,
   offlineSessionStorage,
   soloClientSession
-} from "@/session-schema"
-import { roomSettings } from "@/room-schema"
-import { createRoomValidation } from "@/validation/room-validation"
-
-export const createOfflineSessionValidation = z.object({
-  settings: sessionSettings
-    .omit({ format: true })
-    .extend({ format: z.literal(sessionSettings.shape.format.enum.OFFLINE) }),
-  forceStart: z.coerce.boolean().optional()
-})
+} from "@/session"
 
 export const createSoloSessionValidation = z.object({
   settings: sessionSettings
     .omit({ format: true })
     .extend({ format: z.literal(sessionSettings.shape.format.enum.SOLO) }),
-  forceStart: z.coerce.boolean().optional()
-})
-
-export const sessionFormValidation = z.object({
-  settings: createSoloSessionValidation.shape.settings
-    .or(createRoomValidation.shape.settings)
-    .or(createOfflineSessionValidation.shape.settings),
   forceStart: z.coerce.boolean().optional()
 })
 
@@ -43,7 +28,7 @@ export const storeSoloSessionValidation = z.object({
 })
 
 export const finishSoloSessionValidation = z.object({
-  clientSession: baseClientSession
+  clientSession: clientSession
     .omit({ status: true, cards: true })
     .extend({
       cards: z.array(sessionCard.extend({
@@ -53,7 +38,7 @@ export const finishSoloSessionValidation = z.object({
 })
 
 export const forceCloseSoloSessionValidation = z.object({
-  clientSession: baseClientSession
+  clientSession: clientSession
     .omit({ status: true })
 })
 
@@ -68,10 +53,9 @@ export const saveOfflineSessionValidation = z.object({
     })
 })
 
-export type CreateOfflineSessionValidation = z.infer<typeof createOfflineSessionValidation>
 export type CreateSoloSessionValidation = z.infer<typeof createSoloSessionValidation>
-export type SessionFormValidation = z.infer<typeof sessionFormValidation>
 export type CreateMultiplayerSessionValidation = z.infer<typeof createMultiplayerSessionValidation>
+export type StoreSoloSessionValidation = z.infer<typeof storeSoloSessionValidation>
 export type FinishSoloSessionValidation = z.infer<typeof finishSoloSessionValidation>
 export type ForceCloseSoloSessionValidation = z.infer<typeof forceCloseSoloSessionValidation>
 export type SaveOfflineSessionValidation = z.infer<typeof saveOfflineSessionValidation>

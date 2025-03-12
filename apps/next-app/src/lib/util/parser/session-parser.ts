@@ -1,8 +1,8 @@
 // types
 import type { Prisma } from "@repo/db"
 import type {
-  BaseClientSession,
   ClientSession,
+  ClientSessionVariants,
   OfflineClientSession,
   OfflineSessionStorage
 } from "@repo/schema/session"
@@ -24,7 +24,7 @@ import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
 import { pickFields } from "@/lib/util/parser"
 
 /* Schema parser keys */
-export const clientSessionKeys: (keyof BaseClientSession)[] = [
+export const clientSessionKeys: (keyof ClientSession)[] = [
   'slug', 'collectionId',
   'owner', 'guest',
   'status', 'mode', 'format', 'tableSize',
@@ -43,15 +43,15 @@ export const offlineSessionStorageKeys: (keyof OfflineSessionStorage)[] = [
  * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientSession`.
  * 
  * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
- * @returns {ClientSession} - A parsed session with player data structured into `current` and `other` fields.
+ * @returns {ClientSessionVariants} - A parsed session with player data structured into `current` and `other` fields.
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards
-): ClientSession {
+): ClientSessionVariants {
   const filteredSession = pickFields(session, clientSessionKeys)
   const sessionCollection = session.collection ?? getFallbackCollection(session.tableSize)
 
-  const { format, mode, ...clientSession }: Omit<BaseClientSession, "guest"> = {
+  const { format, mode, ...clientSession }: Omit<ClientSession, "guest"> = {
     ...filteredSession,
     collectionId: sessionCollection.id,
     cards: pairSessionCardsWithCollection(session.cards, sessionCollection.cards),

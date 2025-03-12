@@ -7,7 +7,7 @@ import { toast } from "sonner"
 // types
 import type { DefaultValues } from "react-hook-form"
 import type { SessionFormValidation } from "@repo/schema/session-validation"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"

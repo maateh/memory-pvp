@@ -2,7 +2,7 @@ import Image from "next/image"
 
 // types
 import type { LucideProps } from "lucide-react"
-import type { ClientUser } from "@/lib/schema/user-schema"
+import type { ClientUser } from "@repo/schema/user"
 
 // utils
 import { cn } from "@/lib/util"

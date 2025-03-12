@@ -10,13 +10,15 @@
     "check-types": "tsc --noEmit"
   },
   "exports": {
-    "./session": "./dist/session-schema.js",
-    "./player": "./dist/player-schema.js",
-    "./player-connection": "./dist/player-connection-schema.js",
-    "./room": "./dist/room-schema.js",
-    "./room-player": "./dist/room-player-schema.js",
-    "./session-validation": "./dist/validation/session-validation.js",
-    "./room-validation": "./dist/validation/room-validation.js"
+    "./collection": "./dist/collection/index.js",
+    "./collection-validation": "./dist/collection/validation/index.js",
+    "./player": "./dist/player/index.js",
+    "./player-validation": "./dist/player/validation/index.js",
+    "./room": "./dist/room/index.js",
+    "./room-validation": "./dist/room/validation/index.js",
+    "./session": "./dist/session/index.js",
+    "./session-validation": "./dist/session/validation/index.js",
+    "./user": "./dist/user/index.js"
   },
   "dependencies": {
     "@repo/db": "workspace:*"

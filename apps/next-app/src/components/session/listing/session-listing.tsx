@@ -4,7 +4,7 @@ import { useState } from "react"
 
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 
 // react-table
 import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table"
@@ -27,7 +27,7 @@ import { CardItem, NoListingData } from "@/components/shared"
 import { useSidebar } from "@/components/ui/sidebar"
 
 type SessionListingProps = {
-  sessions: ClientSession[]
+  sessions: ClientSessionVariants[]
 }
 
 const SessionListing = ({ sessions }: SessionListingProps) => {

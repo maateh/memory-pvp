@@ -1,6 +1,6 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientMemoryCard, ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientMemoryCard, ClientCardCollection } from "@repo/schema/collection"
 import type { CardCollectionWithCardsWithUser } from "@repo/db/types"
 import type { CollectionFilterQuery } from "@/lib/schema/query/collection-query"
 

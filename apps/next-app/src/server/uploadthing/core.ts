@@ -1,7 +1,6 @@
 // types
-import type { z } from "zod"
 import type { FileRouter } from "uploadthing/next"
-import type { CreateCardCollectionUtValidation } from "@/lib/schema/validation/collection-validation"
+import type { CreateCardCollectionUtValidation } from "@repo/schema/collection-validation"
 
 // uploadthing
 import { createUploadthing } from "uploadthing/next"
@@ -15,7 +14,7 @@ import { signedIn } from "@/server/action/user-action"
 import { getCollectionImageSettings } from "@/config/collection-settings"
 
 // validations
-import { createCollectionUtValidation } from "@/lib/schema/validation/collection-validation"
+import { createCollectionUtValidation } from "@repo/schema/collection-validation"
 
 /** Middleware to limit the number of card collections that can be created by users. */
 async function collectionLimitMiddleware({ input }: { input: CreateCardCollectionUtValidation }) {

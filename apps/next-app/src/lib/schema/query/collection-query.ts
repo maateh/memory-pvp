@@ -2,10 +2,10 @@ import { z } from "zod"
 
 // schemas
 import { sortKeys } from "@/lib/schema/query"
-import { clientCollectionSchema } from "@/lib/schema/collection-schema"
+import { clientCardCollection } from "@repo/schema/collection"
 
 /* Query filters */
-export const collectionFilterQuery = clientCollectionSchema
+export const collectionFilterQuery = clientCardCollection
   .pick({ name: true, tableSize: true })
   .extend({
     username: z.string(),
@@ -13,7 +13,7 @@ export const collectionFilterQuery = clientCollectionSchema
   }).partial()
 
 export const collectionSortQuery = z.record(
-  clientCollectionSchema.pick({
+  clientCardCollection.pick({
     name: true,
     tableSize: true,
     createdAt: true,

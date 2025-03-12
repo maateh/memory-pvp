@@ -1,6 +1,6 @@
 // types
 import type { ColumnDef } from "@tanstack/react-table"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 import type { CollectionListingMetadata } from "./collection-listing"
 
 // config

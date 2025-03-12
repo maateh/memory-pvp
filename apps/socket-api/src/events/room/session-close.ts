@@ -6,7 +6,7 @@ import { closeSession } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // schemas
-import { runningRoomSchema } from "@repo/schema/room"
+import { runningRoom } from "@repo/schema/room"
 
 // error
 import { ServerError } from "@repo/server/error"
@@ -21,7 +21,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
   try {
-    const room = await getRoom<RunningRoom>(roomSlug, runningRoomSchema)
+    const room = await getRoom<RunningRoom>(roomSlug, runningRoom)
 
     if (room.status !== "cancelled") {
       ServerError.throw({

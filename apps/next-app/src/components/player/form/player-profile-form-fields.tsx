@@ -1,6 +1,6 @@
 // types
 import type { UseFormReturn } from "react-hook-form"
-import type { CreatePlayerValidation } from "@/lib/schema/validation/player-validation"
+import type { CreatePlayerValidation } from "@repo/schema/player-validation"
 
 // icons
 import { Hash } from "lucide-react"

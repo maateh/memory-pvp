@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { UploadThingError } from "uploadthing/server"
 
 // types
-import type { CreateClientCardCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import type { CollectionFormValidation } from "@/lib/schema/collection/validation"
 
 // config
 import { collectionMaxSizeMap, collectionMinSizeMap } from "@/config/collection-settings"
@@ -14,7 +14,7 @@ import { handleServerError, logError } from "@/lib/util/error"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createClientCollectionValidation } from "@/lib/schema/validation/collection-validation"
+import { collectionFormValidation } from "@/lib/schema/collection/validation"
 
 // components
 import { Form } from "@/components/shared"
@@ -24,8 +24,8 @@ import CollectionFormFields from "./collection-form-fields"
 import { useCreateCollectionAction } from "@/lib/safe-action/collection"
 
 const CollectionForm = () => {
-  const form = useForm<CreateClientCardCollectionValidation>({
-    resolver: zodResolver(createClientCollectionValidation),
+  const form = useForm<CollectionFormValidation>({
+    resolver: zodResolver(collectionFormValidation),
     defaultValues: {
       name: '',
       description: '',
@@ -45,7 +45,7 @@ const CollectionForm = () => {
     status: createCollectionStatus
   } = useCreateCollectionAction({ tableSize })
 
-  const handleExecute = async ({ images, ...values }: CreateClientCardCollectionValidation) => {
+  const handleExecute = async ({ images, ...values }: CollectionFormValidation) => {
     try {
       const files = await startUpload(images, values)
       
@@ -75,7 +75,7 @@ const CollectionForm = () => {
   }
 
   return (
-    <Form<CreateClientCardCollectionValidation>
+    <Form<CollectionFormValidation>
       className="mt-5"
       form={form}
       onSubmit={handleExecute}

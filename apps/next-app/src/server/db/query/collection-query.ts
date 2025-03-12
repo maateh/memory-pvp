@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@/lib/schema/collection-schema"
+import type { ClientCardCollection } from "@repo/schema/collection"
 import type { Pagination, PaginationParams } from "@/lib/types/query"
 import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/query/collection-query"
 
