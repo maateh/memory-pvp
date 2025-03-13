@@ -6,32 +6,33 @@ import { getPlayers } from "@/server/db/query/player-query"
 // types
 import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
 
+import { playerFilter, playerSort } from "@repo/schema/player"
+
 // constants
 import { playerSortOptions } from "@/components/player/filter/constants"
 
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { Await, SortDropdownButton } from "@/components/shared"
 import { PlayerProfileListing, PlayerProfileListingSkeleton } from "@/components/player/listing"
 import { PlayerTagFilter } from "@/components/player/filter"
 import { PlayerCreateWidgetCard } from "@/components/player/widget"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { Await, SortDropdownButton } from "@/components/shared"
 
 type PlayersPageProps = {
   searchParams: PlayerFilter & PlayerSort
 }
 
 const PlayersPage = ({ searchParams }: PlayersPageProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
-    filter: PlayerFilter
-    sort: PlayerSort
-  }
+  const { filter, sort } = parseSearchParams(searchParams, {
+    filterSchema: playerFilter,
+    sortSchema: playerSort
+  })
 
   return (
     <div className="page-wrapper relative flex flex-col gap-10 xl:flex-row">

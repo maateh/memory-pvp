@@ -1,8 +1,11 @@
 // types
 import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
 
+// schemas
+import { collectionFilter, collectionSort } from "@repo/schema/collection"
+
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser"
 
 // components
 import { CollectionExplorerPopup } from "@/components/collection/popup"
@@ -12,8 +15,11 @@ type CollectionsExplorerPopupProps = {
 }
 
 const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
+  const { filter, sort, pagination } = parseSearchParams(searchParams, {
+    filterSchema: collectionFilter,
+    sortSchema: collectionSort,
+    parsePagination: true
+  })
 
   return (
     <CollectionExplorerPopup

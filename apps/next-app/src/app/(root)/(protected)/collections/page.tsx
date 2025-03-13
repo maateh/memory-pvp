@@ -2,7 +2,10 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
+import { CollectionFilter, CollectionSort } from "@repo/schema/collection"
+
+// schemas
+import { collectionFilter, collectionSort } from "@repo/schema/collection"
 
 // server
 import { getCollections } from "@/server/db/query/collection-query"
@@ -11,7 +14,7 @@ import { getCollections } from "@/server/db/query/collection-query"
 import { collectionSortOptions } from "@/components/collection/filter/constants"
 
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser"
 
 // icons
 import { ImageUp } from "lucide-react"
@@ -22,21 +25,24 @@ import { Separator } from "@/components/ui/separator"
 import { TableSkeleton } from "@/components/ui/table"
 
 // components
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
 import { CollectionListing } from "@/components/collection/listing"
-import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
   searchParams: CollectionFilter & CollectionSort
 }
 
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
+  const { filter, sort, pagination } = parseSearchParams(searchParams, {
+    filterSchema: collectionFilter,
+    sortSchema: collectionSort,
+    parsePagination: true
+  })
 
   return (
     <>
