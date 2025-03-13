@@ -17,7 +17,7 @@ export const playerSort = z.record(
     tag: true,
     createdAt: true,
     // TODO: extend with stats (?)
-    stats: true
+    // stats: true
   }).keyof(),
   sortKey
 )
