@@ -3,9 +3,9 @@ import type { SortKey } from "@repo/schema/search"
 /* Filter types */
 export type FilterService = "store" | "params" | "mixed"
 
-export type FilterOptions<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K][]
-}
+export type FilterOptions<T extends Record<string, unknown>> = Required<{
+  [K in keyof T]: Required<T>[K][]
+}>
 
 /* Sort types */
 export type SortOption<T extends Record<string, SortKey>, K = keyof T> = {
