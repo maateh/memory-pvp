@@ -12,13 +12,13 @@ export const paginationParams = z.object({
 export const paginationWithoutData = z.object({
   totalPage: z.coerce.number(),
   hasNextPage: z.coerce.boolean()
-})
+}).extend(paginationParams.required().shape)
 
-export const pagination = <T extends z.ZodTypeAny>(
-  dataSchema: T
-) => z.object({ data: z.array(dataSchema) })
-  .extend(paginationWithoutData.shape)
-  .extend(paginationParams.shape)
+export const pagination = <T>(
+  dataSchema: z.ZodSchema<T>
+) => z.object({
+  data: z.array(dataSchema)
+}).extend(paginationWithoutData.shape)
 
 /* Sort types */
 export type SortKey = z.infer<typeof sortKey>
@@ -26,4 +26,4 @@ export type SortKey = z.infer<typeof sortKey>
 /* Pagination types */
 export type PaginationParams = z.infer<typeof paginationParams>
 export type PaginationWithoutData = z.infer<typeof paginationWithoutData>
-export type Pagination<T extends z.ZodTypeAny> = z.infer<ReturnType<typeof pagination<T>>>
+export type Pagination<T> = z.infer<ReturnType<typeof pagination<T>>>
