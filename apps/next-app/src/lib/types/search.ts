@@ -1,4 +1,4 @@
-import type { SortKey } from "@/lib/schema/search"
+import type { SortKey } from "@repo/schema/search"
 
 /* Filter types */
 export type FilterService = "store" | "params" | "mixed"
