@@ -1,5 +1,5 @@
 // types
-import type { PaginationWithoutData } from "@/lib/types/query"
+import type { PaginationWithoutData } from "@repo/schema/search"
 
 // utils
 import { getPageNumbers } from "@/lib/util/parser/pagination-parser"

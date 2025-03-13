@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
+import type { SessionFilter, SessionSort } from "@repo/schema/session"
 
 // server
 import { getClientSessions } from "@/server/db/query/session-query"

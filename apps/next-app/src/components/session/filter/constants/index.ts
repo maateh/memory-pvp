@@ -1,6 +1,6 @@
 // types
-import type { SortOptions } from "@/lib/types/query"
-import type { SessionSort } from "../types"
+import type { SessionSort } from "@repo/schema/session"
+import type { SortOptions } from "@/lib/types/search"
 
 export const sessionSortOptions: SortOptions<SessionSort> = {
   slug: {

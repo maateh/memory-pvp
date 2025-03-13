@@ -4,12 +4,9 @@ import { useMemo } from "react"
 
 // types
 import type { SessionStatus } from "@repo/db"
-import type { FilterService, FilterOptions } from "@/lib/types/query"
+import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
-import type {
-  SessionStatusFilter as TSessionStatusFilter,
-  SessionStatusFilterFields
-} from "./types"
+import type { SessionFilter } from "@repo/schema/session"
 
 // utils
 import { cn } from "@/lib/util"
@@ -21,7 +18,9 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-const options: FilterOptions<SessionStatusFilterFields> = {
+type TSessionStatusFilter = Pick<SessionFilter, "status">
+
+const options: FilterOptions<TSessionStatusFilter> = {
   status: ["RUNNING", "FINISHED", "CLOSED", "FORCE_CLOSED"]
 }
 

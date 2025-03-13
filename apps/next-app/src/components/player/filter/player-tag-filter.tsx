@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 // types
-import type { PlayerFilter } from "./types"
+import type { PlayerFilter } from "@repo/schema/player"
 
 // utils
 import { cn } from "@/lib/util"

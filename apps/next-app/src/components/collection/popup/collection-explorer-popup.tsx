@@ -1,9 +1,12 @@
 import { Suspense } from "react"
 
 // types
-import type { ClientCardCollection } from "@repo/schema/collection"
-import type { PaginationParams } from "@/lib/types/query"
-import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+import type { PaginationParams } from "@repo/schema/search"
+import type {
+  ClientCardCollection,
+  CollectionFilter,
+  CollectionSort
+} from "@repo/schema/collection"
 
 // server
 import { getCollections } from "@/server/db/query/collection-query"

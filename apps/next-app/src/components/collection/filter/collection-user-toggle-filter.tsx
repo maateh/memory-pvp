@@ -1,7 +1,7 @@
 "use client"
 
 // types
-import type { CollectionFilter } from "./types"
+import type { CollectionFilter } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"

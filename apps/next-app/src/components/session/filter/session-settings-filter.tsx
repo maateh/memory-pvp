@@ -4,12 +4,9 @@ import { useMemo } from "react"
 
 // types
 import type { MatchFormat, SessionMode, TableSize } from "@repo/db"
-import type { FilterService, FilterOptions } from "@/lib/types/query"
+import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
-import type {
-  SessionSettingsFilter as TSessionSettingsFilter,
-  SessionSettingsFilterFields
-} from "./types"
+import type { SessionFilter } from "@repo/schema/session"
 
 // config
 import {
@@ -29,7 +26,9 @@ import { Separator } from "@/components/ui/separator"
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-const options: FilterOptions<SessionSettingsFilterFields> = {
+type TSessionSettingsFilter = Pick<SessionFilter, "mode" | "format" | "tableSize">
+
+const options: FilterOptions<TSessionSettingsFilter> = {
   mode: ["CASUAL", "RANKED"],
   format: ["OFFLINE", "SOLO", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]

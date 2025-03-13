@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 // types
-import { CollectionFilter } from "./types"
+import { CollectionFilter } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"

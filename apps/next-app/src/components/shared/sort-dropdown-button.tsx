@@ -3,7 +3,8 @@
 import { useMemo } from "react"
 
 // types
-import type { SortKey, SortOption, SortOptions } from "@/lib/types/query"
+import type { SortKey } from "@repo/schema/search"
+import type { SortOption, SortOptions } from "@/lib/types/search"
 import type { LucideProps } from "lucide-react"
 
 // utils
@@ -24,12 +25,12 @@ import {
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-type SortDropdownButtonProps<T extends { [key in keyof T]: string | number | boolean }> = {
+type SortDropdownButtonProps<T extends { [K in keyof T]: SortKey }> = {
   options: SortOptions<T>
   iconProps?: LucideProps
 } & React.ComponentProps<typeof Button>
 
-function SortDropdownButton<T extends { [key in keyof T]: string | number | boolean }>({
+function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
   options,
   iconProps,
   className,

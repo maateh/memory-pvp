@@ -1,6 +1,7 @@
 // types
 import type { z } from "zod"
-import type { Filter, Sort, SortKey, PaginationParams } from "@/lib/types/query"
+import type { SortKey, PaginationParams } from "@repo/schema/search"
+import type { Filter, Sort } from "@/lib/types/query"
 import type { FilterParamValue } from "@/hooks/use-filter-params"
 
 /**

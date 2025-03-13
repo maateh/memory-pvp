@@ -1,5 +1,5 @@
 // types
-import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
 
 // utils
 import { parseFilterParams } from "@/lib/util/parser"

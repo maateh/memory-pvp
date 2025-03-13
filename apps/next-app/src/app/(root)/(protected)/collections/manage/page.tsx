@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 
 // types
-import type { CollectionSort } from "@/components/collection/filter/types"
+import type { CollectionSort } from "@repo/schema/collection"
 
 // server
 import { getUserCollections } from "@/server/db/query/collection-query"

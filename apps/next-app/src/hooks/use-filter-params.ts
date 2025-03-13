@@ -2,7 +2,8 @@ import { useCallback, useMemo } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 // types
-import type { Filter, Sort, SortKey, PaginationParams } from "@/lib/types/query"
+import type { SortKey, PaginationParams } from "@repo/schema/search"
+import type { Filter, Sort } from "@/lib/types/query"
 
 // utils
 import { parseFilterParams } from "@/lib/util/parser"

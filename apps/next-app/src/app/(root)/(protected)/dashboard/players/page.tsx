@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import { getPlayers } from "@/server/db/query/player-query"
 
 // types
-import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
+import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
 
 // constants
 import { playerSortOptions } from "@/components/player/filter/constants"

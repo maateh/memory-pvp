@@ -1,6 +1,6 @@
 // types
-import type { SortOptions } from "@/lib/types/query"
-import type { PlayerSort } from "../types"
+import type { PlayerSort } from "@repo/schema/player"
+import type { SortOptions } from "@/lib/types/search"
 
 export const playerSortOptions: SortOptions<PlayerSort> = {
   tag: {

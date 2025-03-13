@@ -1,6 +1,6 @@
 // types
-import type { SortOptions } from "@/lib/types/query"
-import type { CollectionSort } from "../types"
+import type { CollectionSort } from "@repo/schema/collection"
+import type { SortOptions } from "@/lib/types/search"
 
 export const collectionSortOptions: SortOptions<CollectionSort> = {
   name: {

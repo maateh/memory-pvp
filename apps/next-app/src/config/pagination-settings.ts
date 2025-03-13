@@ -1,5 +1,5 @@
 // types
-import type { PaginationParams } from "@/lib/types/query"
+import type { PaginationParams } from "@repo/schema/search"
 
 /** Maximum item limit of pagination queries */
 export const MAX_PAGINATION_LIMIT = 20

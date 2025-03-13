@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
 
 // server
 import { getCollections } from "@/server/db/query/collection-query"

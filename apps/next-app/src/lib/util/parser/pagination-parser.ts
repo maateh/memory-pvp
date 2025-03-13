@@ -1,5 +1,5 @@
 // types
-import type { Pagination, PaginationWithoutData, PaginationParams } from "@/lib/types/query"
+import type { Pagination, PaginationWithoutData, PaginationParams } from "@repo/schema/search"
 
 // config
 import { getFixedPaginationParams } from "@/config/pagination-settings"
@@ -33,7 +33,11 @@ export function paginate(params: PaginationParams): { skip: number; take: number
  * @param {PaginationParams} params - The pagination parameters containing `page` and `limit`.
  * @returns {Pagination<T>} - An object containing paginated data and metadata (total pages, current page, etc.).
  */
-export function paginationWrapper<T>(data: T[], total: number, params: PaginationParams): Pagination<T> {
+export function paginationWrapper<T>(
+  data: T[],
+  total: number,
+  params: PaginationParams
+): Pagination<T> {
   const { page, limit } = getFixedPaginationParams(params)
 
   const totalPage = Math.ceil(total / limit)

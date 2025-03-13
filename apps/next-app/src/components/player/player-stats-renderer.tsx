@@ -4,7 +4,7 @@ import { useMemo } from "react"
 
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-import type { SessionFilter } from "@/components/session/filter/types"
+import type { SessionFilter } from "@repo/schema/session"
 
 // trpc
 import { trpc } from "@/server/trpc/client"

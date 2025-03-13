@@ -1,8 +1,8 @@
 "use client"
 
 // types
-import type { FilterOptions } from "@/lib/types/query"
-import type { CollectionFilter, CollectionFilterFields } from "./types"
+import type { CollectionFilter } from "@repo/schema/collection"
+import type { FilterOptions } from "@/lib/types/search"
 
 // config
 import { tableSizePlaceholders } from "@repo/config/game"
@@ -16,7 +16,7 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-const options: FilterOptions<Pick<CollectionFilterFields, 'tableSize'>> = {
+const options: FilterOptions<Pick<CollectionFilter, 'tableSize'>> = {
   tableSize: ['SMALL', 'MEDIUM', 'LARGE']
 }
 
