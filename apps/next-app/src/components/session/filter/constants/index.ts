@@ -7,9 +7,17 @@ export const sessionSortOptions: SortOptions<SessionSort> = {
     sortValueKey: "slug",
     label: "Session"
   },
+  status: {
+    sortValueKey: "status",
+    label: "Status"
+  },
   mode: {
     sortValueKey: "mode",
     label: "Settings"
+  },
+  format: {
+    sortValueKey: "format",
+    label: "Match format"
   },
   tableSize: {
     sortValueKey: "tableSize",
