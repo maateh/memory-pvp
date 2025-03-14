@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
-import type { SortKey, PaginationParams } from "@repo/schema/search"
-import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
+import type { PaginationParams } from "@repo/schema/search"
+import type { Filter, FilterPattern, Search, Sort, SortPattern } from "@/lib/types/search"
 
 // schemas
 import { paginationParams, sortKey } from "@repo/schema/search"
@@ -10,12 +10,6 @@ type ParseSearchParamsOptions<F extends FilterPattern, S extends SortPattern> = 
   filterSchema?: z.ZodSchema<F>
   sortSchema?: z.ZodSchema<S>
   parsePagination?: boolean
-}
-
-type ParseSearchParamsReturn<F extends FilterPattern, S extends SortPattern> = {
-  filter: Filter<F>
-  sort: Sort<S>
-  pagination: PaginationParams
 }
 
 /**
@@ -28,7 +22,7 @@ type ParseSearchParamsReturn<F extends FilterPattern, S extends SortPattern> = {
 export function parseSearchParams<F extends FilterPattern, S extends SortPattern>(
   searchEntries: URLSearchParamsIterator<[string, string]>,
   options: ParseSearchParamsOptions<F, S>
-): ParseSearchParamsReturn<F, S> {
+): Search<F, S> {
   const { filterSchema, sortSchema, parsePagination = false } = options
 
   const params = Object.fromEntries(searchEntries)

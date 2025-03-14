@@ -3,17 +3,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 // types
 import type { SortKey, PaginationParams } from "@repo/schema/search"
-import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
+import type { FilterPattern, Search, SortPattern } from "@/lib/types/search"
 
 // utils
 import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 type PaginationAction = "keep" | "reset"
 
-type UseSearchReturn<F extends FilterPattern, S extends SortPattern> = {
-  filter: Filter<F>
-  sort: Sort<S>
-  pagination: PaginationParams
+type UseSearchReturn<F extends FilterPattern, S extends SortPattern> = Search<F, S> & {
   addSearchParam: (key: keyof (F & S & PaginationParams), value: string, pagination?: PaginationAction) => void
   removeSearchParam: (key: keyof (F & S & PaginationParams), pagination?: PaginationAction) => void
   clearSearchParams: (pagination?: PaginationAction) => void

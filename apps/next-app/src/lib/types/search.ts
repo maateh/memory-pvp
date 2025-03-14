@@ -1,4 +1,4 @@
-import type { SortKey } from "@repo/schema/search"
+import type { PaginationParams, SortKey } from "@repo/schema/search"
 
 /* Filter types */
 export type FilterService = "store" | "params" | "mixed"
@@ -29,4 +29,11 @@ export type SortOption<S extends SortPattern, K = keyof S> = {
 
 export type SortOptions<S extends SortPattern> = {
   [K in keyof S]: SortOption<S, K>
+}
+
+/* Merged search types */
+export type Search<F extends FilterPattern, S extends SortPattern> = {
+  filter: Filter<F>
+  sort: Sort<S>
+  pagination: PaginationParams
 }
