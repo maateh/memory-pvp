@@ -11,7 +11,7 @@ import { collectionFilter, collectionSort } from "@repo/schema/collection"
 import { getCollections } from "@/server/db/query/collection-query"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // icons
 import { ImageUp } from "lucide-react"

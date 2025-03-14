@@ -10,7 +10,7 @@ import { sessionFilter, sessionSort } from "@repo/schema/session"
 import { getClientSessions } from "@/server/db/query/session-query"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

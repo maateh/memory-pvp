@@ -16,7 +16,7 @@ import { parseCollectionFilterToWhere, parseSchemaToClientCollection } from "@/l
 
 // utils
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
-import { parseSortToOrderBy } from "@/lib/util/parser"
+import { parseSortToOrderBy } from "@/lib/util/parser/search-parser"
 
 /**
  * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.

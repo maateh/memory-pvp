@@ -22,7 +22,7 @@ import { sessionSortQuery } from "@/lib/schema/query/session-query"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // utils
-import { parseSortToOrderBy } from "@/lib/util/parser"
+import { parseSortToOrderBy } from "@/lib/util/parser/search-parser"
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
 import { parseSchemaToClientSession, parseSessionFilterToWhere } from "@/lib/util/parser/session-parser"
 

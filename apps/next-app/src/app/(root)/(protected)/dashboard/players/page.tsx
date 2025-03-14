@@ -9,7 +9,7 @@ import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
 import { playerFilter, playerSort } from "@repo/schema/player"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"

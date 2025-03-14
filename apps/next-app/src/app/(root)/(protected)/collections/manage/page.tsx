@@ -10,7 +10,7 @@ import { collectionSort } from "@repo/schema/collection"
 import { getUserCollections } from "@/server/db/query/collection-query"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // components
 import { Await, PaginationHandler } from "@/components/shared"

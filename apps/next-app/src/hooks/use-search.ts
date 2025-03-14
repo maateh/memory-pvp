@@ -6,7 +6,7 @@ import type { SortKey, PaginationParams } from "@repo/schema/search"
 import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 type PaginationAction = "keep" | "reset"
 

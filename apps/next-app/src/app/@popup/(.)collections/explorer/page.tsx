@@ -5,7 +5,7 @@ import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
 import { collectionFilter, collectionSort } from "@repo/schema/collection"
 
 // utils
-import { parseSearchParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // components
 import { CollectionExplorerPopup } from "@/components/collection/popup"
