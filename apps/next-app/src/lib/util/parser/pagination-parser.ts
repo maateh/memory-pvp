@@ -2,7 +2,7 @@
 import type { Pagination, PaginationWithoutData, PaginationParams } from "@repo/schema/search"
 
 // config
-import { getFixedPaginationParams } from "@/config/pagination-settings"
+import { fixedPaginationParams } from "@/config/pagination-settings"
 
 /**
  * Calculates pagination parameters based on the provided input.
@@ -13,8 +13,10 @@ import { getFixedPaginationParams } from "@/config/pagination-settings"
  * @param {PaginationParams} params - The pagination parameters containing `page` and `limit`.
  * @returns {{ skip: number; take: number }} - An object with the calculated `skip` and `take` values.
  */
-export function paginate(params: PaginationParams): { skip: number; take: number } {
-  const { page, limit } = getFixedPaginationParams(params)
+export function paginate(
+  params: PaginationParams | undefined
+): { skip: number; take: number } {
+  const { page, limit } = fixedPaginationParams(params)
 
   return {
     skip: (page - 1) * limit,
@@ -36,9 +38,9 @@ export function paginate(params: PaginationParams): { skip: number; take: number
 export function paginationWrapper<T>(
   data: T[],
   total: number,
-  params: PaginationParams
+  params: PaginationParams | undefined
 ): Pagination<T> {
-  const { page, limit } = getFixedPaginationParams(params)
+  const { page, limit } = fixedPaginationParams(params)
 
   const totalPage = Math.ceil(total / limit)
   const hasNextPage = page < totalPage

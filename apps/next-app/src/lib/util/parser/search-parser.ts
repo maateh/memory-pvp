@@ -61,14 +61,14 @@ export function parseSearchParams<F extends FilterPattern, S extends SortPattern
  * using the first defined sorting field. If validation fails or the `sort` object is empty,
  * it returns the fallback value.
  *
- * @template S - A record type where keys are field names and values are "asc" or "desc".
- * @param sort - The input object to validate and parse into an `orderBy` object.
- * @param sortSchema - The Zod schema to validate the `sortInput` object.
- * @param fallback - A fallback object to return if validation fails or no sorting fields are provided.
+ * @template S A record type where keys are field names and values are "asc" or "desc".
+ * @param {Sort<S> | undefined} sort The input object to validate and parse into an `orderBy` object.
+ * @param {z.ZodSchema<S>} sortSchema The Zod schema to validate the `sortInput` object.
+ * @param {Sort<S>} fallback A fallback object to return if validation fails or no sorting fields are provided.
  * @returns {Sort<S> | undefined} An object with one sorting field for Prisma's `orderBy`, or the fallback if validation fails or is empty.
  */
 export function parseSortToOrderBy<S extends SortPattern>(
-  sort: S,
+  sort: S | undefined,
   sortSchema: z.ZodSchema<S>,
   fallback?: Sort<S>
 ): Sort<S> | undefined {
