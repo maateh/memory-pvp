@@ -9,9 +9,6 @@ import { sessionFilter, sessionSort } from "@repo/schema/session"
 // server
 import { getClientSessions } from "@/server/db/query/session-query"
 
-// config
-import { sessionSortOptions } from "@/components/session/filter/constants"
-
 // utils
 import { parseSearchParams } from "@/lib/util/parser"
 
@@ -48,10 +45,7 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
 
         <SessionStatusFilter filterKey="history" />
         <div className="flex items-center gap-x-2">
-          <SortDropdownButton
-            sortSchema={sessionSort}
-            options={sessionSortOptions}
-          />
+          <SortDropdownButton schemaKey="session" />
 
           <SessionSettingsFilter filterKey="history" />
         </div>

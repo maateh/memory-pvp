@@ -14,6 +14,8 @@ export type FilterOptions<F extends FilterPattern> = Required<{
 }>
 
 /* Sort types */
+export type SortSchemaKey = "collection" | "player" | "session"
+
 export type SortPattern = Record<string, SortKey>
 
 export type Sort<S extends SortPattern> = Partial<{

@@ -3,10 +3,12 @@
 import { useMemo } from "react"
 
 // types
-import type { z } from "zod"
 import type { LucideProps } from "lucide-react"
 import type { SortKey } from "@repo/schema/search"
-import type { SortOption, SortOptions, SortPattern } from "@/lib/types/search"
+import type { SortOption, SortPattern, SortSchemaKey } from "@/lib/types/search"
+
+// config
+import { sortSettings } from "@/config/sort-settings"
 
 // utils
 import { cn } from "@/lib/util"
@@ -26,21 +28,20 @@ import {
 // hooks
 import { useSearch } from "@/hooks/use-search"
 
-type SortDropdownButtonProps<S extends SortPattern> = {
-  sortSchema: z.ZodSchema<S>
-  options: SortOptions<S>
+type SortDropdownButtonProps = {
+  schemaKey: SortSchemaKey
   iconProps?: LucideProps
 } & React.ComponentProps<typeof Button>
 
 function SortDropdownButton<S extends SortPattern>({
-  sortSchema,
-  options,
+  schemaKey,
   iconProps,
   className,
   variant = "ghost",
   size = "icon",
   ...props
-}: SortDropdownButtonProps<S>) {
+}: SortDropdownButtonProps) {
+  const { options, sortSchema } = useMemo(() => sortSettings<S>(schemaKey), [schemaKey])
   const { sort, toggleSortParam } = useSearch({ sortSchema })
 
   /* Gets only the first sort entry even if there are multiple specified. */

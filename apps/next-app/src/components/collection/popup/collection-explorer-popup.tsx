@@ -8,14 +8,8 @@ import type {
   CollectionSort
 } from "@repo/schema/collection"
 
-// schema
-import { collectionSort } from "@repo/schema/collection"
-
 // server
 import { getCollections } from "@/server/db/query/collection-query"
-
-// constants
-import { collectionSortOptions } from "@/components/collection/filter/constants"
 
 // shadcn
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -23,10 +17,14 @@ import { Separator } from "@/components/ui/separator"
 import { TableSkeleton } from "@/components/ui/table"
 
 // components
-import { CollectionNameFilter, CollectionSizeFilter, CollectionUserToggleFilter } from "@/components/collection/filter"
-import { CollectionListing } from "@/components/collection/listing"
-import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
 import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
+import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
+import { CollectionListing } from "@/components/collection/listing"
+import {
+  CollectionNameFilter,
+  CollectionSizeFilter,
+  CollectionUserToggleFilter
+} from "@/components/collection/filter"
 
 type CollectionExplorerPopupProps = ({
   renderer: "trigger"
@@ -67,10 +65,7 @@ const CollectionExplorerPopup = ({
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <SortDropdownButton
-              sortSchema={collectionSort}
-              options={collectionSortOptions}
-            />
+            <SortDropdownButton schemaKey="collection" />
 
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />

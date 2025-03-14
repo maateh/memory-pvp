@@ -8,9 +8,6 @@ import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
 
 import { playerFilter, playerSort } from "@repo/schema/player"
 
-// constants
-import { playerSortOptions } from "@/components/player/filter/constants"
-
 // utils
 import { parseSearchParams } from "@/lib/util/parser"
 
@@ -44,10 +41,7 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
       <div className="flex-1 w-full">
         <div className="flex items-end justify-between gap-x-6">
           <PlayerTagFilter className="flex-1" />
-          <SortDropdownButton
-            sortSchema={playerSort}
-            options={playerSortOptions}
-          />
+          <SortDropdownButton schemaKey="player" />
         </div>
 
         <Separator className="w-2/3 mx-auto my-4 bg-border/10 rounded-full" />

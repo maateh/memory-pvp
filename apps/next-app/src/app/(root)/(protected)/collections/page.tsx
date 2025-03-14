@@ -10,9 +10,6 @@ import { collectionFilter, collectionSort } from "@repo/schema/collection"
 // server
 import { getCollections } from "@/server/db/query/collection-query"
 
-// constants
-import { collectionSortOptions } from "@/components/collection/filter/constants"
-
 // utils
 import { parseSearchParams } from "@/lib/util/parser"
 
@@ -26,12 +23,12 @@ import { TableSkeleton } from "@/components/ui/table"
 
 // components
 import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
+import { CollectionListing } from "@/components/collection/listing"
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
-import { CollectionListing } from "@/components/collection/listing"
 
 type CollectionsPageProps = {
   searchParams: CollectionFilter & CollectionSort
@@ -52,10 +49,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <SortDropdownButton
-              sortSchema={collectionSort}
-              options={collectionSortOptions}
-            />
+            <SortDropdownButton schemaKey="collection" />
 
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />
