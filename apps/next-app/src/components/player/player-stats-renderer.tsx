@@ -30,8 +30,7 @@ const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
   const filter = useFilterStore<SessionFilter>((state) => state.statistics)
 
   const [stats] = trpc.player.getStats.useSuspenseQuery({
-    playerFilter: { id: player.id },
-    sessionFilter: filter
+    filter: { ...filter, playerId: player.id }
   })
 
   const playerStats = useMemo(() => getRendererPlayerStats({
