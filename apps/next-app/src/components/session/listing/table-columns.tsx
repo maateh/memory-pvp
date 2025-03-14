@@ -4,6 +4,9 @@ import Link from "next/link"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { ClientSessionVariants } from "@repo/schema/session"
 
+// schemas
+import { sessionSort } from "@repo/schema/session"
+
 // config
 import {
   matchFormatPlaceholders,
@@ -19,9 +22,9 @@ import { Button } from "@/components/ui/button"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
+import { CustomDate } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
 import { SessionInfoBadge, SessionBadge } from "@/components/session"
-import { CustomDate } from "@/components/shared"
 
 export const columns: ColumnDef<ClientSessionVariants>[] = [
   {
@@ -31,6 +34,7 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Session"
           sortValueKey="status"
         />
@@ -53,6 +57,7 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Settings"
           sortValueKey="mode"
         />
@@ -77,13 +82,14 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Table size"
           sortValueKey="tableSize"
         />
       )
     },
     cell({ getValue }) {
-      const tableSize = getValue<ClientSessionVariants['tableSize']>()
+      const tableSize = getValue<ClientSessionVariants["tableSize"]>()
 
       return (
         <SessionInfoBadge
@@ -125,13 +131,14 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Started at"
           sortValueKey="startedAt"
         />
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientSessionVariants['startedAt']>()
+      const date = getValue<ClientSessionVariants["startedAt"]>()
 
       return (
         <CustomDate
@@ -148,13 +155,14 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Closed at"
           sortValueKey="closedAt"
         />
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientSessionVariants['closedAt']>()
+      const date = getValue<ClientSessionVariants["closedAt"]>()
 
       if (!date) {
         return (
@@ -181,7 +189,7 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
     cell({ row }) {
       const session = row.original
 
-      if (session.status === 'RUNNING') {
+      if (session.status === "RUNNING") {
         return (
           <Button className="ml-auto p-1.5 rounded-full"
             tooltip="Continue session"
