@@ -37,12 +37,12 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
     })
   })
 
-  const { tableSize, collectionId } = filter
+  const { tableSize = "SMALL", collectionId } = filter
   
   const [user, players, collection] = await Promise.all([
     signedIn(),
     getPlayers({ withAvatar: true }),
-    collectionId ? getCollection({ id: collectionId }) : getRandomCollection(tableSize)
+    collectionId ? getCollection(collectionId) : getRandomCollection(tableSize)
   ])
 
   return (

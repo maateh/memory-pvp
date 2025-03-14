@@ -7,7 +7,7 @@ import type { CollectionSort } from "@repo/schema/collection"
 import { collectionSort } from "@repo/schema/collection"
 
 // server
-import { getUserCollections } from "@/server/db/query/collection-query"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // utils
 import { parseSearchParams } from "@/lib/util/parser/search-parser"
@@ -34,7 +34,7 @@ const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => 
 
       <div className="w-full col-span-9 xl:col-span-5 2xl:col-span-6">
         <Suspense>
-          <Await promise={getUserCollections({ sort, pagination })}>
+          <Await promise={getCollections({ sort, pagination }, "protected")}>
             {({ data: userCollections, ...pagination }) => (
               <>
                 <CollectionListing

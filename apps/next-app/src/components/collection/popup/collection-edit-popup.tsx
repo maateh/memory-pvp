@@ -45,7 +45,7 @@ const CollectionEditPopup = ({ renderer, collection, collectionId, ...props }: C
 
         {renderer === "router" && (
           <Suspense fallback={<CollectionEditSkeleton />}>
-            <Await promise={getCollection({ id: collectionId })}>
+            <Await promise={getCollection(collectionId)}>
               {(collection) => collection ? (
                 <CollectionEditContent collection={collection} />
               ) : (
