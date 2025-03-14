@@ -48,7 +48,11 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
 
         <SessionStatusFilter filterKey="history" />
         <div className="flex items-center gap-x-2">
-          <SortDropdownButton options={sessionSortOptions} />
+          <SortDropdownButton
+            sortSchema={sessionSort}
+            options={sessionSortOptions}
+          />
+
           <SessionSettingsFilter filterKey="history" />
         </div>
       </div>

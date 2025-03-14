@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 
-// types
-import { CollectionFilter } from "@repo/schema/collection"
+// schemas
+import { collectionFilter } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"
@@ -18,22 +18,21 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { useFilterParams } from "@/hooks/use-filter-params"
 
 type CollectionNameFilterProps = {
-  inputProps?: Omit<React.ComponentProps<typeof Input>, 'type' | 'placeholder' | 'value' | 'onChange'>
+  inputProps?: Omit<React.ComponentProps<typeof Input>, "type" | "placeholder" | "value" | "onChange">
 } & React.ComponentProps<typeof Label>
 
 const CollectionNameFilter = ({ inputProps, className, ...props }: CollectionNameFilterProps) => {
-  const { filter, toggleFilterParam, removeFilterParam } = useFilterParams<CollectionFilter>()
+  const { filter, toggleFilterParam, removeFilterParam } = useFilterParams({
+    filterSchema: collectionFilter
+  })
 
   const [collectionName, setCollectionName] = useState<string>(filter.name || "")
 
   useDebounce({
     value: collectionName,
     onDebounce(debouncedValue) {
-      if (debouncedValue) {
-        toggleFilterParam("name", debouncedValue)
-      } else {
-        removeFilterParam("name")
-      }        
+      if (debouncedValue) toggleFilterParam("name", debouncedValue)
+      else removeFilterParam("name")        
     }
   })
 

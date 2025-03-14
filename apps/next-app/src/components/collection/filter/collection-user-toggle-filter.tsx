@@ -1,7 +1,7 @@
 "use client"
 
-// types
-import type { CollectionFilter } from "@repo/schema/collection"
+// schemas
+import { collectionFilter } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"
@@ -20,8 +20,10 @@ const CollectionUserToggleFilter = ({
   size = "icon",
   className,
   ...props
-}: Omit<React.ComponentProps<typeof Button>, 'onClick'>) => {
-  const { filter, toggleFilterParam } = useFilterParams<CollectionFilter>()
+}: Omit<React.ComponentProps<typeof Button>, "onClick">) => {
+  const { filter, toggleFilterParam } = useFilterParams({
+    filterSchema: collectionFilter
+  })
 
   return (
     <Button className={cn("p-1.5 border border-border/20", className)}

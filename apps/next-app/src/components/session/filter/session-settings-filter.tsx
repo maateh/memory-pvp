@@ -8,6 +8,9 @@ import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 import type { SessionFilter } from "@repo/schema/session"
 
+// schemas
+import { sessionFilter } from "@repo/schema/session"
+
 // config
 import {
   matchFormatPlaceholders,
@@ -41,7 +44,9 @@ type SessionSettingsFilterProps = {
 
 const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionSettingsFilterProps) => {
   const filterStore = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionSettingsFilter>()
+  const { filter: filterParams, toggleFilterParam } = useFilterParams({
+    filterSchema: sessionFilter.pick({ mode: true, format: true, tableSize: true })
+  })
 
   const filter: TSessionSettingsFilter = useMemo(() => {
     return filterService === "store" ? filterStore : filterParams

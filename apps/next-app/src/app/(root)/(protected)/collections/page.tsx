@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import { CollectionFilter, CollectionSort } from "@repo/schema/collection"
+import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
 
 // schemas
 import { collectionFilter, collectionSort } from "@repo/schema/collection"
@@ -52,7 +52,11 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <SortDropdownButton options={collectionSortOptions} />
+            <SortDropdownButton
+              sortSchema={collectionSort}
+              options={collectionSortOptions}
+            />
+
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />
           </div>

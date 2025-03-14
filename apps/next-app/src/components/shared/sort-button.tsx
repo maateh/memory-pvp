@@ -1,5 +1,9 @@
 "use client"
 
+// types
+import type { z } from "zod"
+import type { SortPattern } from "@/lib/types/search"
+
 // utils
 import { cn } from "@/lib/util"
 
@@ -12,12 +16,14 @@ import { Button } from "@/components/ui/button"
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-type SortButtonProps<T extends { [key in keyof T]: string | number | boolean }> = {
-  sortValueKey: keyof T
+type SortButtonProps<S extends SortPattern> = {
+  sortSchema: z.ZodSchema<S>
+  sortValueKey: keyof S
   iconProps?: LucideProps
-} & Omit<React.ComponentProps<typeof Button>, 'onClick'>
+} & Omit<React.ComponentProps<typeof Button>, "onClick">
 
-function SortButton<T extends { [key in keyof T]: string | number | boolean }>({
+function SortButton<S extends SortPattern>({
+  sortSchema,
   sortValueKey,
   iconProps,
   variant = "ghost",
@@ -25,8 +31,8 @@ function SortButton<T extends { [key in keyof T]: string | number | boolean }>({
   className,
   children,
   ...props
-}: SortButtonProps<T>) {
-  const { sort, toggleSortParam } = useFilterParams<T>()
+}: SortButtonProps<S>) {
+  const { sort, toggleSortParam } = useFilterParams({ sortSchema })
 
   return (
     <Button className={cn("p-1.5 gap-x-2", className)}

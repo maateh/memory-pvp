@@ -3,24 +3,26 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 // types
 import type { SortKey, PaginationParams } from "@repo/schema/search"
-import type { Filter, Sort } from "@/lib/types/query"
+import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
 
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser"
 
 export type FilterParamValue = string | number | boolean
 export type PaginationAction = "reset" | "reset"
 
-type UseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
-  filter: Filter<T>
-  sort: Sort<T>
+type UseFilterParamsReturn<F extends FilterPattern, S extends SortPattern> = {
+  filter: Filter<F>
+  sort: Sort<S>
   pagination: PaginationParams
-  addFilterParam: (key: keyof T, value: string, pagination?: PaginationAction) => void
-  toggleFilterParam: (key: keyof T, value: string, pagination?: PaginationAction) => void
-  removeFilterParam: (key: keyof T | SortKey, pagination?: PaginationAction) => void
+  addFilterParam: (key: keyof (F & S), value: string, pagination?: PaginationAction) => void
+  toggleFilterParam: (key: keyof F, value: string, pagination?: PaginationAction) => void
+  removeFilterParam: (key: keyof (F & S), pagination?: PaginationAction) => void
   clearFilterParams: (pagination?: PaginationAction) => void
-  toggleSortParam: (value: keyof T) => void
+  toggleSortParam: (value: keyof S) => void
 }
+
+// TODO: rename to `useSearch`
 
 /**
  * Custom hook to manage filtering and sorting query parameters for URL-based state.
@@ -32,30 +34,31 @@ type UseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
  * 
  * @returns {UseFilterParamsReturn<T>} - An object containing the parsed `filter`, `sort`, and functions to manipulate query parameters.
  */
-export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }>(): UseFilterParamsReturn<T> {
+export function useFilterParams<F extends FilterPattern, S extends SortPattern>(
+  options: Parameters<typeof parseSearchParams<F, S>>["1"]
+): UseFilterParamsReturn<F, S> {
   const searchParams = useSearchParams()
 
   const router = useRouter()
   const pathname = usePathname()
 
   /** 
-   * Parses the current URL parameters and separates into a `filter` and `sort` object.
+   * Parses the current URL parameters and separates into a `filter`, `sort` and `pagination` object.
    * 
-   * @returns {Object} - An object within the parsed `filter` and `sort` parameters.
+   * @returns {Object} - An object within the parsed `filter`, `sort` and `pagination` parameters.
    */
   const { filter, sort, pagination } = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString())
-    return parseFilterParams<T>(params)
-  }, [searchParams])
+    return parseSearchParams<F, S>(searchParams.entries(), options)
+  }, [searchParams, options])
 
   /** 
    * Creates a query string by adding or updating a parameter key and value in the existing URL search parameters.
    * 
-   * @param {keyof T | SortKey} key - The key of the parameter to set.
+   * @param {keyof (F & S)} key - The key of the parameter to set.
    * @param {FilterParamValue | keyof T} value - The value to set for the parameter.
    * @returns {string} - The updated query string.
    */
-  const createQueryString = useCallback((key: keyof T | SortKey, value: FilterParamValue | keyof T, pagination: PaginationAction) => {
+  const createQueryString = useCallback((key: keyof (F & S), value: FilterParamValue | keyof S, pagination: PaginationAction) => {
     const params = new URLSearchParams(searchParams.toString())
 
     if (typeof key === "string") {
@@ -72,10 +75,10 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
   /** 
    * Removes a specified query parameter key from the URL search parameters.
    * 
-   * @param {keyof T | SortKey} key - The key of the parameter to remove.
+   * @param {keyof (F & S)} key - The key of the parameter to remove.
    * @returns {string} - The updated query string.
    */
-  const removeQueryString = useCallback((key: keyof T | SortKey, pagination: PaginationAction) => {
+  const removeQueryString = useCallback((key: keyof (F & S), pagination: PaginationAction) => {
     const params = new URLSearchParams(searchParams.toString())
 
     if (typeof key === "string") {
@@ -95,7 +98,7 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
    * @param {keyof T} key - The key of the filter parameter to set.
    * @param {string} value - The value to set for the filter parameter.
    */
-  const addFilterParam = useCallback((key: keyof T, value: string, pagination: PaginationAction = "reset") => {
+  const addFilterParam = useCallback((key: keyof (F & S), value: string, pagination: PaginationAction = "reset") => {
     const query = createQueryString(key, value, pagination)
     router.replace(pathname + '?' + query, { scroll: false })
   }, [router, pathname, createQueryString])
@@ -109,7 +112,7 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
    * @param {keyof T} key - The filter parameter key to toggle.
    * @param {string} value - The value to set or remove for the filter parameter.
    */
-  const toggleFilterParam = useCallback((key: keyof T, value: string, pagination: PaginationAction = "reset") => {
+  const toggleFilterParam = useCallback((key: keyof F, value: string, pagination: PaginationAction = "reset") => {
     const query = filter[key] === value
       ? removeQueryString(key, pagination)
       : createQueryString(key, value, pagination)
@@ -120,9 +123,9 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
   /** 
    * Removes a filter or sort parameter from the URL search parameters.
    * 
-   * @param {keyof T | SortKey} key - The key of the parameter to remove.
+   * @param {keyof (F & S)} key - The key of the parameter to remove.
    */
-  const removeFilterParam = useCallback((key: keyof T | SortKey, pagination: PaginationAction = "reset") => {
+  const removeFilterParam = useCallback((key: keyof (F & S), pagination: PaginationAction = "reset") => {
     const query = removeQueryString(key, pagination)
     router.replace(pathname + '?' + query, { scroll: false })
   }, [router, pathname, removeQueryString])
@@ -131,7 +134,7 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
    * Clears all filter and sort parameters from the URL, resetting to the base path.
    */
   const clearFilterParams = useCallback((pagination: PaginationAction = "reset") => {
-    searchParams.keys().map((key) => removeQueryString(key as keyof T | SortKey, pagination))
+    searchParams.keys().map((key) => removeQueryString(key as keyof (F & S), pagination))
     router.replace(pathname, { scroll: false })
   }, [router, pathname, searchParams, removeQueryString])
 
@@ -144,7 +147,7 @@ export function useFilterParams<T extends { [key in keyof T]: FilterParamValue }
    * 
    * @param {keyof T} value - The key of the sort parameter to toggle.
    */
-  const toggleSortParam = useCallback((value: keyof T) => {
+  const toggleSortParam = useCallback((value: keyof S) => {
     const params = new URLSearchParams(searchParams.toString())
     const sortAscParam = params.get('asc')
     const sortDescParam = params.get('desc')

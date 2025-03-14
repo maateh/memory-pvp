@@ -3,9 +3,10 @@
 import { useMemo } from "react"
 
 // types
-import type { SortKey } from "@repo/schema/search"
-import type { SortOption, SortOptions } from "@/lib/types/search"
+import type { z } from "zod"
 import type { LucideProps } from "lucide-react"
+import type { SortKey } from "@repo/schema/search"
+import type { SortOption, SortOptions, SortPattern } from "@/lib/types/search"
 
 // utils
 import { cn } from "@/lib/util"
@@ -25,28 +26,30 @@ import {
 // hooks
 import { useFilterParams } from "@/hooks/use-filter-params"
 
-type SortDropdownButtonProps<T extends { [K in keyof T]: SortKey }> = {
-  options: SortOptions<T>
+type SortDropdownButtonProps<S extends SortPattern> = {
+  sortSchema: z.ZodSchema<S>
+  options: SortOptions<S>
   iconProps?: LucideProps
 } & React.ComponentProps<typeof Button>
 
-function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
+function SortDropdownButton<S extends SortPattern>({
+  sortSchema,
   options,
   iconProps,
   className,
   variant = "ghost",
   size = "icon",
   ...props
-}: SortDropdownButtonProps<T>) {
-  const { sort, toggleSortParam } = useFilterParams<T>()
+}: SortDropdownButtonProps<S>) {
+  const { sort, toggleSortParam } = useFilterParams({ sortSchema })
 
-  /** Gets only the first sort param even if there are multiple specified. */
+  /* Gets only the first sort entry even if there are multiple specified. */
   const { sortValueKey, sortKey } = useMemo(() => {
-    return Object.entries(sort)
-      .reduce((prev, [sortValueKey, sortKey], index) => {
-        if (index >= 1) return prev
-        return { sortValueKey, sortKey }
-      }, {}) as { sortValueKey: keyof T, sortKey: SortKey }
+    const firstEntry = Object.entries(sort)[0]
+    return (firstEntry || {}) as Partial<{
+      sortValueKey: keyof S
+      sortKey: SortKey
+    }>
   }, [sort])
 
   return (
@@ -57,11 +60,11 @@ function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
             children: (
               <div className="flex items-center gap-x-1.5">
                 <ArrowDownUp className={cn("size-3.5 flex-none", { "hidden": !!sortKey })} />
-                <SortAsc className={cn("size-4 flex-none", { "hidden": sortKey !== 'asc' })} />
-                <SortDesc className={cn("size-4 flex-none", { "hidden": sortKey !== 'desc' })} />
+                <SortAsc className={cn("size-4 flex-none", { "hidden": sortKey !== "asc" })} />
+                <SortDesc className={cn("size-4 flex-none", { "hidden": sortKey !== "desc" })} />
   
                 <p className="font-light dark:font-extralight">
-                  Sort by <span className={cn("lowercase text-accent font-medium", { "text-destructive": sortKey === 'desc' })}>
+                  Sort by <span className={cn("lowercase text-accent font-medium", { "text-destructive": sortKey === "desc" })}>
                     {sortValueKey ? options[sortValueKey]?.label : 'default'}
                   </span>
                 </p>
@@ -82,16 +85,16 @@ function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
 
           <SortAsc {...iconProps}
             className={cn("absolute size-4 sm:size-5 flex-none transition-all", {
-              "rotate-0 scale-100": sortKey === 'asc',
-              "-rotate-90 scale-0": sortKey !== 'asc'
+              "rotate-0 scale-100": sortKey === "asc",
+              "-rotate-90 scale-0": sortKey !== "asc"
             }, iconProps?.className)}
             strokeWidth={iconProps?.strokeWidth || 2.5}
           />
 
           <SortDesc {...iconProps}
             className={cn("absolute size-4 sm:size-5 flex-none transition-all", {
-              "rotate-0 scale-100": sortKey === 'desc',
-              "-rotate-90 scale-0": sortKey !== 'desc'
+              "rotate-0 scale-100": sortKey === "desc",
+              "-rotate-90 scale-0": sortKey !== "desc"
             }, iconProps?.className)}
             strokeWidth={iconProps?.strokeWidth || 2.5}
           />
@@ -99,10 +102,10 @@ function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
-        {Object.values<SortOption<T>>(options).map(({ label, sortValueKey }) => (
+        {Object.values<SortOption<S>>(options).map(({ label, sortValueKey }) => (
           <DropdownMenuItem className={cn("justify-between", {
-            "text-accent bg-accent/10": sort[sortValueKey] === 'asc',
-            "text-destructive bg-destructive/10": sort[sortValueKey] === 'desc'
+            "text-accent bg-accent/10": sort[sortValueKey] === "asc",
+            "text-destructive bg-destructive/10": sort[sortValueKey] === "desc"
           })}
             variant="muted"
             onClick={() => toggleSortParam(sortValueKey)}
@@ -114,11 +117,11 @@ function SortDropdownButton<T extends { [K in keyof T]: SortKey }>({
               strokeWidth={2.5}
             />
 
-            <SortAsc className={cn("size-3.5 flex-none", { "hidden": sort[sortValueKey] !== 'asc' })}
+            <SortAsc className={cn("size-3.5 flex-none", { "hidden": sort[sortValueKey] !== "asc" })}
               strokeWidth={2.5}
             />
 
-            <SortDesc className={cn("size-3.5 flex-none", { "hidden": sort[sortValueKey] !== 'desc' })}
+            <SortDesc className={cn("size-3.5 flex-none", { "hidden": sort[sortValueKey] !== "desc" })}
               strokeWidth={2.5}
             />
           </DropdownMenuItem>

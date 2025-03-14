@@ -8,6 +8,9 @@ import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
 import type { SessionFilter } from "@repo/schema/session"
 
+// schemas
+import { sessionFilter } from "@repo/schema/session"
+
 // utils
 import { cn } from "@/lib/util"
 
@@ -31,10 +34,12 @@ type SessionStatusFilterProps = {
 
 const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionStatusFilterProps) => {
   const filterStore = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionStatusFilter>()
+  const { filter: filterParams, toggleFilterParam } = useFilterParams({
+    filterSchema: sessionFilter.pick({ status: true })
+  })
 
   const filter: TSessionStatusFilter = useMemo(() => {
-    return filterService === 'store' ? filterStore : filterParams
+    return filterService === "store" ? filterStore : filterParams
   }, [filterService, filterStore, filterParams])
 
   const handleSelectStatus = (status: SessionStatus) => {
