@@ -5,26 +5,26 @@ export type FilterService = "store" | "params" | "mixed"
 
 export type FilterPattern = Record<string, unknown>
 
-export type Filter<T extends FilterPattern> = Partial<{
-  [K in keyof T]: T[K]
+export type Filter<F extends FilterPattern> = Partial<{
+  [K in keyof F]: F[K]
 }>
 
-export type FilterOptions<T extends FilterPattern> = Required<{
-  [K in keyof T]: Required<T>[K][]
+export type FilterOptions<F extends FilterPattern> = Required<{
+  [K in keyof F]: Required<F>[K][]
 }>
 
 /* Sort types */
 export type SortPattern = Record<string, SortKey>
 
-export type Sort<T extends SortPattern> = Partial<{
-  [K in keyof T]: SortKey
+export type Sort<S extends SortPattern> = Partial<{
+  [K in keyof S]: SortKey
 }>
 
-export type SortOption<T extends SortPattern, K = keyof T> = {
+export type SortOption<S extends SortPattern, K = keyof S> = {
   sortValueKey: K
   label: string
 }
 
-export type SortOptions<T extends SortPattern> = {
-  [K in keyof T]: SortOption<T, K>
+export type SortOptions<S extends SortPattern> = {
+  [K in keyof S]: SortOption<S, K>
 }
