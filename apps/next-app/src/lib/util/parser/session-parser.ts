@@ -1,16 +1,15 @@
 // types
 import type { Prisma } from "@repo/db"
+import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 import type {
   ClientSession,
   ClientSessionVariants,
-  OfflineClientSession,
-  OfflineSessionStorage
+  OfflineSessionStorage,
+  SessionFilter
 } from "@repo/schema/session"
-import type { SessionFilterQuery } from "@/lib/schema/query/session-query"
-import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
 
 // schemas
-import { sessionFilterQuery } from "@/lib/schema/query/session-query"
+import { sessionFilter } from "@repo/schema/session"
 
 // config
 import { getFallbackCollection } from "@/config/collection-settings"
@@ -79,22 +78,15 @@ export function parseSchemaToClientSession(
 }
 
 /**
- * Parses the provided session filter input to create a `Prisma.GameSessionWhereInput` object, 
- * which can be used to query game sessions using Prisma.
+ * TODO: write doc
  * 
- * - Filters sessions by the owner's user ID and optionally by players and stats.
- * - If `players` are provided in the input, it checks whether any of the players in the session 
- *   have a matching tag from the input.
- * - Filters session stats if provided in the input.
- * 
- * @param {string} userId - The ID of the session owner to filter by.
- * @param {SessionFilterQuery} filterInput - The filter input that includes optional player and stats filters.
- * 
- * @returns {Prisma.GameSessionWhereInput} - A Prisma query input for filtering game sessions.
+ * @param filter 
+ * @param userId 
+ * @returns 
  */
-export function parseSessionFilter(
-  userId: string,
-  filterInput: SessionFilterQuery
+export function parseSessionFilterToWhere(
+  filter: SessionFilter,
+  userId: string
 ): Prisma.GameSessionWhereInput {
   const where: Prisma.GameSessionWhereInput = {
     OR: [
@@ -103,16 +95,17 @@ export function parseSessionFilter(
     ]
   }
 
-  const { success, data: filter } = sessionFilterQuery.safeParse(filterInput)
+  const { success, data } = sessionFilter.safeParse(filter)
   if (!success) return where
 
-  if (filter.playerId) {
+  const { playerId, ...parsedFilter } = data
+
+  if (playerId) {
     where.OR = [
-      { ownerId: filter.playerId },
-      { guestId: filter.playerId }
+      { owner: { userId, id: playerId } },
+      { guest: { userId, id: playerId } }
     ]
-    delete filter.playerId
   }
 
-  return { ...where, ...filter }
+  return { ...where, ...parsedFilter }
 }

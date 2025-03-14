@@ -24,7 +24,7 @@ import { sessionSchemaFields } from "@/config/session-settings"
 // utils
 import { parseSortToOrderBy } from "@/lib/util/parser"
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
-import { parseSchemaToClientSession, parseSessionFilter } from "@/lib/util/parser/session-parser"
+import { parseSchemaToClientSession, parseSessionFilterToWhere } from "@/lib/util/parser/session-parser"
 
 /**
  * Retrieves a list of game sessions for the signed-in user, parsed into `ClientGameSession` instances.
@@ -47,7 +47,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
   const user = await signedIn()
   if (!user) return paginationWrapper([], 0, pagination)
 
-  const where = parseSessionFilter(user.id, filter)
+  const where = parseSessionFilterToWhere(filter, user.id)
 
   const total = await db.gameSession.count({ where })
   const sessions = await db.gameSession.findMany({

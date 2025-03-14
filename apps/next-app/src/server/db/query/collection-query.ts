@@ -12,7 +12,7 @@ import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 
 // helpers
-import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
+import { parseCollectionFilterToWhere, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
 
 // utils
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
@@ -66,12 +66,8 @@ export async function getCollections({ filter, sort, pagination }: {
   sort: CollectionSortQuery
   pagination: PaginationParams
 }): Promise<Pagination<ClientCardCollection>> {
-  const where = parseCollectionFilter(filter)
-
-  if (filter.excludeUser) {
-    const user = await signedIn()
-    where.NOT = { userId: user?.id }
-  }
+  const user = filter.excludeUser ? await signedIn() : null
+  const where = parseCollectionFilterToWhere(filter, user?.id)
 
   const total = await db.cardCollection.count({ where })
   const collections = await db.cardCollection.findMany({
