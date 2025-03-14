@@ -18,7 +18,7 @@ import { cn } from "@/lib/util"
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
 
 // hooks
-import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
+import { setFilterState, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useSearch } from "@/hooks/use-search"
 
 type TSessionStatusFilter = Pick<SessionFilter, "status">
@@ -33,18 +33,18 @@ type SessionStatusFilterProps = {
 }
 
 const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionStatusFilterProps) => {
-  const filterStore = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useSearch({
+  const storeFilter = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
+  const { filter: searchFilter, toggleFilterParam } = useSearch({
     filterSchema: sessionFilter.pick({ status: true })
   })
 
-  const filter: TSessionStatusFilter = useMemo(() => {
-    return filterService === "store" ? filterStore : filterParams
-  }, [filterService, filterStore, filterParams])
+  const filter = useMemo(() => {
+    return filterService === "store" ? storeFilter : searchFilter
+  }, [filterService, storeFilter, searchFilter])
 
   const handleSelectStatus = (status: SessionStatus) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionStatusFilter>((state) => {
+      setFilterState<TSessionStatusFilter>((state) => {
         const filter = state[filterKey]
   
         state[filterKey] = {

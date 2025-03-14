@@ -26,7 +26,7 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList, Brea
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
+import { setFilterState, useFilterStore } from "@/hooks/store/use-filter-store"
 import { useSearch } from "@/hooks/use-search"
 
 type TSessionSettingsFilter = Pick<SessionFilter, "mode" | "format" | "tableSize">
@@ -43,18 +43,18 @@ type SessionSettingsFilterProps = {
 }
 
 const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionSettingsFilterProps) => {
-  const filterStore = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useSearch({
+  const storeFilter = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
+  const { filter: searchFilter, toggleFilterParam } = useSearch({
     filterSchema: sessionFilter.pick({ mode: true, format: true, tableSize: true })
   })
 
   const filter: TSessionSettingsFilter = useMemo(() => {
-    return filterService === "store" ? filterStore : filterParams
-  }, [filterService, filterStore, filterParams])
+    return filterService === "store" ? storeFilter : searchFilter
+  }, [filterService, storeFilter, searchFilter])
 
   const handleSelectMode = (mode: SessionMode) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         if (filter.mode === mode) {
@@ -74,7 +74,7 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
 
   const handleSelectFormat = (format: MatchFormat) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         if (filter.format === format) {
@@ -94,7 +94,7 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
 
   const handleSelectTableSize = (tableSize: TableSize) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         state[filterKey] = {

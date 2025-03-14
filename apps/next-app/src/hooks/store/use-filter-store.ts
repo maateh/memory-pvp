@@ -20,7 +20,7 @@ export const useFilterStore = <F extends FilterPattern>(
   selector: (state: FilterStore<F>) => FilterStore<F>[FilterStoreKey]
 ) => useFilterStoreImpl(selector)
 
-export const setFilterStore = useFilterStoreImpl.setState as <F extends FilterPattern>(
+export const setFilterState = useFilterStoreImpl.setState as <F extends FilterPattern>(
   partial: (state: FilterStore<F>) => Partial<FilterStore<F>>,
   replace?: boolean
 ) => void
