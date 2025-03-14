@@ -1,5 +1,3 @@
-import { z } from "zod"
-
 // server
 import { ServerError } from "@repo/server/error"
 
@@ -8,16 +6,13 @@ import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
-import { playerFilterQuery } from "@/lib/schema/query/player-query"
-import { sessionFilterQuery } from "@/lib/schema/query/session-query"
+import { playerGetStatsValidation } from "@repo/schema/player-validation"
 
 export const playerProfileRouter = createTRPCRouter({
   getStats: protectedProcedure
-    .input(z.object({
-      playerFilter: playerFilterQuery,
-      sessionFilter: sessionFilterQuery
-    }))
+    .input(playerGetStatsValidation)
     .query(async ({ ctx, input }) => {
+      // FIXME: parse filters
       const { playerFilter, sessionFilter } = input
       const playerId = playerFilter.id
 

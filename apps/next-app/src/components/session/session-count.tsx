@@ -11,7 +11,10 @@ import { useFilterStore } from "@/hooks/store/use-filter-store"
 
 const SessionCount = ({ playerId }: { playerId: string }) => {
   const filter = useFilterStore<SessionFilter>((state) => state.history)
-  const [sessionCount] = trpc.session.count.useSuspenseQuery({ playerId, ...filter })
+  const [sessionCount] = trpc.session.count.useSuspenseQuery({
+    // FIXME: use only `playerId` instead of `ownerId` and `guestId`
+    filter: { ...filter, ownerId: playerId }
+  })
 
   return (
     <>
