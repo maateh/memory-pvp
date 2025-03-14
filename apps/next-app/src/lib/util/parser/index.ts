@@ -2,7 +2,6 @@
 import type { z } from "zod"
 import type { SortKey, PaginationParams } from "@repo/schema/search"
 import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
-import type { FilterParamValue } from "@/hooks/use-search"
 
 // schemas
 import { paginationParams, sortKey } from "@repo/schema/search"
@@ -76,67 +75,6 @@ export function parseSearchParams<F extends FilterPattern, S extends SortPattern
   if (parsePagination) {
     const { data, success } = paginationParams.safeParse(params)
     if (success) pagination = data
-  }
-
-  return { filter, sort, pagination }
-}
-
-/**
- * Parses URL search parameters into separate filter and sort objects based on specified keys.
- * 
- * - Collects keys from `URLSearchParams` and differentiates them as either filter or sort parameters.
- * - Sort parameters are indicated by "asc" or "desc" keys, where each value is categorized as ascending or descending.
- * - All other keys are treated as filter parameters, with each key-value pair added to the `filter` object.
- * - Returns an object with `filter` and `sort` properties, representing parsed filtering and sorting instructions.
- * 
- * @deprecated Will be replaced by `parseSearchParams.
- * @template T - The shape of the parameter object, where each key's value must be of type `string`, `number`, or `boolean`.
- * @param {URLSearchParams} params - The search parameters to parse.
- * @returns {ParseSearchParamsReturn<T>} - An object with `filter` and `sort` properties for filtered and sorted results.
- */
-export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue }>(
-  params: URLSearchParams
-): ParseSearchParamsReturn<T> {
-  const keys = Array.from(params.keys())
-
-  /* Filter parser */
-  const filter = keys.filter((key) => key !== 'asc' && key !== 'desc' && key !== 'page' && key !== 'limit')
-    .reduce((filter, key) => {
-      let value: string | boolean | null = params.get(key)
-
-      /* Parses `true` and `false` string values to boolean */
-      if (value === 'true' || value === 'false') {
-        value = value === 'true'
-      }
-
-      return {
-        ...filter,
-        [key]: value
-      }
-    }, {} as Filter<T>)
-  
-  /* Sort parser */
-  const sortAscValue = params.get('asc')
-  const sortDescValue = params.get('desc')
-
-  params.delete('asc')
-  params.delete('desc')
-
-  let sort: Sort<T> = {}
-
-  if (sortAscValue) {
-    sort = { [sortAscValue]: 'asc' } as Sort<T>
-  } else if (sortDescValue) {
-    sort = { [sortDescValue]: 'desc' } as Sort<T>
-  }
-
-  /* Pagination parser */
-  const pageValue = params.get('page')
-  const limitValue = params.get('limit')
-
-  const pagination: PaginationParams = {
-    page: pageValue ? parseInt(pageValue) : undefined,
-    limit: limitValue ? parseInt(limitValue) : undefined
   }
 
   return { filter, sort, pagination }

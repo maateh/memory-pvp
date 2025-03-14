@@ -8,7 +8,6 @@ import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/searc
 // utils
 import { parseSearchParams } from "@/lib/util/parser"
 
-export type FilterParamValue = string | number | boolean
 type PaginationAction = "keep" | "reset"
 
 type UseSearchReturn<F extends FilterPattern, S extends SortPattern> = {
