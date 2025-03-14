@@ -38,7 +38,8 @@ type CollectionsPageProps = {
 }
 
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
-  const { filter, sort, pagination } = parseSearchParams(searchParams, {
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,
     sortSchema: collectionSort,
     parsePagination: true

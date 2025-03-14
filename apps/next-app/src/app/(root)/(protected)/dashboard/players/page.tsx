@@ -29,7 +29,8 @@ type PlayersPageProps = {
 }
 
 const PlayersPage = ({ searchParams }: PlayersPageProps) => {
-  const { filter, sort } = parseSearchParams(searchParams, {
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort } = parseSearchParams(searchEntries, {
     filterSchema: playerFilter,
     sortSchema: playerSort
   })

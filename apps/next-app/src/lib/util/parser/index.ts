@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { SortKey, PaginationParams } from "@repo/schema/search"
-import type { Filter, Sort } from "@/lib/types/query"
+import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
 import type { FilterParamValue } from "@/hooks/use-filter-params"
 
 // schemas
@@ -28,31 +28,34 @@ export function pickFields<T extends object, U extends keyof T>(obj: T, keys: U[
   return result
 }
 
-type ParseFilterParamsReturn<T extends { [key in keyof T]: FilterParamValue }> = {
-  filter: Filter<T>
-  sort: Sort<T>
+type ParseSearchParamsOptions<F extends FilterPattern, S extends SortPattern> = {
+  filterSchema?: z.ZodSchema<F>
+  sortSchema?: z.ZodSchema<S>
+  parsePagination?: boolean
+}
+
+type ParseSearchParamsReturn<F extends FilterPattern, S extends SortPattern> = {
+  filter: Filter<F>
+  sort: Sort<S>
   pagination: PaginationParams
 }
 
 /**
  * TODO: write doc
  * 
- * @param searchParams 
+ * @param searchEntries 
  * @param options 
  * @returns 
  */
-export function parseSearchParams<T extends Record<string, any>>(searchParams: T, options: {
-  filterSchema?: z.ZodSchema
-  sortSchema?: z.ZodSchema
-  parsePagination?: boolean
-}): ParseFilterParamsReturn<T> {
+export function parseSearchParams<F extends FilterPattern, S extends SortPattern>(
+  searchEntries: URLSearchParamsIterator<[string, string]>,
+  options: ParseSearchParamsOptions<F, S>
+): ParseSearchParamsReturn<F, S> {
   const { filterSchema, sortSchema, parsePagination = false } = options
 
-  const searchEntries = new URLSearchParams(searchParams).entries()
   const params = Object.fromEntries(searchEntries)
-
-  let filter: Filter<T> = {}
-  let sort: Sort<T> = {}
+  let filter: Filter<F> = {}
+  let sort: Sort<S> = {}
   let pagination: PaginationParams = {}
 
   if (filterSchema) {
@@ -89,11 +92,11 @@ export function parseSearchParams<T extends Record<string, any>>(searchParams: T
  * @deprecated Will be replaced by `parseSearchParams.
  * @template T - The shape of the parameter object, where each key's value must be of type `string`, `number`, or `boolean`.
  * @param {URLSearchParams} params - The search parameters to parse.
- * @returns {ParseFilterParamsReturn<T>} - An object with `filter` and `sort` properties for filtered and sorted results.
+ * @returns {ParseSearchParamsReturn<T>} - An object with `filter` and `sort` properties for filtered and sorted results.
  */
 export function parseFilterParams<T extends { [key in keyof T]: FilterParamValue }>(
   params: URLSearchParams
-): ParseFilterParamsReturn<T> {
+): ParseSearchParamsReturn<T> {
   const keys = Array.from(params.keys())
 
   /* Filter parser */

@@ -28,7 +28,8 @@ type SessionsPageProps = {
 }
 
 const SessionsPage = ({ searchParams }: SessionsPageProps) => {
-  const { filter, sort, pagination } = parseSearchParams(searchParams, {
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter,
     sortSchema: sessionSort,
     parsePagination: true
