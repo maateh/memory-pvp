@@ -13,10 +13,7 @@ export const sessionFilter = clientSession
     format: true,
     tableSize: true
   })
-  .extend({
-    ownerId: z.string(),
-    guestId: z.string()
-  })
+  .extend({ playerId: z.string() })
   .partial()
 
 export const sessionSort = z.record(

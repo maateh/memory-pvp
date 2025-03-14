@@ -18,10 +18,7 @@ import { Separator } from "@/components/ui/separator"
 import { SessionCount } from "@/components/session"
 
 const SessionCounter = ({ player }: { player: ClientPlayer }) => {
-  void trpc.session.count.prefetch({
-    // FIXME: use only `playerId` instead of `ownerId` and `guestId`
-    filter: { ownerId: player.id }
-  })
+  void trpc.session.count.prefetch({ filter: { playerId: player.id } })
 
   return (
     <div className="mt-5 pt-3 flex gap-x-2 border-t border-border/50">
