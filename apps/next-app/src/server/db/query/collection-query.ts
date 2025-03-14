@@ -1,18 +1,20 @@
 // types
 import type { TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@repo/schema/collection"
+import type { ClientCardCollection, CollectionFilter, CollectionSort } from "@repo/schema/collection"
 import type { Pagination, PaginationParams } from "@repo/schema/search"
-import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/query/collection-query"
 
 // schema
-import { collectionSortQuery } from "@/lib/schema/query/collection-query"
+import { collectionSort } from "@repo/schema/collection"
 
 // server
 import { db } from "@repo/server/db"
 import { signedIn } from "@/server/action/user-action"
 
 // helpers
-import { parseCollectionFilterToWhere, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
+import {
+  parseCollectionFilterToWhere,
+  parseSchemaToClientCollection
+} from "@/lib/util/parser/collection-parser"
 
 // utils
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
@@ -62,8 +64,8 @@ export async function getCollection({ id, userProtected = true }: {
  * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
 export async function getCollections({ filter, sort, pagination }: {
-  filter: CollectionFilterQuery
-  sort: CollectionSortQuery
+  filter: CollectionFilter
+  sort: CollectionSort
   pagination: PaginationParams
 }): Promise<Pagination<ClientCardCollection>> {
   const user = filter.excludeUser ? await signedIn() : null
@@ -73,7 +75,7 @@ export async function getCollections({ filter, sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, collectionSort, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true
@@ -92,11 +94,11 @@ export async function getCollections({ filter, sort, pagination }: {
  * - Orders collections by the specified `sort` criteria or by creation date in descending order if no sort criteria are provided.
  * - Includes user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
  * 
- * @param {CollectionSortQuery} [sort={}] - The sorting criteria for ordering collections.
+ * @param {CollectionSort} [sort={}] - The sorting criteria for ordering collections.
  * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
  */
 export async function getUserCollections({ sort, pagination }: {
-  sort: CollectionSortQuery
+  sort: CollectionSort
   pagination: PaginationParams
 }): Promise<Pagination<ClientCardCollection>> {
   const user = await signedIn()
@@ -106,7 +108,7 @@ export async function getUserCollections({ sort, pagination }: {
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where: { userId: user.id },
-    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, collectionSort, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true

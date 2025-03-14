@@ -1,7 +1,6 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientPlayer } from "@repo/schema/player"
-import type { PlayerFilterQuery, PlayerSortQuery } from "@/lib/schema/query/player-query"
+import type { ClientPlayer, PlayerFilter, PlayerSort } from "@repo/schema/player"
 
 // server
 import { db } from "@repo/server/db"
@@ -24,7 +23,7 @@ import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
  * @returns {Promise<ClientPlayer | null>} - The player's profile with the associated avatar (optional), or `null` if no match is found.
  */
 export async function getPlayer({ filter, withAvatar = false }: Partial<{
-  filter: PlayerFilterQuery
+  filter: PlayerFilter
   withAvatar: boolean
 }>): Promise<ClientPlayer | null> {
   const user = await signedIn()
@@ -67,8 +66,8 @@ export async function getPlayer({ filter, withAvatar = false }: Partial<{
  * @returns {Promise<ClientPlayer[]>} - A list of player profiles associated with the user.
  */
 export async function getPlayers({ filter, sort, withAvatar = false }: Partial<{
-  filter: PlayerFilterQuery
-  sort: PlayerSortQuery
+  filter: PlayerFilter
+  sort: PlayerSort
   withAvatar: boolean
 }> = {}): Promise<ClientPlayer[]> {
   const user = await signedIn()

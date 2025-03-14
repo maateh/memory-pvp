@@ -1,9 +1,11 @@
 // types
 import type { MatchFormat } from "@repo/db"
-import type { ClientSessionVariants } from "@repo/schema/session"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
+import type { ClientSessionVariants, SessionFilter, SessionSort } from "@repo/schema/session"
 import type { Pagination, PaginationParams } from "@repo/schema/search"
-import type { SessionFilterQuery, SessionSortQuery } from "@/lib/schema/query/session-query"
+
+// schema
+import { sessionSort } from "@repo/schema/session"
 
 // db
 import { db } from "@repo/server/db"
@@ -14,9 +16,6 @@ import { sessionKey } from "@repo/server/redis-keys"
 
 // actions
 import { signedIn } from "@/server/action/user-action"
-
-// schema
-import { sessionSortQuery } from "@/lib/schema/query/session-query"
 
 // config
 import { sessionSchemaFields } from "@/config/session-settings"
@@ -40,8 +39,8 @@ import { parseSchemaToClientSession, parseSessionFilterToWhere } from "@/lib/uti
  * @returns {Promise<ClientSessionVariants[]>} - An array of parsed sessions, or an empty array if no user is signed in.
  */
 export async function getClientSessions({ filter, sort, pagination }: {
-  filter: SessionFilterQuery
-  sort: SessionSortQuery
+  filter: SessionFilter
+  sort: SessionSort
   pagination: PaginationParams
 }): Promise<Pagination<ClientSessionVariants>> {
   const user = await signedIn()
@@ -53,7 +52,7 @@ export async function getClientSessions({ filter, sort, pagination }: {
   const sessions = await db.gameSession.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort, sessionSortQuery, { closedAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, sessionSort, { closedAt: "desc" }),
     include: sessionSchemaFields
   })
 
