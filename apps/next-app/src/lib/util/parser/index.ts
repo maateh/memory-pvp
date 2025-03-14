@@ -63,11 +63,11 @@ export function parseSearchParams<F extends FilterPattern, S extends SortPattern
   }
 
   if (sortSchema) {
-    const swappedParams = Object.fromEntries(
-      searchEntries.filter(([key]) => sortKey.safeParse(key).success)
-        .map((entry) => entry.reverse())
-    )
-    
+    const swappedEntries = Object.entries(params)
+      .filter(([key]) => sortKey.safeParse(key).success)
+      .map((entry) => entry.reverse())
+    const swappedParams = Object.fromEntries(swappedEntries)
+      
     const { data, success } = sortSchema.safeParse(swappedParams)
     if (success) sort = data
   }
