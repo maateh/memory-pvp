@@ -27,7 +27,7 @@ import { Separator } from "@/components/ui/separator"
 
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type TSessionSettingsFilter = Pick<SessionFilter, "mode" | "format" | "tableSize">
 
@@ -44,7 +44,7 @@ type SessionSettingsFilterProps = {
 
 const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionSettingsFilterProps) => {
   const filterStore = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams({
+  const { filter: filterParams, toggleFilterParam } = useSearch({
     filterSchema: sessionFilter.pick({ mode: true, format: true, tableSize: true })
   })
 

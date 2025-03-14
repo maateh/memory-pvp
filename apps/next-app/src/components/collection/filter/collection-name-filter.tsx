@@ -15,14 +15,14 @@ import { Separator } from "@/components/ui/separator"
 
 // hooks
 import { useDebounce } from "@/hooks/use-debounce"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type CollectionNameFilterProps = {
   inputProps?: Omit<React.ComponentProps<typeof Input>, "type" | "placeholder" | "value" | "onChange">
 } & React.ComponentProps<typeof Label>
 
 const CollectionNameFilter = ({ inputProps, className, ...props }: CollectionNameFilterProps) => {
-  const { filter, toggleFilterParam, removeFilterParam } = useFilterParams({
+  const { filter, toggleFilterParam, removeSearchParam: removeFilterParam } = useSearch({
     filterSchema: collectionFilter
   })
 

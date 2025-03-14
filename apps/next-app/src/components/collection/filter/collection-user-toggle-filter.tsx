@@ -13,7 +13,7 @@ import { UserRoundCheck, UserRoundMinus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 const CollectionUserToggleFilter = ({
   variant = "ghost",
@@ -21,7 +21,7 @@ const CollectionUserToggleFilter = ({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "onClick">) => {
-  const { filter, toggleFilterParam } = useFilterParams({
+  const { filter, toggleFilterParam } = useSearch({
     filterSchema: collectionFilter
   })
 

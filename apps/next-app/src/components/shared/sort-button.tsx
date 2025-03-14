@@ -14,7 +14,7 @@ import { ArrowDownUp, LucideProps, SortAsc, SortDesc } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type SortButtonProps<S extends SortPattern> = {
   sortSchema: z.ZodSchema<S>
@@ -32,7 +32,7 @@ function SortButton<S extends SortPattern>({
   children,
   ...props
 }: SortButtonProps<S>) {
-  const { sort, toggleSortParam } = useFilterParams({ sortSchema })
+  const { sort, toggleSortParam } = useSearch({ sortSchema })
 
   return (
     <Button className={cn("p-1.5 gap-x-2", className)}

@@ -17,14 +17,14 @@ import { cn } from "@/lib/util"
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 const options: FilterOptions<Pick<CollectionFilter, "tableSize">> = {
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
 const CollectionSizeFilter = ({ className, ...props }: React.ComponentProps<typeof BreadcrumbList>) => {
-  const { filter, toggleFilterParam } = useFilterParams({
+  const { filter, toggleFilterParam } = useSearch({
     filterSchema: collectionFilter.pick({ tableSize: true })
   })
 

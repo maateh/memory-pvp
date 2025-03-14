@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type SortDropdownButtonProps<S extends SortPattern> = {
   sortSchema: z.ZodSchema<S>
@@ -41,7 +41,7 @@ function SortDropdownButton<S extends SortPattern>({
   size = "icon",
   ...props
 }: SortDropdownButtonProps<S>) {
-  const { sort, toggleSortParam } = useFilterParams({ sortSchema })
+  const { sort, toggleSortParam } = useSearch({ sortSchema })
 
   /* Gets only the first sort entry even if there are multiple specified. */
   const { sortValueKey, sortKey } = useMemo(() => {

@@ -2,7 +2,7 @@
 import type { z } from "zod"
 import type { SortKey, PaginationParams } from "@repo/schema/search"
 import type { Filter, FilterPattern, Sort, SortPattern } from "@/lib/types/search"
-import type { FilterParamValue } from "@/hooks/use-filter-params"
+import type { FilterParamValue } from "@/hooks/use-search"
 
 // schemas
 import { paginationParams, sortKey } from "@repo/schema/search"

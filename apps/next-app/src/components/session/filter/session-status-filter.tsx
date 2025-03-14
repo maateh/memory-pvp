@@ -19,7 +19,7 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } fro
 
 // hooks
 import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type TSessionStatusFilter = Pick<SessionFilter, "status">
 
@@ -34,7 +34,7 @@ type SessionStatusFilterProps = {
 
 const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionStatusFilterProps) => {
   const filterStore = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams({
+  const { filter: filterParams, toggleFilterParam } = useSearch({
     filterSchema: sessionFilter.pick({ status: true })
   })
 
