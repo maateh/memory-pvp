@@ -59,19 +59,18 @@ export function parseSchemaToClientCollection(
  * @returns 
  */
 export function parseCollectionFilterToWhere(
-  filter: CollectionFilter,
-  userId?: string
+  filter: CollectionFilter
 ): Prisma.CardCollectionWhereInput {
   const { success, data } = collectionFilter.safeParse(filter)
   if (!success) return {}
 
-  const { name, description, tableSize, username, excludeUser } = data
+  const { name, description, tableSize, userId, username, excludeUser } = data
 
   return {
     name: { contains: name },
     description: { contains: description },
     tableSize,
-    user: { username: { contains: username } },
+    user: { id: userId, username: { contains: username } },
     NOT: excludeUser ? { userId } : undefined
   }
 }

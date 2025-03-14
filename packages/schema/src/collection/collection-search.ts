@@ -12,6 +12,7 @@ export const collectionFilter = clientCardCollection
     tableSize: true
   })
   .extend({
+    userId: z.string(),
     username: z.string(),
     excludeUser: z.coerce.boolean().optional()
   })
