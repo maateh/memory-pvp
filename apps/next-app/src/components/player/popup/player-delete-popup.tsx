@@ -46,11 +46,11 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
           size="sm"
         />
 
-        {renderer === 'trigger' && <PlayerDeletePopupContent player={player} />}
+        {renderer === "trigger" && <PlayerDeletePopupContent player={player} />}
 
-        {renderer === 'router' && (
+        {renderer === "router" && (
           <Suspense fallback={<PlayerDeletePopupSkeleton />}>
-            <Await promise={getPlayer({ filter: { tag: playerTag } })}>
+            <Await promise={getPlayer({ tag: playerTag })}>
               {(player) => player ? (
                 <PlayerDeletePopupContent player={player} />
               ) : (
@@ -91,7 +91,7 @@ const PlayerDeletePopupContent = ({ player }: { player: ClientPlayer }) => (
 
 const PlayerDeletePopupSkeleton = () => (
   <StatisticList className="w-full max-w-md mx-auto">
-    {Array(3).fill('').map((_, index) => (
+    {Array(3).fill("").map((_, index) => (
       <Skeleton className="w-32 h-12 bg-destructive/10 rounded-2xl"
         key={index}
       />

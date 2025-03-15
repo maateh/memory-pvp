@@ -23,7 +23,7 @@ type PlayerEditPopupProps = ({
   renderer: "router"
   playerTag: string
   player?: never
-}) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
+}) & Omit<React.ComponentProps<typeof PopupTrigger>, "renderer">
 
 const PlayerEditPopup = ({ renderer, player, playerTag, ...props }: PlayerEditPopupProps) => {
   return (
@@ -47,7 +47,7 @@ const PlayerEditPopup = ({ renderer, player, playerTag, ...props }: PlayerEditPo
 
         {renderer === "router" && (
           <Suspense fallback={<Skeleton className="w-11/12 h-9 mx-auto bg-muted-foreground/20" />}>
-            <Await promise={getPlayer({ filter: { tag: playerTag } })}>
+            <Await promise={getPlayer({ tag: playerTag })}>
               {(player) => player ? (
                 <PlayerProfileForm className="px-4"
                   type="edit"

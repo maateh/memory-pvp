@@ -1,6 +1,10 @@
 // types
-import type { ClientPlayer } from "@repo/schema/player"
+import type { Prisma } from "@repo/db"
+import type { ClientPlayer, PlayerFilter } from "@repo/schema/player"
 import type { PlayerProfileWithUserAvatar } from "@repo/db/types"
+
+// schemas
+import { playerFilter } from "@repo/schema/player"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
@@ -34,4 +38,21 @@ export function parseSchemaToClientPlayer(
 
   const filteredPlayer = pickFields(playerWithAvatar, clientPlayerKeys)
   return filteredPlayer
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param filter 
+ * @param userId 
+ * @returns 
+ */
+export function parsePlayerFilterToWhere(
+  filter: PlayerFilter,
+  userId: string
+): Prisma.PlayerProfileWhereInput {
+  const { success, data: parsedFilter } = playerFilter.safeParse(filter)
+  if (!success) return { userId }
+
+  return { ...parsedFilter, userId }
 }

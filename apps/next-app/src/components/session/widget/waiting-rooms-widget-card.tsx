@@ -1,5 +1,5 @@
-import Link from "next/link"
 import { Suspense } from "react"
+import Link from "next/link"
 
 // db
 import { getPlayer } from "@/server/db/query/player-query"
@@ -34,8 +34,9 @@ const WaitingRoomsWidgetCard = () => {
         <WidgetLink href="/dashboard/rooms" />
       </WidgetActionWrapper>
 
-      <Suspense>
-        <Await promise={getPlayer({ filter: { isActive: true } })}>
+      {/* TODO: create loading fallback for `WidgetCard` */}
+      <Suspense fallback={<>Loading...</>}>
+        <Await promise={getPlayer({ isActive: true })}>
           {(player) => player ? (
             <Await promise={getActiveRoom(player.id)}>
               {(activeRoom) => activeRoom ? (

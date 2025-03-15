@@ -41,7 +41,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   
   const [user, players, collection] = await Promise.all([
     signedIn(),
-    getPlayers({ withAvatar: true }),
+    getPlayers({}, "withAvatar"),
     collectionId ? getCollection(collectionId) : getRandomCollection(tableSize)
   ])
 

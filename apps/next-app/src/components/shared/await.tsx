@@ -1,6 +1,6 @@
 type AwaitProps<T> = {
   promise: Promise<T>
-  children: (data: T ) => React.JSX.Element
+  children: (data: T ) => React.JSX.Element | null
 }
 
 async function Await<T>({ promise, children }: AwaitProps<T>) {

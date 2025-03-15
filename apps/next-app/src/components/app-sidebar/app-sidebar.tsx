@@ -1,6 +1,7 @@
+import { Suspense } from "react"
 import Link from "next/link"
 
-// server
+// db
 import { getPlayers } from "@/server/db/query/player-query"
 
 // icons
@@ -19,15 +20,14 @@ import {
 
 // components
 import { SignedIn } from "@clerk/nextjs"
+import { Await } from "@/components/shared"
 import GroupPlayer from "./group-player"
 import GroupGame from "./group-game"
 import NavGroups from "./nav-groups"
 import FooterUser from "./footer-user"
 import FooterTheme from "./footer-theme"
 
-const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  const players = await getPlayers({ withAvatar: true })
-
+const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -49,9 +49,14 @@ const AppSidebar = async ({ ...props }: React.ComponentProps<typeof Sidebar>) =>
 
       <SidebarContent>
         <SignedIn>
-          <GroupPlayer
-            players={players}
-          />
+          {/* TODO: add loading fallback */}
+          <Suspense fallback={<>Loading...</>}>
+            <Await promise={getPlayers({}, "withAvatar")}>
+              {(players) => players && (
+                <GroupPlayer players={players} />
+              )}
+            </Await>
+          </Suspense>
         </SignedIn>
 
         <SidebarSeparator className="w-1/6 h-1 mx-auto -my-1.5 bg-sidebar-border/30 rounded-full group-data-[collapsible=icon]:my-0" />

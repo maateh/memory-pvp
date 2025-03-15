@@ -1,26 +1,27 @@
+import { Suspense } from "react"
 import dynamic from "next/dynamic"
 
-// server
-import { signedIn } from "@/server/action/user-action"
+// db
 import { getPlayers } from "@/server/db/query/player-query"
+
+// actions
+import { signedIn } from "@/server/action/user-action"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { Await } from "@/components/shared"
 import { UserManageButton } from "@/components/user"
 import { SessionStatisticsSkeleton } from "@/components/session/summary"
 import SaveOfflineSession from "./save-offline-session"
 
-const OfflineSessionResults = dynamic(() => import('./offline-session-results'), {
+const OfflineSessionResults = dynamic(() => import("./offline-session-results"), {
   ssr: false,
   loading: SessionStatisticsSkeleton
 })
 
-const OfflineSessionSummaryPage = async () => {
-  const user = await signedIn()
-  const players = await getPlayers()
-
+const OfflineSessionSummaryPage = () => {
   return (
     <>
       <OfflineSessionResults />
@@ -33,14 +34,17 @@ const OfflineSessionSummaryPage = async () => {
 
       <Separator className="w-1/5 mx-auto mt-2 mb-5 bg-border/5" />
 
-      {!user ? (
-        <UserManageButton className="mx-auto text-base"
-          size="lg"
-          showSignInIfLoggedOut
-        />
-      ) : (
-        <SaveOfflineSession players={players} />
-      )}
+      {/* TODO: add loading fallback */}
+      <Suspense fallback={<>Loading...</>}>
+        <Await promise={Promise.all([signedIn(), getPlayers()])}>
+          {([user, players]) => !user ? (
+            <UserManageButton className="mx-auto text-base"
+              size="lg"
+              showSignInIfLoggedOut
+            />    
+          ): <SaveOfflineSession players={players} />}
+        </Await>
+      </Suspense>
     </>
   )
 }
