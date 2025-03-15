@@ -70,7 +70,10 @@ export const sessionCardFlip: SocketEventHandler<
       data: session
     } satisfies SocketResponse<MultiplayerClientSession>)
 
-    if (actionKey !== "pairing") return
+    if (actionKey !== "pairing") {
+      response({ message: "Card flipped" })
+      return
+    }
 
     const { flipped } = session
     const eventKey = handleCardPairing({ playerId, session })
@@ -86,7 +89,10 @@ export const sessionCardFlip: SocketEventHandler<
     } satisfies SocketResponse<MultiplayerClientSession>)
 
     const isOver = session.cards.every((card) => card.matchedBy !== null)
-    if (!isOver) return
+    if (!isOver) {
+      response({ message: "Cards paired" })
+      return
+    }
 
     await closeSession({ ...room, session }, playerId, "FINISHED")
 
@@ -95,6 +101,8 @@ export const sessionCardFlip: SocketEventHandler<
       description: "Let's see the results...",
       data: roomSlug
     } satisfies SocketResponse<string>)
+
+    response({ message: "Session finished" })
   } catch (err) {
     response({
       message: "Failed to flip card.",
