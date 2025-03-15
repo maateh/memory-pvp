@@ -1,7 +1,9 @@
 // types
 import type { ColumnDef } from "@tanstack/react-table"
 import type { WaitingRoom } from "@repo/schema/room"
-import type { WaitingRoomListingMetadata } from "./waiting-room-listing"
+
+// schemas
+import { sessionSort } from "@repo/schema/session"
 
 // config
 import {
@@ -17,10 +19,10 @@ import { CalendarClock, Dices, Gamepad2 } from "lucide-react"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
+import { CustomDate } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
 import { SessionInfoBadge, SessionBadge } from "@/components/session"
 import { RoomJoinButton } from "@/components/room"
-import { CustomDate } from "@/components/shared"
 
 export const columns: ColumnDef<WaitingRoom>[] = [
   {
@@ -29,7 +31,7 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     enableHiding: true,
     header: "Owner",
     cell({ getValue }) {
-      const owner = getValue<WaitingRoom['owner']>()
+      const owner = getValue<WaitingRoom["owner"]>()
 
       return (
         <PlayerBadge className="w-fit"
@@ -46,13 +48,14 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Settings"
           sortValueKey="mode"
         />
       )
     },
     cell({ getValue }) {
-      const { mode, format } = getValue<WaitingRoom['settings']>()
+      const { mode, format } = getValue<WaitingRoom["settings"]>()
 
       return (
         <SessionInfoBadge className="py-0 text-xs"
@@ -71,13 +74,14 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Table size"
           sortValueKey="tableSize"
         />
       )
     },
     cell({ getValue }) {
-      const { tableSize } = getValue<WaitingRoom['settings']>()
+      const { tableSize } = getValue<WaitingRoom["settings"]>()
 
       return (
         <SessionInfoBadge className="py-0 text-xs"
@@ -96,13 +100,14 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Session"
           sortValueKey="status"
         />
       )
     },
     cell({ getValue }) {
-      const slug = getValue<WaitingRoom['slug']>()
+      const slug = getValue<WaitingRoom["slug"]>()
 
       return (
         <SessionBadge className="text-xs"
@@ -118,13 +123,14 @@ export const columns: ColumnDef<WaitingRoom>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Created at"
           sortValueKey="createdAt"
         />
       )
     },
     cell({ getValue }) {
-      const date = getValue<WaitingRoom['createdAt']>()
+      const date = getValue<WaitingRoom["createdAt"]>()
 
       return (
         <CustomDate

@@ -14,7 +14,7 @@ export const createSoloSessionValidation = z.object({
   settings: sessionSettings
     .omit({ format: true })
     .extend({ format: z.literal(sessionSettings.shape.format.enum.SOLO) }),
-  forceStart: z.coerce.boolean().optional()
+  forceStart: z.boolean().optional()
 })
 
 export const createMultiplayerSessionValidation = z.object({

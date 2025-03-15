@@ -1,53 +1,49 @@
-// prisma
-import type { SessionMode, MatchFormat, TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@repo/schema/collection"
+// types
+import type { SessionFilter } from "@repo/schema/session"
 
-// server
-import { db } from "@repo/server/db"
-import { signedIn } from "@/server/action/user-action"
+// schemas
+import { sessionFilter } from "@repo/schema/session"
+
+// db
 import { getPlayers } from "@/server/db/query/player-query"
-import { getRandomCollection } from "@/server/db/query/collection-query"
+import { getCollection, getRandomCollection } from "@/server/db/query/collection-query"
 
-// helpers
-import { parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
+// actions
+import { signedIn } from "@/server/action/user-action"
+
+// utils
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
 import { PlayerSelectButton } from "@/components/player/select"
-import { UserManageButton } from "@/components/user"
 import { SessionForm } from "@/components/session/form"
+import { UserManageButton } from "@/components/user"
 
 type BaseGameSetupPageProps = {
-  searchParams: Partial<{
-    mode: SessionMode
-    format: MatchFormat
-    tableSize: TableSize
-    collectionId: string
-  }>
+  searchParams: Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">
 }
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
-  const user = await signedIn()
-  const players = await getPlayers({ withAvatar: true })
-
-  let clientCollection: ClientCardCollection | null = null
-  if (searchParams.collectionId) {
-    const collection = await db.cardCollection.findUnique({
-      where: {
-        id: searchParams.collectionId
-      },
-      include: {
-        user: true,
-        cards: true
-      }
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter } = parseSearchParams(searchEntries, {
+    filterSchema: sessionFilter.pick({
+      mode: true,
+      format: true,
+      tableSize: true,
+      collectionId: true
     })
+  })
 
-    clientCollection = collection ? parseSchemaToClientCollection(collection) : null
-  } else {
-    clientCollection = await getRandomCollection(searchParams.tableSize)
-  }
+  const { tableSize = "SMALL", collectionId } = filter
+  
+  const [user, players, collection] = await Promise.all([
+    signedIn(),
+    getPlayers({}, "withAvatar"),
+    collectionId ? getCollection(collectionId) : getRandomCollection(tableSize)
+  ])
 
   return (
     <>
@@ -79,8 +75,8 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
 
       <main className="flex-1 flex flex-col">
         <SessionForm
-          defaultValues={{ settings: searchParams }}
-          collection={clientCollection}
+          defaultValues={{ settings: filter }}
+          collection={collection}
         />
       </main>
     </>

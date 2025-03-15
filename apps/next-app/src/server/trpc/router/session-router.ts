@@ -2,17 +2,19 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
-import { sessionFilterQuery } from "@/lib/schema/query/session-query"
+import { sessionCountValidation } from "@repo/schema/session-validation"
 
 // utils
-import { parseSessionFilter } from "@/lib/util/parser/session-parser"
+import { parseSessionFilterToWhere } from "@/lib/util/parser/session-parser"
 
 export const sessionRouter = createTRPCRouter({
   count: protectedProcedure
-    .input(sessionFilterQuery)
+    .input(sessionCountValidation)
     .query(async ({ ctx, input }) => {
+      const { filter } = input
+
       return await ctx.db.gameSession.count({
-        where: parseSessionFilter(ctx.user.id, input)
+        where: parseSessionFilterToWhere(filter, ctx.user.id)
       })
     })
 })

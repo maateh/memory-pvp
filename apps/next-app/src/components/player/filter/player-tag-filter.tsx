@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 
-// types
-import type { PlayerFilter } from "./types"
+// schemas
+import { playerFilter } from "@repo/schema/player"
 
 // utils
 import { cn } from "@/lib/util"
@@ -15,25 +15,24 @@ import { Separator } from "@/components/ui/separator"
 
 // hooks
 import { useDebounce } from "@/hooks/use-debounce"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 type PlayerTagFilterProps = {
-  inputProps?: Omit<React.ComponentProps<typeof Input>, 'type' | 'placeholder' | 'value' | 'onChange'>
+  inputProps?: Omit<React.ComponentProps<typeof Input>, "type" | "placeholder" | "value" | "onChange">
 } & React.ComponentProps<typeof Label>
 
 const PlayerTagFilter = ({ inputProps, className, ...props }: PlayerTagFilterProps) => {
-  const { filter, toggleFilterParam, removeFilterParam } = useFilterParams<PlayerFilter>()
+  const { filter, toggleFilterParam, removeSearchParam: removeFilterParam } = useSearch({
+    filterSchema: playerFilter
+  })
 
   const [playerTag, setPlayerTag] = useState<string>(filter.tag || "")
 
   useDebounce({
     value: playerTag,
     onDebounce(debouncedValue) {
-      if (debouncedValue) {
-        toggleFilterParam("tag", debouncedValue)
-      } else {
-        removeFilterParam("tag")
-      }        
+      if (debouncedValue) toggleFilterParam("tag", debouncedValue)
+      else removeFilterParam("tag")        
     }
   })
 

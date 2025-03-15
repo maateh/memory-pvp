@@ -1,8 +1,11 @@
 "use client"
 
 // types
-import type { FilterOptions } from "@/lib/types/query"
-import type { CollectionFilter, CollectionFilterFields } from "./types"
+import type { CollectionFilter } from "@repo/schema/collection"
+import type { FilterOptions } from "@/lib/types/search"
+
+// schemas
+import { collectionFilter } from "@repo/schema/collection"
 
 // config
 import { tableSizePlaceholders } from "@repo/config/game"
@@ -14,14 +17,16 @@ import { cn } from "@/lib/util"
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
-const options: FilterOptions<Pick<CollectionFilterFields, 'tableSize'>> = {
-  tableSize: ['SMALL', 'MEDIUM', 'LARGE']
+const options: FilterOptions<Pick<CollectionFilter, "tableSize">> = {
+  tableSize: ["SMALL", "MEDIUM", "LARGE"]
 }
 
 const CollectionSizeFilter = ({ className, ...props }: React.ComponentProps<typeof BreadcrumbList>) => {
-  const { filter, toggleFilterParam } = useFilterParams<CollectionFilter>()
+  const { filter, toggleFilterParam } = useSearch({
+    filterSchema: collectionFilter.pick({ tableSize: true })
+  })
 
   return (
     <Breadcrumb>
@@ -29,7 +34,7 @@ const CollectionSizeFilter = ({ className, ...props }: React.ComponentProps<type
         <BreadcrumbItemGroup>
           {options.tableSize.map((tableSize) => (
             <BreadcrumbButton
-              onClick={() => toggleFilterParam('tableSize', tableSize)}
+              onClick={() => toggleFilterParam("tableSize", tableSize)}
               selected={filter.tableSize === tableSize}
               key={tableSize}
             >

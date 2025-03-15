@@ -6,7 +6,7 @@ import { clientPlayer, playerConnection } from "@/player"
 export const roomPlayerRole = z.enum(["owner", "guest"])
 
 export const roomPlayer = clientPlayer.extend({
-  ready: z.coerce.boolean(),
+  ready: z.boolean(),
   role: roomPlayerRole,
   connection: playerConnection
 })

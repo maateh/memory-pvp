@@ -4,12 +4,12 @@ import { useMemo } from "react"
 
 // types
 import type { MatchFormat, SessionMode, TableSize } from "@repo/db"
-import type { FilterService, FilterOptions } from "@/lib/types/query"
+import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
-import type {
-  SessionSettingsFilter as TSessionSettingsFilter,
-  SessionSettingsFilterFields
-} from "./types"
+import type { SessionFilter } from "@repo/schema/session"
+
+// schemas
+import { sessionFilter } from "@repo/schema/session"
 
 // config
 import {
@@ -26,10 +26,12 @@ import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList, Brea
 import { Separator } from "@/components/ui/separator"
 
 // hooks
-import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { setFilterState, useFilterStore } from "@/hooks/store/use-filter-store"
+import { useSearch } from "@/hooks/use-search"
 
-const options: FilterOptions<SessionSettingsFilterFields> = {
+type TSessionSettingsFilter = Pick<SessionFilter, "mode" | "format" | "tableSize">
+
+const options: FilterOptions<TSessionSettingsFilter> = {
   mode: ["CASUAL", "RANKED"],
   format: ["OFFLINE", "SOLO", "PVP", "COOP"],
   tableSize: ["SMALL", "MEDIUM", "LARGE"]
@@ -41,16 +43,18 @@ type SessionSettingsFilterProps = {
 }
 
 const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionSettingsFilterProps) => {
-  const filterStore = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionSettingsFilter>()
+  const storeFilter = useFilterStore<TSessionSettingsFilter>((state) => state[filterKey])
+  const { filter: searchFilter, toggleFilterParam } = useSearch({
+    filterSchema: sessionFilter.pick({ mode: true, format: true, tableSize: true })
+  })
 
   const filter: TSessionSettingsFilter = useMemo(() => {
-    return filterService === "store" ? filterStore : filterParams
-  }, [filterService, filterStore, filterParams])
+    return filterService === "store" ? storeFilter : searchFilter
+  }, [filterService, storeFilter, searchFilter])
 
   const handleSelectMode = (mode: SessionMode) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         if (filter.mode === mode) {
@@ -70,7 +74,7 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
 
   const handleSelectFormat = (format: MatchFormat) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         if (filter.format === format) {
@@ -90,7 +94,7 @@ const SessionSettingsFilter = ({ filterKey, filterService = "params" }: SessionS
 
   const handleSelectTableSize = (tableSize: TableSize) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionSettingsFilter>((state) => {
+      setFilterState<TSessionSettingsFilter>((state) => {
         const filter = state[filterKey]
   
         state[filterKey] = {

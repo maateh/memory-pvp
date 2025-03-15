@@ -1,8 +1,8 @@
 // types
-import type { Pagination, PaginationWithoutData, PaginationParams } from "@/lib/types/query"
+import type { Pagination, PaginationWithoutData, PaginationParams } from "@repo/schema/search"
 
-// config
-import { getFixedPaginationParams } from "@/config/pagination-settings"
+// schema
+import { paginationParams } from "@repo/schema/search"
 
 /**
  * Calculates pagination parameters based on the provided input.
@@ -10,11 +10,17 @@ import { getFixedPaginationParams } from "@/config/pagination-settings"
  * - Computes the `skip` and `take` values for database queries.
  * - Ensures the input pagination parameters are fixed and valid.
  * 
- * @param {PaginationParams} params - The pagination parameters containing `page` and `limit`.
+ * @param {PaginationParams | undefined} params - The pagination parameters containing `page` and `limit`.
  * @returns {{ skip: number; take: number }} - An object with the calculated `skip` and `take` values.
  */
-export function paginate(params: PaginationParams): { skip: number; take: number } {
-  const { page, limit } = getFixedPaginationParams(params)
+export function paginate(
+  params: PaginationParams | undefined
+): { skip: number; take: number } {
+  /**
+   * Note: Each field inside `paginationParams` has `default` value,
+   * so we can make sure the validation will succeed.
+   */
+  const { limit, page } = paginationParams.safeParse(params).data!
 
   return {
     skip: (page - 1) * limit,
@@ -30,11 +36,19 @@ export function paginate(params: PaginationParams): { skip: number; take: number
  * 
  * @param {T[]} data - The array of data items for the current page.
  * @param {number} total - The total number of items available.
- * @param {PaginationParams} params - The pagination parameters containing `page` and `limit`.
+ * @param {PaginationParams | undefined} params - The pagination parameters containing `page` and `limit`.
  * @returns {Pagination<T>} - An object containing paginated data and metadata (total pages, current page, etc.).
  */
-export function paginationWrapper<T>(data: T[], total: number, params: PaginationParams): Pagination<T> {
-  const { page, limit } = getFixedPaginationParams(params)
+export function paginationWrapper<T>(
+  data: T[],
+  total: number,
+  params: PaginationParams | undefined
+): Pagination<T> {
+  /**
+   * Note: Each field inside `paginationParams` has `default` value,
+   * so we can make sure the validation will succeed.
+   */
+  const { limit, page } = paginationParams.safeParse(params).data!
 
   const totalPage = Math.ceil(total / limit)
   const hasNextPage = page < totalPage

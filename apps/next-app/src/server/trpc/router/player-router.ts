@@ -1,5 +1,3 @@
-import { z } from "zod"
-
 // server
 import { ServerError } from "@repo/server/error"
 
@@ -8,18 +6,15 @@ import { TRPCError } from "@trpc/server"
 import { createTRPCRouter, protectedProcedure } from "@/server/trpc"
 
 // validations
-import { playerFilterQuery } from "@/lib/schema/query/player-query"
-import { sessionFilterQuery } from "@/lib/schema/query/session-query"
+import { playerGetStatsValidation } from "@repo/schema/player-validation"
+import { parseSessionFilterToWhere } from "@/lib/util/parser/session-parser"
 
 export const playerProfileRouter = createTRPCRouter({
   getStats: protectedProcedure
-    .input(z.object({
-      playerFilter: playerFilterQuery,
-      sessionFilter: sessionFilterQuery
-    }))
+    .input(playerGetStatsValidation)
     .query(async ({ ctx, input }) => {
-      const { playerFilter, sessionFilter } = input
-      const playerId = playerFilter.id
+      const { filter } = input
+      const { playerId } = filter
 
       if (!playerId) {
         throw new TRPCError({
@@ -34,20 +29,14 @@ export const playerProfileRouter = createTRPCRouter({
       }
 
       const sessions = await ctx.db.gameSession.findMany({
-        where: {
-          ...sessionFilter,
-          OR: [
-            { owner: { userId: ctx.user.id, ...playerFilter } },
-            { guest: { userId: ctx.user.id, ...playerFilter } }
-          ]
-        },
+        where: parseSessionFilterToWhere(filter, ctx.user.id),
         select: {
           stats: true,
           results: {
             where: {
               player: {
-                userId: ctx.user.id,
-                ...playerFilter
+                id: playerId,
+                userId: ctx.user.id
               }
             },
             include: { player: true }

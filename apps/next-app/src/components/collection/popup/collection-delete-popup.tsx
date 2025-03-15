@@ -64,7 +64,7 @@ const CollectionDeletePopup = ({ renderer, collection, collectionId, ...props }:
 
         {renderer === "router" && (
           <Suspense fallback={<Skeleton className="h-32 bg-primary/80 rounded-2xl" />}>
-            <Await promise={getCollection({ id: collectionId })}>
+            <Await promise={getCollection(collectionId)}>
               {(collection) => collection ? (
                 <div className="px-4">
                   <CollectionCard className="h-fit w-full max-w-sm sm:max-w-lg"

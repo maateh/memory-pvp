@@ -1,7 +1,7 @@
 "use client"
 
-// types
-import type { CollectionFilter } from "./types"
+// schemas
+import { collectionFilter } from "@repo/schema/collection"
 
 // utils
 import { cn } from "@/lib/util"
@@ -13,22 +13,24 @@ import { UserRoundCheck, UserRoundMinus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 // hooks
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { useSearch } from "@/hooks/use-search"
 
 const CollectionUserToggleFilter = ({
   variant = "ghost",
   size = "icon",
   className,
   ...props
-}: Omit<React.ComponentProps<typeof Button>, 'onClick'>) => {
-  const { filter, toggleFilterParam } = useFilterParams<CollectionFilter>()
+}: Omit<React.ComponentProps<typeof Button>, "onClick">) => {
+  const { filter, toggleFilterParam } = useSearch({
+    filterSchema: collectionFilter
+  })
 
   return (
     <Button className={cn("p-1.5 border border-border/20", className)}
       variant={variant}
       size={size}
-      tooltip={`${filter.excludeUser ? 'Hide' : 'Show'} collections created by you`}
-      onClick={() => toggleFilterParam('excludeUser', filter.excludeUser ? 'false' : 'true')}
+      tooltip={`${filter.excludeUser ? "Hide" : "Show"} collections created by you`}
+      onClick={() => toggleFilterParam("excludeUser", (!filter.excludeUser).toString())}
       {...props}
     >
       <UserRoundCheck className={cn("size-3.5 sm:size-4 text-accent transition-all", {

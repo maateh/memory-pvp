@@ -1,11 +1,10 @@
 import { z } from "zod"
 
 // schemas
-import { sortKeys } from "@/lib/schema/query"
-import { clientSession } from "@repo/schema/session"
+import { clientSession } from "@/session"
+import { sortKey } from "@/search"
 
-/* Query filters */
-export const sessionFilterQuery = clientSession
+export const sessionFilter = clientSession
   .pick({
     slug: true,
     collectionId: true,
@@ -17,18 +16,20 @@ export const sessionFilterQuery = clientSession
   .extend({ playerId: z.string() })
   .partial()
 
-export const sessionSortQuery = z.record(
+export const sessionSort = z.record(
   clientSession.pick({
     slug: true,
     mode: true,
     format: true,
     tableSize: true,
     status: true,
+    // TODO: extend with stats (?)
+    // stats: true
     startedAt: true,
     closedAt: true
   }).keyof(),
-  sortKeys
+  sortKey
 )
 
-export type SessionFilterQuery = z.infer<typeof sessionFilterQuery>
-export type SessionSortQuery = z.infer<typeof sessionSortQuery>
+export type SessionFilter = z.infer<typeof sessionFilter>
+export type SessionSort = z.infer<typeof sessionSort>

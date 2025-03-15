@@ -1,6 +1,8 @@
 // types
-import type { Table as RTable } from "@tanstack/react-table"
+import type { z } from "zod"
 import type { LucideProps } from "lucide-react"
+import type { Table as RTable } from "@tanstack/react-table"
+import type { SortPattern } from "@/lib/types/search"
 
 // react-table
 import { flexRender } from "@tanstack/react-table"
@@ -82,12 +84,19 @@ function DataTable<D>({ table, ...props }: DataTableProps<D>) {
   )
 }
 
-type DataTableColumnSortingHeaderProps = {
+type DataTableColumnSortingHeaderProps<S extends SortPattern> = {
+  sortSchema: z.ZodSchema<S>
   header: string
   sortValueKey: string
 } & React.ComponentProps<"div">
 
-function DataTableColumnSortingHeader({ header, sortValueKey, className, ...props }: DataTableColumnSortingHeaderProps) {
+function DataTableColumnSortingHeader<S extends SortPattern>({
+  sortSchema,
+  header,
+  sortValueKey,
+  className,
+  ...props
+}: DataTableColumnSortingHeaderProps<S>) {
   return (
     <div className={cn("flex justify-between items-center", className)} {...props}>
       <span className="mt-1">
@@ -95,6 +104,7 @@ function DataTableColumnSortingHeader({ header, sortValueKey, className, ...prop
       </span>
       
       <SortButton className="max-sm:break-all"
+        sortSchema={sortSchema}
         iconProps={{ className: "size-3 sm:size-3.5" }}
         sortValueKey={sortValueKey}
       />

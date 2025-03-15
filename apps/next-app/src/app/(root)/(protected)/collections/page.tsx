@@ -2,16 +2,16 @@ import Link from "next/link"
 import { Suspense } from "react"
 
 // types
-import type { CollectionFilter, CollectionSort } from "@/components/collection/filter/types"
+import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
+
+// schemas
+import { collectionFilter, collectionSort } from "@repo/schema/collection"
 
 // server
 import { getCollections } from "@/server/db/query/collection-query"
 
-// constants
-import { collectionSortOptions } from "@/components/collection/filter/constants"
-
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // icons
 import { ImageUp } from "lucide-react"
@@ -22,21 +22,25 @@ import { Separator } from "@/components/ui/separator"
 import { TableSkeleton } from "@/components/ui/table"
 
 // components
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
+import { CollectionListing } from "@/components/collection/listing"
 import {
   CollectionNameFilter,
   CollectionSizeFilter,
   CollectionUserToggleFilter
 } from "@/components/collection/filter"
-import { CollectionListing } from "@/components/collection/listing"
-import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type CollectionsPageProps = {
   searchParams: CollectionFilter & CollectionSort
 }
 
 const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort, pagination } = parseSearchParams(searchEntries, {
+    filterSchema: collectionFilter,
+    sortSchema: collectionSort,
+    parsePagination: true
+  })
 
   return (
     <>
@@ -45,7 +49,8 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
           <CollectionNameFilter />
 
           <div className="mt-1 flex items-center gap-x-2 sm:gap-x-3.5">
-            <SortDropdownButton options={collectionSortOptions} />
+            <SortDropdownButton schemaKey="collection" />
+
             <CollectionSizeFilter />
             <CollectionUserToggleFilter />
           </div>

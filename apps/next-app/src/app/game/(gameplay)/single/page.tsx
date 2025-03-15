@@ -15,7 +15,7 @@ import SingleGameHandler from "./single-game-handler"
 const SingleGamePage = () => {
   return (
     <Suspense fallback={<SessionLoader />}>
-      <Await promise={getPlayer({ filter: { isActive: true } })}>
+      <Await promise={getPlayer({ isActive: true })}>
         {(player) => player ? (
           <Await promise={getActiveClientSession("SOLO", player.id)}>
             {(session) => session ? (

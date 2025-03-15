@@ -3,17 +3,17 @@ import { Suspense } from "react"
 // types
 import type { ClientPlayer } from "@repo/schema/player"
 
-// server
+// db
 import { getPlayers } from "@/server/db/query/player-query"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { Await } from "@/components/shared"
 import { PlayerProfileForm } from "@/components/player/form"
 import { PlayerSelectCommand, PlayerSelectCommandSkeleton } from "@/components/player/select"
 import { Popup, PopupContent, PopupFooter, PopupHeader, PopupTrigger } from "@/components/popup"
-import { Await } from "@/components/shared"
 
 type PlayerSelectPopupProps = ({
   renderer: "trigger"
@@ -21,7 +21,7 @@ type PlayerSelectPopupProps = ({
 } | {
   renderer: "router"
   players?: never
-}) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
+}) & Omit<React.ComponentProps<typeof PopupTrigger>, "renderer">
 
 const PlayerSelectPopup = ({ renderer, players, ...props }: PlayerSelectPopupProps) => {
   return (
@@ -36,14 +36,14 @@ const PlayerSelectPopup = ({ renderer, players, ...props }: PlayerSelectPopupPro
 
         <Separator className="w-5/6 mx-auto mb-3 bg-border/15" />
 
-        {renderer === 'trigger' && (
+        {renderer === "trigger" && (
           <PlayerSelectCommand className="max-w-screen-md mx-auto px-4 sm:px-8"
             listProps={{ className: "w-full max-w-lg mx-auto px-2" }}
             players={players}
           />
         )}
 
-        {renderer === 'router' && (
+        {renderer === "router" && (
           <Suspense fallback={(
             <PlayerSelectCommandSkeleton className="w-full max-w-xl mx-auto"
               listProps={{ className: "max-w-md mx-auto" }}

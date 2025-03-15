@@ -16,7 +16,7 @@ import { RoomStoreProvider } from "@/components/provider"
 const GameMultiplayerLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <Suspense fallback={<SessionLoader />}>
-      <Await promise={getPlayer({ filter: { isActive: true } })}>
+      <Await promise={getPlayer({ isActive: true })}>
         {(player) => player ? (
           <Await promise={getActiveRoom(player.id)}>
             {(room) => room ? (

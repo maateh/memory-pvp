@@ -1,32 +1,36 @@
 import { Suspense } from "react"
 
 // types
-import type { SessionFilter, SessionSort } from "@/components/session/filter/types"
+import type { SessionFilter, SessionSort } from "@repo/schema/session"
+
+// schemas
+import { sessionFilter, sessionSort } from "@repo/schema/session"
 
 // server
 import { getClientSessions } from "@/server/db/query/session-query"
 
-// config
-import { sessionSortOptions } from "@/components/session/filter/constants"
-
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 import { SessionListing, SessionListingSkeleton } from "@/components/session/listing"
-import { Await, PaginationHandler, SortDropdownButton } from "@/components/shared"
 
 type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
 }
 
 const SessionsPage = ({ searchParams }: SessionsPageProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort, pagination } = parseFilterParams<typeof searchParams>(params)
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort, pagination } = parseSearchParams(searchEntries, {
+    filterSchema: sessionFilter,
+    sortSchema: sessionSort,
+    parsePagination: true
+  })
 
   return (
     <div className="page-wrapper">
@@ -41,7 +45,8 @@ const SessionsPage = ({ searchParams }: SessionsPageProps) => {
 
         <SessionStatusFilter filterKey="history" />
         <div className="flex items-center gap-x-2">
-          <SortDropdownButton options={sessionSortOptions} />
+          <SortDropdownButton schemaKey="session" />
+
           <SessionSettingsFilter filterKey="history" />
         </div>
       </div>

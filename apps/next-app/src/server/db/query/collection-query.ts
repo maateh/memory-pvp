@@ -1,51 +1,47 @@
 // types
-import type { z } from "zod"
 import type { TableSize } from "@repo/db"
-import type { ClientCardCollection } from "@repo/schema/collection"
-import type { Pagination, PaginationParams } from "@/lib/types/query"
-import type { CollectionFilterQuery, CollectionSortQuery } from "@/lib/schema/query/collection-query"
+import type { ClientCardCollection, CollectionFilter, CollectionSort } from "@repo/schema/collection"
+import type { Pagination } from "@repo/schema/search"
+import type { Search } from "@/lib/types/search"
 
 // schema
-import { collectionSortQuery } from "@/lib/schema/query/collection-query"
+import { collectionSort } from "@repo/schema/collection"
 
-// server
+// db
 import { db } from "@repo/server/db"
+
+// actions
 import { signedIn } from "@/server/action/user-action"
 
 // helpers
-import { parseCollectionFilter, parseSchemaToClientCollection } from "@/lib/util/parser/collection-parser"
+import {
+  parseCollectionFilterToWhere,
+  parseSchemaToClientCollection
+} from "@/lib/util/parser/collection-parser"
 
 // utils
 import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser"
-import { parseSortToOrderBy } from "@/lib/util/parser"
+import { parseSortToOrderBy } from "@/lib/util/parser/search-parser"
 
 /**
- * Retrieves a specific card collection by its ID and parses it into a `ClientCardCollection`.
+ * Retrieves a card collection by ID with optional access control.
  * 
- * - If `userProtected` is enabled, ensures that a user is signed in before fetching the collection.
- * - Fetches the collection with its associated user and cards data.
- * - Returns `null` if the collection is not found or if the user is not signed in when `userProtected` is `true`.
- * 
- * @param {Object} options - Options for retrieving the collection.
- * @param {string} options.id - The ID of the collection to retrieve.
- * @param {boolean} [options.userProtected=true] - Whether to require the user to be signed in to fetch the collection.
- * @returns {Promise<ClientCardCollection | null>} - The parsed collection or `null` if not found.
+ * @param {string} id The ID of the card collection to retrieve.
+ * @param {("public" | "protected")} [access="public"] The access level required for retrieving the collection.
+ * @returns {Promise<ClientCardCollection | null>} Client-safe card collection or `null` if not found.
  */
-export async function getCollection({ id, userProtected = true }: {
-  id: string
-  userProtected?: boolean
-}): Promise<ClientCardCollection | null> {
-  if (userProtected) {
+export async function getCollection(
+  id: string,
+  access: "public" | "protected" = "public"
+): Promise<ClientCardCollection | null> {
+  if (access === "protected") {
     const user = await signedIn()
     if (!user) return null
   }
 
   const collection = await db.cardCollection.findUnique({
     where: { id },
-    include: {
-      user: true,
-      cards: true
-    }
+    include: { user: true, cards: true }
   })
 
   if (!collection) return null
@@ -53,65 +49,26 @@ export async function getCollection({ id, userProtected = true }: {
 }
 
 /**
- * Retrieves a list of card collections based on the specified filter and sorting options.
+ * Retrieves a paginated list of card collections based on search filters and access level.
  * 
- * - Parses and applies filter criteria from `input.filter`.
- * - Sorts the results according to the specified `sort` parameter.
- * - Excludes collections created by the signed-in user if `includeUser` is `false`.
- * 
- * @param {Object} input - The input object containing filter, sort, and pagination options.
- * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
+ * @param {Partial<Search<CollectionFilter, CollectionSort>>} search Search object containing filter, sort, and pagination parameters.
+ * @param {("public" | "protected")} [access="public"] The access level required for retrieving collections.
+ * @returns {Promise<Pagination<ClientCardCollection>>} Paginated list of client-safe card collections.
  */
-export async function getCollections({ filter, sort, pagination }: {
-  filter: CollectionFilterQuery
-  sort: CollectionSortQuery
-  pagination: PaginationParams
-}): Promise<Pagination<ClientCardCollection>> {
-  const where = parseCollectionFilter(filter)
+export async function getCollections(
+  search: Partial<Search<CollectionFilter, CollectionSort>>,
+  access: "public" | "protected" = "public"
+): Promise<Pagination<ClientCardCollection>> {
+  const { filter, sort, pagination } = search
 
-  if (filter.excludeUser) {
-    const user = await signedIn()
-    where.NOT = { userId: user?.id }
-  }
+  const user = access === "protected" || filter?.excludeUser ? await signedIn() : null
+  const where = parseCollectionFilterToWhere({ ...filter, userId: user?.id })
 
   const total = await db.cardCollection.count({ where })
   const collections = await db.cardCollection.findMany({
     ...paginate(pagination),
     where,
-    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
-    include: {
-      user: true,
-      cards: true
-    }
-  })
-
-  const clientCollections = collections.map((collection) => parseSchemaToClientCollection(collection))
-  return paginationWrapper(clientCollections, total, pagination)
-}
-
-/**
- * Retrieves a list of card collections for the signed-in user, sorted as specified and parsed into `ClientCardCollection` instances.
- * 
- * - Fetches collections from the database for the signed-in user.
- * - Returns an empty array if no user is signed in.
- * - Orders collections by the specified `sort` criteria or by creation date in descending order if no sort criteria are provided.
- * - Includes user and cards data for each collection, then converts each collection to the `ClientCardCollection` format.
- * 
- * @param {CollectionSortQuery} [sort={}] - The sorting criteria for ordering collections.
- * @returns {Promise<Pagination<ClientCardCollection>>} - An object of paginated parsed collections.
- */
-export async function getUserCollections({ sort, pagination }: {
-  sort: CollectionSortQuery
-  pagination: PaginationParams
-}): Promise<Pagination<ClientCardCollection>> {
-  const user = await signedIn()
-  if (!user) return paginationWrapper([], 0, pagination)
-
-  const total = await db.cardCollection.count({ where: { userId: user.id } })
-  const collections = await db.cardCollection.findMany({
-    ...paginate(pagination),
-    where: { userId: user.id },
-    orderBy: parseSortToOrderBy(sort, collectionSortQuery, { createdAt: "desc" }),
+    orderBy: parseSortToOrderBy(sort, collectionSort, { createdAt: "desc" }),
     include: {
       user: true,
       cards: true
@@ -129,12 +86,11 @@ export async function getUserCollections({ sort, pagination }: {
  * - Selects a collection that matches the specified `tableSize`, skipping a random number of records for randomness.
  * - If no collections match the criteria, returns `null`.
  * 
- * @param {TableSize} tableSize - The required table size for the card collection.
- * 
- * @returns {Promise<ClientCardCollection | null>} - A randomly selected card collection including its cards, or `null` if no match is found.
+ * @param {TableSize} tableSize The required table size for the card collection.
+ * @returns {Promise<ClientCardCollection | null>} A randomly selected card collection, or `null` if no match is found.
  */
 export async function getRandomCollection(
-  tableSize: TableSize = 'SMALL'
+  tableSize: TableSize
 ): Promise<ClientCardCollection | null> {
   const count = await db.cardCollection.count()
   const randomSkip = Math.floor(Math.random() * count)

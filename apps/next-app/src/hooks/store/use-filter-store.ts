@@ -1,28 +1,26 @@
 import { create } from "zustand"
 
 // types
-import type { Filter } from "@/lib/types/query"
+import type { Filter, FilterPattern } from "@/lib/types/search"
 
 /* Filter store keys */
 export type FilterStoreKey = "statistics" | "rooms" | "history"
 
 /* Store types */
-type FilterStore<T> = {
-  [K in FilterStoreKey]: Filter<T>
-}
+type FilterStore<F extends FilterPattern> = Record<FilterStoreKey, Filter<F>>
 
-/** Filter store (generic) implementation */
+/* Generic filter store implementation */
 const useFilterStoreImpl = create<FilterStore<any>>((_) => ({
   statistics: {},
   rooms: {},
   history: {}
 }))
 
-export const useFilterStore = <T>(
-  selector: (state: FilterStore<T>) => FilterStore<T>[FilterStoreKey]
+export const useFilterStore = <F extends FilterPattern>(
+  selector: (state: FilterStore<F>) => FilterStore<F>[FilterStoreKey]
 ) => useFilterStoreImpl(selector)
 
-export const setFilterStore = useFilterStoreImpl.setState as <T>(
-  partial: (state: FilterStore<T>) => Partial<FilterStore<T>>,
+export const setFilterState = useFilterStoreImpl.setState as <F extends FilterPattern>(
+  partial: (state: FilterStore<F>) => Partial<FilterStore<F>>,
   replace?: boolean
 ) => void

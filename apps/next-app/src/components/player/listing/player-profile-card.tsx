@@ -23,10 +23,7 @@ type PlayerProfileCardProps = {
 }
 
 const PlayerProfileCard = ({ player }: PlayerProfileCardProps) => {
-  void trpc.player.getStats.prefetch({
-    playerFilter: { id: player.id },
-    sessionFilter: {}
-  })
+  void trpc.player.getStats.prefetch({ filter: { playerId: player.id } })
 
   return (
     <>

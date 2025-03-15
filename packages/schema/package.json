@@ -10,6 +10,7 @@
     "check-types": "tsc --noEmit"
   },
   "exports": {
+    "./search": "./dist/search.js",
     "./collection": "./dist/collection/index.js",
     "./collection-validation": "./dist/collection/validation/index.js",
     "./player": "./dist/player/index.js",

@@ -21,10 +21,10 @@ type SessionSummaryPageProps = {
   }
 }
 
-const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
+const SessionSummaryPage = ({ params }: SessionSummaryPageProps) => {
   return (
     <Suspense fallback={<SessionStatisticsSkeleton />}>
-      <Await promise={getClientSession({ slug: params.slug })}>
+      <Await promise={getClientSession(params.slug)}>
         {(session) => session ? (
           <>
             <SessionStatistics stats={getRendererSessionStats(session)} />

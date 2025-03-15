@@ -1,26 +1,32 @@
 import { Suspense } from "react"
 
 // types
-import type { CollectionSort } from "@/components/collection/filter/types"
+import type { CollectionSort } from "@repo/schema/collection"
+
+// schemas
+import { collectionSort } from "@repo/schema/collection"
 
 // server
-import { getUserCollections } from "@/server/db/query/collection-query"
+import { getCollections } from "@/server/db/query/collection-query"
 
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // components
+import { Await, PaginationHandler } from "@/components/shared"
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"
 import { CollectionListing } from "@/components/collection/listing"
-import { Await, PaginationHandler } from "@/components/shared"
 
 type CollectionsManagePageProps = {
   searchParams: CollectionSort
 }
 
-const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProps) => {
-  const params = new URLSearchParams(searchParams)
-  const { sort, pagination } = parseFilterParams<typeof searchParams>(params)
+const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => {
+  const searchEntries = new URLSearchParams(searchParams).entries()
+  const { sort, pagination } = parseSearchParams(searchEntries, {
+    sortSchema: collectionSort,
+    parsePagination: true
+  })
 
   return (
     <div className="grid grid-cols-9 gap-x-8 gap-y-16">
@@ -28,7 +34,7 @@ const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProp
 
       <div className="w-full col-span-9 xl:col-span-5 2xl:col-span-6">
         <Suspense>
-          <Await promise={getUserCollections({ sort, pagination })}>
+          <Await promise={getCollections({ sort, pagination }, "protected")}>
             {({ data: userCollections, ...pagination }) => (
               <>
                 <CollectionListing

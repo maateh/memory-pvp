@@ -4,34 +4,33 @@ import { Suspense } from "react"
 import { getPlayers } from "@/server/db/query/player-query"
 
 // types
-import type { PlayerFilter, PlayerSort } from "@/components/player/filter/types"
+import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
 
-// constants
-import { playerSortOptions } from "@/components/player/filter/constants"
+import { playerFilter, playerSort } from "@repo/schema/player"
 
 // utils
-import { parseFilterParams } from "@/lib/util/parser"
+import { parseSearchParams } from "@/lib/util/parser/search-parser"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
 // components
+import { Await, SortDropdownButton } from "@/components/shared"
 import { PlayerProfileListing, PlayerProfileListingSkeleton } from "@/components/player/listing"
 import { PlayerTagFilter } from "@/components/player/filter"
 import { PlayerCreateWidgetCard } from "@/components/player/widget"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
-import { Await, SortDropdownButton } from "@/components/shared"
 
 type PlayersPageProps = {
   searchParams: PlayerFilter & PlayerSort
 }
 
 const PlayersPage = ({ searchParams }: PlayersPageProps) => {
-  const params = new URLSearchParams(searchParams as {})
-  const { filter, sort } = parseFilterParams<typeof searchParams>(params) as {
-    filter: PlayerFilter
-    sort: PlayerSort
-  }
+  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const { filter, sort } = parseSearchParams(searchEntries, {
+    filterSchema: playerFilter,
+    sortSchema: playerSort
+  })
 
   return (
     <div className="page-wrapper relative flex flex-col gap-10 xl:flex-row">
@@ -42,7 +41,7 @@ const PlayersPage = ({ searchParams }: PlayersPageProps) => {
       <div className="flex-1 w-full">
         <div className="flex items-end justify-between gap-x-6">
           <PlayerTagFilter className="flex-1" />
-          <SortDropdownButton options={playerSortOptions} />
+          <SortDropdownButton schemaKey="player" />
         </div>
 
         <Separator className="w-2/3 mx-auto my-4 bg-border/10 rounded-full" />

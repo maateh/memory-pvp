@@ -1,11 +1,14 @@
 // types
 import type { Prisma } from "@repo/db"
-import type { ClientMemoryCard, ClientCardCollection } from "@repo/schema/collection"
 import type { CardCollectionWithCardsWithUser } from "@repo/db/types"
-import type { CollectionFilterQuery } from "@/lib/schema/query/collection-query"
+import type {
+  ClientMemoryCard,
+  ClientCardCollection,
+  CollectionFilter
+} from "@repo/schema/collection"
 
 // schemas
-import { collectionFilterQuery } from "@/lib/schema/query/collection-query"
+import { collectionFilter } from "@repo/schema/collection"
 
 // utils
 import { pickFields } from "@/lib/util/parser"
@@ -29,9 +32,8 @@ export const clientMemoryCardKeys: (keyof ClientMemoryCard)[] = [
  * - Maps through each card in the collection and filters to include fields specified in `clientMemoryCardKeys`.
  * - Returns a new `ClientCardCollection` object containing the filtered collection data, user information, and cards.
  * 
- * @param {CardCollectionWithCardsWithUser} collection - The card collection schema with cards and user data to transform.
- * 
- * @returns {ClientCardCollection} - The transformed collection object ready for client-side usage.
+ * @param {CardCollectionWithCardsWithUser} collection The card collection schema with cards and user data to transform.
+ * @returns {ClientCardCollection} The transformed collection object ready for client-side usage.
  */
 export function parseSchemaToClientCollection(
   collection: CardCollectionWithCardsWithUser
@@ -49,28 +51,24 @@ export function parseSchemaToClientCollection(
 }
 
 /**
- * Parses the input filter to generate a Prisma query condition for filtering card collections.
+ * Parses `CollectionFilter` into a Prisma `where` query for filtering card collections.
  * 
- * - Constructs a `Prisma.CardCollectionWhereInput` object to match collections based on the given username, name, and table size.
- * - Supports partial matches for the `username` and `name` fields.
- * 
- * @param {CollectionFilterQuery} filterInput - An input object based on `collectionFilterSchema`, containing filter criteria for collections.
- * 
- * @returns {Prisma.CardCollectionWhereInput} - A Prisma filter object for querying card collections by username, name, and table size.
+ * @param {CollectionFilter} filter Filter object containing filtering criteria.
+ * @returns {Prisma.CardCollectionWhereInput} Prisma object for querying the database.
  */
-export function parseCollectionFilter(
-  filterInput: CollectionFilterQuery
+export function parseCollectionFilterToWhere(
+  filter: CollectionFilter
 ): Prisma.CardCollectionWhereInput {
-  const { success, data: filter } = collectionFilterQuery.safeParse(filterInput)
-
+  const { success, data } = collectionFilter.safeParse(filter)
   if (!success) return {}
-  const { username, name, tableSize } = filter
+
+  const { name, description, tableSize, userId, username, excludeUser } = data
 
   return {
-    user: {
-      username: { contains: username }
-    },
     name: { contains: name },
-    tableSize
+    description: { contains: description },
+    tableSize,
+    user: { id: userId, username: { contains: username } },
+    NOT: excludeUser ? { userId } : undefined
   }
 }

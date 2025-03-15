@@ -3,6 +3,9 @@ import type { ColumnDef } from "@tanstack/react-table"
 import type { ClientCardCollection } from "@repo/schema/collection"
 import type { CollectionListingMetadata } from "./collection-listing"
 
+// schemas
+import { sessionSort } from "@repo/schema/session"
+
 // config
 import { tableSizePlaceholders } from "@repo/config/game"
 
@@ -13,10 +16,10 @@ import { CalendarCheck, CalendarCheck2, Dices } from "lucide-react"
 import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/components/ui/data-table"
 
 // components
+import { CustomDate } from "@/components/shared"
 import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 import { SessionInfoBadge } from "@/components/session"
 import { UserAvatar } from "@/components/user"
-import { CustomDate } from "@/components/shared"
 import CollectionActions from "./collection-actions"
 
 export const columns: ColumnDef<ClientCardCollection>[] = [
@@ -26,7 +29,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header: "Owner",
     enableHiding: true,
     cell({ getValue }) {
-      const user = getValue<ClientCardCollection['user']>()
+      const user = getValue<ClientCardCollection["user"]>()
 
       return (
         <div className="flex items-center gap-x-2">
@@ -45,13 +48,14 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Collection name"
           sortValueKey="name"
         />
       )
     },
     cell({ getValue }) {
-      const name = getValue<ClientCardCollection['name']>()
+      const name = getValue<ClientCardCollection["name"]>()
 
       return (
         <span className="max-sm:break-all">
@@ -66,13 +70,14 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Size"
           sortValueKey="tableSize"
         />
       )
     },
     cell({ getValue }) {
-      const tableSize = getValue<ClientCardCollection['tableSize']>()
+      const tableSize = getValue<ClientCardCollection["tableSize"]>()
 
       return (
         <SessionInfoBadge className="px-2 py-0 text-xs"
@@ -90,7 +95,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header: "Description",
     enableHiding: true,
     cell({ getValue }) {
-      const description = getValue<ClientCardCollection['description']>()
+      const description = getValue<ClientCardCollection["description"]>()
 
       return (
         <span className="text-xs text-muted-foreground break-all line-clamp-3">
@@ -105,7 +110,7 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header: "Card images",
     enableHiding: true,
     cell({ getValue }) {
-      const cards = getValue<ClientCardCollection['cards']>()
+      const cards = getValue<ClientCardCollection["cards"]>()
 
       return (
         <CollectionPreviewList className="pl-1.5 justify-start" dense>
@@ -128,13 +133,14 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Created at"
           sortValueKey="createdAt"
         />
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientCardCollection['createdAt']>()
+      const date = getValue<ClientCardCollection["createdAt"]>()
 
       return (
         <CustomDate
@@ -151,13 +157,14 @@ export const columns: ColumnDef<ClientCardCollection>[] = [
     header() {
       return (
         <DataTableColumnSortingHeader
+          sortSchema={sessionSort}
           header="Updated at"
           sortValueKey="updatedAt"
         />
       )
     },
     cell({ getValue }) {
-      const date = getValue<ClientCardCollection['updatedAt']>()
+      const date = getValue<ClientCardCollection["updatedAt"]>()
 
       return (
         <CustomDate

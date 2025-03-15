@@ -17,10 +17,7 @@ import { WaitingRoomListing, WaitingRoomListingSkeleton } from "@/components/roo
 const WaitingRoomsPage = async () => {
   return (
     <Suspense fallback={<WaitingRoomListingSkeleton />}>
-      <Await promise={getPlayer({
-        filter: { isActive: true },
-        withAvatar: true
-      })}>
+      <Await promise={getPlayer({ isActive: true }, "withAvatar")}>
         {(player) => player ? (
           <Await promise={Promise.all([
             getActiveRoom(player.id),

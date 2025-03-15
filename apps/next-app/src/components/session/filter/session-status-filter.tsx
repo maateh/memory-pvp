@@ -4,12 +4,12 @@ import { useMemo } from "react"
 
 // types
 import type { SessionStatus } from "@repo/db"
-import type { FilterService, FilterOptions } from "@/lib/types/query"
+import type { FilterService, FilterOptions } from "@/lib/types/search"
 import type { FilterStoreKey } from "@/hooks/store/use-filter-store"
-import type {
-  SessionStatusFilter as TSessionStatusFilter,
-  SessionStatusFilterFields
-} from "./types"
+import type { SessionFilter } from "@repo/schema/session"
+
+// schemas
+import { sessionFilter } from "@repo/schema/session"
 
 // utils
 import { cn } from "@/lib/util"
@@ -18,10 +18,12 @@ import { cn } from "@/lib/util"
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItemGroup, BreadcrumbList } from "@/components/ui/breadcrumb"
 
 // hooks
-import { setFilterStore, useFilterStore } from "@/hooks/store/use-filter-store"
-import { useFilterParams } from "@/hooks/use-filter-params"
+import { setFilterState, useFilterStore } from "@/hooks/store/use-filter-store"
+import { useSearch } from "@/hooks/use-search"
 
-const options: FilterOptions<SessionStatusFilterFields> = {
+type TSessionStatusFilter = Pick<SessionFilter, "status">
+
+const options: FilterOptions<TSessionStatusFilter> = {
   status: ["RUNNING", "FINISHED", "CLOSED", "FORCE_CLOSED"]
 }
 
@@ -31,16 +33,18 @@ type SessionStatusFilterProps = {
 }
 
 const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionStatusFilterProps) => {
-  const filterStore = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
-  const { filter: filterParams, toggleFilterParam } = useFilterParams<TSessionStatusFilter>()
+  const storeFilter = useFilterStore<TSessionStatusFilter>((state) => state[filterKey])
+  const { filter: searchFilter, toggleFilterParam } = useSearch({
+    filterSchema: sessionFilter.pick({ status: true })
+  })
 
-  const filter: TSessionStatusFilter = useMemo(() => {
-    return filterService === 'store' ? filterStore : filterParams
-  }, [filterService, filterStore, filterParams])
+  const filter = useMemo(() => {
+    return filterService === "store" ? storeFilter : searchFilter
+  }, [filterService, storeFilter, searchFilter])
 
   const handleSelectStatus = (status: SessionStatus) => {
     if (filterService === "store" || filterService === "mixed") {
-      setFilterStore<TSessionStatusFilter>((state) => {
+      setFilterState<TSessionStatusFilter>((state) => {
         const filter = state[filterKey]
   
         state[filterKey] = {
