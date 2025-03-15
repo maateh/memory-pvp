@@ -24,11 +24,11 @@ import { paginate, paginationWrapper } from "@/lib/util/parser/pagination-parser
 import { parseSortToOrderBy } from "@/lib/util/parser/search-parser"
 
 /**
- * TODO: rewrite doc
+ * Retrieves a card collection by ID with optional access control.
  * 
- * @param id 
- * @param access 
- * @returns 
+ * @param {string} id The ID of the card collection to retrieve.
+ * @param {("public" | "protected")} [access="public"] The access level required for retrieving the collection.
+ * @returns {Promise<ClientCardCollection | null>} Client-safe card collection or `null` if not found.
  */
 export async function getCollection(
   id: string,
@@ -49,10 +49,11 @@ export async function getCollection(
 }
 
 /**
- * TODO: rewrite doc
+ * Retrieves a paginated list of card collections based on search filters and access level.
  * 
- * @param search 
- * @returns 
+ * @param {Partial<Search<CollectionFilter, CollectionSort>>} search Search object containing filter, sort, and pagination parameters.
+ * @param {("public" | "protected")} [access="public"] The access level required for retrieving collections.
+ * @returns {Promise<Pagination<ClientCardCollection>>} Paginated list of client-safe card collections.
  */
 export async function getCollections(
   search: Partial<Search<CollectionFilter, CollectionSort>>,
@@ -85,8 +86,8 @@ export async function getCollections(
  * - Selects a collection that matches the specified `tableSize`, skipping a random number of records for randomness.
  * - If no collections match the criteria, returns `null`.
  * 
- * @param {TableSize} tableSize - The required table size for the card collection.
- * @returns {Promise<ClientCardCollection | null>} - A randomly selected card collection including its cards, or `null` if no match is found.
+ * @param {TableSize} tableSize The required table size for the card collection.
+ * @returns {Promise<ClientCardCollection | null>} A randomly selected card collection, or `null` if no match is found.
  */
 export async function getRandomCollection(
   tableSize: TableSize

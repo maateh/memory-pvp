@@ -32,9 +32,8 @@ export const clientMemoryCardKeys: (keyof ClientMemoryCard)[] = [
  * - Maps through each card in the collection and filters to include fields specified in `clientMemoryCardKeys`.
  * - Returns a new `ClientCardCollection` object containing the filtered collection data, user information, and cards.
  * 
- * @param {CardCollectionWithCardsWithUser} collection - The card collection schema with cards and user data to transform.
- * 
- * @returns {ClientCardCollection} - The transformed collection object ready for client-side usage.
+ * @param {CardCollectionWithCardsWithUser} collection The card collection schema with cards and user data to transform.
+ * @returns {ClientCardCollection} The transformed collection object ready for client-side usage.
  */
 export function parseSchemaToClientCollection(
   collection: CardCollectionWithCardsWithUser
@@ -52,11 +51,10 @@ export function parseSchemaToClientCollection(
 }
 
 /**
- * TODO: write doc
+ * Parses `CollectionFilter` into a Prisma `where` query for filtering card collections.
  * 
- * @param filter 
- * @param userId 
- * @returns 
+ * @param {CollectionFilter} filter Filter object containing filtering criteria.
+ * @returns {Prisma.CardCollectionWhereInput} Prisma object for querying the database.
  */
 export function parseCollectionFilterToWhere(
   filter: CollectionFilter

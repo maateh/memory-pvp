@@ -39,10 +39,10 @@ export const offlineSessionStorageKeys: (keyof OfflineSessionStorage)[] = [
 ] as const
 
 /**
- * Parses a `GameSessionWithOwnerWithPlayersWithAvatar` schema into a `ClientSession`.
+ * Converts a `GameSessionWithPlayersWithAvatarWithCollectionWithCards` schema to a `ClientSessionVariants` object.
  * 
- * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session - The full session data including players and avatars.
- * @returns {ClientSessionVariants} - A parsed session with player data structured into `current` and `other` fields.
+ * @param {GameSessionWithPlayersWithAvatarWithCollectionWithCards} session The session schema to convert.
+ * @returns {ClientSessionVariants} The transformed session data for the client.
  */
 export function parseSchemaToClientSession(
   session: GameSessionWithPlayersWithAvatarWithCollectionWithCards
@@ -78,11 +78,11 @@ export function parseSchemaToClientSession(
 }
 
 /**
- * TODO: write doc
+ * Parses a session filter into a Prisma `where` query for game sessions.
  * 
- * @param filter 
- * @param userId 
- * @returns 
+ * @param {SessionFilter} filter Session filter object containing filtering criteria.
+ * @param {string} userId The user ID for filtering the sessions by the owner or guest.
+ * @returns {Prisma.GameSessionWhereInput} Prisma `where` object for querying the database.
  */
 export function parseSessionFilterToWhere(
   filter: SessionFilter,

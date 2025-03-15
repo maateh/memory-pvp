@@ -13,11 +13,17 @@ type ParseSearchParamsOptions<F extends FilterPattern, S extends SortPattern> = 
 }
 
 /**
- * TODO: write doc
+ * Parses URL search parameters into filter, sort, and pagination objects.
  * 
- * @param searchEntries 
- * @param options 
- * @returns 
+ * This function extracts search parameters, validates them using provided schemas, 
+ * and structures them into filter, sort, and optional pagination objects.
+ * 
+ * @template F extends FilterPattern
+ * @template S extends SortPattern
+ * 
+ * @param {URLSearchParamsIterator<[string, string]>} searchEntries URLSearchParams iterator.
+ * @param {ParseSearchParamsOptions<F, S>} options Parsing options including filter and sort schemas.
+ * @returns {Search<F, S>} Parsed search parameters as filter, sort, and pagination objects.
  */
 export function parseSearchParams<F extends FilterPattern, S extends SortPattern>(
   searchEntries: URLSearchParamsIterator<[string, string]>,
@@ -59,18 +65,14 @@ export function parseSearchParams<F extends FilterPattern, S extends SortPattern
 }
 
 /**
- * Validates and converts a `sort` object into a single-field `orderBy` object for Prisma queries.
- *
- * This function validates the `sort` input using the provided Zod schema. If validation passes,
- * it converts the `sort` object into a single `{ field: direction }` format for Prisma queries,
- * using the first defined sorting field. If validation fails or the `sort` object is empty,
- * it returns the fallback value.
- *
- * @template S A record type where keys are field names and values are "asc" or "desc".
- * @param {Sort<S> | undefined} sort The input object to validate and parse into an `orderBy` object.
- * @param {z.ZodSchema<S>} sortSchema The Zod schema to validate the `sortInput` object.
- * @param {Sort<S>} fallback A fallback object to return if validation fails or no sorting fields are provided.
- * @returns {Sort<S> | undefined} An object with one sorting field for Prisma's `orderBy`, or the fallback if validation fails or is empty.
+ * Parses a sorting parameter into a Prisma order-by query.
+ * 
+ * @template S - The type of the sorting criteria.
+ * 
+ * @param {S | undefined} sort Sorting criteria.
+ * @param {z.ZodSchema<S>} sortSchema Zod schema to validate the sorting input.
+ * @param {Sort<S> | undefined} [fallback] Optional fallback sorting value.
+ * @returns {Sort<S> | undefined} Parsed sorting object or fallback.
  */
 export function parseSortToOrderBy<S extends SortPattern>(
   sort: S | undefined,

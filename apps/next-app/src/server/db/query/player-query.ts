@@ -20,11 +20,11 @@ import {
 } from "@/lib/util/parser/player-parser"
 
 /**
- * TODO: rewrite doc
+ * Retrieves a player profile based on the provided filter and avatar inclusion option.
  * 
- * @param filter 
- * @param avatar 
- * @returns 
+ * @param {PlayerFilter} filter Filter object for querying player profiles.
+ * @param {("withAvatar" | "withoutAvatar")} [avatar="withoutAvatar"] Option to include or exclude the user avatar.
+ * @returns {Promise<ClientPlayer | null>} Client-safe player profile or null if not found.
  */
 export async function getPlayer(
   filter: PlayerFilter,
@@ -53,11 +53,11 @@ export async function getPlayer(
 }
 
 /**
- * TODO: rewrite doc
+ * Retrieves a list of players based on the provided filter, sort, and avatar inclusion option.
  * 
- * @param search 
- * @param avatar 
- * @returns 
+ * @param {Partial<Omit<Search<PlayerFilter, PlayerSort>, "pagination">>} [search] Optional search criteria including filter and sort.
+ * @param {("withAvatar" | "withoutAvatar")} [avatar="withAvatar"] Option to include or exclude the user avatar.
+ * @returns {Promise<ClientPlayer[]>} An array of client-safe player profiles.
  */
 export async function getPlayers(
   search?: Partial<Omit<Search<PlayerFilter, PlayerSort>, "pagination">>,

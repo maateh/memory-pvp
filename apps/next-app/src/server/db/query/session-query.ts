@@ -30,15 +30,10 @@ import {
 } from "@/lib/util/parser/session-parser"
 
 /**
- * Retrieves a game session based on its unique `slug` and returns it in a client-friendly format.
+ * Retrieves a game session based on the provided slug and the signed-in user.
  * 
- * - Verifies user authentication using the `signedIn` function. If no user is signed in, returns `null`.
- * - Looks for a game session that matches the provided filter.
- * - Ensures the authenticated user has access to the session by checking if they are one of the players.
- * - Transforms the session data into a client-friendly format using `parseSchemaToClientSession`.
- * 
- * @param {string} slug Unique key to find the game session.
- * @returns {Promise<ClientSessionVariants | null>} The client-friendly game session or `null` if not found or unauthorized.
+ * @param {string} slug The unique identifier for the game session.
+ * @returns {Promise<ClientSessionVariants | null>} Client-safe game session, or null if not found.
  */
 export async function getClientSession(
   slug: string
@@ -62,10 +57,13 @@ export async function getClientSession(
 }
 
 /**
- * TODO: rewrite doc
+ * Retrieves a paginated list of game sessions based on the provided search criteria.
  * 
- * @param search 
- * @returns 
+ * This function takes search parameters including filter, sort, and pagination details,
+ * and returns a paginated list of game sessions for the signed-in user.
+ * 
+ * @param {Search<SessionFilter, SessionSort>} search The search object containing filter, sort, and pagination details.
+ * @returns {Promise<Pagination<ClientSessionVariants>>} Paginated list of client-safe game sessions.
  */
 export async function getClientSessions(
   search: Search<SessionFilter, SessionSort>
