@@ -29,8 +29,8 @@ const CollectionUserToggleFilter = ({
     <Button className={cn("p-1.5 border border-border/20", className)}
       variant={variant}
       size={size}
-      tooltip={`${filter.excludeUser ? 'Hide' : 'Show'} collections created by you`}
-      onClick={() => toggleFilterParam('excludeUser', filter.excludeUser ? 'false' : 'true')}
+      tooltip={`${filter.excludeUser ? "Hide" : "Show"} collections created by you`}
+      onClick={() => toggleFilterParam("excludeUser", (!filter.excludeUser).toString())}
       {...props}
     >
       <UserRoundCheck className={cn("size-3.5 sm:size-4 text-accent transition-all", {

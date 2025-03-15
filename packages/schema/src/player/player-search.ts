@@ -8,9 +8,10 @@ export const playerFilter = clientPlayer
   .pick({
     id: true,
     tag: true,
-    color: true,
-    isActive: true
-  }).partial()
+    color: true
+  })
+  .extend({ isActive: z.boolean() })
+  .partial()
 
 export const playerSort = z.record(
   clientPlayer.pick({

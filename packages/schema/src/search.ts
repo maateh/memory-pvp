@@ -11,7 +11,7 @@ export const paginationParams = z.object({
 
 export const paginationWithoutData = z.object({
   totalPage: z.coerce.number(),
-  hasNextPage: z.coerce.boolean()
+  hasNextPage: z.boolean()
 }).extend(paginationParams.required().shape)
 
 export const pagination = <T>(

@@ -8,13 +8,13 @@ export const collectionFilter = clientCardCollection
   .pick({
     id: true,
     name: true,
-    description: true, // TODO: parser -> contains
+    description: true,
     tableSize: true
   })
   .extend({
     userId: z.string(),
     username: z.string(),
-    excludeUser: z.coerce.boolean().optional()
+    excludeUser: z.boolean()
   })
   .partial()
 

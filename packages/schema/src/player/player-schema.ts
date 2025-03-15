@@ -15,7 +15,7 @@ export const clientPlayer = z.object({
   id: z.string(),
   tag: playerTag,
   color: playerColor,
-  isActive: z.coerce.boolean(),
+  isActive: z.boolean(),
   imageUrl: z.string().nullable().optional(),
   stats: playerStats,
   createdAt: z.coerce.date(),

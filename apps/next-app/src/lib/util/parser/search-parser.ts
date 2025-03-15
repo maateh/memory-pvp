@@ -31,15 +31,20 @@ export function parseSearchParams<F extends FilterPattern, S extends SortPattern
   let pagination: PaginationParams = {}
 
   if (filterSchema) {
-    const { data, success } = filterSchema.safeParse(params)
+    const fixedParams = Object.entries(params)
+      .reduce((params, [key, value]) => ({
+        ...params,
+        [key]: value === "true" || value
+      }), {} as Filter<F>)
+
+    const { data, success } = filterSchema.safeParse(fixedParams)
     if (success) filter = data
   }
 
   if (sortSchema) {
-    const swappedEntries = Object.entries(params)
+    const swappedParams = Object.entries(params)
       .filter(([key]) => sortKey.safeParse(key).success)
-      .map((entry) => entry.reverse())
-    const swappedParams = Object.fromEntries(swappedEntries)
+      .reduce((params, [key, value]) => ({ ...params, [value]: key }), {} as Sort<S>)
       
     const { data, success } = sortSchema.safeParse(swappedParams)
     if (success) sort = data
