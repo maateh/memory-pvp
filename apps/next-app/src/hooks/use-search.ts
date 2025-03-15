@@ -40,7 +40,7 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
   /** 
    * Parses the current URL parameters and separates into a `filter`, `sort` and `pagination` object.
    * 
-   * @returns {Object} An object within the parsed `filter`, `sort` and `pagination` parameters.
+   * @returns {Search<F, S>} An object within the parsed `filter`, `sort` and `pagination` parameters.
    */
   const { filter, sort, pagination } = useMemo(() => {
     return parseSearchParams<F, S>(searchParams.entries(), options)
@@ -51,6 +51,7 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
    * 
    * @param {keyof (F & S & PaginationParams)} key The key of the parameter to set.
    * @param {string} value The value to set for the parameter.
+   * @param {PaginationAction} pagination Pagination action to `keep` or `reset` the current page.
    * @returns {string} The updated query string.
    */
   const createQueryString = useCallback((
@@ -74,7 +75,8 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
   /** 
    * Removes a specified query parameter key from the URL search parameters.
    * 
-   * @param {keyof (F & S)} key The key of the parameter to remove.
+   * @param {keyof (F & S & PaginationParams)} key The key of the parameter to remove.
+   * @param {PaginationAction} pagination Pagination action to `keep` or `reset` the current page.
    * @returns {string} The updated query string.
    */
   const removeQueryString = useCallback((
@@ -135,7 +137,7 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
      * @param {PaginationAction} [pagination="reset"] Pagination action to `keep` or `reset` the current page.
      */
     clearSearchParams(pagination: PaginationAction = "reset") {
-      searchParams.keys().map((key) => removeQueryString(key as keyof (F & S), pagination))
+      searchParams.keys().map((key) => removeQueryString(key, pagination))
       router.replace(pathname, { scroll: false })
     },
 
