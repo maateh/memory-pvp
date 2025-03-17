@@ -2,6 +2,7 @@ import { Suspense } from "react"
 
 // types
 import type { SessionFilter, SessionSort } from "@repo/schema/session"
+import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
 import { sessionFilter, sessionSort } from "@repo/schema/session"
@@ -25,8 +26,8 @@ type SessionsPageProps = {
 }
 
 const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
-  const search = await searchParams
-  const searchEntries = new URLSearchParams(search as {}).entries()
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter,
     sortSchema: sessionSort,
@@ -62,7 +63,7 @@ const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
 
               <PaginationHandler className="py-5"
                 pathname="/dashboard/sessions"
-                searchParams={searchParams as {}}
+                search={search}
                 pagination={pagination}
               />
             </>

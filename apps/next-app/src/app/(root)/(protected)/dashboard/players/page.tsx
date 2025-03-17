@@ -1,10 +1,11 @@
 import { Suspense } from "react"
 
-// server
-import { getPlayers } from "@/server/db/query/player-query"
-
 // types
 import type { PlayerFilter, PlayerSort } from "@repo/schema/player"
+import type { SearchPattern } from "@/lib/types/search"
+
+// server
+import { getPlayers } from "@/server/db/query/player-query"
 
 import { playerFilter, playerSort } from "@repo/schema/player"
 
@@ -26,8 +27,8 @@ type PlayersPageProps = {
 }
 
 const PlayersPage = async ({ searchParams }: PlayersPageProps) => {
-  const search = await searchParams
-  const searchEntries = new URLSearchParams(search as {}).entries()
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { filter, sort } = parseSearchParams(searchEntries, {
     filterSchema: playerFilter,
     sortSchema: playerSort

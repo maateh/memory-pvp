@@ -1,5 +1,6 @@
 // types
 import type { SessionFilter } from "@repo/schema/session"
+import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
 import { sessionFilter } from "@repo/schema/session"
@@ -27,8 +28,8 @@ type BaseGameSetupPageProps = {
 }
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
-  const search = await searchParams
-  const searchEntries = new URLSearchParams(search as {}).entries()
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { filter } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter.pick({
       mode: true,

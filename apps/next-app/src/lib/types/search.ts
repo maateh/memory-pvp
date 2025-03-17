@@ -32,6 +32,8 @@ export type SortOptions<S extends SortPattern> = {
 }
 
 /* Merged search types */
+export type SearchPattern = FilterPattern & SortPattern & PaginationParams
+
 export type Search<F extends FilterPattern, S extends SortPattern> = {
   filter: Filter<F>
   sort: Sort<S>
