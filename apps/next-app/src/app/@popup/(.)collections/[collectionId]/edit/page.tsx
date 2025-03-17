@@ -2,12 +2,13 @@
 import { CollectionEditPopup } from "@/components/collection/popup"
 
 type CollectionEditPopupPageProps = {
-  params: {
+  params: Promise<{
     collectionId: string
-  }
+  }>
 }
 
-const CollectionEditPopupPage = ({ params }: CollectionEditPopupPageProps) => {
+const CollectionEditPopupPage = async (props: CollectionEditPopupPageProps) => {
+  const params = await props.params;
   return (
     <CollectionEditPopup
       renderer="router"

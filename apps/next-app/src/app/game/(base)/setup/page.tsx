@@ -26,7 +26,8 @@ type BaseGameSetupPageProps = {
   searchParams: Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">
 }
 
-const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
+const BaseGameSetupPage = async (props: BaseGameSetupPageProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams as {}).entries()
   const { filter } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter.pick({
@@ -38,7 +39,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   })
 
   const { tableSize = "SMALL", collectionId } = filter
-  
+
   const [user, players, collection] = await Promise.all([
     signedIn(),
     getPlayers({}, "withAvatar"),

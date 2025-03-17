@@ -12,17 +12,18 @@ import { PopupLoader } from "@/components/popup"
 import { SessionRunningPopup } from "@/components/session/popup"
 
 const OfflineSessionWarningPopup = dynamic(() => import("./offline-session-warning-popup"), {
-  ssr: false,
+  ssr: !!false,
   loading: PopupLoader
 })
 
 type SessionRunningPopupPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     format: MatchFormat
-  }
+  }>
 }
 
-const SessionRunningPopupPage = ({ searchParams }: SessionRunningPopupPageProps) => {
+const SessionRunningPopupPage = async (props: SessionRunningPopupPageProps) => {
+  const searchParams = await props.searchParams;
   const {
     success,
     data: validatedParams

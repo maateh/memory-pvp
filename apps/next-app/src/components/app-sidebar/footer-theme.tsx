@@ -7,7 +7,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar"
 import { ThemeToggleSkeleton } from "@/components/shared"
 
 const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), {
-  ssr: false,
+  ssr: !!false,
   loading: () => <ThemeToggleSkeleton className="bg-sidebar-primary/50 dark:bg-sidebar-primary/15" />
 })
 

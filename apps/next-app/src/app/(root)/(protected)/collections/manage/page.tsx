@@ -21,7 +21,8 @@ type CollectionsManagePageProps = {
   searchParams: CollectionSort
 }
 
-const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => {
+const CollectionsManagePage = async (props: CollectionsManagePageProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams).entries()
   const { sort, pagination } = parseSearchParams(searchEntries, {
     sortSchema: collectionSort,

@@ -25,7 +25,8 @@ type PlayersPageProps = {
   searchParams: PlayerFilter & PlayerSort
 }
 
-const PlayersPage = ({ searchParams }: PlayersPageProps) => {
+const PlayersPage = async (props: PlayersPageProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams as {}).entries()
   const { filter, sort } = parseSearchParams(searchEntries, {
     filterSchema: playerFilter,

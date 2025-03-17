@@ -24,7 +24,8 @@ type SessionsPageProps = {
   searchParams: SessionFilter & SessionSort
 }
 
-const SessionsPage = ({ searchParams }: SessionsPageProps) => {
+const SessionsPage = async (props: SessionsPageProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter,

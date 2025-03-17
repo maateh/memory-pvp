@@ -16,7 +16,7 @@ import { uploadRouter } from "@/server/uploadthing/core"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider, TRPCProvider } from "@/components/provider"
 import { Toaster } from "@/components/ui/sonner"
-const SocketServiceProvider = dynamic(() => import("@/components/provider/socket-service-provider"), { ssr: false })
+const SocketServiceProvider = dynamic(() => import("@/components/provider/socket-service-provider"), { ssr: !!false })
 
 // styles
 import { dark } from "@clerk/themes"

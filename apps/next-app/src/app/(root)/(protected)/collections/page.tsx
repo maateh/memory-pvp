@@ -34,7 +34,8 @@ type CollectionsPageProps = {
   searchParams: CollectionFilter & CollectionSort
 }
 
-const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
+const CollectionsPage = async (props: CollectionsPageProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,

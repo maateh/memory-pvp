@@ -14,7 +14,8 @@ type CollectionsExplorerPopupProps = {
   searchParams: CollectionFilter & CollectionSort
 }
 
-const CollectionsExplorerPopup = ({ searchParams }: CollectionsExplorerPopupProps) => {
+const CollectionsExplorerPopup = async (props: CollectionsExplorerPopupProps) => {
+  const searchParams = await props.searchParams;
   const searchEntries = new URLSearchParams(searchParams as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,
