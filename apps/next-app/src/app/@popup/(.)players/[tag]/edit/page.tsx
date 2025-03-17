@@ -2,16 +2,18 @@
 import { PlayerEditPopup } from "@/components/player/popup"
 
 type PlayersEditPopupPageProps = {
-  params: {
+  params: Promise<{
     tag: string
-  }
+  }>
 }
 
-const PlayersEditPopupPage = ({ params }: PlayersEditPopupPageProps) => {
+const PlayersEditPopupPage = async ({ params }: PlayersEditPopupPageProps) => {
+  const { tag } = await params
+
   return (
     <PlayerEditPopup
       renderer="router"
-      playerTag={params.tag}
+      playerTag={tag}
     />
   )
 }

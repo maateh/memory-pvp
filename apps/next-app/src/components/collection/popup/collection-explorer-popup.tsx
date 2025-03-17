@@ -7,6 +7,7 @@ import type {
   CollectionFilter,
   CollectionSort
 } from "@repo/schema/collection"
+import type { SearchPattern } from "@/lib/types/search"
 
 // server
 import { getCollections } from "@/server/db/query/collection-query"
@@ -32,13 +33,13 @@ type CollectionExplorerPopupProps = ({
   filter?: never
   sort?: never
   pagination?: never
-  searchParams?: never
+  search?: never
 } | {
   renderer: "router"
   filter: CollectionFilter
   sort: CollectionSort
   pagination: PaginationParams
-  searchParams?: Record<string, string>
+  search?: SearchPattern
   collections?: never
 }) & Omit<React.ComponentProps<typeof PopupTrigger>, 'renderer'>
 
@@ -48,7 +49,7 @@ const CollectionExplorerPopup = ({
   filter,
   sort,
   pagination,
-  searchParams,
+  search,
   ...props
 }: CollectionExplorerPopupProps) => {
   return (
@@ -92,7 +93,7 @@ const CollectionExplorerPopup = ({
                     <PopupFooter className="pt-0">
                       <PaginationHandler
                         pathname="/collections/explorer"
-                        searchParams={searchParams as {}}
+                        search={search}
                         pagination={pagination}
                       />
                     </PopupFooter>

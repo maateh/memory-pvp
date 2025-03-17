@@ -12,8 +12,8 @@ import { Gamepad2, LogIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
-const HomePage = () => {
-  const { userId } = auth()
+const HomePage = async () => {
+  const { userId } = await auth()
   if (userId) redirect('/dashboard')
 
   return (

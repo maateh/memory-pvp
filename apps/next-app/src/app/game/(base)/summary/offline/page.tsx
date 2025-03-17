@@ -20,7 +20,7 @@ import { SessionStatisticsSkeleton } from "@/components/session/summary"
 import SaveOfflineSession from "./save-offline-session"
 
 const OfflineSessionResults = dynamic(() => import("./offline-session-results"), {
-  ssr: false,
+  ssr: !!false,
   loading: SessionStatisticsSkeleton
 })
 

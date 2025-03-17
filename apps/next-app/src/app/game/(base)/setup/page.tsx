@@ -1,5 +1,6 @@
 // types
 import type { SessionFilter } from "@repo/schema/session"
+import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
 import { sessionFilter } from "@repo/schema/session"
@@ -23,11 +24,12 @@ import { SessionForm } from "@/components/session/form"
 import { UserManageButton } from "@/components/user"
 
 type BaseGameSetupPageProps = {
-  searchParams: Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">
+  searchParams: Promise<Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">>
 }
 
 const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { filter } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter.pick({
       mode: true,
@@ -38,7 +40,7 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   })
 
   const { tableSize = "SMALL", collectionId } = filter
-  
+
   const [user, players, collection] = await Promise.all([
     signedIn(),
     getPlayers({}, "withAvatar"),

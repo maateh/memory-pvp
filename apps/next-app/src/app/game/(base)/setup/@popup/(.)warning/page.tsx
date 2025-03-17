@@ -12,23 +12,21 @@ import { PopupLoader } from "@/components/popup"
 import { SessionRunningPopup } from "@/components/session/popup"
 
 const OfflineSessionWarningPopup = dynamic(() => import("./offline-session-warning-popup"), {
-  ssr: false,
+  ssr: !!false,
   loading: PopupLoader
 })
 
 type SessionRunningPopupPageProps = {
-  searchParams: {
-    format: MatchFormat
-  }
+  searchParams: Promise<{ format: MatchFormat }>
 }
 
-const SessionRunningPopupPage = ({ searchParams }: SessionRunningPopupPageProps) => {
+const SessionRunningPopupPage = async ({ searchParams }: SessionRunningPopupPageProps) => {
+  const search = await searchParams
   const {
-    success,
-    data: validatedParams
-  } = MatchFormatSchema.safeParse(searchParams.format)
+    success
+  } = MatchFormatSchema.safeParse(search.format)
 
-  if (!success || !validatedParams) {
+  if (!success) {
     return (
       <RedirectFallback
         type="back"
@@ -38,13 +36,13 @@ const SessionRunningPopupPage = ({ searchParams }: SessionRunningPopupPageProps)
     )
   }
 
-  if (searchParams.format === "OFFLINE") {
+  if (search.format === "OFFLINE") {
     return <OfflineSessionWarningPopup />
   }
 
   return (
     <SessionRunningPopup
-      format={searchParams.format}
+      format={search.format}
       renderer="router"
     />
   )

@@ -3,6 +3,7 @@ import { Suspense } from "react"
 
 // types
 import type { CollectionFilter, CollectionSort } from "@repo/schema/collection"
+import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
 import { collectionFilter, collectionSort } from "@repo/schema/collection"
@@ -31,11 +32,12 @@ import {
 } from "@/components/collection/filter"
 
 type CollectionsPageProps = {
-  searchParams: CollectionFilter & CollectionSort
+  searchParams: Promise<CollectionFilter & CollectionSort>
 }
 
-const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,
     sortSchema: collectionSort,
@@ -85,7 +87,7 @@ const CollectionsPage = ({ searchParams }: CollectionsPageProps) => {
               {pagination.totalPage > 1 && (
                 <PaginationHandler className="pt-5"
                   pathname="/collections"
-                  searchParams={searchParams as {}}
+                  search={search}
                   pagination={pagination}
                 />
               )}

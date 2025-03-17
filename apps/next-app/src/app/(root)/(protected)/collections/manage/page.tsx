@@ -2,6 +2,7 @@ import { Suspense } from "react"
 
 // types
 import type { CollectionSort } from "@repo/schema/collection"
+import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
 import { collectionSort } from "@repo/schema/collection"
@@ -18,11 +19,12 @@ import { CollectionUploadWidgetCard } from "@/components/collection/widget"
 import { CollectionListing, CollectionListingSkeleton } from "@/components/collection/listing"
 
 type CollectionsManagePageProps = {
-  searchParams: CollectionSort
+  searchParams: Promise<CollectionSort>
 }
 
-const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => {
-  const searchEntries = new URLSearchParams(searchParams).entries()
+const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProps) => {
+  const search = await searchParams as SearchPattern
+  const searchEntries = new URLSearchParams(search).entries()
   const { sort, pagination } = parseSearchParams(searchEntries, {
     sortSchema: collectionSort,
     parsePagination: true
@@ -46,7 +48,7 @@ const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => 
                 {pagination.totalPage > 1 && (
                   <PaginationHandler className="py-3"
                     pathname="/collections/manage"
-                    searchParams={searchParams as {}}
+                    search={search}
                     pagination={pagination}
                   />
                 )}

@@ -43,7 +43,7 @@ export const actionClient = createSafeActionClient({
  * - Throws an `ActionError` if the user is not authenticated or if no user record is found.
  */
 export const protectedActionClient = actionClient.use(async ({ ctx, next }) => {
-  const { userId: clerkId } = auth()
+  const { userId: clerkId } = await auth()
 
   if (!clerkId) {
     ServerError.throwInAction({

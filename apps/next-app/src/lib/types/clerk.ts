@@ -1,4 +1,4 @@
-import type { UserResource } from "@clerk/types"
+import type { User } from "@clerk/nextjs/server"
 
 /* User types */
-export type ClerkUser = Pick<UserResource, "username" | "imageUrl"> & { username: string }
+export type ClerkUser = Pick<User, "username" | "imageUrl"> & { username: string }

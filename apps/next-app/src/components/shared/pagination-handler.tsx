@@ -1,5 +1,6 @@
 // types
 import type { PaginationWithoutData } from "@repo/schema/search"
+import type { SearchPattern } from "@/lib/types/search"
 
 // utils
 import { getPageNumbers } from "@/lib/util/parser/pagination-parser"
@@ -19,18 +20,18 @@ import {
 
 type PaginationHandlerProps = {
   pathname: string
-  searchParams?: Record<string, string>
+  search?: SearchPattern
   pagination: PaginationWithoutData
 } & React.ComponentProps<typeof Pagination>
 
 const PaginationHandler = ({
   pathname,
-  searchParams = {},
+  search = {},
   pagination,
   ...props
 }: PaginationHandlerProps) => {
   const buildHref = (pageNumber: number | string) => {
-    const query = new URLSearchParams(searchParams)
+    const query = new URLSearchParams(search)
     query.set('page', pageNumber.toString())
     return `${pathname}?${query.toString()}`
   }

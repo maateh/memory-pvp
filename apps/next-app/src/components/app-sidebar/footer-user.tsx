@@ -15,7 +15,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar"
 import { UserManageButtonSkeleton } from "@/components/user"
 
 const UserManageButton = dynamic(() => import("@/components/user/user-manage-button"), {
-  ssr: false,
+  ssr: !!false,
   loading: () => <UserManageButtonSkeleton className="bg-sidebar-primary/50 dark:bg-sidebar-primary/15 group-data-[collapsible=icon]:size-7" />
 })
 

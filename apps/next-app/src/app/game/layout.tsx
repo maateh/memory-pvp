@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import { ThemeToggleSkeleton } from "@/components/shared"
 
 const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), {
-  ssr: false,
+  ssr: !!false,
   loading: () => <ThemeToggleSkeleton className="bg-accent/30 rounded-full absolute top-3 right-3 sm:top-4 sm:right-4" />
 })
 

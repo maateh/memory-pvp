@@ -2,16 +2,18 @@
 import { CollectionDeletePopup } from "@/components/collection/popup"
 
 type CollectionDeletePopupPageProps = {
-  params: {
+  params: Promise<{
     collectionId: string
-  }
+  }>
 }
 
-const CollectionDeletePopupPage = ({ params }: CollectionDeletePopupPageProps) => {
+const CollectionDeletePopupPage = async ({ params }: CollectionDeletePopupPageProps) => {
+  const { collectionId } = await params
+
   return (
     <CollectionDeletePopup
       renderer="router"
-      collectionId={params.collectionId}
+      collectionId={collectionId}
     />
   )
 }

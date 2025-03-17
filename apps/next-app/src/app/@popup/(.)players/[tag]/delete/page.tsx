@@ -2,16 +2,18 @@
 import { PlayerDeletePopup } from "@/components/player/popup"
 
 type PlayersDeletePopupPageProps = {
-  params: {
+  params: Promise<{
     tag: string
-  }
+  }>
 }
 
-const PlayersDeletePopupPage = ({ params }: PlayersDeletePopupPageProps) => {
+const PlayersDeletePopupPage = async ({ params }: PlayersDeletePopupPageProps) => {
+  const { tag } = await params
+
   return (
     <PlayerDeletePopup
       renderer="router"
-      playerTag={params.tag}
+      playerTag={tag}
     />
   )
 }

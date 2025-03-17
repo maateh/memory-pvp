@@ -4,6 +4,6 @@ import dynamic from "next/dynamic"
 import { SessionLoader } from "@/components/gameplay"
 
 export default dynamic(() => import("./multi-session-loader"), {
-  ssr: false,
+  ssr: !!false,
   loading: SessionLoader
 })

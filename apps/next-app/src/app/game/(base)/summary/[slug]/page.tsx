@@ -16,15 +16,15 @@ import { SessionStatistics, SessionStatisticsSkeleton } from "@/components/sessi
 import SessionPlayerStats from "./session-player-stats"
 
 type SessionSummaryPageProps = {
-  params: {
-    slug: string
-  }
+  params: Promise<{ slug: string }>
 }
 
-const SessionSummaryPage = ({ params }: SessionSummaryPageProps) => {
+const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
+  const { slug } = await params
+
   return (
     <Suspense fallback={<SessionStatisticsSkeleton />}>
-      <Await promise={getClientSession(params.slug)}>
+      <Await promise={getClientSession(slug)}>
         {(session) => session ? (
           <>
             <SessionStatistics stats={getRendererSessionStats(session)} />
