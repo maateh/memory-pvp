@@ -63,7 +63,8 @@ export async function userCreated(evt: WebhookEvent) {
   })
 
   if (user) {
-    await clerkClient.users.updateUserMetadata(id, {
+    const clerk = await clerkClient()
+    clerk.users.updateUserMetadata(id, {
       publicMetadata: {
         userId: user.id
       }
