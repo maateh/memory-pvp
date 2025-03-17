@@ -7,12 +7,13 @@ type CollectionEditPopupPageProps = {
   }>
 }
 
-const CollectionEditPopupPage = async (props: CollectionEditPopupPageProps) => {
-  const params = await props.params;
+const CollectionEditPopupPage = async ({ params }: CollectionEditPopupPageProps) => {
+  const { collectionId } = await params
+
   return (
     <CollectionEditPopup
       renderer="router"
-      collectionId={params.collectionId}
+      collectionId={collectionId}
     />
   )
 }

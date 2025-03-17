@@ -7,12 +7,13 @@ type CollectionDeletePopupPageProps = {
   }>
 }
 
-const CollectionDeletePopupPage = async (props: CollectionDeletePopupPageProps) => {
-  const params = await props.params;
+const CollectionDeletePopupPage = async ({ params }: CollectionDeletePopupPageProps) => {
+  const { collectionId } = await params
+
   return (
     <CollectionDeletePopup
       renderer="router"
-      collectionId={params.collectionId}
+      collectionId={collectionId}
     />
   )
 }

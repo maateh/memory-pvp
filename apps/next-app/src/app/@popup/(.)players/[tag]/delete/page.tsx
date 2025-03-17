@@ -7,12 +7,13 @@ type PlayersDeletePopupPageProps = {
   }>
 }
 
-const PlayersDeletePopupPage = async (props: PlayersDeletePopupPageProps) => {
-  const params = await props.params;
+const PlayersDeletePopupPage = async ({ params }: PlayersDeletePopupPageProps) => {
+  const { tag } = await params
+
   return (
     <PlayerDeletePopup
       renderer="router"
-      playerTag={params.tag}
+      playerTag={tag}
     />
   )
 }

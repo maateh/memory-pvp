@@ -31,12 +31,12 @@ import {
 } from "@/components/collection/filter"
 
 type CollectionsPageProps = {
-  searchParams: CollectionFilter & CollectionSort
+  searchParams: Promise<CollectionFilter & CollectionSort>
 }
 
-const CollectionsPage = async (props: CollectionsPageProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const CollectionsPage = async ({ searchParams }: CollectionsPageProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,
     sortSchema: collectionSort,

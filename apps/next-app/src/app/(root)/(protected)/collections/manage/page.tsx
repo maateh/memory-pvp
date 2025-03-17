@@ -18,12 +18,12 @@ import { CollectionUploadWidgetCard } from "@/components/collection/widget"
 import { CollectionListing, CollectionListingSkeleton } from "@/components/collection/listing"
 
 type CollectionsManagePageProps = {
-  searchParams: CollectionSort
+  searchParams: Promise<CollectionSort>
 }
 
-const CollectionsManagePage = async (props: CollectionsManagePageProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams).entries()
+const CollectionsManagePage = async ({ searchParams }: CollectionsManagePageProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { sort, pagination } = parseSearchParams(searchEntries, {
     sortSchema: collectionSort,
     parsePagination: true

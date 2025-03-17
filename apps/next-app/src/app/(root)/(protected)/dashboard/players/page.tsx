@@ -22,12 +22,12 @@ import { PlayerCreateWidgetCard } from "@/components/player/widget"
 import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session/filter"
 
 type PlayersPageProps = {
-  searchParams: PlayerFilter & PlayerSort
+  searchParams: Promise<PlayerFilter & PlayerSort>
 }
 
-const PlayersPage = async (props: PlayersPageProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const PlayersPage = async ({ searchParams }: PlayersPageProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { filter, sort } = parseSearchParams(searchEntries, {
     filterSchema: playerFilter,
     sortSchema: playerSort

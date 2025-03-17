@@ -11,12 +11,12 @@ import { parseSearchParams } from "@/lib/util/parser/search-parser"
 import { CollectionExplorerPopup } from "@/components/collection/popup"
 
 type CollectionsExplorerPopupProps = {
-  searchParams: CollectionFilter & CollectionSort
+  searchParams: Promise<CollectionFilter & CollectionSort>
 }
 
-const CollectionsExplorerPopup = async (props: CollectionsExplorerPopupProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const CollectionsExplorerPopup = async ({ searchParams }: CollectionsExplorerPopupProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: collectionFilter,
     sortSchema: collectionSort,

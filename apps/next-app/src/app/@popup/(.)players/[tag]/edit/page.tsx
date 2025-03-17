@@ -7,12 +7,13 @@ type PlayersEditPopupPageProps = {
   }>
 }
 
-const PlayersEditPopupPage = async (props: PlayersEditPopupPageProps) => {
-  const params = await props.params;
+const PlayersEditPopupPage = async ({ params }: PlayersEditPopupPageProps) => {
+  const { tag } = await params
+
   return (
     <PlayerEditPopup
       renderer="router"
-      playerTag={params.tag}
+      playerTag={tag}
     />
   )
 }

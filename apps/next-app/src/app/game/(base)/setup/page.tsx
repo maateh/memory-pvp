@@ -23,12 +23,12 @@ import { SessionForm } from "@/components/session/form"
 import { UserManageButton } from "@/components/user"
 
 type BaseGameSetupPageProps = {
-  searchParams: Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">
+  searchParams: Promise<Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">>
 }
 
-const BaseGameSetupPage = async (props: BaseGameSetupPageProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { filter } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter.pick({
       mode: true,

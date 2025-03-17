@@ -21,12 +21,12 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import { SessionListing, SessionListingSkeleton } from "@/components/session/listing"
 
 type SessionsPageProps = {
-  searchParams: SessionFilter & SessionSort
+  searchParams: Promise<SessionFilter & SessionSort>
 }
 
-const SessionsPage = async (props: SessionsPageProps) => {
-  const searchParams = await props.searchParams;
-  const searchEntries = new URLSearchParams(searchParams as {}).entries()
+const SessionsPage = async ({ searchParams }: SessionsPageProps) => {
+  const search = await searchParams
+  const searchEntries = new URLSearchParams(search as {}).entries()
   const { filter, sort, pagination } = parseSearchParams(searchEntries, {
     filterSchema: sessionFilter,
     sortSchema: sessionSort,
