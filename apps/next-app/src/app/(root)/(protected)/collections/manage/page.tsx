@@ -15,7 +15,7 @@ import { parseSearchParams } from "@/lib/util/parser/search-parser"
 // components
 import { Await, PaginationHandler } from "@/components/shared"
 import { CollectionUploadWidgetCard } from "@/components/collection/widget"
-import { CollectionListing } from "@/components/collection/listing"
+import { CollectionListing, CollectionListingSkeleton } from "@/components/collection/listing"
 
 type CollectionsManagePageProps = {
   searchParams: CollectionSort
@@ -33,7 +33,7 @@ const CollectionsManagePage = ({ searchParams }: CollectionsManagePageProps) => 
       <CollectionUploadWidgetCard className="w-full h-max max-w-2xl mx-auto col-span-9 xl:order-2 xl:col-span-4 2xl:col-span-3" />
 
       <div className="w-full col-span-9 xl:col-span-5 2xl:col-span-6">
-        <Suspense>
+        <Suspense fallback={<CollectionListingSkeleton />}>
           <Await promise={getCollections({ sort, pagination }, "protected")}>
             {({ data: userCollections, ...pagination }) => (
               <>

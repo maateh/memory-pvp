@@ -12,6 +12,9 @@ import { cn } from "@/lib/util"
 // icons
 import { ChevronRightCircle } from "lucide-react"
 
+// shadcn
+import { Skeleton } from "@/components/ui/skeleton"
+
 // components
 import { StatisticBadge } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
@@ -32,7 +35,7 @@ const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
 
   return (
     <div className={cn("h-12 flex flex-wrap items-center gap-x-2 gap-y-6 overflow-y-hidden lg:justify-end", {
-      "justify-end": state === 'collapsed' && !isMobile
+      "justify-end": state === "collapsed" && !isMobile
     })}>
       <div className="h-full flex items-center gap-x-2">
         <PlayerBadge player={activePlayer} />
@@ -49,4 +52,23 @@ const AppPlayerStats = ({ activePlayer }: AppPlayerStatsProps) => {
   )
 }
 
+const AppPlayerStatsSkeleton = () => {
+  const { state, isMobile } = useSidebar()
+
+  return (
+    <div className={cn("h-12 flex flex-wrap items-center gap-x-2 gap-y-6 overflow-y-hidden lg:justify-end", {
+      "justify-end": state === "collapsed" && !isMobile
+    })}>
+      <div className="h-full" />
+
+      {Array(isMobile ? 1 : 6).fill("").map((_, index) => (
+        <Skeleton className="w-20 h-5 rounded-full bg-muted-foreground/25"
+          key={index}
+        />
+      ))}
+    </div>
+  )
+}
+
 export default AppPlayerStats
+export { AppPlayerStatsSkeleton }

@@ -1,2 +1,2 @@
-export { default as CollectionListing } from "./collection-listing"
-export { default as CollectionCard } from "./collection-card"
+export { default as CollectionListing, CollectionListingSkeleton } from "./collection-listing"
+export { default as CollectionCard, CollectionCardSkeleton } from "./collection-card"

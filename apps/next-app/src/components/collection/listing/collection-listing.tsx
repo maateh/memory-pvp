@@ -22,11 +22,12 @@ import { ImageOff } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 
 // components
-import { CollectionCard } from "@/components/collection/listing"
-import { NoListingData } from "@/components/shared"
+import { CollectionCard, CollectionCardSkeleton } from "@/components/collection/listing"
+import { CardItem, NoListingData } from "@/components/shared"
 
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
+import { TableSkeleton } from "@/components/ui/table"
 
 type CollectionListingMetadata = {
   type: "listing" | "manage"
@@ -97,5 +98,20 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
   )
 }
 
+const CollectionListingSkeleton = () => (
+  <>
+    <ul className="space-y-6 block 2xl:hidden">
+      {Array.from({ length: 4 }).fill('').map((_, index) => (
+        <CollectionCardSkeleton key={index} />
+      ))}
+    </ul>
+
+    <div className="hidden 2xl:block">
+      <TableSkeleton columns={6} rows={7} />
+    </div>
+  </>
+)
+
 export default CollectionListing
+export { CollectionListingSkeleton }
 export type { CollectionListingMetadata }

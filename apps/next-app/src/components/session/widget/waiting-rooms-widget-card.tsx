@@ -19,6 +19,7 @@ import { ActiveRoomCardContent } from "@/components/room"
 import {
   WidgetActionWrapper,
   WidgetCard,
+  WidgetCardLoader,
   WidgetLink,
   WidgetSubtitle
 } from "@/components/widget"
@@ -34,8 +35,7 @@ const WaitingRoomsWidgetCard = () => {
         <WidgetLink href="/dashboard/rooms" />
       </WidgetActionWrapper>
 
-      {/* TODO: create loading fallback for `WidgetCard` */}
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<WidgetCardLoader />}>
         <Await promise={getPlayer({ isActive: true })}>
           {(player) => player ? (
             <Await promise={getActiveRoom(player.id)}>

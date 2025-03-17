@@ -7,6 +7,9 @@ import { getPlayers } from "@/server/db/query/player-query"
 // actions
 import { signedIn } from "@/server/action/user-action"
 
+// icons
+import { Loader2 } from "lucide-react"
+
 // shadcn
 import { Separator } from "@/components/ui/separator"
 
@@ -34,8 +37,7 @@ const OfflineSessionSummaryPage = () => {
 
       <Separator className="w-1/5 mx-auto mt-2 mb-5 bg-border/5" />
 
-      {/* TODO: add loading fallback */}
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<Loader2 className="size-7 sm:size-8 shrink-0 mx-auto animate-spin text-muted-foreground" />}>
         <Await promise={Promise.all([signedIn(), getPlayers()])}>
           {([user, players]) => !user ? (
             <UserManageButton className="mx-auto text-base"

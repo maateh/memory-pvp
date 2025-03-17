@@ -17,6 +17,7 @@ import { SessionSettingsFilter, SessionStatusFilter } from "@/components/session
 import {
   WidgetActionWrapper,
   WidgetCard,
+  WidgetCardLoader,
   WidgetLink,
   WidgetSubtitle
 } from "@/components/widget"
@@ -32,8 +33,7 @@ const SessionsWidgetCard = () => {
         <WidgetLink href="/dashboard/sessions" />
       </WidgetActionWrapper>
 
-      {/* TODO: create loading fallback for `WidgetCard` */}
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<WidgetCardLoader />}>
         <Await promise={getPlayer({ isActive: true })}>
           {(player) => player ? (
             <>

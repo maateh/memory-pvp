@@ -1,8 +1,4 @@
-import { Suspense } from "react"
 import Link from "next/link"
-
-// db
-import { getPlayers } from "@/server/db/query/player-query"
 
 // icons
 import { Spade } from "lucide-react"
@@ -20,7 +16,6 @@ import {
 
 // components
 import { SignedIn } from "@clerk/nextjs"
-import { Await } from "@/components/shared"
 import GroupPlayer from "./group-player"
 import GroupGame from "./group-game"
 import NavGroups from "./nav-groups"
@@ -49,14 +44,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 
       <SidebarContent>
         <SignedIn>
-          {/* TODO: add loading fallback */}
-          <Suspense fallback={<>Loading...</>}>
-            <Await promise={getPlayers({}, "withAvatar")}>
-              {(players) => players && (
-                <GroupPlayer players={players} />
-              )}
-            </Await>
-          </Suspense>
+          <GroupPlayer />
         </SignedIn>
 
         <SidebarSeparator className="w-1/6 h-1 mx-auto -my-1.5 bg-sidebar-border/30 rounded-full group-data-[collapsible=icon]:my-0" />

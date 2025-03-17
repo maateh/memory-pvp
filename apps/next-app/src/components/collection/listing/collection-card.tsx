@@ -22,12 +22,10 @@ import {
   CardTitle
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import {
-  CollectionPreviewItem,
-  CollectionPreviewList
-} from "@/components/collection/collection-preview-listing"
+import { CollectionPreviewItem, CollectionPreviewList } from "@/components/collection"
 import { SessionInfoBadge } from "@/components/session"
 import { UserAvatar } from "@/components/user"
 import CollectionActions from "./collection-actions"
@@ -122,4 +120,7 @@ const CollectionCard = ({
   )
 }
 
+const CollectionCardSkeleton = () => <Skeleton className="h-40 w-full max-w-xl mx-auto bg-primary/75 rounded-2xl" />
+
 export default CollectionCard
+export { CollectionCardSkeleton }
