@@ -37,7 +37,7 @@ export const createTRPCRouter = t.router
 export const publicProcedure = t.procedure
 
 export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
-  const { userId: clerkId } = auth()
+  const { userId: clerkId } = await auth()
 
   if (!clerkId) {
     throw new TRPCError({

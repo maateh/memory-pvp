@@ -46,7 +46,7 @@ type BaseLayoutProps = {
 }
 
 const BaseLayout = async ({ children, popup }: BaseLayoutProps) => {
-  const { getToken } = auth()
+  const { getToken } = await auth()
   const authToken = await getToken()
 
   return (

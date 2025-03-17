@@ -25,7 +25,7 @@ type SignedInParams = {
  * @returns {Promise<User | null>} - The user object if authenticated and found in the database, or `null` otherwise.
  */
 export async function signedIn({ redirectToSignIn = false }: SignedInParams = {}): Promise<User | null> {
-  const { userId: clerkId } = auth()
+  const { userId: clerkId } = await auth()
 
   let user: User | null = null
   if (clerkId) {
@@ -33,7 +33,7 @@ export async function signedIn({ redirectToSignIn = false }: SignedInParams = {}
   }
 
   if (!user && redirectToSignIn) {
-    return auth().redirectToSignIn()
+    return (await auth()).redirectToSignIn();
   }
 
   return user

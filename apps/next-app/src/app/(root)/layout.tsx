@@ -8,8 +8,8 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Appbar, AppBreadcrumbs } from "@/components/appbar"
 
-const RootLayout = ({ children }: React.PropsWithChildren) => {
-  const { userId } = auth()
+const RootLayout = async ({ children }: React.PropsWithChildren) => {
+  const { userId } = await auth()
 
   return (
     <div className="min-h-screen flex">
