@@ -28,7 +28,7 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
   const { gainedElo } = calculateElo(session, player.id)
 
   /* Note: only `RANKED` session has elo values */
-  const eloKey: Array<SessionPlayerStatKeys> = session.mode === "CASUAL" ? ["elo"] : []
+  const eloKey: Array<SessionPlayerStatKeys> = session.mode === "RANKED" ? ["elo"] : []
   const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "totalTime"])
 
   return (
