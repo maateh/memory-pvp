@@ -2,6 +2,9 @@
 import type { GameSession, SessionStatus } from "@repo/db"
 import type { ClientSession } from "@repo/schema/session"
 
+// helpers
+import { calculateElo } from "@repo/helper/elo"
+
 // server
 import { db } from "@repo/server/db"
 
@@ -29,7 +32,7 @@ export async function closeSession(
       where: { id: player.id },
       data: {
         stats: {
-          elo: 0, // TODO: calculate `elo`
+          elo: calculateElo(clientSession, currentPlayerId).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
           avgTime: 0, // TODO: calculate `avgTime`
@@ -52,7 +55,7 @@ export async function closeSession(
           createMany: {
             data: players.map((player) => ({
               playerId: player.id,
-              gainedElo: 0, // TODO: calculate `gainedElo`
+              gainedElo: calculateElo(clientSession, currentPlayerId).gainedElo,
               flips: stats.flips[player.id],
               matches: stats.matches[player.id]
             }))
