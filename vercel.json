@@ -1,6 +1,7 @@
 {
   "framework": "nextjs",
   "git": {
+    "ignoreBuildStep": true,
     "deploymentEnabled": {
       "main": false
     }
