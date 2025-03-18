@@ -4,15 +4,5 @@
     "deploymentEnabled": {
       "main": false
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/save-sessions",
-      "schedule": "0 0 */1 * *"
-    },
-    {
-      "path": "/api/cron/save-sessions",
-      "schedule": "0 12 */1 * *"
-    }
-  ]
+  }
 }
