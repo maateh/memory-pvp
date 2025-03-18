@@ -4,12 +4,12 @@ import type { ClientPlayer } from "@repo/schema/player"
 import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
 
 // helpers
-import { calculatePlayerSessionScore } from "@repo/helper/session"
+import { calculateElo } from "@repo/helper/elo"
 
 // utils
-import { cn } from "@/lib/util"
-import { formatTimer } from "@/lib/util/game"
 import { getRendererPlayerStats } from "@/lib/util/stats"
+import { formatTimer } from "@/lib/util/game"
+import { cn } from "@/lib/util"
 
 // shadcn
 import { Separator } from "@/components/ui/separator"
@@ -25,14 +25,10 @@ type SessionPlayerStatsProps = {
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  const elo = calculatePlayerSessionScore(
-    session,
-    player.id,
-    session.status === "FINISHED" ? "finish" : "abandon"
-  ) || 0
+  const { gainedElo } = calculateElo(session, player.id)
 
-  /* Note: only `RANKED` sessions have elo values */
-  const eloKey: Array<SessionPlayerStatKeys> = elo ? ["elo"] : []
+  /* Note: only `RANKED` session has elo values */
+  const eloKey: Array<SessionPlayerStatKeys> = session.mode === "CASUAL" ? ["elo"] : []
   const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "totalTime"])
 
   return (
@@ -48,7 +44,7 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
       <StatisticList className="w-fit mx-auto grid sm:grid-cols-2">
         {Object.values(stats).map(({ key, ...stat }) => (
           <StatisticItem className="w-full mx-auto max-w-48"
-            variant={key === "elo" ? elo < 0 ? "destructive" : "default" : "default"}
+            variant={key === "elo" ? gainedElo < 0 ? "destructive" : "default" : "default"}
             size="sm"
             statistic={{
               ...stat,
@@ -56,7 +52,7 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
                 key: key as SessionPlayerStatKeys,
                 data: stat.data,
                 sessionPlayerStats: {
-                  elo,
+                  elo: gainedElo,
                   flips: session.stats.flips[player.id],
                   matches: session.stats.matches[player.id],
                   totalTime: formatTimer(session.stats.timer * 1000)
@@ -71,7 +67,6 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
   )
 }
 
-/* Local utils */
 type RenderStatDataParams = {
   key: SessionPlayerStatKeys
   data: RendererStat["data"]

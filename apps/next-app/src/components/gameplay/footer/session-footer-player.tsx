@@ -3,11 +3,10 @@
 import { useMemo } from "react"
 
 // types
-import type { ClientSessionVariants } from "@repo/schema/session"
 import type { ClientPlayer } from "@repo/schema/player"
 
 // helpers
-import { calculatePlayerSessionScore, getFreeFlips } from "@repo/helper/session"
+import { calculateElo } from "@repo/helper/elo"
 
 // utils
 import { cn } from "@/lib/util"
@@ -20,9 +19,9 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // components
-import { UserAvatar } from "@/components/user"
-import { PlayerBadge } from "@/components/player"
 import { GlowingOverlay, StatisticBadge } from "@/components/shared"
+import { PlayerBadge } from "@/components/player"
+import { UserAvatar } from "@/components/user"
 
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
@@ -35,9 +34,7 @@ type SessionFooterPlayerProps = {
 const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) => {
   const session = useSessionStore((state) => state.session)
 
-  const freeFlips = useMemo(() => getFreeFlips(session), [session])
-  const elo = useMemo(() => calculatePlayerSessionScore(session, player.id), [session, player.id])
-
+  const { gainedElo } = useMemo(() => calculateElo(session, player.id), [session, player])
   const flips = session.stats.flips[player.id]
 
   return (
@@ -63,7 +60,7 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
         </div>
 
         <StatisticBadge className="font-medium"
-          variant={player.stats.elo < 0 ? 'destructive' : 'accent'}
+          variant={player.stats.elo === 0 ? "default" : player.stats.elo > 0 ? "accent" : "destructive"}
           Icon={Trophy}
           iconProps={{ className: "size-3.5" }}
         >
@@ -78,33 +75,26 @@ const SessionFooterPlayer = ({ player, flipOrder }: SessionFooterPlayerProps) =>
         <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
           variant="outline"
         >
-          <Sigma className="size-4 flex-none" />
+          <Sigma className="size-4 shrink-none" />
 
-          <p className="space-x-1">
-            <span className="text-sm small-caps">
-              {flips} flips
-            </span>
-
-            {freeFlips !== null && (
-              <span className="text-xs">
-                / {freeFlips} free
-              </span>
-            )}
+          <p className="space-x-1 text-sm small-caps">
+            {flips} flips
           </p>
         </Badge>
 
-        {elo !== null && (
-          <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", { "mr-auto ml-0": flipOrder })}
-            variant={elo >= 0 ? 'accent' : 'destructive'}
-          >
-            <CircleFadingArrowUp className={cn("size-4 flex-none", { "rotate-180": elo < 0 })} />
-  
-            <p className="space-x-1">
-              <span className="text-sm font-light small-caps">Session</span>
-              <span className="text-xs font-semibold">/ {elo} Elo</span>
-            </p>
-          </Badge>
-        )}
+        <Badge className={cn("w-fit ml-auto flex items-center gap-x-1.5", {
+          "opacity-40": session.mode === "CASUAL",
+          "mr-auto ml-0": flipOrder
+        })}
+          variant={gainedElo === 0 ? "muted" : gainedElo > 0 ? "accent" : "destructive"}
+        >
+          <CircleFadingArrowUp className={cn("size-4 shrink-none", { "rotate-180": gainedElo < 0 })} />
+
+          <p className="space-x-1">
+            <span className="text-sm font-light small-caps">Session</span>
+            <span className="text-xs font-semibold">/ {gainedElo} Elo</span>
+          </p>
+        </Badge>
       </div>
     </GlowingOverlay>
   )
