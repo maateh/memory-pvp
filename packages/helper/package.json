@@ -13,7 +13,6 @@
   "exports": {
     "./connection": "./dist/connection-helper.js",
     "./elo": "./dist/elo-helper.js",
-    "./session": "./dist/session-helper.js",
     "./player": "./dist/player-helper.js"
   },
   "dependencies": {
