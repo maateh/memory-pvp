@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 
 // types
 import type { DefaultValues } from "react-hook-form"
@@ -72,13 +71,6 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
 
   const handleSubmit = async (values: SessionFormValidation) => {
     const { settings, forceStart } = values
-
-    if (settings.mode === "RANKED") {
-      toast.warning("Ranked mode is not available.", {
-        description: "Currently, you can only play in Casual because the ranked system is under development."
-      })
-      return
-    }
 
     if (settings.format === "OFFLINE") {
       createOfflineSession({ ...values, collection })

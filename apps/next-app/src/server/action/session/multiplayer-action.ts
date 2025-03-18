@@ -48,14 +48,6 @@ export const createRoom = playerActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { settings } = parsedInput
 
-    if (settings.mode === "RANKED") {
-      ServerError.throwInAction({
-        key: "UNKNOWN",
-        message: "Ranked mode is not available.",
-        description: "Currently, you can only play in Casual because the ranked system is under development."
-      })
-    }
-
     /* Throws server error with 'ACTIVE_SESSION' key if active session found. */
     const activeSession = await getActiveSession(["COOP", "PVP"], ctx.player.id)
     if (activeSession) {
