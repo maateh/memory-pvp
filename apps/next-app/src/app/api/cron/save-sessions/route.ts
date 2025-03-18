@@ -8,16 +8,16 @@ import { sessionKey } from "@repo/server/redis-keys"
 // db
 import { db } from "@repo/server/db"
 
-const ROUTE_PREFIX = '[API | GET - /cron/save-sessions]'
+const ROUTE_PREFIX = "[API | GET - /cron/save-sessions]"
 
 export async function GET(req: Request) {
-  const apiKey = req.headers.get('cron-secret')
+  const authHeader = req.headers.get("authorization")
 
-  if (apiKey !== process.env.CRON_SECRET) {
-    return Response.json({ message: 'Invalid secret.' }, { status: 401 })
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return Response.json({ message: "Invalid secret." }, { status: 401 })
   }
 
-  console.info(ROUTE_PREFIX, 'Saving stored sessions...')
+  console.info(ROUTE_PREFIX, "Saving stored sessions...")
 
   try {
     const sessions = await getSessionsFromRedis()
@@ -40,20 +40,20 @@ export async function GET(req: Request) {
     return Response.json({ message, saved_sessions: sessions.length }, { status: 200, statusText: message })
   } catch (err) {
     console.error(ROUTE_PREFIX, err)
-    return Response.json({ message: 'Failed to save stored sessions.' }, { status: 500 })
-  }  
+    return Response.json({ message: "Failed to save stored sessions." }, { status: 500 })
+  }
 }
 
 /**
  * Retrieves all game sessions from Redis using a cursor-based scan.
- * 
- * - Uses `redis.scan` instead of `redis.keys` to efficiently fetch keys in batches without blocking Redis. 
- *   This prevents performance issues, especially in large datasets, as `redis.keys` could potentially lock 
+ *
+ * - Uses `redis.scan` instead of `redis.keys` to efficiently fetch keys in batches without blocking Redis.
+ *   This prevents performance issues, especially in large datasets, as `redis.keys` could potentially lock
  *   Redis during its operation.
- * 
- * - Scans for keys matching the pattern 'session:*', retrieves corresponding session data, and aggregates 
+ *
+ * - Scans for keys matching the pattern 'session:*', retrieves corresponding session data, and aggregates
  *   them into a list of `ClientGameSession[]`.
- * 
+ *
  * @returns {Promise<ClientSessionVariants[]>} - A promise that resolves to an array of client game sessions.
  */
 async function getSessionsFromRedis(): Promise<ClientSessionVariants[]> {
@@ -65,7 +65,6 @@ async function getSessionsFromRedis(): Promise<ClientSessionVariants[]> {
       match: sessionKey("*"),
       count: 100
     })
-
 
     if (sessionKeys.length > 0) {
       const data = await redis.mget<ClientSessionVariants[]>(sessionKeys)
