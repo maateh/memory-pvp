@@ -5,8 +5,14 @@ export const K_FACTORS = {
   COOP: 10
 }
 
+/** TODO: write doc  */
+export const ELO_DIFFERENCE_FACTOR = 400
+
 /** TODO: write doc */
 export const SOLO_MINUS_SCORE_FACTOR = 0.35
+
+/** TODO: write doc */
+export const CORRECTED_FLIPS_MULTIPLIER = 0.5
 
 /** TODO: write doc */
 export const TABLE_SIZE_MULTIPLIERS = {

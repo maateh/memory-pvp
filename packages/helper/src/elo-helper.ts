@@ -8,6 +8,8 @@ import type {
 
 // config
 import {
+  CORRECTED_FLIPS_MULTIPLIER,
+  ELO_DIFFERENCE_FACTOR,
   K_FACTORS,
   TABLE_SIZE_MULTIPLIERS,
   TIME_BOOSTER_MULTIPLIERS,
@@ -34,7 +36,7 @@ function calculateExpectedScore(
   playerElo: number,
   opponentElo: number
 ): number {
-  return 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400))
+  return 1 / (1 + Math.pow(10, (opponentElo - playerElo) / ELO_DIFFERENCE_FACTOR))
 }
 
 type CalculateGainedEloOpts = {
@@ -88,7 +90,7 @@ export function soloElo(
     return { newElo: owner.stats.elo, gainedElo: 0 }
   }
 
-  const correctedFlips = stats.flips[owner.id] * 0.5
+  const correctedFlips = stats.flips[owner.id] * CORRECTED_FLIPS_MULTIPLIER
   const successRate = status !== "FORCE_CLOSED"
     ? stats.matches[owner.id] / correctedFlips
     : 0
@@ -165,7 +167,7 @@ export function coopElo(
 
   // TODO: Note (!): `COOP` Elo calculation hasn't been completely tested yet.
 
-  const correctedFlips = (playerId: string) => stats.flips[playerId] * 0.5
+  const correctedFlips = (playerId: string) => stats.flips[playerId] * CORRECTED_FLIPS_MULTIPLIER
   const successRate = stats.matches[player.id] / correctedFlips(player.id)
   const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(teammate.id)
 
