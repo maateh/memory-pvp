@@ -127,15 +127,21 @@ export function pvpElo(
     return { newElo: player.stats.elo, gainedElo: 0 }
   }
 
-  // TODO: Note (!): `PVP` Elo calculation hasn't been completely tested yet.
+  const totalMatches = Object.values(stats.matches).reduce((total, current) => total + current, 0)
+  const playerPerformance = stats.matches[player.id] / totalMatches
+  const opponentPerformance = stats.matches[opponent.id] / totalMatches
 
-  const isWinner = stats.matches[player.id] > stats.matches[opponent.id]
-  const actualScore = status === "FINISHED" ? isWinner ? 1 : 0
+  const closenessFactor = status === "FINISHED"
+    ? 1 - Math.abs(playerPerformance - opponentPerformance)
+    : status === "CLOSED" ? 1 : 0
+
+  const actualScore = status === "FINISHED"
+    ? (playerPerformance - opponentPerformance) + 0.5
     : status === "CLOSED" ? 1 : 0
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.PVP,
-    scoreMultiplier: actualScore - calculateExpectedScore(player.stats.elo, opponent.stats.elo),
+    scoreMultiplier: closenessFactor * (actualScore - calculateExpectedScore(player.stats.elo, opponent.stats.elo)),
     tableSize,
     timer: stats.timer
   })
@@ -164,8 +170,6 @@ export function coopElo(
   if (mode === "CASUAL") {
     return { newElo: player.stats.elo, gainedElo: 0 }
   }
-
-  // TODO: Note (!): `COOP` Elo calculation hasn't been completely tested yet.
 
   const correctedFlips = (playerId: string) => stats.flips[playerId] * CORRECTED_FLIPS_MULTIPLIER
   const successRate = stats.matches[player.id] / correctedFlips(player.id)
