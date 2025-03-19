@@ -1,6 +1,10 @@
 // types
-import type { TableSize } from "@repo/db"
-import type { ClientSession, MultiplayerClientSession, SoloClientSession } from "@repo/schema/session"
+import type { SessionStatus, TableSize } from "@repo/db"
+import type {
+  ClientSession,
+  MultiplayerClientSession,
+  SoloClientSession
+} from "@repo/schema/session"
 
 // config
 import {
@@ -75,7 +79,8 @@ export function calculateGainedElo(
  * @returns 
  */
 export function soloElo(
-  session: Pick<SoloClientSession, "owner" | "stats" | "tableSize" | "mode">
+  session: Pick<SoloClientSession, "owner" | "stats" | "tableSize" | "mode">,
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): EloUpdate {
   const { owner, stats, tableSize, mode } = session
 
@@ -84,7 +89,9 @@ export function soloElo(
   }
 
   const correctedFlips = stats.flips[owner.id] * 0.5
-  const successRate = stats.matches[owner.id] / correctedFlips
+  const successRate = status !== "FORCE_CLOSED"
+    ? stats.matches[owner.id] / correctedFlips
+    : 0
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.SINGLE,
@@ -105,7 +112,8 @@ export function soloElo(
  */
 export function pvpElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
-  playerId: string
+  playerId: string,
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): EloUpdate {
   const { owner, guest, stats, tableSize, mode } = session
 
@@ -120,7 +128,8 @@ export function pvpElo(
   // TODO: Note (!): `PVP` Elo calculation hasn't been completely tested yet.
 
   const isWinner = stats.matches[player.id] > stats.matches[opponent.id]
-  const actualScore = isWinner ? 1 : 0
+  const actualScore = status === "FINISHED" ? isWinner ? 1 : 0
+    : status === "CLOSED" ? 1 : 0
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.PVP,
@@ -141,7 +150,8 @@ export function pvpElo(
  */
 export function coopElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
-  playerId: string
+  playerId: string,
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): EloUpdate {
   const { owner, guest, stats, tableSize, mode } = session
 
@@ -160,7 +170,9 @@ export function coopElo(
   const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(teammate.id)
 
   const teamPerformance = successRate + teammateSuccessRate
-  const teamScore = (successRate + teamPerformance) / 2
+  const teamScore = status !== "FORCE_CLOSED"
+    ? (successRate + teamPerformance) / 2
+    : 0
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.COOP,
@@ -181,20 +193,29 @@ export function coopElo(
  */
 export function calculateElo(
   session: Pick<ClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode" | "format">,
-  playerId: string
+  playerId: string,
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED"> = "FINISHED",
+  requesterPlayerId?: string
 ): EloUpdate {
   const { format, owner } = session
 
   if (format === "SOLO") {
-    return soloElo(session)
+    return soloElo(session, status)
   }
 
   if (format === "PVP") {
-    return pvpElo(session as MultiplayerClientSession, playerId)
+    let actionStatus = status
+
+    if (requesterPlayerId !== playerId) {
+      if (status === "CLOSED") actionStatus = "FORCE_CLOSED"
+      if (status === "FORCE_CLOSED") actionStatus = "CLOSED"
+    }
+    
+    return pvpElo(session as MultiplayerClientSession, playerId, actionStatus)
   }
 
   if (format === "COOP") {
-    return coopElo(session as MultiplayerClientSession, playerId)
+    return coopElo(session as MultiplayerClientSession, playerId, status)
   }
 
   return { newElo: owner.stats.elo, gainedElo: 0 }

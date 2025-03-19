@@ -6,19 +6,19 @@ import type { ClientSession } from "@repo/schema/session"
 import { calculateElo } from "@repo/helper/elo"
 
 // server
-import { db } from "@repo/server/db"
+import { db } from "@/db"
 
 /**
  * TODO: write doc
  * 
  * @param clientSession 
- * @param currentPlayerId 
+ * @param requesterPlayerId 
  * @param status 
  * @returns 
  */
 export async function closeSession(
   clientSession: Pick<ClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
-  currentPlayerId: string,
+  requesterPlayerId: string,
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<GameSession> {
   const { slug, format, owner, guest, stats } = clientSession
@@ -32,7 +32,7 @@ export async function closeSession(
       where: { id: player.id },
       data: {
         stats: {
-          elo: calculateElo(clientSession, player.id).newElo,
+          elo: calculateElo(clientSession, player.id, status, requesterPlayerId).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
           avgTime: 0, // TODO: calculate `avgTime`
@@ -55,7 +55,7 @@ export async function closeSession(
           createMany: {
             data: players.map((player) => ({
               playerId: player.id,
-              gainedElo: calculateElo(clientSession, player.id).gainedElo,
+              gainedElo: calculateElo(clientSession, player.id, status, requesterPlayerId).gainedElo,
               flips: stats.flips[player.id],
               matches: stats.matches[player.id]
             }))
