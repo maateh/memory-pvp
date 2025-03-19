@@ -7,6 +7,7 @@ import type {
 } from "@repo/schema/session"
 
 // config
+import { tableSizeMap } from "@repo/config/game"
 import {
   CORRECTED_FLIPS_MULTIPLIER,
   ELO_DIFFERENCE_FACTOR,
@@ -78,6 +79,16 @@ export function calculateGainedElo(
 /**
  * TODO: write doc
  * 
+ * @param flips 
+ * @returns 
+ */
+function correctedFlips(flips: number): number {
+  return (flips * CORRECTED_FLIPS_MULTIPLIER) || 1
+}
+
+/**
+ * TODO: write doc
+ * 
  * @param session 
  * @returns 
  */
@@ -91,9 +102,8 @@ export function soloElo(
     return { newElo: owner.stats.elo, gainedElo: 0 }
   }
 
-  const correctedFlips = stats.flips[owner.id] * CORRECTED_FLIPS_MULTIPLIER
   const successRate = status !== "FORCE_CLOSED"
-    ? stats.matches[owner.id] / correctedFlips
+    ? stats.matches[owner.id] / correctedFlips(stats.flips[owner.id])
     : -FORCE_CLOSE_SUBTRACT_VALUE
 
   const gainedElo = calculateGainedElo({
@@ -128,9 +138,9 @@ export function pvpElo(
     return { newElo: player.stats.elo, gainedElo: 0 }
   }
 
-  const totalMatches = Object.values(stats.matches).reduce((total, current) => total + current, 1)
-  const playerPerformance = stats.matches[player.id] / totalMatches
-  const opponentPerformance = stats.matches[opponent.id] / totalMatches
+  const tableSizeFactor = tableSizeMap[tableSize] / 2
+  const playerPerformance = stats.matches[player.id] / tableSizeFactor
+  const opponentPerformance = stats.matches[opponent.id] / tableSizeFactor
 
   const closenessFactor = 1 - Math.abs(playerPerformance - opponentPerformance)
 
@@ -170,9 +180,8 @@ export function coopElo(
     return { newElo: player.stats.elo, gainedElo: 0 }
   }
 
-  const correctedFlips = (playerId: string) => stats.flips[playerId] * CORRECTED_FLIPS_MULTIPLIER
-  const successRate = stats.matches[player.id] / correctedFlips(player.id)
-  const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(teammate.id)
+  const successRate = stats.matches[player.id] / correctedFlips(stats.flips[player.id])
+  const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(stats.flips[teammate.id])
 
   const teamPerformance = successRate + teammateSuccessRate
   const teamScore = status === "FORCE_CLOSED" ? -FORCE_CLOSE_SUBTRACT_VALUE
