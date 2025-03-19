@@ -15,6 +15,7 @@
     "./collection-validation": "./dist/collection/validation/index.js",
     "./player": "./dist/player/index.js",
     "./player-validation": "./dist/player/validation/index.js",
+    "./result": "./dist/result/index.js",
     "./room": "./dist/room/index.js",
     "./room-validation": "./dist/room/validation/index.js",
     "./session": "./dist/session/index.js",

@@ -13,7 +13,8 @@
   "exports": {
     "./connection": "./dist/connection-settings.js",
     "./elo": "./dist/elo-settings.js",
-    "./game": "./dist/game-settings.js"
+    "./game": "./dist/game-settings.js",
+    "./result": "./dist/result-settings.js"
   },
   "dependencies": {
     "lucide-react": "^0.429.0"
