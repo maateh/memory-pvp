@@ -1,10 +1,6 @@
 // types
-import type { ClientSessionVariants } from "@repo/schema/session"
-import type { ClientPlayer } from "@repo/schema/player"
+import type { ClientResult } from "@repo/schema/result"
 import type { RendererStat, RendererPlayerStatKeys } from "@/lib/types/statistic"
-
-// helpers
-import { calculateElo } from "@repo/helper/elo"
 
 // utils
 import { getRendererPlayerStats } from "@/lib/util/stats"
@@ -17,23 +13,17 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { StatisticItem, StatisticList } from "@/components/shared"
 
-type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, "elo" | "matches" | "flips" | "timer">
+type SessionPlayerResultKeys = Extract<RendererPlayerStatKeys, "elo" | "matches" | "flips" | "timer">
 
-type SessionPlayerStatsProps = {
-  player: ClientPlayer
-  session: ClientSessionVariants
+type SessionPlayerResultProps = {
+  result: ClientResult
 }
 
-const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  // FIXME: load results here instead of calculate Elo scores again
-  const { gainedElo } = calculateElo(
-    session,
-    player.id,
-    session.status as Parameters<typeof calculateElo>["2"]
-  )
+const SessionPlayerResult = ({ result }: SessionPlayerResultProps) => {
+  const { player, session } = result
 
   /* Note: only `RANKED` session has elo values */
-  const eloKey: Array<SessionPlayerStatKeys> = session.mode === "RANKED" ? ["elo"] : []
+  const eloKey: Array<SessionPlayerResultKeys> = session.mode === "RANKED" ? ["elo"] : []
   const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "timer"])
 
   return (
@@ -49,18 +39,18 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
       <StatisticList className="w-fit mx-auto grid sm:grid-cols-2">
         {Object.values(stats).map(({ key, ...stat }) => (
           <StatisticItem className="w-full mx-auto max-w-48"
-            variant={key === "elo" ? gainedElo < 0 ? "destructive" : "default" : "default"}
+            variant={key === "elo" ? result.gainedElo < 0 ? "destructive" : "default" : "default"}
             size="sm"
             statistic={{
               ...stat,
-              data: renderStatData({
-                key: key as SessionPlayerStatKeys,
+              data: renderResultData({
+                key: key as SessionPlayerResultKeys,
                 data: stat.data,
-                sessionPlayerStats: {
-                  elo: gainedElo,
-                  flips: session.stats.flips[player.id],
-                  matches: session.stats.matches[player.id],
-                  timer: formatTimer(session.stats.timer * 1000)
+                sessionPlayerResult: {
+                  elo: result.gainedElo,
+                  flips: result.flips,
+                  matches: result.matches,
+                  timer: formatTimer(result.timer * 1000)
                 }
               })
             }}
@@ -72,10 +62,10 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
   )
 }
 
-type RenderStatDataParams = {
-  key: SessionPlayerStatKeys
+type RenderResultDataParams = {
+  key: SessionPlayerResultKeys
   data: RendererStat["data"]
-  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, "timer">> & {
+  sessionPlayerResult: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerResultKeys, "timer">> & {
     timer: string
   }
 }
@@ -87,30 +77,30 @@ type RenderStatDataParams = {
  * - If the session-specific stat is a positive number, it is prefixed with a '+' sign to indicate an increase.
  * - If the key is 'elo' and its value is negative, the stat is styled with a 'destructive' color to indicate a negative impact.
  * 
- * @param {RenderStatDataParams} params - The parameters for rendering the stat.
+ * @param {RenderResultDataParams} params - The parameters for rendering the stat.
  * @param {PlayerStatsKeys} params.key - The key representing the specific statistic.
  * @param {RendererStat['data']} params.data - The current value of the statistic to display.
  * @param {Object} params.sessionPlayerStats - An object containing session-specific updates for the player's statistics.
  * 
  * @returns {React.ReactNode} - A JSX element that displays the stat data along with session updates.
  */
-function renderStatData({ key, data, sessionPlayerStats }: RenderStatDataParams): React.ReactNode {
-  let sessionPlayerStat: number | string = sessionPlayerStats[key]
+function renderResultData({ key, data, sessionPlayerResult }: RenderResultDataParams): React.ReactNode {
+  let resultData: number | string = sessionPlayerResult[key]
 
-  if (typeof sessionPlayerStat === "number" && sessionPlayerStat > 0) {
-    sessionPlayerStat = `+${sessionPlayerStat}`
+  if (typeof resultData === "number" && resultData > 0) {
+    resultData = `+${resultData}`
   }
 
   return (
     <p className="flex items-center gap-x-1">
       {data}
       <span className={cn("text-accent", {
-        "text-destructive": key === "elo" && (sessionPlayerStats.elo) < 0
+        "text-destructive": key === "elo" && (sessionPlayerResult.elo) < 0
       })}>
-        ({sessionPlayerStat})
+        ({resultData})
       </span>
     </p>
   )
 }
 
-export default SessionPlayerStats
+export default SessionPlayerResult
