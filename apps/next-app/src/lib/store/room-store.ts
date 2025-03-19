@@ -185,7 +185,7 @@ export const roomStore = ({
       }
 
       toast.warning(message, { description, id: "session:close:response" })
-      router.replace("/game/setup")
+      router.replace(`/game/summary/${initialRoom.slug}`)
     } catch (err) {
       handleServerError(err as ServerError)
       logError(err)
