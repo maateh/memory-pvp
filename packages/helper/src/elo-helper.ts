@@ -10,11 +10,12 @@ import type {
 import {
   CORRECTED_FLIPS_MULTIPLIER,
   ELO_DIFFERENCE_FACTOR,
+  FORCE_CLOSE_SUBTRACT_VALUE,
   K_FACTORS,
   TABLE_SIZE_MULTIPLIERS,
   TIME_BOOSTER_MULTIPLIERS,
-  TIME_BOOSTER_LIMIT,
-  SOLO_MINUS_SCORE_FACTOR
+  TIME_BOOSTER_LIMITS,
+  SOLO_SCORE_MULTIPLIER_SUBTRACTOR
 } from "@repo/config/elo"
 
 // helpers
@@ -63,7 +64,7 @@ export function calculateGainedElo(
   if (timer) {
     const minTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MIN
     const maxTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MAX
-    const timeBoosterLimit = TIME_BOOSTER_LIMIT[tableSize]
+    const timeBoosterLimit = TIME_BOOSTER_LIMITS[tableSize]
 
     timeFactor = Math.max(
       minTimeMultiplier,
@@ -93,11 +94,11 @@ export function soloElo(
   const correctedFlips = stats.flips[owner.id] * CORRECTED_FLIPS_MULTIPLIER
   const successRate = status !== "FORCE_CLOSED"
     ? stats.matches[owner.id] / correctedFlips
-    : 0
+    : -FORCE_CLOSE_SUBTRACT_VALUE
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.SINGLE,
-    scoreMultiplier: successRate - SOLO_MINUS_SCORE_FACTOR,
+    scoreMultiplier: successRate - SOLO_SCORE_MULTIPLIER_SUBTRACTOR,
     tableSize,
     timer: stats.timer // FIXME: save session timer
   })
@@ -127,17 +128,15 @@ export function pvpElo(
     return { newElo: player.stats.elo, gainedElo: 0 }
   }
 
-  const totalMatches = Object.values(stats.matches).reduce((total, current) => total + current, 0)
+  const totalMatches = Object.values(stats.matches).reduce((total, current) => total + current, 1)
   const playerPerformance = stats.matches[player.id] / totalMatches
   const opponentPerformance = stats.matches[opponent.id] / totalMatches
 
-  const closenessFactor = status === "FINISHED"
-    ? 1 - Math.abs(playerPerformance - opponentPerformance)
-    : status === "CLOSED" ? 1 : 0
+  const closenessFactor = 1 - Math.abs(playerPerformance - opponentPerformance)
 
   const actualScore = status === "FINISHED"
     ? (playerPerformance - opponentPerformance) + 0.5
-    : status === "CLOSED" ? 1 : 0
+    : status === "CLOSED" ? 1 : -FORCE_CLOSE_SUBTRACT_VALUE
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.PVP,
@@ -176,9 +175,8 @@ export function coopElo(
   const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(teammate.id)
 
   const teamPerformance = successRate + teammateSuccessRate
-  const teamScore = status !== "FORCE_CLOSED"
-    ? (successRate + teamPerformance) / 2
-    : 0
+  const teamScore = status === "FORCE_CLOSED" ? -FORCE_CLOSE_SUBTRACT_VALUE
+    : (successRate + teamPerformance) / 2
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.COOP,
