@@ -49,7 +49,7 @@ model PlayerProfile {
 
   results Result[]
   /// [PlayerStats]
-  stats   Json     @default("{ \"elo\": 100, \"flips\": 0, \"matches\": 0, \"avgTime\": 0, \"totalTime\": 0, \"sessions\": 0 }")
+  stats   Json     @default("{ \"elo\": 100, \"flips\": 0, \"matches\": 0, \"timer\": 0, \"sessions\": 0 }")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -95,6 +95,7 @@ model Result {
   gainedElo Int
   flips     Int
   matches   Int
+  timer     Int
 
   player   PlayerProfile @relation(fields: [playerId], references: [id], onDelete: Cascade)
   playerId String        @db.ObjectId

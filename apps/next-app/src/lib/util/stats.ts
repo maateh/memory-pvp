@@ -120,17 +120,11 @@ export function getRendererPlayerStats(
       label: "Elo",
       data: `${player.stats.elo} Elo`
     },
-    avgTime: {
-      key: "avgTime",
-      Icon: TimerReset,
-      label: "Average Time",
-      data: `${formatTimer(player.stats.avgTime * 1000)}`
-    },
-    totalTime: {
-      key: "totalTime",
+    timer: {
+      key: "timer",
       Icon: Timer,
       label: "Playtime",
-      data: `${formatTimer(player.stats.totalTime * 1000)}`
+      data: `${formatTimer(player.stats.timer * 1000)}`
     },
     flips: {
       key: "flips",

@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { StatisticItem, StatisticList } from "@/components/shared"
 
-type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, "elo" | "totalTime" | "matches" | "flips">
+type SessionPlayerStatKeys = Extract<RendererPlayerStatKeys, "elo" | "matches" | "flips" | "timer">
 
 type SessionPlayerStatsProps = {
   player: ClientPlayer
@@ -25,11 +25,16 @@ type SessionPlayerStatsProps = {
 }
 
 const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
-  const { gainedElo } = calculateElo(session, player.id)
+  // FIXME: load results here instead of calculate Elo scores again
+  const { gainedElo } = calculateElo(
+    session,
+    player.id,
+    session.status as Parameters<typeof calculateElo>["2"]
+  )
 
   /* Note: only `RANKED` session has elo values */
   const eloKey: Array<SessionPlayerStatKeys> = session.mode === "RANKED" ? ["elo"] : []
-  const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "totalTime"])
+  const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "timer"])
 
   return (
     <div>
@@ -55,7 +60,7 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
                   elo: gainedElo,
                   flips: session.stats.flips[player.id],
                   matches: session.stats.matches[player.id],
-                  totalTime: formatTimer(session.stats.timer * 1000)
+                  timer: formatTimer(session.stats.timer * 1000)
                 }
               })
             }}
@@ -70,8 +75,8 @@ const SessionPlayerStats = ({ player, session }: SessionPlayerStatsProps) => {
 type RenderStatDataParams = {
   key: SessionPlayerStatKeys
   data: RendererStat["data"]
-  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, "totalTime">> & {
-    totalTime: string
+  sessionPlayerStats: Pick<PrismaJson.PlayerStats, Exclude<SessionPlayerStatKeys, "timer">> & {
+    timer: string
   }
 }
 

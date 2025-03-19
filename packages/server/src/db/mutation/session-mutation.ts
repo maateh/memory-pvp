@@ -35,8 +35,7 @@ export async function closeSession(
           elo: calculateElo(clientSession, player.id, status, requesterPlayerId).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
-          avgTime: 0, // TODO: calculate `avgTime`
-          totalTime: player.stats.totalTime + stats.timer,
+          timer: player.stats.timer + stats.timer,
           sessions: ++player.stats.sessions
         }
       }
@@ -57,7 +56,8 @@ export async function closeSession(
               playerId: player.id,
               gainedElo: calculateElo(clientSession, player.id, status, requesterPlayerId).gainedElo,
               flips: stats.flips[player.id],
-              matches: stats.matches[player.id]
+              matches: stats.matches[player.id],
+              timer: stats.timer
             }))
           }
         }
