@@ -84,6 +84,9 @@ importers:
       '@repo/ts-config':
         specifier: workspace:*
         version: link:../../packages/ts-config
+      '@repo/util':
+        specifier: workspace:*
+        version: link:../../packages/util
       '@tanstack/react-query':
         specifier: ^5.52.3
         version: 5.67.1(react@19.0.0)
@@ -220,6 +223,9 @@ importers:
       '@repo/server':
         specifier: workspace:*
         version: link:../../packages/server
+      '@repo/util':
+        specifier: workspace:*
+        version: link:../../packages/util
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -351,6 +357,15 @@ importers:
         version: 1.8.11
 
   packages/ts-config: {}
+
+  packages/util:
+    devDependencies:
+      '@repo/ts-config':
+        specifier: workspace:*
+        version: link:../ts-config
+      '@types/node':
+        specifier: ^22.10.4
+        version: 22.13.9
 
 packages:
 

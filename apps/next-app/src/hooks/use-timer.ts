@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 
+// utils
+import { elapsedTime } from "@repo/util/timer"
+
 type TimerType = "increase" | "decrease"
 
 type UseTimerProps = {
@@ -46,10 +49,7 @@ export const useTimer = ({
   const [stopped, setStopped] = useState<boolean>(false)
 
   const [timerInMs, setTimerInMs] = useState<number>(() => {
-    const now = Date.now()
-    const refTime = new Date(referenceDate).getTime()
-
-    const initialTimer = now - refTime
+    const initialTimer = elapsedTime(referenceDate).ms
     return timerType === "increase"
       ? Math.max(initialTimer, 0)
       : Math.max(stopAfterInMs - initialTimer, 0)

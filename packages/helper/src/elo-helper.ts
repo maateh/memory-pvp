@@ -110,7 +110,7 @@ export function soloElo(
     kFactor: K_FACTORS.SINGLE,
     scoreMultiplier: successRate - SOLO_SCORE_MULTIPLIER_SUBTRACTOR,
     tableSize,
-    timer: stats.timer // FIXME: save session timer
+    timer: stats.timer
   })
 
   return { newElo: owner.stats.elo + gainedElo, gainedElo }
