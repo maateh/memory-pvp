@@ -2,9 +2,7 @@
 
 // types
 import type { SoloClientSession } from "@repo/schema/session"
-
-// helpers
-import { validateCardMatches } from "@/lib/helper/session-helper"
+import type { FinishSoloSessionValidation } from "@repo/schema/session-validation"
 
 // utils
 import { logError } from "@/lib/util/error"
@@ -43,10 +41,7 @@ const SingleGameHandler = () => {
 
       try {
         await finishSoloSession({
-          clientSession: {
-            ...session,
-            cards: validateCardMatches(session.cards)
-          }
+          clientSession: session as FinishSoloSessionValidation["clientSession"]
         })
       } catch (err) {
         logError(err)

@@ -2,12 +2,11 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { toast } from "sonner"
 
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-
-// helpers
-import { validateCardMatches } from "@/lib/helper/session-helper"
+import type { SaveOfflineSessionValidation } from "@repo/schema/session-validation"
 
 // utils
 import { getSessionFromStorage } from "@/lib/util/storage"
@@ -27,7 +26,6 @@ import { PlayerProfileForm } from "@/components/player/form"
 
 // hooks
 import { useSaveOfflineSessionAction } from "@/lib/safe-action/session/singleplayer"
-import { toast } from "sonner"
 
 type SaveOfflineSessionProps = {
   players: ClientPlayer[]
@@ -54,10 +52,7 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
     try {
       await saveOfflineSession({
         playerId,
-        clientSession: {
-          ...offlineSession,
-          cards: validateCardMatches(offlineSession.cards)
-        }
+        clientSession: offlineSession as SaveOfflineSessionValidation["clientSession"]
       })
     } catch (err) {
       logError(err)
