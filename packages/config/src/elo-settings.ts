@@ -9,7 +9,7 @@ export const K_FACTORS = {
 export const ELO_DIFFERENCE_FACTOR = 400
 
 /** TODO: write doc */
-export const SOLO_SCORE_MULTIPLIER_SUBTRACTOR = 0.35
+export const SOLO_SCORE_MULTIPLIER_SUBTRACTOR = 0.45
 
 /** TODO: write doc */
 export const FORCE_CLOSE_SUBTRACT_VALUE = 0.5
