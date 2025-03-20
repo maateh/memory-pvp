@@ -7,7 +7,7 @@ import { Cog } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
-const BaseGameSummaryLayout = ({ children }: { children: React.ReactNode }) => {
+const GameSummaryLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <header className="mt-4">
@@ -47,4 +47,4 @@ const BaseGameSummaryLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default BaseGameSummaryLayout
+export default GameSummaryLayout

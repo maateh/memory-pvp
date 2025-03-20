@@ -6,7 +6,7 @@ import { LayoutDashboard } from "lucide-react"
 // shadcn
 import { Button } from "@/components/ui/button"
 
-const BaseGameLayout = ({ children }: { children: React.ReactNode }) => {
+const GameMenuLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Button className="bg-accent/30 hover:bg-accent/40 font-normal dark:font-light tracking-wide expandable absolute top-3 left-3 sm:top-4 sm:left-4"
@@ -29,4 +29,4 @@ const BaseGameLayout = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default BaseGameLayout
+export default GameMenuLayout

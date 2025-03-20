@@ -23,11 +23,11 @@ import { PlayerSelectButton } from "@/components/player/select"
 import { SessionForm } from "@/components/session/form"
 import { UserManageButton } from "@/components/user"
 
-type BaseGameSetupPageProps = {
+type GameSetupPageProps = {
   searchParams: Promise<Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">>
 }
 
-const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
+const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const search = await searchParams as SearchPattern
   const searchEntries = new URLSearchParams(search).entries()
   const { filter } = parseSearchParams(searchEntries, {
@@ -85,4 +85,4 @@ const BaseGameSetupPage = async ({ searchParams }: BaseGameSetupPageProps) => {
   )
 }
 
-export default BaseGameSetupPage
+export default GameSetupPage

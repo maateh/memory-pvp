@@ -15,11 +15,11 @@ import { Await, RedirectFallback } from "@/components/shared"
 import { SessionStatistics, SessionStatisticsSkeleton } from "@/components/session/summary"
 import SessionPlayerResult from "./session-player-result"
 
-type SessionSummaryPageProps = {
+type GameSummaryPageProps = {
   params: Promise<{ slug: string }>
 }
 
-const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
+const GameSummaryPage = async ({ params }: GameSummaryPageProps) => {
   const { slug } = await params
 
   return (
@@ -55,4 +55,4 @@ const SessionSummaryPage = async ({ params }: SessionSummaryPageProps) => {
   )
 }
 
-export default SessionSummaryPage
+export default GameSummaryPage

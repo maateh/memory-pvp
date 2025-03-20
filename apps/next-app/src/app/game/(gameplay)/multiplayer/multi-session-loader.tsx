@@ -4,7 +4,7 @@
 import { roomHeaderMap } from "@/config/room-settings"
 
 // layouts
-import BaseGameLayout from "@/app/game/(base)/layout"
+import GameMenuLayout from "@/app/game/(menu)/layout"
 
 // components
 import { RedirectFallback } from "@/components/shared"
@@ -46,9 +46,9 @@ const MultiSessionLoader = () => {
   }
 
   return (
-    <BaseGameLayout>
+    <GameMenuLayout>
       <RoomScreen />
-    </BaseGameLayout>
+    </GameMenuLayout>
   )
 }
 

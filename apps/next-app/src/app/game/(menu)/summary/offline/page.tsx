@@ -24,7 +24,7 @@ const OfflineSessionResults = dynamic(() => import("./offline-session-results"),
   loading: SessionStatisticsSkeleton
 })
 
-const OfflineSessionSummaryPage = () => {
+const GameSummaryOfflinePage = () => {
   return (
     <>
       <OfflineSessionResults />
@@ -51,4 +51,4 @@ const OfflineSessionSummaryPage = () => {
   )
 }
 
-export default OfflineSessionSummaryPage
+export default GameSummaryOfflinePage
