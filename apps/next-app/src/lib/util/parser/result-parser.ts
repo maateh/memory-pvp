@@ -15,10 +15,13 @@ export const clientResultKeys: (keyof ClientResult)[] = [
 
 
 /**
- * TODO: write doc
+ * Parses a database result schema into a client-friendly result format.
  * 
- * @param result 
- * @returns 
+ * - Removes unnecessary fields from the result object.
+ * - Converts the `player` field into a client-compatible format.
+ * 
+ * @param {ResultWithPlayerWithSession} result The raw result object including player and session data.
+ * @returns {ClientResult} The parsed result with only relevant fields for the client.
  */
 export function parseSchemaToClientResult(
   result: ResultWithPlayerWithSession

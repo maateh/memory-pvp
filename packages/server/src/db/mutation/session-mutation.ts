@@ -9,12 +9,17 @@ import { calculateElo } from "@repo/helper/elo"
 import { db } from "@/db"
 
 /**
- * TODO: write doc
+ * Closes a game session and updates player statistics.
  * 
- * @param clientSession 
- * @param requesterPlayerId 
- * @param status 
- * @returns 
+ * - Updates player profiles with the latest Elo rating, game stats, and session count.
+ * - Updates the session status to `FINISHED`, `CLOSED`, or `FORCE_CLOSED`.
+ * - Records the session results for each participating player.
+ * - Operations are executed within a database transaction.
+ * 
+ * @param {ClientSession} clientSession The current session containing player data, mode, and stats.
+ * @param {string} requesterPlayerId The ID of the player requesting the session closure.
+ * @param {SessionStatus} status Session "action" status.
+ * @returns {Promise<GameSession>} The updated game session.
  */
 export async function closeSession(
   clientSession: Pick<ClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,

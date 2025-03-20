@@ -49,10 +49,15 @@ type CalculateGainedEloOpts = {
 }
 
 /**
- * TODO: write doc
+ * Calculates the gained Elo rating based on various game factors.
  * 
- * @param options
- * @returns 
+ * This function computes the Elo gain using the provided K-factor, score multiplier, 
+ * table size, and an optional timer-based adjustment. The Elo gain is influenced by
+ * predefined table size multipliers and time-based boosters.
+ * 
+ * @param {CalculateGainedEloOpts} options The options for calculating Elo gain, including 
+ *        K-factor, score multiplier, table size, and an optional timer.
+ * @returns {number} The calculated Elo gain, rounded to the nearest integer.
  */
 export function calculateGainedElo(
   options: CalculateGainedEloOpts
@@ -78,20 +83,29 @@ export function calculateGainedElo(
 }
 
 /**
- * TODO: write doc
+ * Adjusts the number of flips using a predefined multiplier.
  * 
- * @param flips 
- * @returns 
+ * Applies the `CORRECTED_FLIPS_MULTIPLIER` to the given number of flips. 
+ * If the result is falsy (e.g., zero or NaN), it defaults to `1` to ensure a valid output.
+ * 
+ * @param {number} flips The original number of flips.
+ * @returns {number} The adjusted number of flips, ensuring a minimum value of `1`.
  */
 function correctedFlips(flips: number): number {
   return (flips * CORRECTED_FLIPS_MULTIPLIER) || 1
 }
 
 /**
- * TODO: write doc
+ * Calculates the Elo update for a solo session based on the player's performance.
  * 
- * @param session 
- * @returns 
+ * - If the session mode is `CASUAL`, the Elo remains unchanged.
+ * - If the session was not forcefully closed, the success rate is computed as matches found divided by corrected flips.
+ * - If the session was `FORCE_CLOSED`, a penalty is applied.
+ * - Elo gain is determined using the `calculateGainedElo` function with predefined factors.
+ * 
+ * @param {SoloClientSession} session Solo session data, including the owner, session stats, table size, and mode.
+ * @param {SessionStatus} status Session "action" status, which affects the Elo calculation.
+ * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function soloElo(
   session: Pick<SoloClientSession, "owner" | "stats" | "tableSize" | "mode">,
@@ -118,11 +132,17 @@ export function soloElo(
 }
 
 /**
- * TODO: write doc
+ * Calculates the Elo update for a player in a PVP session based on performance.
  * 
- * @param session 
- * @param playerId 
- * @returns 
+ * - If the session mode is `CASUAL`, the Elo remains unchanged.
+ * - Performance is measured using matches found relative to the table size.
+ * - The closeness factor adjusts the impact based on the difference in performance.
+ * - Elo gain is calculated using the expected score, closeness factor, and match outcome.
+ * 
+ * @param {MultiplayerClientSession} session PvP session data, including both players, stats, table size, and mode.
+ * @param {string} playerId The ID of the player whose Elo is being calculated.
+ * @param {SessionStatus} status Session "action" status, which affects the Elo calculation.
+ * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function pvpElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
@@ -160,11 +180,17 @@ export function pvpElo(
 }
 
 /**
- * TODO: write doc
+ * Calculates the Elo update for a player in a cooperative (Co-Op) session.
  * 
- * @param session 
- * @param playerId 
- * @returns 
+ * - If the session mode is `CASUAL`, the Elo remains unchanged.
+ * - Performance is measured based on the player's match success rate.
+ * - The team performance is determined by both players' success rates.
+ * - Elo gain is adjusted based on the expected score and session status.
+ * 
+ * @param {MultiplayerClientSession} session Co-Op session data, including both players, stats, table size, and mode.
+ * @param {string} playerId The ID of the player whose Elo is being calculated.
+ * @param {SessionStatus} status Session "action" status, affecting the Elo calculation.
+ * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function coopElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
@@ -199,11 +225,17 @@ export function coopElo(
 }
 
 /**
- * TODO: write doc
+ * Calculates the Elo update for a player based on the session format.
  * 
- * @param session 
- * @param playerId 
- * @returns 
+ * - Determines the correct Elo calculation method based on the session format.
+ * - Adjusts the session status in PVP mode if the requester is different from the player.
+ * - If the format is unrecognized, the player's Elo remains unchanged.
+ * 
+ * @param {ClientSession} session Session data, including players, stats, table size, mode, and format.
+ * @param {string} playerId The ID of the player whose Elo is being calculated.
+ * @param {SessionStatus} status Session "action" status, affecting the Elo calculation (default: `FINISHED`).
+ * @param {string} requesterPlayerId (Optional) The ID of the player making the calculation request, used for PVP status adjustments.
+ * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function calculateElo(
   session: Pick<ClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode" | "format">,

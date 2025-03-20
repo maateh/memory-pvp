@@ -11,10 +11,14 @@ import { resultSchemaFields } from "@repo/config/result"
 import { parseSchemaToClientResult } from "@/lib/util/parser/result-parser"
 
 /**
- * TODO: write doc
+ * Retrieves and parses game results for a given session.
  * 
- * @param slug 
- * @returns 
+ * - Fetches results from the database based on the session `slug`.
+ * - Includes related fields as defined in `resultSchemaFields`.
+ * - Converts each result into a client-friendly format.
+ * 
+ * @param {string} slug The unique identifier of the game session.
+ * @returns {Promise<ClientResult[]>} A list of parsed client results.
  */
 export async function getResults(
   slug: string

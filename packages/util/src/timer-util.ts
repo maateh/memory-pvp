@@ -4,10 +4,13 @@ type ElapsedTimeReturn = {
 }
 
 /**
- * TODO: write doc
+ * Calculates the elapsed time between the current date and a given reference date.
  * 
- * @param referenceDate 
- * @returns 
+ * This function computes the difference in milliseconds and seconds between the
+ * current time and the provided reference date.
+ * 
+ * @param {Date} referenceDate The date to compare against the current time. Can be a Date object or a date string.
+ * @returns {ElapsedTimeReturn} An object containing the elapsed time in milliseconds (`ms`) and seconds (`seconds`).
  */
 export function elapsedTime(referenceDate: Date): ElapsedTimeReturn {
   const refTime = typeof referenceDate === "string"
