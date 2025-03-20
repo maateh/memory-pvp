@@ -69,10 +69,7 @@ export async function getCollections(
     ...paginate(pagination),
     where,
     orderBy: parseSortToOrderBy(sort, collectionSort, { createdAt: "desc" }),
-    include: {
-      user: true,
-      cards: true
-    }
+    include: { user: true, cards: true }
   })
 
   const clientCollections = collections.map((collection) => parseSchemaToClientCollection(collection))
@@ -92,15 +89,12 @@ export async function getCollections(
 export async function getRandomCollection(
   tableSize: TableSize
 ): Promise<ClientCardCollection | null> {
-  const count = await db.cardCollection.count()
+  const count = await db.cardCollection.count({ where: { tableSize } })
   const randomSkip = Math.floor(Math.random() * count)
 
   const collection = await db.cardCollection.findFirst({
     where: { tableSize },
-    include: {
-      user: true,
-      cards: true
-    },
+    include: { user: true, cards: true },
     skip: randomSkip
   })
 
