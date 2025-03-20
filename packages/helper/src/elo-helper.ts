@@ -122,7 +122,7 @@ export function soloElo(
     : -FORCE_CLOSE_SUBTRACT_VALUE
 
   const gainedElo = calculateGainedElo({
-    kFactor: K_FACTORS.SINGLE,
+    kFactor: K_FACTORS.SOLO,
     scoreMultiplier: successRate - SOLO_SCORE_MULTIPLIER_SUBTRACTOR,
     tableSize,
     timer: stats.timer
