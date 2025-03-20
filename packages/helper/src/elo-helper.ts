@@ -58,22 +58,23 @@ export function calculateGainedElo(
   options: CalculateGainedEloOpts
 ): number {
   const { kFactor, scoreMultiplier, tableSize, timer } = options
-
   const sizeMultiplier = TABLE_SIZE_MULTIPLIERS[tableSize]
-  let timeFactor = 1
-  
-  if (timer) {
-    const minTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MIN
-    const maxTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MAX
-    const timeBoosterLimit = TIME_BOOSTER_LIMITS[tableSize]
 
-    timeFactor = Math.max(
-      minTimeMultiplier,
-      maxTimeMultiplier - timer / (timeBoosterLimit * 2)
-    )
-  }
+  const gainedElo = kFactor * scoreMultiplier * sizeMultiplier
+  if (!timer) return Math.round(gainedElo)
 
-  return Math.round(kFactor * scoreMultiplier * sizeMultiplier * timeFactor)
+  const minTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MIN
+  const maxTimeMultiplier = TIME_BOOSTER_MULTIPLIERS.MAX
+  const timeBoosterLimit = TIME_BOOSTER_LIMITS[tableSize]
+
+  const timeFactor = Math.max(
+    minTimeMultiplier,
+    maxTimeMultiplier - timer / timeBoosterLimit
+  )
+
+  const gainedEloWithTimeFactor = gainedElo >= 0
+    ? gainedElo * timeFactor : gainedElo / timeFactor
+  return Math.round(gainedEloWithTimeFactor)
 }
 
 /**

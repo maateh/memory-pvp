@@ -33,6 +33,6 @@ export const TIME_BOOSTER_LIMITS = {
 
 /** TODO: write doc */
 export const TIME_BOOSTER_MULTIPLIERS = {
-  MIN: 0.5,
-  MAX: 1.5
+  MIN: 0.25,
+  MAX: 2
 }
