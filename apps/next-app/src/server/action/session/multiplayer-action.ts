@@ -28,7 +28,6 @@ import {
 } from "@/server/action"
 
 // config
-import { tableSizeMap } from "@repo/config/game"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
@@ -38,7 +37,11 @@ import { createRoomValidation, joinRoomValidation } from "@repo/schema/room-vali
 // helpers
 import { currentPlayerKey } from "@repo/helper/player"
 import { offlinePlayerConnection } from "@repo/helper/connection"
-import { generateSessionCards, generateSessionSlug } from "@/lib/helper/session-helper"
+import {
+  generateSessionCards,
+  generateSessionSlug,
+  verifyCollectionInAction
+} from "@/lib/helper/session-helper"
 
 // utils
 import { ServerError } from "@repo/server/error"
@@ -69,35 +72,12 @@ export const createRoom = playerActionClient
       })
     }
 
-    /* Finding collection with the specified `collectionId` */
-    const collection = await ctx.db.cardCollection.findUnique({
-      where: { id: settings.collectionId },
-      include: { user: true, cards: true }
-    })
-
     /**
-     * Throws server error with `COLLECTION_NOT_FOUND` key if
-     * collection not found with the specified `collectionId`.
+     * Checks collection exists with the specified `collectionId`.
+     * Throws custom server errors if collection is not found
+     * or table size is incompatible with the settings.
      */
-    if (!collection) {
-      ServerError.throwInAction({
-        key: "COLLECTION_NOT_FOUND",
-        message: "Sorry, but we can't find the card collection you selected.",
-        description: "Please, select another collection or try again later."
-      })
-    }
-
-    /**
-     * Throws server error with `TABLE_SIZE_CONFLICT` key if
-     * collection and settings table sizes are incompatible.
-     */
-    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
-      ServerError.throwInAction({
-        key: "TABLE_SIZE_CONFLICT",
-        message: "Collection table size is too small.",
-        description: "Table size of the selected collection is incompatible with your settings."
-      })
-    }
+    await verifyCollectionInAction(settings)
 
     const slug = generateSessionSlug(settings)
     const connection = offlinePlayerConnection({
@@ -215,35 +195,12 @@ export const createMultiplayerSession = playerActionClient
       })
     }
 
-    /* Finding collection with the specified `collectionId` */
-    const collection = await ctx.db.cardCollection.findUnique({
-      where: { id: collectionId },
-      include: { user: true, cards: true }
-    })
-  
     /**
-     * Throws server error with `COLLECTION_NOT_FOUND` key if
-     * collection not found with the specified `collectionId`.
+     * Checks collection exists with the specified `collectionId`.
+     * Throws custom server errors if collection is not found
+     * or table size is incompatible with the settings.
      */
-    if (!collection) {
-      ServerError.throwInAction({
-        key: "COLLECTION_NOT_FOUND",
-        message: "Sorry, but we can't find the card collection you selected.",
-        description: "Please, select another card collection or try again later."
-      })
-    }
-
-    /**
-     * Throws server error with `TABLE_SIZE_CONFLICT` key if
-     * collection and settings table sizes are incompatible.
-     */
-    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
-      ServerError.throwInAction({
-        key: "TABLE_SIZE_CONFLICT",
-        message: "Collection table size is too small.",
-        description: "Table size of the selected collection is incompatible with your settings."
-      })
-    }
+    const collection = await verifyCollectionInAction({ ...settings, collectionId })
 
     /* Create the multiplayer game session */
     const session = await ctx.db.gameSession.create({

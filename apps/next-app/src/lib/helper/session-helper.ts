@@ -2,8 +2,17 @@ import { nanoid } from "nanoid"
 
 // types
 import type { MemoryCard, TableSize } from "@repo/db"
-import type { ClientSessionVariants, ClientSessionCard } from "@repo/schema/session"
+import type { CardCollectionWithCardsWithUser } from "@repo/db/types"
 import type { ClientCardCollection } from "@repo/schema/collection"
+import type {
+  ClientSessionVariants,
+  ClientSessionCard,
+  SessionSettings
+} from "@repo/schema/session"
+
+// server
+import { db } from "@repo/server/db"
+import { ServerError } from "@repo/server/error"
 
 // config
 import { tableSizeMap } from "@repo/config/game"
@@ -43,7 +52,6 @@ export function generateSessionSlug(
 
   return `${prefix}_${id}`
 }
-
 
 /**
  * Generates an array of shuffled session cards from a given card collection for use in a game session.
@@ -105,6 +113,50 @@ export function pairSessionCardsWithCollection(
   }))
 
   return cards
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param settings 
+ * @returns 
+ */
+export async function verifyCollectionInAction(
+  settings: Pick<SessionSettings, "collectionId" | "tableSize">
+): Promise<CardCollectionWithCardsWithUser> {
+  const { collectionId, tableSize } = settings
+
+  /* Finding collection with the specified `collectionId` */
+  const collection = await db.cardCollection.findUnique({
+    where: { id: collectionId },
+    include: { user: true, cards: true }
+  })
+
+  /**
+   * Throws server error with `COLLECTION_NOT_FOUND` key if
+   * collection not found with the specified `collectionId`.
+   */
+  if (!collection) {
+    ServerError.throwInAction({
+      key: "COLLECTION_NOT_FOUND",
+      message: "Sorry, but we can't find the card collection you selected.",
+      description: "Please, select another collection or try again later."
+    })
+  }
+
+  /**
+   * Throws server error with `TABLE_SIZE_CONFLICT` key if
+   * collection and settings table sizes are incompatible.
+   */
+  if (tableSizeMap[tableSize] > tableSizeMap[collection.tableSize]) {
+    ServerError.throwInAction({
+      key: "TABLE_SIZE_CONFLICT",
+      message: "Collection table size is too small.",
+      description: "Table size of the selected collection is incompatible with your settings."
+    })
+  }
+
+  return collection
 }
 
 type ValidatedMemoryCard = Omit<ClientSessionCard, 'matchedBy'> & {
