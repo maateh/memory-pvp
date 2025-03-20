@@ -116,10 +116,16 @@ export function pairSessionCardsWithCollection(
 }
 
 /**
- * TODO: write doc
+ * Verifies if a card collection exists and is compatible with the specified table size.
  * 
- * @param settings 
- * @returns 
+ * This function retrieves a card collection by `collectionId` and ensures it meets 
+ * the table size requirements set in `settings`. If the collection is not found 
+ * or its table size is smaller than required, an error is thrown.
+ * 
+ * @param {SessionSettings} settings The session settings containing `collectionId` and `tableSize`.
+ * @returns {Promise<CardCollectionWithCardsWithUser>} The card collection with its associated cards and user.
+ * @throws {ServerError} If the collection is not found (`COLLECTION_NOT_FOUND`).
+ * @throws {ServerError} If the collection's table size is too small (`TABLE_SIZE_CONFLICT`).
  */
 export async function verifyCollectionInAction(
   settings: Pick<SessionSettings, "collectionId" | "tableSize">
