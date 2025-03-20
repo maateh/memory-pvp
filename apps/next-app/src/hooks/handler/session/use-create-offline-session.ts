@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import type { SessionFormValuesCache } from "@/components/session/form/session-form"
 
 // config
+import { tableSizeMap } from "@repo/config/game"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 
 // helpers
@@ -57,13 +58,20 @@ export const useCreateOfflineSession = () => {
       return
     }
 
+    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
+      toast.error("Collection table size is too small.", {
+        description: "Table size of the selected collection is incompatible with your settings."
+      })
+      return
+    }
+
     /* Creates and stores the offline session using `localStorage` */
     saveSessionToStorage({
       collectionId: settings.collectionId,
       tableSize: settings.tableSize,
       flipped: [],
       cards: pairSessionCardsWithCollection(
-        generateSessionCards(collection),
+        generateSessionCards(collection, settings.tableSize),
         collection.cards
       ),
       stats: {

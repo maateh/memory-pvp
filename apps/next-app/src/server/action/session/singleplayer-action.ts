@@ -17,6 +17,7 @@ import {
 } from "@/server/action"
 
 // config
+import { tableSizeMap } from "@repo/config/game"
 import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 
@@ -84,6 +85,18 @@ export const createSoloSession = playerActionClient
       })
     }
 
+    /**
+     * Throws server error with `TABLE_SIZE_CONFLICT` key if
+     * collection and settings table sizes are incompatible.
+     */
+    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
+      ServerError.throwInAction({
+        key: "TABLE_SIZE_CONFLICT",
+        message: "Collection table size is too small.",
+        description: "Table size of the selected collection is incompatible with your settings."
+      })
+    }
+
     /* Creates the game session, then redirects the user to the game page */
     await ctx.db.gameSession.create({
       data: {
@@ -91,7 +104,7 @@ export const createSoloSession = playerActionClient
         slug: generateSessionSlug(settings),
         status: "RUNNING",
         flipped: [],
-        cards: generateSessionCards(collection),
+        cards: generateSessionCards(collection, settings.tableSize),
         currentTurn: ctx.player.id,
         stats: {
           timer: 0,

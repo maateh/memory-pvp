@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 
 // types
-import type { MemoryCard } from "@repo/db"
+import type { MemoryCard, TableSize } from "@repo/db"
 import type { ClientSessionVariants, ClientSessionCard } from "@repo/schema/session"
 import type { ClientCardCollection } from "@repo/schema/collection"
 
@@ -57,11 +57,12 @@ export function generateSessionSlug(
  * @returns {PrismaJson.SessionCard[]} - Array of session cards, each duplicated and shuffled for game use.
  */
 export function generateSessionCards(
-  collection: ClientCardCollection
+  collection: ClientCardCollection,
+  tableSize: TableSize
 ): PrismaJson.SessionCard[] {
   const randomCards = collection.cards
     .sort(() => Math.random() - 0.5)
-    .slice(0, tableSizeMap[collection.tableSize] / 2)
+    .slice(0, tableSizeMap[tableSize] / 2)
 
   const sessionCards = randomCards.reduce((cards, card, index) => {
     const firstKey = index * 2

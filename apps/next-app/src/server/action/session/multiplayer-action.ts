@@ -28,6 +28,7 @@ import {
 } from "@/server/action"
 
 // config
+import { tableSizeMap } from "@repo/config/game"
 import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
@@ -65,6 +66,36 @@ export const createRoom = playerActionClient
         key: "ACTIVE_ROOM",
         message: "Active room found.",
         description: "You have already joined another room. Please leave it first."
+      })
+    }
+
+    /* Finding collection with the specified `collectionId` */
+    const collection = await ctx.db.cardCollection.findUnique({
+      where: { id: settings.collectionId },
+      include: { user: true, cards: true }
+    })
+
+    /**
+     * Throws server error with `COLLECTION_NOT_FOUND` key if
+     * collection not found with the specified `collectionId`.
+     */
+    if (!collection) {
+      ServerError.throwInAction({
+        key: "COLLECTION_NOT_FOUND",
+        message: "Sorry, but we can't find the card collection you selected.",
+        description: "Please, select another collection or try again later."
+      })
+    }
+
+    /**
+     * Throws server error with `TABLE_SIZE_CONFLICT` key if
+     * collection and settings table sizes are incompatible.
+     */
+    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
+      ServerError.throwInAction({
+        key: "TABLE_SIZE_CONFLICT",
+        message: "Collection table size is too small.",
+        description: "Table size of the selected collection is incompatible with your settings."
       })
     }
 
@@ -202,6 +233,18 @@ export const createMultiplayerSession = playerActionClient
       })
     }
 
+    /**
+     * Throws server error with `TABLE_SIZE_CONFLICT` key if
+     * collection and settings table sizes are incompatible.
+     */
+    if (tableSizeMap[settings.tableSize] > tableSizeMap[collection.tableSize]) {
+      ServerError.throwInAction({
+        key: "TABLE_SIZE_CONFLICT",
+        message: "Collection table size is too small.",
+        description: "Table size of the selected collection is incompatible with your settings."
+      })
+    }
+
     /* Create the multiplayer game session */
     const session = await ctx.db.gameSession.create({
       data: {
@@ -209,7 +252,7 @@ export const createMultiplayerSession = playerActionClient
         slug,
         status: "RUNNING",
         flipped: [],
-        cards: generateSessionCards(collection),
+        cards: generateSessionCards(collection, settings.tableSize),
         currentTurn: Math.random() < 0.5 ? ctx.player.id : guestId,
         stats: {
           timer: 0,
