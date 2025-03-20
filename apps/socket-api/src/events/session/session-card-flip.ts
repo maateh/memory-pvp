@@ -22,6 +22,7 @@ import { io } from "@/server"
 import { currentPlayerKey, otherPlayerKey } from "@repo/helper/player"
 
 // utils
+import { elapsedTime } from "@repo/util/timer"
 import { validate } from "@/utils/validate"
 
 export const sessionCardFlip: SocketEventHandler<
@@ -126,6 +127,7 @@ function handleCardFlip(clickedCard: ClientSessionCard, {
   }]
 
   ++session.stats.flips[playerId]
+  session.stats.timer = elapsedTime(session.startedAt).seconds
 
   if (session.format === "COOP" && session.flipped.length === 1) {
     session.currentTurn = session.currentTurn === playerId

@@ -2,20 +2,28 @@
 import type { GameSession, SessionStatus } from "@repo/db"
 import type { ClientSession } from "@repo/schema/session"
 
+// helpers
+import { calculateElo } from "@repo/helper/elo"
+
 // server
-import { db } from "@repo/server/db"
+import { db } from "@/db"
 
 /**
- * TODO: write doc
+ * Closes a game session and updates player statistics.
  * 
- * @param clientSession 
- * @param currentPlayerId 
- * @param status 
- * @returns 
+ * - Updates player profiles with the latest Elo rating, game stats, and session count.
+ * - Updates the session status to `FINISHED`, `CLOSED`, or `FORCE_CLOSED`.
+ * - Records the session results for each participating player.
+ * - Operations are executed within a database transaction.
+ * 
+ * @param {ClientSession} clientSession The current session containing player data, mode, and stats.
+ * @param {string} requesterPlayerId The ID of the player requesting the session closure.
+ * @param {SessionStatus} status Session "action" status.
+ * @returns {Promise<GameSession>} The updated game session.
  */
 export async function closeSession(
   clientSession: Pick<ClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
-  currentPlayerId: string,
+  requesterPlayerId: string,
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<GameSession> {
   const { slug, format, owner, guest, stats } = clientSession
@@ -29,11 +37,10 @@ export async function closeSession(
       where: { id: player.id },
       data: {
         stats: {
-          elo: 0, // TODO: calculate `elo`
+          elo: calculateElo(clientSession, player.id, status, requesterPlayerId).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
-          avgTime: 0, // TODO: calculate `avgTime`
-          totalTime: player.stats.totalTime + stats.timer,
+          timer: player.stats.timer + stats.timer,
           sessions: ++player.stats.sessions
         }
       }
@@ -52,9 +59,10 @@ export async function closeSession(
           createMany: {
             data: players.map((player) => ({
               playerId: player.id,
-              gainedElo: 0, // TODO: calculate `gainedElo`
+              gainedElo: calculateElo(clientSession, player.id, status, requesterPlayerId).gainedElo,
               flips: stats.flips[player.id],
-              matches: stats.matches[player.id]
+              matches: stats.matches[player.id],
+              timer: stats.timer
             }))
           }
         }

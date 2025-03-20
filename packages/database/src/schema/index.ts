@@ -6,6 +6,7 @@ import {
   GameSessionSchema,
   MemoryCardSchema,
   PlayerProfileSchema,
+  ResultSchema,
   UserSchema
 } from "@/schema/generated"
 
@@ -17,12 +18,12 @@ import {
   sessionStats
 } from "@/schema/json"
 
-export const playerProfileWithUserAvatar = PlayerProfileSchema
+export const playerProfile = PlayerProfileSchema
   .omit({ stats: true })
-  .extend({
-    user: UserSchema.pick({ imageUrl: true }).optional(),
-    stats: playerStats
-  })
+  .extend({ stats: playerStats })
+
+export const playerProfileWithUserAvatar = playerProfile
+  .extend({ user: UserSchema.pick({ imageUrl: true }).optional() })
 
 export const cardCollectionWithCards = CardCollectionSchema
   .extend({ cards: z.array(MemoryCardSchema) })
@@ -39,4 +40,19 @@ export const gameSessionWithPlayersWithAvatarWithCollectionWithCards = GameSessi
     stats: sessionStats,
     cards: z.array(sessionCard),
     flipped: z.array(sessionCardMetadata)
+  })
+  
+export const resultWithPlayerWithSession = ResultSchema
+  .omit({ playerId: true, sessionId: true })
+  .extend({
+    player: playerProfile,
+    session: GameSessionSchema
+      .pick({
+        slug: true,
+        mode: true,
+        format: true,
+        tableSize: true,
+        startedAt: true
+      })
+      .extend({ stats: sessionStats })
   })

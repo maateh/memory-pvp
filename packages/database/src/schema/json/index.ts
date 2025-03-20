@@ -4,8 +4,7 @@ export const playerStats = z.object({
   elo: z.coerce.number(),
   flips: z.coerce.number(),
   matches: z.coerce.number(),
-  avgTime: z.coerce.number(),
-  totalTime: z.coerce.number(),
+  timer: z.coerce.number(),
   sessions: z.coerce.number()
 })
 

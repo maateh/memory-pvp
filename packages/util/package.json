@@ -1,5 +1,5 @@
 {
-  "name": "@repo/config",
+  "name": "@repo/util",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
@@ -11,16 +11,9 @@
     "check-types": "tsc --noEmit"
   },
   "exports": {
-    "./connection": "./dist/connection-settings.js",
-    "./elo": "./dist/elo-settings.js",
-    "./game": "./dist/game-settings.js",
-    "./result": "./dist/result-settings.js"
-  },
-  "dependencies": {
-    "lucide-react": "^0.429.0"
+    "./timer": "./dist/timer-util.js"
   },
   "devDependencies": {
-    "@repo/db": "workspace:*",
     "@repo/ts-config": "workspace:*",
     "@types/node": "^22.10.4"
   }

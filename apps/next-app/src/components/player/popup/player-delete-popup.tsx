@@ -71,7 +71,7 @@ const PlayerDeletePopup = ({ renderer, player, playerTag, ...props }: PlayerDele
 const PlayerDeletePopupContent = ({ player }: { player: ClientPlayer }) => (
   <>
     <StatisticList className="px-4 mt-2 max-w-lg mx-auto">
-      {Object.values(getRendererPlayerStats(player, ["tag", "elo", "totalTime"])).map((stat) => (
+      {Object.values(getRendererPlayerStats(player, ["tag", "elo", "timer"])).map((stat) => (
         <StatisticItem className="min-w-32 max-w-40"
           variant="destructive"
           size="sm"

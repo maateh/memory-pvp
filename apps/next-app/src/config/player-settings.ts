@@ -1,7 +1,6 @@
 // types
 import type { ClientPlayer } from "@repo/schema/player"
 
-/* Offline player metadata */
 export const offlinePlayerMetadata = {
   color: '#ffffff',
   id: '_offline',
@@ -14,13 +13,11 @@ export const offlinePlayerMetadata = {
     elo: 0,
     flips: 0,
     matches: 0,
-    avgTime: 0,
-    totalTime: 0,
+    timer: 0,
     sessions: 0
   }
 } satisfies ClientPlayer
 
-/* Deleted player placeholder */
 export const deletedPlayerPlaceholder = {
   color: '#ffffff',
   id: '_deleted',
@@ -33,8 +30,7 @@ export const deletedPlayerPlaceholder = {
     elo: 0,
     flips: 0,
     matches: 0,
-    avgTime: 0,
-    totalTime: 0,
+    timer: 0,
     sessions: 0
   }
 } satisfies ClientPlayer

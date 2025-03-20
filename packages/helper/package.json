@@ -12,7 +12,7 @@
   },
   "exports": {
     "./connection": "./dist/connection-helper.js",
-    "./session": "./dist/session-helper.js",
+    "./elo": "./dist/elo-helper.js",
     "./player": "./dist/player-helper.js"
   },
   "dependencies": {

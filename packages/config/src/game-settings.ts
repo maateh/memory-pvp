@@ -83,9 +83,3 @@ export const tableSizeMap: Record<TableSize, number> = {
   MEDIUM: 24,
   LARGE: 32
 } as const
-
-/**
- * Multiplier to calculate the amount of the "free flips"
- * in 'Ranked - Solo/Multiplayer' sessions.
- */
-export const freeFlipsMultiplier = 0.75 as const

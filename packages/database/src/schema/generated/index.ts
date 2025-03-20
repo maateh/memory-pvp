@@ -60,7 +60,7 @@ export const PlayerProfileScalarFieldEnumSchema = z.enum(['id','tag','color','is
 
 export const GameSessionScalarFieldEnumSchema = z.enum(['id','slug','status','mode','format','tableSize','stats','cards','flipped','currentTurn','collectionId','ownerId','guestId','startedAt','updatedAt','closedAt']);
 
-export const ResultScalarFieldEnumSchema = z.enum(['id','gainedElo','flips','matches','playerId','sessionId','createdAt','updatedAt']);
+export const ResultScalarFieldEnumSchema = z.enum(['id','gainedElo','flips','matches','timer','playerId','sessionId','createdAt','updatedAt']);
 
 export const MemoryCardScalarFieldEnumSchema = z.enum(['id','utKey','imageUrl','collectionId']);
 
@@ -169,6 +169,7 @@ export const ResultSchema = z.object({
   gainedElo: z.number().int(),
   flips: z.number().int(),
   matches: z.number().int(),
+  timer: z.number().int(),
   playerId: z.string(),
   sessionId: z.string(),
   createdAt: z.coerce.date(),

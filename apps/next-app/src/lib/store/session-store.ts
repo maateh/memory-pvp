@@ -5,6 +5,9 @@ import type { ClientPlayer } from "@repo/schema/player"
 import type { ClientSessionVariants, ClientSessionCard } from "@repo/schema/session"
 import type { SyncStatus } from "@/components/shared/sync-indicator"
 
+// utils
+import { elapsedTime } from "@repo/util/timer"
+
 type SessionState = {
   session: ClientSessionVariants
   currentPlayer: ClientPlayer
@@ -48,6 +51,7 @@ export const sessionStore = ({
       }]
 
       ++session.stats.flips[currentPlayer.id]
+      session.stats.timer = elapsedTime(session.startedAt).seconds
 
       return { session }
     })
