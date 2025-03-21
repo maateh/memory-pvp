@@ -96,12 +96,6 @@ export const createSoloSession = playerActionClient
       }
     })
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
     redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
@@ -138,12 +132,6 @@ export const finishSoloSession = soloSessionActionClient
       closeSession(clientSession, ctx.player.id, "FINISHED")
     ])
 
-    /*
-     * Note: Unfortunately, passing 'RedirectType.replace' as redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
     redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
   })
 
@@ -157,12 +145,6 @@ export const forceCloseSoloSession = soloSessionActionClient
       closeSession(clientSession, ctx.player.id, "FORCE_CLOSED")
     ])
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
     redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
   })
 
@@ -216,11 +198,5 @@ export const saveOfflineSession = protectedActionClient
       }
     })
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
     redirect(`/game/summary/${slug}`, RedirectType.replace)
   })

@@ -283,11 +283,5 @@ export const forceCloseMultiplayerSession = multiplayerSessionActionClient
   .action(async ({ ctx }) => {
     await closeSession(ctx.activeRoom, ctx.player.id, "FORCE_CLOSED")
 
-    /**
-     * Note: Unfortunately, passing 'RedirectType.replace' as the redirect type doesn't work in NextJS 14.
-     * Looks like it has been fixed in NextJS 15 so this will be a bit buggy until then.
-     * 
-     * https://github.com/vercel/next.js/discussions/60864
-     */
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
