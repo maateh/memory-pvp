@@ -11,8 +11,8 @@ import { parseSearchParams } from "@/lib/util/parser/search-parser"
 type PaginationAction = "keep" | "reset"
 
 type UseSearchReturn<F extends FilterPattern, S extends SortPattern> = Search<F, S> & {
-  addSearchParam: (key: keyof (F & S & PaginationParams), value: string, pagination?: PaginationAction) => void
-  removeSearchParam: (key: keyof (F & S & PaginationParams), pagination?: PaginationAction) => void
+  addSearchParam: (key: keyof (F | S) | keyof PaginationParams, value: string, pagination?: PaginationAction) => void
+  removeSearchParam: (key: keyof (F | S) | keyof PaginationParams, pagination?: PaginationAction) => void
   clearSearchParams: (pagination?: PaginationAction) => void
   toggleFilterParam: (key: keyof F, value: string, pagination?: PaginationAction) => void
   toggleSortParam: (value: keyof S, pagination?: PaginationAction) => void
@@ -49,13 +49,13 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
   /** 
    * Creates a query string by adding or updating a parameter key and value in the existing URL search parameters.
    * 
-   * @param {keyof (F & S & PaginationParams)} key The key of the parameter to set.
+   * @param {keyof (F | S) | keyof PaginationParams} key The key of the parameter to set.
    * @param {string} value The value to set for the parameter.
    * @param {PaginationAction} pagination Pagination action to `keep` or `reset` the current page.
    * @returns {string} The updated query string.
    */
   const createQueryString = useCallback((
-    key: keyof (F & S & PaginationParams),
+    key: keyof (F | S) | keyof PaginationParams,
     value: string,
     pagination: PaginationAction
   ) => {
@@ -75,12 +75,12 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
   /** 
    * Removes a specified query parameter key from the URL search parameters.
    * 
-   * @param {keyof (F & S & PaginationParams)} key The key of the parameter to remove.
+   * @param {keyof (F | S) | keyof PaginationParams} key The key of the parameter to remove.
    * @param {PaginationAction} pagination Pagination action to `keep` or `reset` the current page.
    * @returns {string} The updated query string.
    */
   const removeQueryString = useCallback((
-    key: keyof (F & S & PaginationParams),
+    key: keyof (F | S) | keyof PaginationParams,
     pagination: PaginationAction
   ) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -104,12 +104,12 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
     /** 
      * Adds or updates a search parameter in the URL.
      * 
-     * @param {keyof (F & S & PaginationParams)} key The key of the search parameter to set.
+     * @param {keyof (F | S) | keyof PaginationParams} key The key of the search parameter to set.
      * @param {string} value The value to set for the search parameter.
      * @param {PaginationAction} [pagination="reset"] Pagination action to `keep` or `reset` the current page.
      */
     addSearchParam(
-      key: keyof (F & S & PaginationParams),
+      key: keyof (F | S) | keyof PaginationParams,
       value: string,
       pagination: PaginationAction = "reset"
     ) {
@@ -120,11 +120,11 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
     /** 
      * Removes a search parameter from the URL.
      * 
-     * @param {keyof (F & S & PaginationParams)} key The key of the search parameter to set.
+     * @param {keyof (F | S) | keyof PaginationParams} key The key of the search parameter to set.
      * @param {PaginationAction} [pagination="reset"] Pagination action to `keep` or `reset` the current page.
      */
     removeSearchParam(
-      key: keyof (F & S & PaginationParams), 
+      key: keyof (F | S) | keyof PaginationParams, 
       pagination: PaginationAction = "reset"
     ) {
       const query = removeQueryString(key, pagination)
@@ -157,8 +157,8 @@ export function useSearch<F extends FilterPattern, S extends SortPattern>(
       pagination: PaginationAction = "reset"
     ) {
       const query = filter[key] === value
-        ? removeQueryString(key, pagination)
-        : createQueryString(key, value, pagination)
+        ? removeQueryString(key as keyof (F | S), pagination)
+        : createQueryString(key as keyof (F | S), value, pagination)
 
       router.replace(`${pathname}?${query}`, { scroll: false })
     },
