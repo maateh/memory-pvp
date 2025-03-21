@@ -1,12 +1,14 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 
 // types
 import type { DefaultValues } from "react-hook-form"
 import type { SessionFormValidation } from "@repo/schema/session-validation"
 import type { ClientCardCollection } from "@repo/schema/collection"
+import type { SessionFormFilter } from "@repo/schema/session"
 
 // clerk
 import { useClerk } from "@clerk/nextjs"
@@ -31,6 +33,7 @@ import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
 // hooks
+import { useCacheStore } from "@/hooks/store/use-cache-store"
 import { useCreateOfflineSession } from "@/hooks/handler/session/use-create-offline-session"
 import { useCreateSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
 import { useCreateRoomAction } from "@/lib/safe-action/session/multiplayer"
@@ -40,21 +43,24 @@ type SessionFormValuesCache = {
 } & SessionFormValidation
 
 type SessionFormProps = {
-  defaultValues?: DefaultValues<SessionFormValidation>
+  settings: SessionFormFilter
   collection: ClientCardCollection | null
 }
 
-const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
+const SessionForm = ({ settings, collection }: SessionFormProps) => {
+  const router = useRouter()
   const { user: clerkUser } = useClerk()
+
+  const setCache = useCacheStore<Pick<SessionFormFilter, "collectionId" | "tableSize">, "set">((state) => state.set)
 
   const form = useForm<SessionFormValidation>({
     resolver: zodResolver(sessionFormValidation),
-    defaultValues: {
+    values: {
       settings: {
-        mode: defaultValues?.settings?.mode ?? "CASUAL",
-        format: defaultValues?.settings?.format ?? "SOLO",
-        tableSize: defaultValues?.settings?.tableSize ?? "SMALL",
-        collectionId: collection?.id
+        mode: settings.mode ?? "CASUAL",
+        format: settings.format ?? "SOLO",
+        tableSize: settings.tableSize ?? "SMALL",
+        collectionId: collection?.id || ""
       }
     }
   })
@@ -68,6 +74,11 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
     executeAsync: createWaitingRoom,
     status: createWaitingRoomStatus
   } = useCreateRoomAction()
+
+  const openCollectionExplorer = () => {
+    setCache(settings)
+    router.push("/collections/explorer")
+  }
 
   const handleSubmit = async (values: SessionFormValidation) => {
     const { settings, forceStart } = values
@@ -106,28 +117,28 @@ const SessionForm = ({ defaultValues, collection }: SessionFormProps) => {
       <SessionFormFields form={form} />
 
       <div className="my-auto flex justify-center">
-        <Button className="w-full max-w-xl p-0 whitespace-normal transition-transform hover:scale-105 hover:no-underline"
-          tooltip={collection ? "Click to select another collection" : "Manage collections"}
-          variant={collection ? "link" : "destructive"}
+        <Button className={cn("w-full max-w-xl p-0 whitespace-normal transition-transform hover:scale-105 hover:no-underline", {
+          "max-w-sm": !collection
+        })}
+          tooltip="Select another collection"
+          variant={collection ? "link" : "outline"}
           size="icon"
           type="button"
-          asChild
+          onClick={openCollectionExplorer}
         >
-          <Link href={collection ? "/collections/explorer" : "/collections/manage"} scroll={false}>
-            {collection ? (
-              <CollectionCard className="h-fit w-full bg-background/50"
-                metadata={{ type: "listing" }}
-                collection={collection}
-                imageSize={32}
-              />
-            ) : (
-              <CardItem className="justify-center text-center bg-destructive/85 text-destructive-foreground">
-                <p className="mt-1 text-base sm:text-lg font-heading font-semibold">
-                  Create your first ever card collection!
-                </p>
-              </CardItem>
-            )}
-          </Link>
+          {collection ? (
+            <CollectionCard className="h-fit w-full bg-background/50"
+              metadata={{ type: "listing" }}
+              collection={collection}
+              imageSize={32}
+            />
+          ) : (
+            <CardItem className="justify-center text-center">
+              <p className="mt-1 text-base font-heading font-medium">
+                No collection found for this table size.
+              </p>
+            </CardItem>
+          )}
         </Button>
       </div>
 

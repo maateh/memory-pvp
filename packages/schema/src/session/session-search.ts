@@ -16,6 +16,14 @@ export const sessionFilter = clientSession
   .extend({ playerId: z.string() })
   .partial()
 
+export const sessionFormFilter = sessionFilter
+  .pick({
+    mode: true,
+    format: true,
+    tableSize: true,
+    collectionId: true
+  })
+
 export const sessionSort = z.record(
   clientSession.pick({
     slug: true,
@@ -32,4 +40,5 @@ export const sessionSort = z.record(
 )
 
 export type SessionFilter = z.infer<typeof sessionFilter>
+export type SessionFormFilter = z.infer<typeof sessionFormFilter>
 export type SessionSort = z.infer<typeof sessionSort>

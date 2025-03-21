@@ -3,6 +3,9 @@
 import { forwardRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
+// types
+import type { SessionFormFilter } from "@repo/schema/session"
+
 // utils
 import { cn } from "@/lib/util"
 
@@ -11,6 +14,9 @@ import { ImagePlay } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+
+// hooks
+import { useCacheStore } from "@/hooks/store/use-cache-store"
 
 type CollectionQuickSetupLinkProps = {
   collectionId: string
@@ -29,19 +35,23 @@ const CollectionQuickSetupLink = forwardRef<
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleNavigate = () => {
-    const url = `/game/setup?collectionId=${collectionId}`
+  const search = useCacheStore<SessionFormFilter, "cache">((state) => state.cache)
 
+  const handleNavigate = () => {
     /*
      * Note: In this case, a full page reload is needed to make sure closing the popup.
      * Yeah, this is a disgusting solution, but I couldn't find a better approach.
      */
     if (pathname === "/collections/explorer") {
+      const searchParams = new URLSearchParams({ ...search, collectionId })
+      const url = `/game/setup?${searchParams.toString()}`
+
       router.back()
       window.location.replace(url)
+      return
     }
 
-    router.push(url)
+    router.push(`/game/setup?collectionId=${collectionId}`)
   }
 
   return (

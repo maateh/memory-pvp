@@ -1,9 +1,9 @@
 // types
-import type { SessionFilter } from "@repo/schema/session"
+import type { SessionFormFilter } from "@repo/schema/session"
 import type { SearchPattern } from "@/lib/types/search"
 
 // schemas
-import { sessionFilter } from "@repo/schema/session"
+import { sessionFormFilter } from "@repo/schema/session"
 
 // db
 import { getPlayers } from "@/server/db/query/player-query"
@@ -24,19 +24,14 @@ import { SessionForm } from "@/components/session/form"
 import { UserManageButton } from "@/components/user"
 
 type GameSetupPageProps = {
-  searchParams: Promise<Pick<SessionFilter, "mode" | "format" | "tableSize" | "collectionId">>
+  searchParams: Promise<SessionFormFilter>
 }
 
 const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
   const search = await searchParams as SearchPattern
   const searchEntries = new URLSearchParams(search).entries()
   const { filter } = parseSearchParams(searchEntries, {
-    filterSchema: sessionFilter.pick({
-      mode: true,
-      format: true,
-      tableSize: true,
-      collectionId: true
-    })
+    filterSchema: sessionFormFilter
   })
 
   const { tableSize = "SMALL", collectionId } = filter
@@ -77,7 +72,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
       <main className="flex-1 flex flex-col">
         <SessionForm
-          defaultValues={{ settings: filter }}
+          settings={filter}
           collection={collection}
         />
       </main>

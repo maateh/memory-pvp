@@ -2,6 +2,10 @@
 import type { UseFormReturn } from "react-hook-form"
 import type { SessionFormValidation } from "@repo/schema/session-validation"
 
+// schemas
+import { sessionFormFilter } from "@repo/schema/session"
+
+
 // config
 import {
   matchFormatPlaceholders,
@@ -15,11 +19,16 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 // components
 import SessionInfoSelect from "./session-info-select"
 
+// hooks
+import { useSearch } from "@/hooks/use-search"
+
 type SessionFormFieldsProps = {
   form: UseFormReturn<SessionFormValidation>
 }
 
 const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
+  const { addSearchParam } = useSearch({ filterSchema: sessionFormFilter })
+
   return (
     <>
       <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8">
@@ -44,7 +53,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                     }))
                   }
                   value={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={(mode) => addSearchParam("mode", mode)}
                 />
               </FormControl>
             </FormItem>
@@ -72,7 +81,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                     }))
                   }
                   value={field.value}
-                  onValueChange={field.onChange}
+                  onValueChange={(format) => addSearchParam("format", format)}
                 />
               </FormControl>
             </FormItem>
@@ -101,7 +110,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                   }))
                 }
                 value={field.value}
-                onValueChange={field.onChange}
+                onValueChange={(tableSize) => addSearchParam("tableSize", tableSize)}
               />
             </FormControl>
           </FormItem>
