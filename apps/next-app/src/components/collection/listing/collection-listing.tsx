@@ -1,6 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 
 // types
 import type { SortingState, VisibilityState } from "@tanstack/react-table"
@@ -16,18 +18,19 @@ import { columns } from "./table-columns"
 import { cn } from "@/lib/util"
 
 // icons
-import { ImageOff } from "lucide-react"
+import { ImageOff, ImageUp } from "lucide-react"
 
 // shadcn
+import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
+import { TableSkeleton } from "@/components/ui/table"
 
 // components
+import { NoListingData } from "@/components/shared"
 import { CollectionCard, CollectionCardSkeleton } from "@/components/collection/listing"
-import { CardItem, NoListingData } from "@/components/shared"
 
 // hooks
 import { useSidebar } from "@/components/ui/sidebar"
-import { TableSkeleton } from "@/components/ui/table"
 
 type CollectionListingMetadata = {
   type: "listing" | "manage"
@@ -37,9 +40,18 @@ type CollectionListingProps = {
   collections: ClientCardCollection[]
   metadata: CollectionListingMetadata
   imageSize?: number
+  fallbackType?: "default" | "redirect"
 }
 
-const CollectionListing = ({ collections, metadata, imageSize }: CollectionListingProps) => {
+const CollectionListing = ({
+  collections,
+  metadata,
+  imageSize,
+  fallbackType = "default"
+}: CollectionListingProps) => {
+  const router = useRouter()
+  const pathname = usePathname()
+
   const { open: sidebarOpen } = useSidebar({ provideFallback: true })
 
   const [sorting, setSorting] = useState<SortingState>([])
@@ -61,11 +73,41 @@ const CollectionListing = ({ collections, metadata, imageSize }: CollectionListi
   })
 
   if (collections.length === 0) {
+    const handleNavigate = () => {
+      const href = "/collections/manage"
+
+      /*
+      * Note: In this case, a full page reload is needed to make sure closing the popup.
+      * Yeah, this is a disgusting solution, but I couldn't find a better approach.
+      */
+      if (pathname === "/collections/explorer") {
+        router.back()
+        window.location.assign(href)
+        return
+      }
+
+      router.replace(href)
+    }
+
     return (
-      <NoListingData className="mt-44"
-        Icon={ImageOff}
-        message="No collection found."
-      />
+      <>
+        <NoListingData className={cn("mt-44", { "mt-4 md:mt-8": pathname === "/collections/explorer" })}
+          iconProps={{ className: cn({ "sm:size-10 md:size-12": pathname === "/collections/explorer" }) }}
+          messageProps={{ className: cn({ "text-base sm:text-lg md:text-xl": pathname === "/collections/explorer" }) }}
+          Icon={ImageOff}
+          message="No collection found."
+          hideClearFilter={fallbackType === "redirect"}
+        />
+
+        {fallbackType === "redirect" && (
+          <Button className="w-fit mt-4 mx-auto flex gap-x-2"
+            onClick={handleNavigate}
+          >
+            <ImageUp className="size-4 shrink-0" />
+            <span>Create your own</span>
+          </Button>
+        )}
+      </>
     )
   }
   

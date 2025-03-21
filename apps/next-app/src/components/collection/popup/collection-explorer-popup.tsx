@@ -114,6 +114,7 @@ const CollectionExplorerPopupContent = ({ collections }: { collections: ClientCa
       collections={collections}
       metadata={{ type: "listing" }}
       imageSize={36}
+      fallbackType="redirect"
     />
   </ScrollArea>
 )
