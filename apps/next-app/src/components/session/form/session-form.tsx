@@ -43,23 +43,23 @@ type SessionFormValuesCache = {
 } & SessionFormValidation
 
 type SessionFormProps = {
-  settings: SessionFormFilter
+  search: SessionFormFilter
   collection: ClientCardCollection | null
 }
 
-const SessionForm = ({ settings, collection }: SessionFormProps) => {
+const SessionForm = ({ search, collection }: SessionFormProps) => {
   const router = useRouter()
   const { user: clerkUser } = useClerk()
 
-  const setCache = useCacheStore<Pick<SessionFormFilter, "collectionId" | "tableSize">, "set">((state) => state.set)
+  const setCache = useCacheStore<SessionFormFilter, "set">((state) => state.set)
 
   const form = useForm<SessionFormValidation>({
     resolver: zodResolver(sessionFormValidation),
     values: {
       settings: {
-        mode: settings.mode ?? "CASUAL",
-        format: settings.format ?? "SOLO",
-        tableSize: settings.tableSize ?? "SMALL",
+        mode: search.mode ?? "CASUAL",
+        format: search.format ?? "SOLO",
+        tableSize: search.tableSize ?? "SMALL",
         collectionId: collection?.id || ""
       }
     }
@@ -76,6 +76,8 @@ const SessionForm = ({ settings, collection }: SessionFormProps) => {
   } = useCreateRoomAction()
 
   const openCollectionExplorer = () => {
+    const { settings } = form.getValues()
+
     setCache(settings)
     router.push("/collections/explorer")
   }

@@ -72,7 +72,7 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
       <main className="flex-1 flex flex-col">
         <SessionForm
-          settings={filter}
+          search={filter}
           collection={collection}
         />
       </main>

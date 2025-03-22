@@ -35,7 +35,7 @@ const CollectionQuickSetupLink = forwardRef<
   const router = useRouter()
   const pathname = usePathname()
 
-  const search = useCacheStore<SessionFormFilter, "cache">((state) => state.cache)
+  const settings = useCacheStore<SessionFormFilter, "cache">((state) => state.cache)
 
   const handleNavigate = () => {
     /*
@@ -43,11 +43,13 @@ const CollectionQuickSetupLink = forwardRef<
      * Yeah, this is a disgusting solution, but I couldn't find a better approach.
      */
     if (pathname === "/collections/explorer") {
-      const searchParams = new URLSearchParams({ ...search, collectionId })
+      const searchParams = new URLSearchParams({ ...settings, collectionId })
       const url = `/game/setup?${searchParams.toString()}`
 
       router.back()
-      window.location.replace(url)
+      if (settings?.collectionId !== collectionId) {
+        window.location.replace(url)
+      }
       return
     }
 
