@@ -10,11 +10,16 @@ import { calculateElo } from "@repo/helper/elo"
 // utils
 import { handleServerError } from "@/lib/util/error"
 
-export const useForceCloseSoloSessionAction = () =>
-  useAction(forceCloseSoloSession, {
-    onSuccess({ input: { clientSession } }) {
-      const { owner, mode } = clientSession
-      const { gainedElo } = calculateElo(clientSession, owner.id, "FORCE_CLOSED")
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
+
+export const useForceCloseSoloSessionAction = () => {
+  const session = useSessionStore((state) => state.session)
+
+  return useAction(forceCloseSoloSession, {
+    onSuccess() {
+      const { owner, mode } = session
+      const { gainedElo } = calculateElo(session, owner.id, "FORCE_CLOSED")
 
       toast.warning("Solo session has been force closed.", {
         description: mode === "CASUAL"
@@ -26,3 +31,4 @@ export const useForceCloseSoloSessionAction = () =>
       handleServerError(error.serverError, "Failed to force close solo game session. Please try again.")
     }
   })
+}

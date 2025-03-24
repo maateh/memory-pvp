@@ -42,6 +42,15 @@ export const clientSession = z.object({
   closedAt: z.coerce.date().optional().nullable()
 })
 
+export const sessionStateUpdater = clientSession
+  .pick({
+    currentTurn: true,
+    cards: true,
+    flipped: true,
+    stats: true
+  })
+
 export type SessionSettings = z.infer<typeof sessionSettings>
 export type ClientSessionCard = z.infer<typeof clientSessionCard>
 export type ClientSession = z.infer<typeof clientSession>
+export type SessionStateUpdater = z.infer<typeof sessionStateUpdater>

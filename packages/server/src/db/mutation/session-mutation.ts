@@ -1,6 +1,6 @@
 // types
 import type { GameSession, SessionStatus } from "@repo/db"
-import type { ClientSession } from "@repo/schema/session"
+import type { ClientSessionVariants } from "@repo/schema/session"
 
 // helpers
 import { calculateElo } from "@repo/helper/elo"
@@ -22,11 +22,11 @@ import { db } from "@/db"
  * @returns {Promise<GameSession>} The updated game session.
  */
 export async function closeSession(
-  clientSession: Pick<ClientSession, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "stats">,
+  clientSession: Pick<ClientSessionVariants, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "cards" | "stats">,
   requesterPlayerId: string,
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<GameSession> {
-  const { slug, format, owner, guest, stats } = clientSession
+  const { slug, format, owner, guest, cards, stats } = clientSession
 
   const players = [owner]
   if (format === "PVP" || format === "COOP") players.push(guest!)
@@ -52,6 +52,7 @@ export async function closeSession(
     db.gameSession.update({
       where: { slug },
       data: {
+        cards,
         stats,
         status,
         closedAt: new Date(),

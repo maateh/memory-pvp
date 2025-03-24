@@ -118,7 +118,7 @@ export const storeSoloSession = soloSessionActionClient
     tx.json.set(key, "$.flipped", flipped)
     tx.json.set(key, "$.stats", stats)
     tx.expire(key, REDIS_STORE_TTL)
-    
+
     const results = await tx.exec({ keepErrors: true })
     if (results.find((result) => result.error)) {
       ServerError.throwInAction({
@@ -132,27 +132,35 @@ export const storeSoloSession = soloSessionActionClient
 export const finishSoloSession = soloSessionActionClient
   .schema(finishSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+    const { cards, stats } = parsedInput
 
     await Promise.all([
       ctx.redis.del(soloSessionKey(ctx.player.id)),
-      closeSession(clientSession, ctx.player.id, "FINISHED")
+      closeSession({
+        ...parseSchemaToClientSession(ctx.activeSession),
+        cards,
+        stats
+      }, ctx.player.id, "FINISHED")
     ])
 
-    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
+    redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
 
 export const forceCloseSoloSession = soloSessionActionClient
   .schema(forceCloseSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+    const { cards, stats } = parsedInput
 
     await Promise.all([
       ctx.redis.del(soloSessionKey(ctx.player.id)),
-      closeSession(clientSession, ctx.player.id, "FORCE_CLOSED")
+      closeSession({
+        ...parseSchemaToClientSession(ctx.activeSession),
+        cards,
+        stats
+      }, ctx.player.id, "FORCE_CLOSED")
     ])
 
-    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
+    redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
 
 export const saveOfflineSession = protectedActionClient

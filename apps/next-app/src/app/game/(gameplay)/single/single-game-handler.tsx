@@ -21,8 +21,8 @@ const SingleGameHandler = () => {
   const session = useSessionStore((state) => state.session)
   const setStoreState = useSessionStore((state) => state.setState)
 
-  const { executeAsync: finishSoloSession } = useFinishSoloSessionAction()
   const { executeAsync: storeSoloSession } = useStoreSoloSessionAction()
+  const { executeAsync: finishSoloSession } = useFinishSoloSessionAction()
 
   const { handleCardFlip } = useSingleplayerGameHandler({
     async onHeartbeat() {
@@ -37,9 +37,7 @@ const SingleGameHandler = () => {
       setStoreState({ syncStatus: "synchronized" })
 
       try {
-        await finishSoloSession({
-          clientSession: session as FinishSoloSessionValidation["clientSession"]
-        })
+        await finishSoloSession(session as FinishSoloSessionValidation)
       } catch (err) {
         logError(err)
       }
