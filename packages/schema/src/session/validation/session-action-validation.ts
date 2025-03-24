@@ -23,12 +23,15 @@ export const createMultiplayerSessionValidation = z.object({
   guestId: z.string()
 })
 
-export const storeSoloSessionValidation = z.object({
-  clientSession: soloClientSession
-})
+export const storeSoloSessionValidation = soloClientSession
+  .pick({
+    cards: true,
+    flipped: true,
+    stats: true
+  })
 
 export const finishSoloSessionValidation = z.object({
-  clientSession: clientSession
+  clientSession: soloClientSession
     .omit({ status: true, cards: true })
     .extend({
       cards: z.array(sessionCard.extend({

@@ -154,7 +154,7 @@ export async function getActiveClientSession(
   let clientSession: ClientSessionVariants | null = null
 
   if (format === "SOLO") {
-    clientSession = await redis.get<SoloClientSession>(soloSessionKey(playerId))
+    clientSession = await redis.json.get<SoloClientSession>(soloSessionKey(playerId))
   }
 
   if (format === "COOP" || format === "PVP") {

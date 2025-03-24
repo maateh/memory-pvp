@@ -17,8 +17,9 @@ import {
 } from "@/server/action"
 
 // config
-import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
+import { REDIS_STORE_TTL } from "@repo/server/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
+import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
 import {
@@ -78,7 +79,7 @@ export const createSoloSession = playerActionClient
     const collection = await verifyCollectionInAction({ ...settings, collectionId })
 
     /* Creates the game session, then redirects the user to the game page */
-    await ctx.db.gameSession.create({
+    const session = await ctx.db.gameSession.create({
       data: {
         ...settings,
         slug: generateSessionSlug(settings),
@@ -93,8 +94,15 @@ export const createSoloSession = playerActionClient
         },
         collection: { connect: { id: collection.id } },
         owner: { connect: { id: ctx.player.id } }
-      }
+      },
+      include: sessionSchemaFields
     })
+
+    const tx = ctx.redis.multi()
+    const key = soloSessionKey(ctx.player.id)
+    tx.json.set(key, "$", parseSchemaToClientSession(session))
+    tx.expire(key, REDIS_STORE_TTL)
+    await tx.exec()
 
     redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
@@ -102,24 +110,23 @@ export const createSoloSession = playerActionClient
 export const storeSoloSession = soloSessionActionClient
   .schema(storeSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+    const { cards, flipped, stats } = parsedInput
 
-    // TODO: use redis hash or json
-    const response = await ctx.redis.set(
-      soloSessionKey(ctx.player.id),
-      clientSession,
-      { ex: SESSION_STORE_TTL }
-    )
-
-    if (response !== "OK") {
+    const tx = ctx.redis.multi()
+    const key = soloSessionKey(ctx.player.id)
+    tx.json.set(key, "$.cards", cards)
+    tx.json.set(key, "$.flipped", flipped)
+    tx.json.set(key, "$.stats", stats)
+    tx.expire(key, REDIS_STORE_TTL)
+    
+    const results = await tx.exec({ keepErrors: true })
+    if (results.find((result) => result.error)) {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Failed to store solo game session.",
         description: "Cache server probably not available."
       })
     }
-
-    return clientSession
   })
 
 export const finishSoloSession = soloSessionActionClient
