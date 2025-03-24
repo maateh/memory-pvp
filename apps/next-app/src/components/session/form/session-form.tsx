@@ -1,17 +1,12 @@
 "use client"
 
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 
 // types
-import type { DefaultValues } from "react-hook-form"
 import type { SessionFormValidation } from "@repo/schema/session-validation"
 import type { ClientCardCollection } from "@repo/schema/collection"
 import type { SessionFormFilter } from "@repo/schema/session"
-
-// clerk
-import { useClerk } from "@clerk/nextjs"
 
 // validations
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -49,7 +44,6 @@ type SessionFormProps = {
 
 const SessionForm = ({ search, collection }: SessionFormProps) => {
   const router = useRouter()
-  const { user: clerkUser } = useClerk()
 
   const setCache = useCacheStore<SessionFormFilter, "set">((state) => state.set)
 
@@ -152,8 +146,7 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
           variant="secondary"
           size="lg"
           disabled={
-            !clerkUser
-              || createSoloSessionStatus === "executing"
+            createSoloSessionStatus === "executing"
               || createWaitingRoomStatus === "executing"
               || !collectionId
               || !collection

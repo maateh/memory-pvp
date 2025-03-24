@@ -36,7 +36,7 @@ export const useCreateOfflineSession = () => {
    */
   const execute = ({ collection, settings, forceStart }: SessionFormValuesCache): void => {
     /* Checks if the values are valid for an offline session */
-    if (settings.mode !== "CASUAL" && settings.format !== "OFFLINE") {
+    if (settings.mode !== "CASUAL") {
       toast.warning("Not supported in Offline mode!", {
         description: "You can only play Casual mode in offline."
       })
