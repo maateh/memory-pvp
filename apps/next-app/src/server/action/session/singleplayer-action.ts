@@ -3,7 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // redis
-import { sessionKey } from "@repo/server/redis-keys"
+import { soloSessionKey } from "@repo/server/redis-keys"
 
 // db
 import { closeSession } from "@repo/server/db-session-mutation"
@@ -104,9 +104,9 @@ export const storeSoloSession = soloSessionActionClient
   .action(async ({ ctx, parsedInput }) => {
     const { clientSession } = parsedInput
 
+    // TODO: use redis hash or json
     const response = await ctx.redis.set(
-      // TODO: key will be replaced
-      sessionKey(ctx.activeSession.slug),
+      soloSessionKey(ctx.player.id),
       clientSession,
       { ex: SESSION_STORE_TTL }
     )
@@ -114,7 +114,7 @@ export const storeSoloSession = soloSessionActionClient
     if (response !== "OK") {
       ServerError.throwInAction({
         key: "UNKNOWN",
-        message: "Failed to store game session.",
+        message: "Failed to store solo game session.",
         description: "Cache server probably not available."
       })
     }
@@ -128,7 +128,7 @@ export const finishSoloSession = soloSessionActionClient
     const { clientSession } = parsedInput
 
     await Promise.all([
-      ctx.redis.del(sessionKey(ctx.activeSession.slug)),
+      ctx.redis.del(soloSessionKey(ctx.player.id)),
       closeSession(clientSession, ctx.player.id, "FINISHED")
     ])
 
@@ -141,7 +141,7 @@ export const forceCloseSoloSession = soloSessionActionClient
     const { clientSession } = parsedInput
 
     await Promise.all([
-      ctx.redis.del(sessionKey(ctx.activeSession.slug)),
+      ctx.redis.del(soloSessionKey(ctx.player.id)),
       closeSession(clientSession, ctx.player.id, "FORCE_CLOSED")
     ])
 

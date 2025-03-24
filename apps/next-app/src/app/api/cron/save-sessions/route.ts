@@ -3,12 +3,16 @@ import type { ClientSessionVariants } from "@repo/schema/session"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { sessionKey } from "@repo/server/redis-keys"
+import { soloSessionKey } from "@repo/server/redis-keys"
 
 // db
 import { db } from "@repo/server/db"
 
 const ROUTE_PREFIX = "[API | GET - /cron/save-sessions]"
+
+// TODO: This cron route should be reworked.
+// - saving solo client sessions from redis to mongodb (like now)
+// - force closing rooms and multiplayer sessions
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization")
@@ -26,7 +30,8 @@ export async function GET(req: Request) {
       return db.gameSession.update({
         where: { slug: session.slug },
         data: {
-          ...(session.format === "SOLO" ? session : { ...session, guest: undefined }),
+          ...session,
+          guest: undefined,
           updatedAt: new Date()
         }
       })
@@ -62,7 +67,7 @@ async function getSessionsFromRedis(): Promise<ClientSessionVariants[]> {
 
   do {
     const [newCursor, sessionKeys] = await redis.scan(cursor, {
-      match: sessionKey("*"),
+      match: soloSessionKey("*"),
       count: 100
     })
 

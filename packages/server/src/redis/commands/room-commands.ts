@@ -10,6 +10,48 @@ import { playerConnectionKey, roomKey, waitingRoomsKey } from "@/redis/keys"
 import { closeSession as closeSessionMutation } from "@/db/mutation/session-mutation"
 
 /**
+ * Retrieves a specific room from Redis based on its slug.
+ * 
+ * - Attempts to fetch the room data from Redis using `json.get`.
+ * - If the room is found, it is returned.
+ * - If the room is not found, a `ServerError` is thrown indicating that the session room has been closed.
+ * 
+ * @param {string} roomSlug - The unique identifier of the room to fetch.
+ * @returns {Promise<R | null>} - The requested room data or null if not found.
+ */
+export async function getRoom<R extends RoomVariants = RoomVariants>(
+  roomSlug: string
+): Promise<R | null> {
+  return await redis.json.get<R>(roomKey(roomSlug))
+}
+
+/**
+ * Retrieves a specific field from a room stored in Redis.
+ * 
+ * - Fetches the value of the specified field from the room data using `json.get`.
+ * - If the field exists, it is returned.
+ * - If the field is not found or the room does not exist, a `ServerError` is thrown.
+ * 
+ * @template R - The room variant type.
+ * @template F - The key of the field to retrieve from the room.
+ * 
+ * @param {string} roomSlug - The unique identifier of the room.
+ * @param {F} field - The field key to retrieve from the room data.
+ * @returns {Promise<R[F] | null>} - The value of the specified field or null if not found.
+ */
+export async function getRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
+  roomSlug: string,
+  field: F
+): Promise<R[F] | null> {
+  const fieldValue = await redis.json.get<(R[F])[]>(
+    roomKey(roomSlug), `$.${field as string}`
+  )
+
+  if (!fieldValue || !fieldValue.length) return null
+  return fieldValue[0]
+}
+
+/**
  * Retrieves a list of waiting rooms from Redis.
  * 
  * Note: Pagination will be added later.
@@ -51,45 +93,19 @@ export async function getActiveRoom<R extends RoomVariants>(
 }
 
 /**
- * Retrieves a specific room from Redis based on its slug.
+ * TODO: write doc
  * 
- * - Attempts to fetch the room data from Redis using `json.get`.
- * - If the room is found, it is returned.
- * - If the room is not found, a `ServerError` is thrown indicating that the session room has been closed.
- * 
- * @param {string} roomSlug - The unique identifier of the room to fetch.
- * @returns {Promise<R | null>} - The requested room data or null if not found.
+ * @param playerId 
+ * @returns 
  */
-export async function getRoom<R extends RoomVariants = RoomVariants>(
-  roomSlug: string
-): Promise<R | null> {
-  return await redis.json.get<R>(roomKey(roomSlug))
-}
-
-/**
- * Retrieves a specific field from a room stored in Redis.
- * 
- * - Fetches the value of the specified field from the room data using `json.get`.
- * - If the field exists, it is returned.
- * - If the field is not found or the room does not exist, a `ServerError` is thrown.
- * 
- * @template R - The room variant type.
- * @template F - The key of the field to retrieve from the room.
- * 
- * @param {string} roomSlug - The unique identifier of the room.
- * @param {F} field - The field key to retrieve from the room data.
- * @returns {Promise<R[F] | null>} - The value of the specified field or null if not found.
- */
-export async function getRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
-  roomSlug: string,
+export async function getActiveRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
+  playerId: string,
   field: F
 ): Promise<R[F] | null> {
-  const fieldValue = await redis.json.get<(R[F])[]>(
-    roomKey(roomSlug), `$.${field as string}`
-  )
+  const roomSlug = await redis.hget<string>(playerConnectionKey(playerId), "roomSlug")
+  if (!roomSlug) return null
 
-  if (!fieldValue || !fieldValue.length) return null
-  return fieldValue[0]
+  return await getRoomByField<R, F>(roomSlug, field)
 }
 
 /**
