@@ -7,7 +7,11 @@ import { multiplayerClientSession } from "@/session"
 
 export const waitingRoom = room
   .omit({ status: true, guest: true, session: true })
-  .extend({ status: z.literal(roomStatus.enum.waiting) })
+  .extend({
+    status: z.literal(roomStatus.enum.waiting),
+    guest: z.never().optional().nullable(),
+    session: z.never().optional().nullable()
+  })
 
 export const joinedRoom = room
   .omit({ status: true, guest: true, session: true })
@@ -16,7 +20,8 @@ export const joinedRoom = room
       roomStatus.enum.joined,
       roomStatus.enum.ready
     ]),
-    guest: roomPlayer
+    guest: roomPlayer,
+    session: z.never().optional().nullable()
   })
 
 export const runningRoom = room

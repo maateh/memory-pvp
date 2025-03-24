@@ -8,13 +8,15 @@ export const offlineClientSession = clientSession
   .omit({ format: true, mode: true, guest: true })
   .extend({
     format: z.literal(clientSession.shape.format.enum.OFFLINE),
-    mode: z.literal(clientSession.shape.mode.enum.CASUAL)
+    mode: z.literal(clientSession.shape.mode.enum.CASUAL),
+    guest: z.never().optional().nullable()
   })
 
 export const soloClientSession = clientSession
   .omit({ format: true, guest: true })
   .extend({
-    format: z.literal(clientSession.shape.format.enum.SOLO)
+    format: z.literal(clientSession.shape.format.enum.SOLO),
+    guest: z.never().optional().nullable()
   })
 
 export const singleplayerClientSession = offlineClientSession

@@ -11,6 +11,7 @@ export const offlineSessionStorage = offlineClientSession
     mode: true,
     format: true,
     owner: true,
+    guest: true,
     currentTurn: true,
     closedAt: true
   })

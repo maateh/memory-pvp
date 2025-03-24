@@ -109,10 +109,9 @@ export async function leaveRoom(
   room: WaitingRoomVariants,
   playerId: string
 ): Promise<WaitingRoom | null> {
-  if (room.status === "joined") room.guest = undefined!
-
   const waitingRoom: WaitingRoom = {
     ...room,
+    guest: undefined,
     status: "waiting",
     connectionStatus: room.owner.connection.status === "online" ? "half_online" : "offline",
     owner: { ...room.owner, ready: false }
