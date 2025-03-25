@@ -19,8 +19,10 @@ export function jsonPathBuilder(basePath: string = "$", ...args: string[]): stri
 }
 
 type SaveRedisJsonOpts = {
-  type?: "multi" | "pipeline"
+  type?: "create" | "update"
+  execution?: "multi" | "pipeline"
   ttl?: number
+  override?: Parameters<typeof redis.json.set>["3"]
 }
 
 /**
@@ -38,22 +40,31 @@ export async function saveRedisJson<T extends Record<string, any>>(
   opts?: SaveRedisJsonOpts
 ): Promise<UpstashResponse<"OK">> {
   const {
-    type = "multi",
-    ttl = REDIS_STORE_TTL
+    type = "create",
+    execution = "multi",
+    ttl = REDIS_STORE_TTL,
+    override
   } = opts || {}
 
-  const tx = redis[type]()
-  Object.keys(data).forEach((fieldKey) => {
-    const path = jsonPathBuilder(basePath, fieldKey)
-    const fieldValue = data[fieldKey]
+  const tx = redis[execution]()
+  if (type === "create") {
+    tx.json.set(key, basePath, data)
+  }
 
-    tx.json.set(
-      key,
-      path,
-      typeof fieldValue === "string" ? `"${fieldValue}"` : fieldValue,
-      { xx: true }
-    )
-  })
+  if (type === "update") {
+    Object.keys(data).forEach((fieldKey) => {
+      const path = jsonPathBuilder(basePath, fieldKey)
+      const fieldValue = data[fieldKey]
+  
+      tx.json.set(
+        key,
+        path,
+        typeof fieldValue === "string" ? `"${fieldValue}"` : fieldValue,
+        override
+      )
+    })
+  }
+
   tx.expire(key, ttl)
   
   const results = await tx.exec({ keepErrors: true })

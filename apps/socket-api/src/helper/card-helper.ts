@@ -54,7 +54,13 @@ export async function handleCardFlip(clickedCard: ClientSessionCard, {
     stats: session.stats
   }
 
-  const { error } = await saveRedisJson(roomKey(session.slug), "$.session", updater)
+  const { error } = await saveRedisJson(
+    roomKey(session.slug),
+    "$.session",
+    updater,
+    { type: "update", override: { xx: true } }
+  )
+
   if (error) {
     ServerError.throw({
       thrownBy: "SOCKET_API",
@@ -108,7 +114,13 @@ export async function handleCardPairing({
     stats: session.stats
   }, eventKey === "matched" ? { cards: session.cards } : {})
 
-  const { error } = await saveRedisJson(roomKey(session.slug), "$.session", updater)
+  const { error } = await saveRedisJson(
+    roomKey(session.slug),
+    "$.session",
+    updater,
+    { type: "update", override: { xx: true } }
+  )
+
   if (error) {
     ServerError.throw({
       thrownBy: "SOCKET_API",
