@@ -25,7 +25,6 @@ export const room = z.object({
   settings: roomSettings,
   session: multiplayerClientSession.nullable(),
   createdAt: z.coerce.date()
-  // TODO: add & track `updatedAt`
 })
 
 export type RoomStatus = z.infer<typeof roomStatus>
