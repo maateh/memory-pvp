@@ -25,10 +25,18 @@ type CardHelperOpts = {
 }
 
 /**
- * TODO: write doc
+ * Handles a player's card flip in a memory card game session.
  * 
- * @param opts
- * @returns 
+ * This function updates the session state by adding the flipped card, increasing the player's 
+ * flip count, and updating the session timer. In cooperative (COOP) mode, it also switches 
+ * the turn if it's the first flipped card in the round.
+ * 
+ * The updated session state is stored in Redis, and an event (`session:card:flipped`) is emitted 
+ * to notify other players about the change. If the Redis update fails, an error is thrown.
+ * 
+ * @param {ClientSessionCard} clickedCard The card that was flipped.
+ * @param {CardHelperOpts} opts The options containing the player ID and session data.
+ * @returns {Promise<{ shouldPairing: boolean }>} An object indicating whether the flipped cards should be checked for pairing.
  */
 export async function handleCardFlip(clickedCard: ClientSessionCard, {
   playerId,
@@ -79,10 +87,17 @@ export async function handleCardFlip(clickedCard: ClientSessionCard, {
 }
 
 /**
- * TODO: write doc
+ * Handles card pairing logic after two cards have been flipped.
  * 
- * @param opts
- * @returns 
+ * This function determines whether the two flipped cards form a match. If they do, the cards 
+ * are marked as matched by the player. In PVP mode, it also switches the turn to the next player.
+ * 
+ * The updated session state is stored in Redis, and an event (`session:card:matched` or 
+ * `session:card:unmatched`) is emitted to notify other players about the result. If the Redis 
+ * update fails, an error is thrown.
+ * 
+ * @param {CardHelperOpts} opts The options containing the player ID and session data.
+ * @returns {Promise<{ isOver: boolean }>} An object indicating whether the game session is over (all cards are matched).
  */
 export async function handleCardPairing({
   playerId,
