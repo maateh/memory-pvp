@@ -1,8 +1,9 @@
 // types
-import type { JoinedRoom, RunningRoom } from "@repo/schema/room"
+import type { JoinedRoom, RunningRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
 import { redis } from "@repo/server/redis"
+import { saveRedisJson } from "@repo/server/redis-json"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 import { playerConnectionKey, roomKey } from "@repo/server/redis-keys"
 
@@ -24,33 +25,34 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
     const playerKey = currentPlayerKey(room.owner.id, playerId)
 
     if (room.status === "waiting") {
-      room.connectionStatus = "offline"
-      room.owner.connection = offlineConnection
-      room.owner.ready = false
-
       await Promise.all([
-        redis.hset(playerConnectionKey(playerId), offlineConnection),
-        redis.json.set(roomKey(room.slug), "$", room, { xx: true })
+        saveRedisJson<Partial<WaitingRoom>>(roomKey(room.slug), "$", {
+          connectionStatus: "offline",
+          owner: {
+            ...room.owner,
+            ready: false,
+            connection: offlineConnection
+          }
+        }, { type: "update" }),
+        redis.hset(playerConnectionKey(playerId), offlineConnection)
       ])
     }
 
     if (room.status === "joined" || room.status === "ready") {
-      room[playerKey].connection = offlineConnection
-
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
 
-      const joinedRoom: JoinedRoom = {
-        ...room,
+      const updater: Partial<JoinedRoom> = {
         status: "joined",
         connectionStatus: ownerIsOnline || guestIsOnline ? "half_online" : "offline",
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }
+      room[playerKey].connection = offlineConnection
 
       await Promise.all([
-        redis.hset(playerConnectionKey(playerId), offlineConnection),
-        redis.json.set(roomKey(room.slug), "$", joinedRoom, { xx: true })
+        saveRedisJson(roomKey(room.slug), "$", updater, { type: "update" }),
+        redis.hset(playerConnectionKey(playerId), offlineConnection)
       ])
 
       socket.broadcast.to(room.slug).emit("room:disconnected", {
@@ -58,27 +60,25 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
         description: playerKey === "owner"
           ? "You can leave the room without losing your Elo points."
           : "You can kick the player out of the room if you don't want to wait any longer.",
-        data: joinedRoom
-      } satisfies SocketResponse<JoinedRoom>)
+        data: updater
+      } satisfies SocketResponse<Partial<JoinedRoom>>)
     }
 
     if (room.status === "running" || room.status === "cancelled") {
-      room[playerKey].connection = offlineConnection
-
       const ownerIsOnline = room.owner.connection.status === "online"
       const guestIsOnline = room.guest.connection.status === "online"
 
-      const cancelledRoom: RunningRoom = {
-        ...room,
+      const updater: Partial<RunningRoom> = {
         status: "cancelled",
         connectionStatus: ownerIsOnline || guestIsOnline ? "half_online" : "offline",
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }
+      room[playerKey].connection = offlineConnection
 
       await Promise.all([
-        redis.hset(playerConnectionKey(playerId), offlineConnection),
-        redis.json.set(roomKey(room.slug), "$", cancelledRoom, { xx: true })
+        saveRedisJson(roomKey(room.slug), "$", updater, { type: "update" }),
+        redis.hset(playerConnectionKey(playerId), offlineConnection)
       ])
 
       socket.broadcast.to(room.slug).emit("room:disconnected", {
@@ -86,8 +86,8 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
         description: room.session.mode === "CASUAL"
           ? "If you don't want to wait for the player to reconnect, close the session."
           : "Please wait at least 5 minutes for the other player to reconnect. After that, you can claim this session as a win.",
-        data: cancelledRoom
-      } satisfies SocketResponse<RunningRoom>)
+        data: updater
+      } satisfies SocketResponse<Partial<RunningRoom>>)
     }
   } catch (err) {
     console.error(err)

@@ -38,7 +38,7 @@ type RoomAction = {
 
 type RoomListener = {
   roomConnected: (response: SocketResponse<RoomVariants>) => void
-  roomDisconnected: (response: SocketResponse<JoinedRoom | RunningRoom>) => void
+  roomDisconnected: (response: SocketResponse<Partial<JoinedRoom | RunningRoom>>) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
   roomKicked: (response: SocketResponse) => void
@@ -203,15 +203,18 @@ export const roomStore = ({
     set({ room })
   },
 
-  roomDisconnected({ data: room, message, description, error }) {
-    if (error || !room) return handleServerError(error)
+  roomDisconnected({ data: updater, message, description, error }) {
+    if (error || !updater) return handleServerError(error)
 
     toast.dismiss("room:connected")
     toast.warning(message, { description, id: "room:disconnected" })
 
-    set(({ currentRoomPlayer }) => {
+    set(({ currentRoomPlayer, room }) => {
       currentRoomPlayer.ready = false
-      return { room, currentRoomPlayer }
+      return {
+        currentRoomPlayer,
+        room: { ...room, ...updater } as typeof room
+      }
     })
   },
 

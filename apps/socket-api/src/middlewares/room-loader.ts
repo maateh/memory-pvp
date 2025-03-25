@@ -1,5 +1,8 @@
+// types
+import type { RoomVariants } from "@repo/schema/room"
+
 // redis
-import { redis } from "@repo/server/redis"
+import { saveRedisJson } from "@repo/server/redis-json"
 import { roomKey } from "@repo/server/redis-keys"
 
 // helpers
@@ -65,10 +68,31 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
       room.guest.ready = false
     }
 
-    await redis.json.set(roomKey(room.slug), `$`, room, { xx: true })
+    const updater: Partial<RoomVariants> = {
+      status: room.status,
+      connectionStatus: room.connectionStatus,
+      owner: room.owner
+    }
+    if (room.guest) updater.guest = room.guest
+
+    const { error } = await saveRedisJson(roomKey(room.slug), "$", updater, {
+      type: "update",
+      override: { xx: true }
+    })
+
+    if (error) {
+      ServerError.throw({
+        thrownBy: "SOCKET_API",
+        key: "UNKNOWN",
+        message: "Failed to store updated room data.",
+        description: "Cache server probably not available."
+      })
+    }
+
     socket.ctx = { ...ctx, connection, room }
     next()
   } catch (err) {
+    console.log({err})
     return next(ServerError.asSocketError(err))
   }
 }

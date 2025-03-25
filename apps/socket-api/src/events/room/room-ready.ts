@@ -2,7 +2,7 @@
 import type { JoinedRoom, RunningRoom } from "@repo/schema/room"
 
 // redis
-import { redis } from "@repo/server/redis"
+import { saveRedisJson } from "@repo/server/redis-json"
 import { roomKey } from "@repo/server/redis-keys"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
@@ -44,7 +44,10 @@ export const roomReady: SocketEventHandler<
       room.status = room.status === "joined" ? "ready" : "running"
     }
 
-    await redis.json.set(roomKey(roomSlug), "$", room, { xx: true })
+    await saveRedisJson<Partial<JoinedRoom | RunningRoom>>(roomKey(roomSlug), "$", {
+      status: room.status,
+      [playerKey]: room[playerKey]
+    }, { type: "update" })
 
     response({
       message: `Your status has been set to ${currentPlayer.ready ? "ready" : "unready"}.`,
