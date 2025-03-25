@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import type { Socket } from "socket.io-client"
 import type { SocketResponse } from "@repo/server/socket-types"
-import type { ClientSessionCard, MultiplayerClientSession } from "@repo/schema/session"
+import type { ClientSessionCard, SessionStateUpdater } from "@repo/schema/session"
 import type { SessionCardFlipValidation } from "@repo/schema/room-validation"
 import type { SessionStore } from "./session-store"
 
@@ -18,9 +18,9 @@ type MultiEventAction = {
 }
 
 type MultiEventListener = {
-  sessionCardFlipped: (response: SocketResponse<MultiplayerClientSession>) => void
-  sessionCardMatched: (response: SocketResponse<MultiplayerClientSession>) => void
-  sessionCardUnmatched: (response: SocketResponse<MultiplayerClientSession>) => void
+  sessionCardFlipped: (response: SocketResponse<Partial<SessionStateUpdater>>) => void
+  sessionCardMatched: (response: SocketResponse<Partial<SessionStateUpdater>>) => void
+  sessionCardUnmatched: (response: SocketResponse<Partial<SessionStateUpdater>>) => void
   sessionFinished: (response: SocketResponse<string>) => void
 }
 
@@ -64,23 +64,33 @@ export const multiEventStore = ({
   },
 
   /* Listeners */
-  sessionCardFlipped({ data: session, error }) {
-    if (error || !session) return handleServerError(error)
+  sessionCardFlipped({ data: updater, error }) {
+    if (error || !updater) return handleServerError(error)
 
-    setStoreState({ session, syncStatus: "synchronized" })
+    setStoreState(({ session }) => ({
+      syncStatus: "synchronized",
+      session: { ...session, ...updater }
+    }))
   },
 
-  sessionCardMatched({ data: session, error }) {
-    if (error || !session) return handleServerError(error)
+  sessionCardMatched({ data: updater, error }) {
+    if (error || !updater) return handleServerError(error)
 
-    setStoreState({ session, syncStatus: "synchronized" })
+    setStoreState(({ session }) => ({
+      syncStatus: "synchronized",
+      session: { ...session, ...updater }
+    }))
   },
 
-  sessionCardUnmatched({ data: session, error }) {
-    if (error || !session) return handleServerError(error)
+  sessionCardUnmatched({ data: updater, error }) {
+    if (error || !updater) return handleServerError(error)
 
     setStoreState({ syncStatus: "synchronized" })
-    setTimeout(() => setStoreState({ session }), 800)
+    setTimeout(() => {
+      setStoreState(({ session }) => ({
+        session: { ...session, ...updater }
+      }))
+    }, 800)
   },
 
   sessionFinished({ data: roomSlug, message, description, error }) {
