@@ -19,7 +19,7 @@ import { db } from "@/db"
 export function playerStatsUpdaterOperations(
   session: Parameters<typeof closeSession>["0"],
   status: Parameters<typeof closeSession>["1"],
-  requesterPlayerId: Parameters<typeof closeSession>["2"]
+  requesterPlayerId?: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__PlayerProfileClient<PlayerProfile>[] {
   const { format, owner, guest, stats } = session
 
@@ -31,7 +31,7 @@ export function playerStatsUpdaterOperations(
       where: { id: player.id },
       data: {
         stats: {
-          elo: calculateElo(session, player.id, status, requesterPlayerId).newElo,
+          elo: calculateElo(session, player.id, status, requesterPlayerId || player.id).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
           timer: player.stats.timer + stats.timer,

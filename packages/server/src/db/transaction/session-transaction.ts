@@ -19,7 +19,7 @@ import { db } from "@/db"
 export function closeSessionOperation(
   session: Parameters<typeof closeSession>["0"],
   status: Parameters<typeof closeSession>["1"],
-  requesterPlayerId: Parameters<typeof closeSession>["2"]
+  requesterPlayerId?: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__GameSessionClient<GameSession> {
   const { slug, format, owner, guest, cards, stats } = session
 
@@ -37,7 +37,7 @@ export function closeSessionOperation(
         createMany: {
           data: players.map((player) => ({
             playerId: player.id,
-            gainedElo: calculateElo(session, player.id, status, requesterPlayerId).gainedElo,
+            gainedElo: calculateElo(session, player.id, status, requesterPlayerId || player.id).gainedElo,
             flips: stats.flips[player.id],
             matches: stats.matches[player.id],
             timer: stats.timer
