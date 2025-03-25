@@ -48,7 +48,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }
-      room[playerKey].connection = offlineConnection
+      updater[playerKey]!.connection = offlineConnection
 
       await Promise.all([
         saveRedisJson(roomKey(room.slug), "$", updater, { type: "update" }),
@@ -74,7 +74,7 @@ export const disconnect: SocketEventHandler = (socket) => async () => {
         owner: { ...room.owner, ready: false },
         guest: { ...room.guest, ready: false }
       }
-      room[playerKey].connection = offlineConnection
+      updater[playerKey]!.connection = offlineConnection
 
       await Promise.all([
         saveRedisJson(roomKey(room.slug), "$", updater, { type: "update" }),
