@@ -22,12 +22,12 @@ import { closeSessionOperation } from "@/db/transaction/session-transaction"
  */
 export async function closeSession(
   session: Pick<ClientSessionVariants, "slug" | "mode" | "format" | "tableSize" | "owner" | "guest" | "cards" | "stats">,
-  requesterPlayerId: string,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">,
+  requesterPlayerId: string
 ): Promise<GameSession> {
   const [closedSession] = await Promise.all([
-    closeSessionOperation(session, requesterPlayerId, status),
-    db.$transaction(playerStatsUpdaterOperations(session, requesterPlayerId, status))
+    closeSessionOperation(session, status, requesterPlayerId),
+    db.$transaction(playerStatsUpdaterOperations(session, status, requesterPlayerId))
   ])
 
   return closedSession

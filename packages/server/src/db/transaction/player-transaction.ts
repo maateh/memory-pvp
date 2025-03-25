@@ -18,8 +18,8 @@ import { db } from "@/db"
  */
 export function playerStatsUpdaterOperations(
   session: Parameters<typeof closeSession>["0"],
-  requesterPlayerId: Parameters<typeof closeSession>["1"],
-  status: Parameters<typeof closeSession>["2"]
+  status: Parameters<typeof closeSession>["1"],
+  requesterPlayerId: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__PlayerProfileClient<PlayerProfile>[] {
   const { format, owner, guest, stats } = session
 

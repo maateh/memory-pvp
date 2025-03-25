@@ -18,8 +18,8 @@ import { db } from "@/db"
  */
 export function closeSessionOperation(
   session: Parameters<typeof closeSession>["0"],
-  requesterPlayerId: Parameters<typeof closeSession>["1"],
-  status: Parameters<typeof closeSession>["2"]
+  status: Parameters<typeof closeSession>["1"],
+  requesterPlayerId: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__GameSessionClient<GameSession> {
   const { slug, format, owner, guest, cards, stats } = session
 

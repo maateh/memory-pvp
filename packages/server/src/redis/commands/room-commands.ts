@@ -186,7 +186,7 @@ export async function closeRunningRoom(
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<void> {
   await Promise.all([
-    closeSession(room.session, playerId, status),
+    closeSession(room.session, status, playerId),
     redis.del(playerConnectionKey(room.owner.id)),
     redis.del(playerConnectionKey(room.guest.id)),
     redis.json.del(roomKey(room.slug))

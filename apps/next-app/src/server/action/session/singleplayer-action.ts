@@ -66,8 +66,8 @@ export const createSoloSession = playerActionClient
     if (activeSession && forceStart) {
       await closeSession(
         parseSchemaToClientSession(activeSession),
-        ctx.player.id,
-        "FORCE_CLOSED"
+        "FORCE_CLOSED",
+        ctx.player.id
       )
     }
 
@@ -138,7 +138,7 @@ export const finishSoloSession = soloSessionActionClient
         ...parseSchemaToClientSession(ctx.activeSession),
         cards,
         stats
-      }, ctx.player.id, "FINISHED")
+      }, "FINISHED", ctx.player.id)
     ])
 
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
@@ -155,7 +155,7 @@ export const forceCloseSoloSession = soloSessionActionClient
         ...parseSchemaToClientSession(ctx.activeSession),
         cards,
         stats
-      }, ctx.player.id, "FORCE_CLOSED")
+      }, "FORCE_CLOSED", ctx.player.id)
     ])
 
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
