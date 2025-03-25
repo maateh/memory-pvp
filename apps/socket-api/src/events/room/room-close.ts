@@ -2,7 +2,7 @@
 import type { WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
-import { closeRoom } from "@repo/server/redis-commands"
+import { closeWaitingRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
@@ -37,7 +37,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
       })
     }
 
-    await closeRoom(room, playerId)
+    await closeWaitingRoom(room, playerId)
     socket.ctx.connection = undefined!
 
     if (room.status !== "waiting") {

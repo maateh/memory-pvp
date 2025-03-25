@@ -10,11 +10,11 @@ import type { JoinedRoom, RunningRoom, WaitingRoom } from "@repo/schema/room"
 import { saveRedisJson } from "@repo/server/redis-json"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 import {
-  closeRoom,
-  closeSession,
+  closeWaitingRoom,
+  closeRunningRoom,
   getActiveRoom,
   getRoom,
-  leaveRoom
+  leaveWaitingRoom
 } from "@repo/server/redis-commands"
 
 // db
@@ -278,8 +278,8 @@ export const leaveOrCloseRoom = roomActionClient
     }
 
     const leaveOrCloseCommand = playerKey === "owner"
-      ? closeRoom
-      : leaveRoom
+      ? closeWaitingRoom
+      : leaveWaitingRoom
 
     await leaveOrCloseCommand(ctx.activeRoom, ctx.player.id)
     redirect("/game/setup")
@@ -287,7 +287,7 @@ export const leaveOrCloseRoom = roomActionClient
 
 export const forceCloseMultiplayerSession = multiplayerSessionActionClient
   .action(async ({ ctx }) => {
-    await closeSession(ctx.activeRoom, ctx.player.id, "FORCE_CLOSED")
+    await closeRunningRoom(ctx.activeRoom, ctx.player.id, "FORCE_CLOSED")
 
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })

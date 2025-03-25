@@ -6,7 +6,7 @@ import type { SessionCardFlipValidation } from "@repo/schema/room-validation"
 import { sessionCardFlipValidation } from "@repo/schema/room-validation"
 
 // redis
-import { closeSession } from "@repo/server/redis-commands"
+import { closeRunningRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // server
@@ -61,7 +61,7 @@ export const sessionCardFlip: SocketEventHandler<
     const { isOver } = await handleCardPairing({ playerId, session })    
     if (!isOver) return response({ message: "Cards paired" })
 
-    await closeSession({ ...room, session }, playerId, "FINISHED")
+    await closeRunningRoom({ ...room, session }, playerId, "FINISHED")
     io.to(roomSlug).emit("session:finished", {
       message: "Session finished!",
       description: "Let's see the results...",

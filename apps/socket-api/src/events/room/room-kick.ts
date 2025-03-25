@@ -2,7 +2,7 @@
 import type { JoinedRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { leaveRoom } from "@repo/server/redis-commands"
+import { leaveWaitingRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
@@ -37,7 +37,7 @@ export const roomKick: SocketEventHandler<
       })
     }
     
-    const waitingRoom = await leaveRoom({ ...room, guest }, guest.id)
+    const waitingRoom = await leaveWaitingRoom({ ...room, guest }, guest.id)
     socket.broadcast.to(roomSlug).emit("room:kicked", {
       message: `${playerTag} has kicked you out of the room.`,
       description: "This will not affect your Elo points."
