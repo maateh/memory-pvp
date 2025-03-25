@@ -87,3 +87,27 @@ export async function saveRedisJson<T extends Record<string, any>>(
   if (error) return { error }
   return { result: "OK" }
 }
+
+export async function scanRedisJson<T extends Record<string, any>>(
+  match: string
+): Promise<T[]> {
+  let cursor = 0
+  const entries: T[] = []
+
+  do {
+    const [newCursor, keys] = await redis.scan(cursor, {
+      match,
+      count: 100
+    })
+
+    if (keys.length > 0) {
+      const data = (await redis.json.mget<T[][]>(keys, "$"))
+        .flatMap((session) => session)
+      entries.push(...data)
+    }
+
+    cursor = parseInt(newCursor)
+  } while (cursor !== 0)
+
+  return entries
+}
