@@ -14,6 +14,8 @@
     "./error": "./dist/error/index.js",
     "./db": "./dist/db/index.js",
     "./db-session-mutation": "./dist/db/mutation/session-mutation.js",
+    "./db-session-transaction": "./dist/db/transaction/session-transaction.js",
+    "./db-player-transaction": "./dist/db/transaction/player-transaction.js",
     "./redis": "./dist/redis/index.js",
     "./redis-json": "./dist/redis/json-helper.js",
     "./redis-settings": "./dist/redis/settings.js",
