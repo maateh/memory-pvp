@@ -3,6 +3,7 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // redis
+import { saveRedisJson } from "@repo/server/redis-json"
 import { soloSessionKey } from "@repo/server/redis-keys"
 
 // db
@@ -17,7 +18,6 @@ import {
 } from "@/server/action"
 
 // config
-import { REDIS_STORE_TTL } from "@repo/server/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
 import { sessionSchemaFields } from "@/config/session-settings"
 
@@ -98,29 +98,27 @@ export const createSoloSession = playerActionClient
       include: sessionSchemaFields
     })
 
-    const tx = ctx.redis.multi()
-    const key = soloSessionKey(ctx.player.id)
-    tx.json.set(key, "$", parseSchemaToClientSession(session))
-    tx.expire(key, REDIS_STORE_TTL)
-    await tx.exec()
+    await saveRedisJson(
+      soloSessionKey(ctx.player.id),
+      "$",
+      parseSchemaToClientSession(session)
+    )
 
     redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const storeSoloSession = soloSessionActionClient
   .schema(storeSoloSessionValidation)
-  .action(async ({ ctx, parsedInput }) => {
-    const { cards, flipped, stats } = parsedInput
+  .action(async ({ ctx, parsedInput: updater }) => {
 
-    const tx = ctx.redis.multi()
-    const key = soloSessionKey(ctx.player.id)
-    tx.json.set(key, "$.cards", cards)
-    tx.json.set(key, "$.flipped", flipped)
-    tx.json.set(key, "$.stats", stats)
-    tx.expire(key, REDIS_STORE_TTL)
+    const { error } = await saveRedisJson(
+      soloSessionKey(ctx.player.id),
+      "$",
+      updater,
+      { type: "update" }
+    )
 
-    const results = await tx.exec({ keepErrors: true })
-    if (results.find((result) => result.error)) {
+    if (error) {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Failed to store solo game session.",

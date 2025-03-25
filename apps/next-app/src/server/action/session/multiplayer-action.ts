@@ -7,7 +7,7 @@ import type { MultiplayerClientSession } from "@repo/schema/session"
 import type { JoinedRoom, RunningRoom, WaitingRoom } from "@repo/schema/room"
 
 // redis
-import { redis } from "@repo/server/redis"
+import { saveRedisJson } from "@repo/server/redis-json"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@repo/server/redis-keys"
 import {
   closeRoom,
@@ -102,8 +102,8 @@ export const createRoom = playerActionClient
     }
 
     await Promise.all([
+      saveRedisJson(roomKey(room.slug), "$", room),
       ctx.redis.hset(playerConnectionKey(ctx.player.id), connection),
-      ctx.redis.json.set(roomKey(room.slug), `$`, room),
       ctx.redis.lpush(waitingRoomsKey, room.slug)
     ])
 
@@ -158,8 +158,7 @@ export const joinRoom = playerActionClient
       createdAt: new Date(),
     })
 
-    const joinedRoom: JoinedRoom = {
-      ...room,
+    const roomUpdater: Pick<JoinedRoom, "status" | "guest"> = {
       status: "joined",
       guest: {
         ...ctx.player,
@@ -169,11 +168,19 @@ export const joinRoom = playerActionClient
       }
     }
 
-    await Promise.all([
+    const [{ error }] = await Promise.all([
+      saveRedisJson(roomKey(roomSlug), "$", roomUpdater, { type: "update" }),
       ctx.redis.hset(playerConnectionKey(ctx.player.id), connection),
-      ctx.redis.json.set(roomKey(roomSlug), "$", joinedRoom, { xx: true }),
       ctx.redis.lrem(waitingRoomsKey, 1, roomSlug)
     ])
+
+    if (error) {
+      ServerError.throwInAction({
+        key: "UNKNOWN",
+        message: "Failed to store updated room data.",
+        description: "Cache server probably not available."
+      })
+    }
 
     redirect("/game/multiplayer")
   })
@@ -242,15 +249,14 @@ export const createMultiplayerSession = playerActionClient
     }
 
     /* Updates the `JoinedRoom` room variant to a `RunningRoom` variant. */
-    const room: RunningRoom = {
-      ...activeRoom,
+    const roomUpdater: Pick<RunningRoom, "status" | "session"> = {
       status: "running",
       session: parseSchemaToClientSession(session) as MultiplayerClientSession
     }
 
     /* Throws server error with `UNKNOWN` key if failed to store the updated room data. */
-    const response = await redis.json.set(roomKey(room.slug), "$", room, { xx: true })
-    if (response !== "OK") {
+    const { error } = await saveRedisJson(roomKey(activeRoom.slug), "$", roomUpdater, { type: "update" })
+    if (error) {
       ServerError.throwInAction({
         key: "UNKNOWN",
         message: "Failed to store game session.",
