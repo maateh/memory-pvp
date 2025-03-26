@@ -117,7 +117,11 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
         <ul className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
           {Object.values(players).map((player) => player && (
             <li key={player.tag}>
-              <PlayerBadge player={player} key={player.tag} />
+              <PlayerBadge
+                size="sm"
+                player={player}
+                key={player.tag}
+              />
             </li>
           ))}
         </ul>
