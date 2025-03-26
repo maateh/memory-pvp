@@ -30,10 +30,10 @@ type RoomState = {
 
 type RoomAction = {
   roomLeave: () => Promise<void>
-  roomClose: () => Promise<void>
+  roomCloseWaiting: () => Promise<void>
+  roomCloseCancelled: () => Promise<void>
   roomReady: () => Promise<void>
   roomKick: () => Promise<void>
-  sessionClose: () => Promise<void>
 }
 
 type RoomListener = {
@@ -92,7 +92,7 @@ export const roomStore = ({
     } finally { toast.dismiss("room:leave") }
   },
 
-  async roomClose() {
+  async roomCloseWaiting() {
     toast.loading("Closing room...", { id: "room:close" })
 
     try {
@@ -170,7 +170,7 @@ export const roomStore = ({
     } finally { toast.dismiss("room:kick") }
   },
 
-  async sessionClose() {
+  async roomCloseCancelled() {
     toast.loading("Closing session...", { id: "session:close" })
 
     try {

@@ -15,8 +15,8 @@ import { ServerError } from "@repo/server/error"
 import { reconnectionTimeExpired } from "@repo/helper/connection"
 import { otherPlayerKey } from "@repo/helper/player"
 
-export const sessionClose: SocketEventHandler = (socket) => async (_, response) => {
-  console.log("DEBUG - session:close -> ", socket.id)
+export const roomCloseCancelled: SocketEventHandler = (socket) => async (_, response) => {
+  console.log("DEBUG - room:close:cancelled -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 

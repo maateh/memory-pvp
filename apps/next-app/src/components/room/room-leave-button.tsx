@@ -24,7 +24,7 @@ const RoomLeaveButton = ({
 
   const { status, owner } = useRoomStore((state) => state.room)
   const player = useRoomStore((state) => state.currentRoomPlayer)
-  const roomClose = useRoomStore((state) => state.roomClose)
+  const roomCloseWaiting = useRoomStore((state) => state.roomCloseWaiting)
   const roomLeave = useRoomStore((state) => state.roomLeave)
 
   const disabled = !socket.active || player.ready || status === "ready"
@@ -40,7 +40,7 @@ const RoomLeaveButton = ({
       <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-muted transition-none", className)}
         variant="ghost"
         size="icon"
-        onClick={player.id === owner.id ? roomClose : roomLeave}
+        onClick={player.id === owner.id ? roomCloseWaiting : roomLeave}
         disabled={disabled}
         {...props}
       >

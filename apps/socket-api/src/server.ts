@@ -16,18 +16,18 @@ import {
   connectionLoader,
   roomAccess,
   roomLoader
-} from "./middlewares"
+} from "@/middlewares"
 
 // events
 import { disconnect, connectionClear } from "@/events"
 import {
   roomReady,
-  roomLeave,
-  roomClose,
   roomKick,
+  roomLeave,
+  roomCloseWaiting,
+  roomCloseCancelled,
   sessionCreated,
-  sessionStartingFailed,
-  sessionClose
+  sessionStartingFailed
 } from "@/events/room"
 import { sessionCardFlip } from "@/events/session"
 
@@ -62,13 +62,14 @@ io.on("connection", (_socket) => {
    * if the action fails after the redis commands have already run
    * the room status can "stuck" without the owner even being notifed.
    */
-  socket.on("room:leave", roomLeave(socket))
-  socket.on("room:close", roomClose(socket))
   socket.on("room:ready", roomReady(socket))
   socket.on("room:kick", roomKick(socket))
   socket.on("session:starting:failed", sessionStartingFailed(socket))
   socket.on("session:created", sessionCreated(socket))
-  socket.on("session:close", sessionClose(socket))
+
+  socket.on("room:leave", roomLeave(socket))
+  socket.on("room:close:waiting", roomCloseWaiting(socket))
+  socket.on("room:close:cancelled", roomCloseCancelled(socket))
 
   socket.on("session:card:flip", sessionCardFlip(socket))
 

@@ -32,7 +32,7 @@ const SessionCloseButton = ({
 }: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "onClick" | "disabled">) => {
   const room = useRoomStore((state) => state.room) as RunningRoom
   const player = useRoomStore((state) => state.currentRoomPlayer)
-  const sessionClose = useRoomStore((state) => state.sessionClose)
+  const roomCloseCancelled = useRoomStore((state) => state.roomCloseCancelled)
 
   const otherConnection = room[otherPlayerKey(room.owner.id, player.id)].connection
   const { timerInMs, stopped } = useTimer({
@@ -52,7 +52,7 @@ const SessionCloseButton = ({
       <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-destructive-foreground transition-none disabled:opacity-60", className)}
         variant="ghost"
         size="icon"
-        onClick={sessionClose}
+        onClick={roomCloseCancelled}
         disabled={!stopped}
         {...props}
       >
