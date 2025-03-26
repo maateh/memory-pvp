@@ -59,7 +59,7 @@ const CollectionCard = ({
             </CardTitle>
           </div>
 
-          <SessionInfoBadge className="px-2 py-0 text-xs"
+          <SessionInfoBadge className="w-fit flex px-2 py-0 text-xs"
             iconProps={{ className: "size-3.5" }}
             Icon={Dices}
             label={tableSizePlaceholders[collection.tableSize].label}
