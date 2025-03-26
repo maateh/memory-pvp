@@ -34,10 +34,7 @@ const WaitingRoomsPage = async () => {
                   </>
                 )}
 
-                <WaitingRoomListing
-                  guestPlayer={player}
-                  rooms={rooms}
-                />
+                <WaitingRoomListing rooms={rooms} />
               </>
             )}
           </Await>

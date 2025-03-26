@@ -1,5 +1,4 @@
 // types
-import type { ClientPlayer } from "@repo/schema/player"
 import type { WaitingRoom } from "@repo/schema/room"
 
 // config
@@ -23,11 +22,10 @@ import { RoomJoinButton } from "@/components/room"
 import { CustomDate } from "@/components/shared"
 
 type WaitingRoomCardProps = {
-  guestPlayer: ClientPlayer
   room: WaitingRoom
 }
 
-const WaitingRoomCard = ({ guestPlayer, room }: WaitingRoomCardProps) => {
+const WaitingRoomCard = ({ room }: WaitingRoomCardProps) => {
   return (
     <div className="w-full py-1.5 px-1 sm:px-2 flex flex-wrap justify-between gap-x-3 gap-y-2">
       <div className="space-y-2">
