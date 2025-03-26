@@ -88,6 +88,16 @@ export async function saveRedisJson<T extends Record<string, any>>(
   return { result: "OK" }
 }
 
+/**
+ * Scans Redis for JSON data matching a given pattern.
+ * 
+ * This function performs a cursor-based scan (`SCAN`) to retrieve keys matching the given pattern.
+ * It then fetches JSON data from the matched keys and returns the results as an array.
+ * 
+ * @template {Record<string, any>} T The expected structure of the retrieved JSON objects.
+ * @param {string} match A Redis key pattern to match entries (e.g., `session:*`).
+ * @returns {Promise<T[]>} A promise resolving to an array of parsed JSON objects.
+ */
 export async function scanRedisJson<T extends Record<string, any>>(
   match: string
 ): Promise<T[]> {
