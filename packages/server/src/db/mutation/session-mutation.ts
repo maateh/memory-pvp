@@ -16,8 +16,8 @@ import { closeSessionOperation } from "@/db/transaction/session-transaction"
  * - Operations are executed within a database transaction.
  * 
  * @param {ClientSessionVariants} session The current session containing player data, mode, and stats.
- * @param {string} requesterPlayerId The ID of the player requesting the session closure.
  * @param {SessionStatus} status Session "action" status.
+ * @param {string} requesterPlayerId The ID of the player requesting the session closure.
  * @returns {Promise<GameSession>} The updated game session.
  */
 export async function closeSession(

@@ -9,12 +9,15 @@ import { calculateElo } from "@repo/helper/elo"
 import { db } from "@/db"
 
 /**
- * TODO: write doc
+ * Generates database update operations to update player statistics after a session ends.
  * 
- * @param session 
- * @param requesterPlayerId 
- * @param status 
- * @returns 
+ * This function prepares Prisma update operations to adjust player statistics, including Elo rating, 
+ * flips, matches, total playtime, and session count, based on the game session results.
+ * 
+ * @param {ClientSessionVariants} session The current session containing player data, mode, and stats.
+ * @param {SessionStatus} status Session "action" status.
+ * @param {string} requesterPlayerId The ID of the player requesting the session closure.
+ * @returns An array of Prisma update operations for player statistics.
  */
 export function playerStatsUpdaterOperations(
   session: Parameters<typeof closeSession>["0"],
