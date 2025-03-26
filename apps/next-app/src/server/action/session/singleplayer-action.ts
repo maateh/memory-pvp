@@ -110,13 +110,16 @@ export const createSoloSession = playerActionClient
 export const storeSoloSession = soloSessionActionClient
   .schema(storeSoloSessionValidation)
   .action(async ({ ctx, parsedInput: updater }) => {
+    const key = soloSessionKey(ctx.player.id)
+    const alreadyStored = await ctx.redis.json.get(key)
 
-    const { error } = await saveRedisJson(
-      soloSessionKey(ctx.player.id),
-      "$",
-      updater,
-      { type: "update" }
-    )
+    if (!alreadyStored) {
+      updater = { ...parseSchemaToClientSession(ctx.activeSession), ...updater }
+    }
+
+    const { error } = await saveRedisJson(key, "$", updater, {
+      type: alreadyStored ? "update" : "create"
+    })
 
     if (error) {
       ServerError.throwInAction({
