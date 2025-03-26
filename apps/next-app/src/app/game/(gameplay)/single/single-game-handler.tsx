@@ -1,7 +1,6 @@
 "use client"
 
 // types
-import type { SoloClientSession } from "@repo/schema/session"
 import type { FinishSoloSessionValidation } from "@repo/schema/session-validation"
 
 // utils
@@ -22,15 +21,13 @@ const SingleGameHandler = () => {
   const session = useSessionStore((state) => state.session)
   const setStoreState = useSessionStore((state) => state.setState)
 
-  const { executeAsync: finishSoloSession } = useFinishSoloSessionAction()
   const { executeAsync: storeSoloSession } = useStoreSoloSessionAction()
+  const { executeAsync: finishSoloSession } = useFinishSoloSessionAction()
 
   const { handleCardFlip } = useSingleplayerGameHandler({
     async onHeartbeat() {
       try {
-        await storeSoloSession({
-          clientSession: session as SoloClientSession
-        })
+        await storeSoloSession(session)
       } catch (err) {
         logError(err)
       }
@@ -40,9 +37,7 @@ const SingleGameHandler = () => {
       setStoreState({ syncStatus: "synchronized" })
 
       try {
-        await finishSoloSession({
-          clientSession: session as FinishSoloSessionValidation["clientSession"]
-        })
+        await finishSoloSession(session as FinishSoloSessionValidation)
       } catch (err) {
         logError(err)
       }

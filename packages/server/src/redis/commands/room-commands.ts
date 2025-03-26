@@ -1,54 +1,18 @@
 // types
 import type { SessionStatus } from "@repo/db"
-import type { RoomVariants, RunningRoom, WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
+import type {
+  RoomVariants,
+  RunningRoom,
+  WaitingRoom,
+  WaitingRoomVariants
+} from "@repo/schema/room"
 
 // redis
 import { redis } from "@/redis"
 import { playerConnectionKey, roomKey, waitingRoomsKey } from "@/redis/keys"
 
 // db
-import { closeSession as closeSessionMutation } from "@/db/mutation/session-mutation"
-
-/**
- * Retrieves a list of waiting rooms from Redis.
- * 
- * Note: Pagination will be added later.
- * 
- * @returns {Promise<WaitingRoom[]>} - A list of waiting rooms.
- */
-export async function getWaitingRooms(): Promise<WaitingRoom[]> {
-  // TODO: add pagination support
-  const roomSlugs = await redis.lrange(waitingRoomsKey, 0, 10)  
-  if (roomSlugs.length === 0) return []
-
-  const roomKeys = roomSlugs.map((slug) => roomKey(slug))
-
-  /*
-   * Note: I don't know why, but `json.mget` gives back every data
-   * inside a nested array, so I have to do a `flatMap` on it.
-   */
-  const rooms = await redis.json.mget<WaitingRoom[][]>(roomKeys, "$")
-  return rooms.flatMap((room) => room)
-}
-
-/**
- * Retrieves the active room associated with a player's connection.
- * 
- * - Fetches the `roomSlug` from Redis using the player's connection key.
- * - If a `roomSlug` exists, retrieves the full room data using `getRoom`.
- * - Returns `null` if the player is not associated with any active room.
- *
- * @param {string} playerId - The unique identifier of the player.
- * @returns {Promise<R | null>} - The room data if the player is in an active room, otherwise `null`.
- */
-export async function getActiveRoom<R extends RoomVariants>(
-  playerId: string
-): Promise<R | null> {
-  const roomSlug = await redis.hget<string>(playerConnectionKey(playerId), "roomSlug")
-  if (!roomSlug) return null
-
-  return await getRoom(roomSlug)
-}
+import { closeSession } from "@/db/mutation/session-mutation"
 
 /**
  * Retrieves a specific room from Redis based on its slug.
@@ -93,7 +57,64 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
 }
 
 /**
- * Updates the room state when a player leaves.
+ * Retrieves a list of waiting rooms from Redis.
+ * 
+ * Note: Pagination will be added later.
+ * 
+ * @returns {Promise<WaitingRoom[]>} - A list of waiting rooms.
+ */
+export async function getWaitingRooms(): Promise<WaitingRoom[]> {
+  // TODO: add pagination support
+  const roomSlugs = await redis.lrange(waitingRoomsKey, 0, 10)  
+  if (roomSlugs.length === 0) return []
+
+  const roomKeys = roomSlugs.map((slug) => roomKey(slug))
+
+  /*
+   * Note: I don't know why, but `json.mget` gives back every data
+   * inside a nested array, so I have to do a `flatMap` on it.
+   */
+  const rooms = await redis.json.mget<WaitingRoom[][]>(roomKeys, "$")
+  return rooms.flatMap((room) => room)
+}
+
+/**
+ * Retrieves the active room associated with a player's connection.
+ * 
+ * - Fetches the `roomSlug` from Redis using the player's connection key.
+ * - If a `roomSlug` exists, retrieves the full room data using `getRoom`.
+ * - Returns `null` if the player is not associated with any active room.
+ *
+ * @param {string} playerId - The unique identifier of the player.
+ * @returns {Promise<R | null>} - The room data if the player is in an active room, otherwise `null`.
+ */
+export async function getActiveRoom<R extends RoomVariants>(
+  playerId: string
+): Promise<R | null> {
+  const roomSlug = await redis.hget<string>(playerConnectionKey(playerId), "roomSlug")
+  if (!roomSlug) return null
+
+  return await getRoom(roomSlug)
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param playerId 
+ * @returns 
+ */
+export async function getActiveRoomByField<R extends RoomVariants = RoomVariants, F extends keyof R = keyof R>(
+  playerId: string,
+  field: F
+): Promise<R[F] | null> {
+  const roomSlug = await redis.hget<string>(playerConnectionKey(playerId), "roomSlug")
+  if (!roomSlug) return null
+
+  return await getRoomByField<R, F>(roomSlug, field)
+}
+
+/**
+ * Updates the waiting room state when a player leaves.
  * 
  * - Removes the guest if applicable.
  * - Resets the room to `"waiting"` status.
@@ -101,11 +122,11 @@ export async function getRoomByField<R extends RoomVariants = RoomVariants, F ex
  * - Removes the player’s connection from Redis.
  * - Saves the updated room and re-adds it to the waiting list.
  *
- * @param {WaitingRoomVariants} room - The room being left.
- * @param {string} playerId - The leaving player's ID.
- * @returns {Promise<WaitingRoom | null>} - The updated room or `null` if failed.
+ * @param {WaitingRoomVariants} room The room being left.
+ * @param {string} playerId The leaving player's ID.
+ * @returns {Promise<WaitingRoom | null>} The updated room or `null` if failed.
  */
-export async function leaveRoom(
+export async function leaveWaitingRoom(
   room: WaitingRoomVariants,
   playerId: string
 ): Promise<WaitingRoom | null> {
@@ -127,18 +148,16 @@ export async function leaveRoom(
 }
 
 /**
- * Closes the room and cleans up related data.
+ * Closes a waiting room and removes related Redis entries.
  * 
- * - Removes the player's connection from Redis.
- * - Deletes the room data from Redis.
- * - If the room is in `"waiting"` status, removes it from the waiting rooms list.
- * - If the room is not in `"waiting"`, also removes the guest's connection.
- *
- * @param {WaitingRoomVariants} room - The room to be closed.
- * @param {string} playerId - The ID of the player requesting to close the room.
- * @returns {Promise<void>} - Resolves once the room and connections are deleted.
+ * This function clears the player's connection key, deletes the room data from Redis, 
+ * and removes the room from the waiting list if it was still in a "waiting" state. 
+ * If the room had a guest, their connection key is also removed.
+ * 
+ * @param {WaitingRoomVariants} room The waiting room instance to be closed.
+ * @param {string} playerId The ID of the player closing the room.
  */
-export async function closeRoom(
+export async function closeWaitingRoom(
   room: WaitingRoomVariants,
   playerId: string
 ): Promise<void> {
@@ -152,24 +171,22 @@ export async function closeRoom(
 }
 
 /**
- * Closes the session and handles player connections based on the specified action.
+ * Closes a running game room and removes related Redis entries.
  * 
- * - Updates the session status based on the specified action.
- * - Deletes player connections for both the owner and the guest.
- * - Removes the room data from Redis.
- *
- * @param {RunningRoom} room - The room to be closed.
- * @param {string} playerId - The ID of the player initiating the closure.
- * @param {("finish" | "abandon")} action - The action to perform (finish or abandon the session).
- * @returns {Promise<void>} - Resolves once the session and connections are updated.
+ * This function finalizes the game session by updating its status and player statistics. 
+ * It also removes the player connection keys and deletes the room data from Redis.
+ * 
+ * @param room The running game room instance to be closed.
+ * @param playerId The ID of the player initiating the closure.
+ * @param status The final status of the session (`FINISHED`, `CLOSED`, or `FORCE_CLOSED`).
  */
-export async function closeSession(
+export async function closeRunningRoom(
   room: RunningRoom,
   playerId: string,
   status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
 ): Promise<void> {
   await Promise.all([
-    closeSessionMutation(room.session, playerId, status),
+    closeSession(room.session, status, playerId),
     redis.del(playerConnectionKey(room.owner.id)),
     redis.del(playerConnectionKey(room.guest.id)),
     redis.json.del(roomKey(room.slug))

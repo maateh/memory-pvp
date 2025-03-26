@@ -2,7 +2,7 @@
 import type { RunningRoom } from "@repo/schema/room"
 
 // redis
-import { closeSession } from "@repo/server/redis-commands"
+import { closeRunningRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // schemas
@@ -45,7 +45,7 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    await closeSession(room, playerId, "CLOSED")
+    await closeRunningRoom(room, playerId, "CLOSED")
     socket.ctx.connection = undefined!
 
     response({

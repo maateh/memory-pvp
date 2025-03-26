@@ -10,11 +10,16 @@ import { calculateElo } from "@repo/helper/elo"
 // utils
 import { handleServerError } from "@/lib/util/error"
 
-export const useFinishSoloSessionAction = () =>
-  useAction(finishSoloSession, {
-    onSuccess({ input: { clientSession } }) {
-      const { owner, mode } = clientSession
-      const { gainedElo } = calculateElo(clientSession, owner.id, "FINISHED")
+// hooks
+import { useSessionStore } from "@/components/provider/session-store-provider"
+
+export const useFinishSoloSessionAction = () => {
+  const session = useSessionStore((state) => state.session)
+
+  return useAction(finishSoloSession, {
+    onSuccess() {
+      const { owner, mode } = session
+      const { gainedElo } = calculateElo(session, owner.id, "FINISHED")
 
       toast.success("Solo game session finished!", {
         description: mode === "CASUAL"
@@ -27,3 +32,4 @@ export const useFinishSoloSessionAction = () =>
       handleServerError(error.serverError, "Failed to save solo game session.")
     }
   })
+}

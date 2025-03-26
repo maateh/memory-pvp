@@ -12,6 +12,6 @@ export function getKeyName(...args: string[]): string {
 export const waitingRoomsKey = getKeyName("waiting_rooms")
 
 /* Hash keys */
-export const sessionKey = (slug: string) => getKeyName("sessions", slug)
-export const roomKey = (slug: string) => getKeyName("session_rooms", slug)
+export const soloSessionKey = (playerId: string) => getKeyName("solo_sessions", playerId)
+export const roomKey = (slug: string) => getKeyName("rooms", slug)
 export const playerConnectionKey = (playerId: string) => getKeyName("player_connections", playerId)

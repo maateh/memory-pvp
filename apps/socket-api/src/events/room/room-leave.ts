@@ -2,7 +2,7 @@
 import type { WaitingRoom, WaitingRoomVariants } from "@repo/schema/room"
 
 // redis
-import { leaveRoom } from "@repo/server/redis-commands"
+import { leaveWaitingRoom } from "@repo/server/redis-commands"
 import { getRoom } from "@repo/server/redis-commands-throwable"
 
 // error
@@ -37,7 +37,7 @@ export const roomLeave: SocketEventHandler = (socket) => async (_, response) => 
       })
     }
 
-    const waitingRoom = await leaveRoom(room, playerId)
+    const waitingRoom = await leaveWaitingRoom(room, playerId)
     socket.ctx.connection = undefined!
 
     socket.leave(roomSlug)

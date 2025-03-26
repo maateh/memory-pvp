@@ -3,7 +3,8 @@
 import { redirect, RedirectType } from "next/navigation"
 
 // redis
-import { sessionKey } from "@repo/server/redis-keys"
+import { saveRedisJson } from "@repo/server/redis-json"
+import { soloSessionKey } from "@repo/server/redis-keys"
 
 // db
 import { closeSession } from "@repo/server/db-session-mutation"
@@ -17,8 +18,8 @@ import {
 } from "@/server/action"
 
 // config
-import { SESSION_STORE_TTL } from "@repo/server/redis-settings"
 import { offlinePlayerMetadata } from "@/config/player-settings"
+import { sessionSchemaFields } from "@/config/session-settings"
 
 // validations
 import {
@@ -65,8 +66,8 @@ export const createSoloSession = playerActionClient
     if (activeSession && forceStart) {
       await closeSession(
         parseSchemaToClientSession(activeSession),
-        ctx.player.id,
-        "FORCE_CLOSED"
+        "FORCE_CLOSED",
+        ctx.player.id
       )
     }
 
@@ -78,7 +79,7 @@ export const createSoloSession = playerActionClient
     const collection = await verifyCollectionInAction({ ...settings, collectionId })
 
     /* Creates the game session, then redirects the user to the game page */
-    await ctx.db.gameSession.create({
+    const session = await ctx.db.gameSession.create({
       data: {
         ...settings,
         slug: generateSessionSlug(settings),
@@ -93,59 +94,74 @@ export const createSoloSession = playerActionClient
         },
         collection: { connect: { id: collection.id } },
         owner: { connect: { id: ctx.player.id } }
-      }
+      },
+      include: sessionSchemaFields
     })
+
+    await saveRedisJson(
+      soloSessionKey(ctx.player.id),
+      "$",
+      parseSchemaToClientSession(session)
+    )
 
     redirect("/game/single", forceStart ? RedirectType.replace : RedirectType.push)
   })
 
 export const storeSoloSession = soloSessionActionClient
   .schema(storeSoloSessionValidation)
-  .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+  .action(async ({ ctx, parsedInput: updater }) => {
+    const key = soloSessionKey(ctx.player.id)
+    const alreadyStored = await ctx.redis.json.get(key)
 
-    const response = await ctx.redis.set(
-      // TODO: key will be replaced
-      sessionKey(ctx.activeSession.slug),
-      clientSession,
-      { ex: SESSION_STORE_TTL }
-    )
+    if (!alreadyStored) {
+      updater = { ...parseSchemaToClientSession(ctx.activeSession), ...updater }
+    }
 
-    if (response !== "OK") {
+    const { error } = await saveRedisJson(key, "$", updater, {
+      type: alreadyStored ? "update" : "create"
+    })
+
+    if (error) {
       ServerError.throwInAction({
         key: "UNKNOWN",
-        message: "Failed to store game session.",
+        message: "Failed to store solo game session.",
         description: "Cache server probably not available."
       })
     }
-
-    return clientSession
   })
 
 export const finishSoloSession = soloSessionActionClient
   .schema(finishSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+    const { cards, stats } = parsedInput
 
     await Promise.all([
-      ctx.redis.del(sessionKey(ctx.activeSession.slug)),
-      closeSession(clientSession, ctx.player.id, "FINISHED")
+      ctx.redis.del(soloSessionKey(ctx.player.id)),
+      closeSession({
+        ...parseSchemaToClientSession(ctx.activeSession),
+        cards,
+        stats
+      }, "FINISHED", ctx.player.id)
     ])
 
-    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
+    redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
 
 export const forceCloseSoloSession = soloSessionActionClient
   .schema(forceCloseSoloSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { clientSession } = parsedInput
+    const { cards, stats } = parsedInput
 
     await Promise.all([
-      ctx.redis.del(sessionKey(ctx.activeSession.slug)),
-      closeSession(clientSession, ctx.player.id, "FORCE_CLOSED")
+      ctx.redis.del(soloSessionKey(ctx.player.id)),
+      closeSession({
+        ...parseSchemaToClientSession(ctx.activeSession),
+        cards,
+        stats
+      }, "FORCE_CLOSED", ctx.player.id)
     ])
 
-    redirect(`/game/summary/${clientSession.slug}`, RedirectType.replace)
+    redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
 
 export const saveOfflineSession = protectedActionClient

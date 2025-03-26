@@ -1,7 +1,7 @@
 // types
 import type { MatchFormat } from "@repo/db"
 import type { GameSessionWithPlayersWithAvatarWithCollectionWithCards } from "@repo/db/types"
-import type { ClientSessionVariants, SessionFilter, SessionSort } from "@repo/schema/session"
+import type { ClientSessionVariants, SessionFilter, SessionSort, SoloClientSession } from "@repo/schema/session"
 import type { Pagination } from "@repo/schema/search"
 import type { Search } from "@/lib/types/search"
 
@@ -13,7 +13,8 @@ import { db } from "@repo/server/db"
 
 // redis
 import { redis } from "@repo/server/redis"
-import { sessionKey } from "@repo/server/redis-keys"
+import { soloSessionKey } from "@repo/server/redis-keys"
+import { getActiveRoomByField } from "@repo/server/redis-commands"
 
 // actions
 import { signedIn } from "@/server/action/user-action"
@@ -141,21 +142,29 @@ export async function getActiveClientSession(
   format: MatchFormat | MatchFormat[],
   playerId?: string
 ): Promise<ClientSessionVariants | null> {
+  if (!playerId) {
+    const user = await signedIn()
+    if (!user) return null
+    
+    const activePlayer = await db.playerProfile.findFirst({ where: { userId: user.id } })
+    if (!activePlayer) return null
+    playerId = activePlayer.id
+  }
+
+  let clientSession: ClientSessionVariants | null = null
+
+  if (format === "SOLO") {
+    clientSession = await redis.json.get<SoloClientSession>(soloSessionKey(playerId))
+  }
+
+  if (format === "COOP" || format === "PVP") {
+    clientSession = await getActiveRoomByField(playerId, "session") || null
+  }
+
+  if (clientSession) return clientSession
+
   const activeSession = await getActiveSession(format, playerId)
   if (!activeSession) return null
-
-  /**
-   * Note: Yep, that makes no sense. Will be reworked after singleplayer
-   * and multiplayer sessions are managed individually.
-   * 
-   * TODO: I'm on it.
-   * 
-   * https://github.com/maateh/memory-pvp/issues/19
-   */
-  if (format === "SOLO") {
-    const storedSession = await redis.get<ClientSessionVariants>(sessionKey(activeSession.slug))
-    if (storedSession) return storedSession
-  }
 
   return parseSchemaToClientSession(activeSession)
 }

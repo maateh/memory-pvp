@@ -1,13 +1,12 @@
 import { z } from "zod"
 
 // schemas
-import { sessionCard } from "@repo/db/json-schema"
 import { roomSettings } from "@/room"
 import {
-  clientSession,
   sessionSettings,
   offlineSessionStorage,
-  soloClientSession
+  sessionStateUpdater,
+  clientSessionCard
 } from "@/session"
 
 export const createSoloSessionValidation = z.object({
@@ -23,31 +22,26 @@ export const createMultiplayerSessionValidation = z.object({
   guestId: z.string()
 })
 
-export const storeSoloSessionValidation = z.object({
-  clientSession: soloClientSession
-})
+export const storeSoloSessionValidation = sessionStateUpdater
+  .omit({ currentTurn: true })
 
-export const finishSoloSessionValidation = z.object({
-  clientSession: clientSession
-    .omit({ status: true, cards: true })
-    .extend({
-      cards: z.array(sessionCard.extend({
-        matchedBy: z.string()
-      }))
-    })
-})
+export const finishSoloSessionValidation = sessionStateUpdater
+  .omit({ currentTurn: true, cards: true, flipped: true })
+  .extend({
+    cards: z.array(clientSessionCard.extend({
+      matchedBy: z.string()
+    }))
+  })
 
-export const forceCloseSoloSessionValidation = z.object({
-  clientSession: clientSession
-    .omit({ status: true })
-})
+export const forceCloseSoloSessionValidation = sessionStateUpdater
+  .omit({ currentTurn: true, flipped: true })
 
 export const saveOfflineSessionValidation = z.object({
   playerId: z.string(),
   clientSession: offlineSessionStorage
     .omit({ cards: true, updatedAt: true })
     .extend({
-      cards: z.array(sessionCard.extend({
+      cards: z.array(clientSessionCard.extend({
         matchedBy: z.string()
       }))
     })

@@ -59,7 +59,7 @@ const SessionActionsDropdown = ({
     }
 
     try {
-      await forceCloseSoloSession({ clientSession: session })
+      await forceCloseSoloSession(session)
     } catch (err) {
       logError(err)
     }
