@@ -5,9 +5,6 @@ import { useMemo } from "react"
 // settings
 import { roomHeaderMap } from "@/config/room-settings"
 
-// helpers
-import { otherPlayerKey } from "@repo/helper/player"
-
 // utils
 import { getRendererSessionStats } from "@/lib/util/stats"
 
@@ -33,14 +30,7 @@ import { useRoomStore } from "@/components/provider/room-store-provider"
 
 const RoomScreen = () => {
   const { handleCopy } = useCopy({ showToast: true })
-
   const room = useRoomStore((state) => state.room)
-  const currentRoomPlayer = useRoomStore((state) => state.currentRoomPlayer)
-  const roomClose = useRoomStore((state) => state.roomClose)
-  const roomLeave = useRoomStore((state) => state.roomLeave)
-  const roomKick = useRoomStore((state) => state.roomKick)
-  const roomReady = useRoomStore((state) => state.roomReady)
-  const sessionClose = useRoomStore((state) => state.sessionClose)
 
   const HeaderIcon = roomHeaderMap[room.status].Icon
 
@@ -120,11 +110,7 @@ const RoomScreen = () => {
           <JoinedPlayer player={room.owner} />
 
           {room.status !== "waiting" && (
-            <JoinedPlayer
-              player={room.guest}
-              disableKick={currentRoomPlayer.role === "guest" || room.status !== "joined"}
-              handleKick={roomKick}
-            />
+            <JoinedPlayer player={room.guest} />
           )}
         </div>
 
@@ -133,28 +119,15 @@ const RoomScreen = () => {
 
       <div className="space-y-10 sm:space-y-12">
         {(room.status !== "cancelled" || room.connectionStatus === "online") && (
-          <RoomReadyButton
-            connectionStatus={room.connectionStatus}
-            roomStatus={room.status}
-            isReady={currentRoomPlayer.ready}
-            handleReady={roomReady}
-          />
+          <RoomReadyButton />
         )}
 
         {room.status !== "cancelled" && room.status !== "running" && (
-          <RoomLeaveButton
-            action={currentRoomPlayer.id === room.owner.id ? "close" : "leave"}
-            handleCloseOrLeave={currentRoomPlayer.id === room.owner.id ? roomClose : roomLeave}
-            roomStatus={room.status}
-            isReady={currentRoomPlayer.ready}
-          />
+          <RoomLeaveButton />
         )}
 
         {room.status === "cancelled" && room.connectionStatus === "half_online" && (
-          <SessionCloseButton
-            handleSessionClose={sessionClose}
-            otherConnection={room[otherPlayerKey(room.owner.id, currentRoomPlayer.id)].connection}
-          />
+          <SessionCloseButton />
         )}
       </div>
     </div>

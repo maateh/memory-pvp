@@ -18,13 +18,18 @@ import { PlayerBadge } from "@/components/player"
 import { UserAvatar } from "@/components/user"
 import { HoverActionOverlay, StatisticBadge } from "@/components/shared"
 
+// hooks
+import { useRoomStore } from "@/components/provider/room-store-provider"
+
 type JoinedPlayerProps = {
   player: RoomPlayer
-  disableKick?: boolean
-  handleKick?: () => void
 }
 
-const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerProps) => {
+const JoinedPlayer = ({ player }: JoinedPlayerProps) => {
+  const { status } = useRoomStore((state) => state.room)
+  const currentPlayer = useRoomStore((state) => state.currentRoomPlayer)
+  const roomKick = useRoomStore((state) => state.roomKick)
+
   const { elo: eloStat } = getRendererPlayerStats(player, ["elo"])
   const isOffline = player.connection.status === "offline"
 
@@ -32,8 +37,8 @@ const JoinedPlayer = ({ player, disableKick = false, handleKick }: JoinedPlayerP
     <HoverActionOverlay className={cn("py-4 flex flex-col items-center justify-center gap-y-2 relative", {
       "opacity-40": isOffline
     })}
-      hoverAction={handleKick}
-      disableOverlay={disableKick || !handleKick}
+      hoverAction={roomKick}
+      disableOverlay={player.role === "owner" || currentPlayer.role === "guest" || status !== "joined"}
       overlayProps={{
         className: "bg-destructive/40",
         children: (
