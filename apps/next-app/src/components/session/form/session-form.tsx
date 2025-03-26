@@ -140,10 +140,9 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
 
       <div className="mt-auto flex flex-col items-center gap-y-4">
         <Button className={cn("p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg", {
-          // TODO: different design if format is offline
-          "": format === "OFFLINE"
+          "bg-muted-foreground/25 hover:bg-muted-foreground/30": format === "OFFLINE"
         })}
-          variant="secondary"
+          variant={format !== "OFFLINE" ? "secondary" : "ghost"}
           size="lg"
           disabled={
             createSoloSessionStatus === "executing"
