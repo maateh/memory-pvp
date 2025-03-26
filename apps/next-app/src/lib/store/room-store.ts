@@ -40,7 +40,7 @@ type RoomListener = {
   roomDisconnected: (response: SocketResponse<Partial<JoinedRoom | RunningRoom>>) => void
   roomKicked: (response: SocketResponse) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
-  roomClosed: (response: SocketResponse) => void
+  roomClosedWaiting: (response: SocketResponse) => void
   roomForceClosedRunning: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom | RunningRoom>) => Promise<void>
   sessionStartingFailed: (response: SocketResponse) => void
@@ -117,7 +117,7 @@ export const roomStore = ({
     })
   },
 
-  roomClosed({ message, description, error }) {
+  roomClosedWaiting({ message, description, error }) {
     if (error) return handleServerError(error)
 
     toast.warning(message, { description })

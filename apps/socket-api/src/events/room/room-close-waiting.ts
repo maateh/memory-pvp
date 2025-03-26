@@ -41,7 +41,7 @@ export const roomCloseWaiting: SocketEventHandler = (socket) => async (_, respon
     socket.ctx.connection = undefined!
 
     if (room.status !== "waiting") {
-      socket.broadcast.to(roomSlug).emit("room:closed", {
+      socket.broadcast.to(roomSlug).emit("room:closed:waiting", {
         message: `${playerTag} has closed the room.`,
         description: "This will not affect your Elo points."
       } satisfies SocketResponse)
