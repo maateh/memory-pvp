@@ -26,6 +26,7 @@ import {
   roomLeave,
   roomCloseWaiting,
   roomCloseCancelled,
+  roomForceCloseRunning,
   sessionCreated,
   sessionStartingFailed
 } from "@/events/room"
@@ -64,13 +65,13 @@ io.on("connection", (_socket) => {
    */
   socket.on("room:ready", roomReady(socket))
   socket.on("room:kick", roomKick(socket))
-  socket.on("session:starting:failed", sessionStartingFailed(socket))
-  socket.on("session:created", sessionCreated(socket))
-
   socket.on("room:leave", roomLeave(socket))
   socket.on("room:close:waiting", roomCloseWaiting(socket))
   socket.on("room:close:cancelled", roomCloseCancelled(socket))
+  socket.on("room:force_close:running", roomForceCloseRunning(socket))
 
+  socket.on("session:starting:failed", sessionStartingFailed(socket))
+  socket.on("session:created", sessionCreated(socket))
   socket.on("session:card:flip", sessionCardFlip(socket))
 
   socket.on("connection:clear", connectionClear(socket))
