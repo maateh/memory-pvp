@@ -150,47 +150,47 @@ export const roomStore = ({
   },
 
   async roomCloseWaiting() {
-    toast.loading("Closing room...", { id: "room:close" })
+    toast.loading("Closing room...", { id: "room:close:waiting" })
 
     try {
       const {
         message,
         description,
         error
-      }: SocketResponse = await socket.emitWithAck("room:close", {})
+      }: SocketResponse = await socket.emitWithAck("room:close:waiting", {})
 
       if (error) {
         throw ServerError.parser(error)
       }
 
       router.replace("/game/setup")
-      toast.success(message, { description })
+      toast.success(message, { description, id: "room:close:waiting:response" })
     } catch (err) {
       handleServerError(err as ServerError)
       logError(err)
-    } finally { toast.dismiss("room:close") }
+    } finally { toast.dismiss("room:close:waiting") }
   },
 
   async roomCloseCancelled() {
-    toast.loading("Closing session...", { id: "session:close" })
+    toast.loading("Closing session...", { id: "room:close:cancelled" })
 
     try {
       const {
         message,
         description,
         error
-      }: SocketResponse = await socket.emitWithAck("session:close", {})
+      }: SocketResponse = await socket.emitWithAck("room:close:cancelled", {})
 
       if (error) {
         throw ServerError.parser(error)
       }
 
-      toast.warning(message, { description, id: "session:close:response" })
+      toast.warning(message, { description, id: "room:close:cancelled:response" })
       router.replace(`/game/summary/${initialRoom.slug}`)
     } catch (err) {
       handleServerError(err as ServerError)
       logError(err)
-    } finally { toast.dismiss("session:close") }
+    } finally { toast.dismiss("room:close:cancelled") }
   },
 
   async roomForceCloseRunning() {
