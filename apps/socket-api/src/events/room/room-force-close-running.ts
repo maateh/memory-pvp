@@ -31,8 +31,10 @@ export const roomForceCloseRunning: SocketEventHandler = (socket) => async (_, r
       })
     }
 
-    // FIXME: rework `calculateElo` to apply penalty manually instead of using "FORCE_CLOSED"
-    await closeRunningRoom(room, playerId, "FORCE_CLOSED")
+    await closeRunningRoom(room, "FORCE_CLOSED", {
+      requesterPlayerId: playerId,
+      applyPenalty: true
+    })
     socket.ctx.connection = undefined!
 
     io.to(roomSlug).emit("room:force_closed:running", {

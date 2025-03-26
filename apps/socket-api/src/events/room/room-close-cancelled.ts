@@ -32,10 +32,10 @@ export const roomCloseCancelled: SocketEventHandler = (socket) => async (_, resp
       })
     }
 
-    const playerKey = otherPlayerKey(room.owner.id, playerId)
+    const otherPlayer = room[otherPlayerKey(room.owner.id, playerId)]
     if (
       room.session.mode === "RANKED" &&
-      !reconnectionTimeExpired(room[playerKey].connection)
+      !reconnectionTimeExpired(otherPlayer.connection)
     ) {
       ServerError.throw({
         thrownBy: "SOCKET_API",
@@ -45,7 +45,10 @@ export const roomCloseCancelled: SocketEventHandler = (socket) => async (_, resp
       })
     }
 
-    await closeRunningRoom(room, playerId, "CLOSED")
+    await closeRunningRoom(room, "CLOSED", {
+      requesterPlayerId: otherPlayer.id,
+      applyPenalty: true
+    })
     socket.ctx.connection = undefined!
 
     response({

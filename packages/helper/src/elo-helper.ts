@@ -1,5 +1,5 @@
 // types
-import type { SessionStatus, TableSize } from "@repo/db"
+import type { TableSize } from "@repo/db"
 import type {
   ClientSession,
   MultiplayerClientSession,
@@ -11,21 +11,16 @@ import { tableSizeMap } from "@repo/config/game"
 import {
   CORRECTED_FLIPS_MULTIPLIER,
   ELO_DIFFERENCE_FACTOR,
-  FORCE_CLOSE_SUBTRACT_VALUE,
+  PENALTY_SCORE,
   K_FACTORS,
   TABLE_SIZE_MULTIPLIERS,
   TIME_BOOSTER_MULTIPLIERS,
   TIME_BOOSTER_LIMITS,
-  SOLO_SCORE_MULTIPLIER_SUBTRACTOR
+  SOLO_SCORE_SUBTRACTOR
 } from "@repo/config/elo"
 
 // helpers
 import { currentPlayerKey } from "./player-helper"
-
-type EloUpdate = {
-  newElo: number
-  gainedElo: number
-}
 
 /**
  * Calculates expected ELO score based on two players' ratings.
@@ -95,6 +90,17 @@ function correctedFlips(flips: number): number {
   return (flips * CORRECTED_FLIPS_MULTIPLIER) || 1
 }
 
+type CalculateEloOpts = {
+  requesterPlayerId?: string
+  neutralizePoints?: boolean
+  applyPenalty?: boolean
+}
+
+type EloUpdate = {
+  newElo: number
+  gainedElo: number
+}
+
 /**
  * Calculates the Elo update for a solo session based on the player's performance.
  * 
@@ -104,26 +110,26 @@ function correctedFlips(flips: number): number {
  * - Elo gain is determined using the `calculateGainedElo` function with predefined factors.
  * 
  * @param {SoloClientSession} session Solo session data, including the owner, session stats, table size, and mode.
- * @param {SessionStatus} status Session "action" status, which affects the Elo calculation.
+ * @param {CalculateEloOpts} options Additional options to manage calculations.
  * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function soloElo(
   session: Pick<SoloClientSession, "owner" | "stats" | "tableSize" | "mode">,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
+  options?: CalculateEloOpts
 ): EloUpdate {
   const { owner, stats, tableSize, mode } = session
+  const { applyPenalty = false } = options || {}
 
   if (mode === "CASUAL") {
     return { newElo: owner.stats.elo, gainedElo: 0 }
   }
 
-  const successRate = status !== "FORCE_CLOSED"
-    ? stats.matches[owner.id] / correctedFlips(stats.flips[owner.id])
-    : -FORCE_CLOSE_SUBTRACT_VALUE
+  const successRate = applyPenalty ? -PENALTY_SCORE
+    : stats.matches[owner.id] / correctedFlips(stats.flips[owner.id])
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.SOLO,
-    scoreMultiplier: successRate - SOLO_SCORE_MULTIPLIER_SUBTRACTOR,
+    scoreMultiplier: successRate - SOLO_SCORE_SUBTRACTOR,
     tableSize,
     timer: stats.timer
   })
@@ -141,15 +147,16 @@ export function soloElo(
  * 
  * @param {MultiplayerClientSession} session PvP session data, including both players, stats, table size, and mode.
  * @param {string} playerId The ID of the player whose Elo is being calculated.
- * @param {SessionStatus} status Session "action" status, which affects the Elo calculation.
+ * @param {CalculateEloOpts} options Additional options to manage calculations.
  * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function pvpElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
   playerId: string,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
+  options?: CalculateEloOpts
 ): EloUpdate {
   const { owner, guest, stats, tableSize, mode } = session
+  const { applyPenalty = false, neutralizePoints } = options || {}
 
   const playerKey = currentPlayerKey(owner.id, playerId)
   const player = playerKey === "owner" ? owner : guest
@@ -164,10 +171,8 @@ export function pvpElo(
   const opponentPerformance = stats.matches[opponent.id] / tableSizeFactor
 
   const closenessFactor = 1 - Math.abs(playerPerformance - opponentPerformance)
-
-  const actualScore = status === "FINISHED"
-    ? (playerPerformance - opponentPerformance) + 0.5
-    : status === "CLOSED" ? 1 : -FORCE_CLOSE_SUBTRACT_VALUE
+  const actualScore = applyPenalty ? -PENALTY_SCORE : neutralizePoints ? 1
+    : (playerPerformance - opponentPerformance) + 0.5
 
   const gainedElo = calculateGainedElo({
     kFactor: K_FACTORS.PVP,
@@ -189,15 +194,16 @@ export function pvpElo(
  * 
  * @param {MultiplayerClientSession} session Co-Op session data, including both players, stats, table size, and mode.
  * @param {string} playerId The ID of the player whose Elo is being calculated.
- * @param {SessionStatus} status Session "action" status, affecting the Elo calculation.
+ * @param {CalculateEloOpts} options Additional options to manage calculations.
  * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function coopElo(
   session: Pick<MultiplayerClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode">,
   playerId: string,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
+  options?: CalculateEloOpts
 ): EloUpdate {
   const { owner, guest, stats, tableSize, mode } = session
+  const { applyPenalty = false } = options || {}
 
   const playerKey = currentPlayerKey(owner.id, playerId)
   const player = playerKey === "owner" ? owner : guest
@@ -211,7 +217,7 @@ export function coopElo(
   const teammateSuccessRate = stats.matches[teammate.id] / correctedFlips(stats.flips[teammate.id])
 
   const teamPerformance = successRate + teammateSuccessRate
-  const teamScore = status === "FORCE_CLOSED" ? -FORCE_CLOSE_SUBTRACT_VALUE
+  const teamScore = applyPenalty ? -PENALTY_SCORE
     : (successRate + teamPerformance) / 2
 
   const gainedElo = calculateGainedElo({
@@ -233,35 +239,38 @@ export function coopElo(
  * 
  * @param {ClientSession} session Session data, including players, stats, table size, mode, and format.
  * @param {string} playerId The ID of the player whose Elo is being calculated.
- * @param {SessionStatus} status Session "action" status, affecting the Elo calculation (default: `FINISHED`).
- * @param {string} requesterPlayerId (Optional) The ID of the player making the calculation request, used for PVP status adjustments.
+ * @param {CalculateEloOpts} options Additional options to manage calculations.
  * @returns {EloUpdate} The updated Elo score and the gained Elo for the player.
  */
 export function calculateElo(
   session: Pick<ClientSession, "owner" | "guest" | "stats" | "tableSize" | "mode" | "format">,
   playerId: string,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED"> = "FINISHED",
-  requesterPlayerId?: string
+  options?: CalculateEloOpts
 ): EloUpdate {
   const { format, owner } = session
 
   if (format === "SOLO") {
-    return soloElo(session, status)
+    return soloElo(session, options)
   }
 
   if (format === "PVP") {
-    let actionStatus = status
+    const { requesterPlayerId } = options || {}
+    let { applyPenalty, neutralizePoints } = options || {}
 
-    if (requesterPlayerId !== playerId) {
-      if (status === "CLOSED") actionStatus = "FORCE_CLOSED"
-      if (status === "FORCE_CLOSED") actionStatus = "CLOSED"
+    if (applyPenalty && requesterPlayerId !== playerId) {
+      applyPenalty = false
+      neutralizePoints = true
     }
-    
-    return pvpElo(session as MultiplayerClientSession, playerId, actionStatus)
+
+    return pvpElo(session as MultiplayerClientSession, playerId, {
+      ...options,
+      applyPenalty,
+      neutralizePoints
+    })
   }
 
   if (format === "COOP") {
-    return coopElo(session as MultiplayerClientSession, playerId, status)
+    return coopElo(session as MultiplayerClientSession, playerId, options)
   }
 
   return { newElo: owner.stats.elo, gainedElo: 0 }

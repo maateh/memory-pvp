@@ -22,15 +22,15 @@ export const K_FACTORS: Record<Exclude<MatchFormat, "OFFLINE">, number> = {
 export const ELO_DIFFERENCE_FACTOR = 400 as const
 
 /** Subtraction factor applied to the solo success rate before calculating Elo gain. */
-export const SOLO_SCORE_MULTIPLIER_SUBTRACTOR = 0.45 as const
+export const SOLO_SCORE_SUBTRACTOR = 0.45 as const
 
 /**
- * Penalty applied when a session is force-closed by a player.
+ * Penalty score applied during Elo calculations.
  * 
  * - Used in Elo calculations to reduce Elo for players who abandon matches.
  * - A fixed negative score multiplier affecting Elo loss.
  */
-export const FORCE_CLOSE_SUBTRACT_VALUE = 0.5 as const
+export const PENALTY_SCORE = 0.5 as const
 
 /** Multiplier applied to the number of flips to normalize success rates. */
 export const CORRECTED_FLIPS_MULTIPLIER = 0.5 as const

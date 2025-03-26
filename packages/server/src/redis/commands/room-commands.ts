@@ -182,11 +182,11 @@ export async function closeWaitingRoom(
  */
 export async function closeRunningRoom(
   room: RunningRoom,
-  playerId: string,
-  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">
+  status: Extract<SessionStatus, "FINISHED" | "CLOSED" | "FORCE_CLOSED">,
+  options?: Parameters<typeof closeSession>["2"]
 ): Promise<void> {
   await Promise.all([
-    closeSession(room.session, status, playerId),
+    closeSession(room.session, status, options),
     redis.del(playerConnectionKey(room.owner.id)),
     redis.del(playerConnectionKey(room.guest.id)),
     redis.json.del(roomKey(room.slug))
