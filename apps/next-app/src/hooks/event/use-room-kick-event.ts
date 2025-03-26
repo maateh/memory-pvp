@@ -19,9 +19,14 @@ type UseRoomKickEventReturn = {
 }
 
 /**
- * TODO: write doc
- * 
- * @returns 
+ * Provides an event handler for kicking a player from a waiting room.
+ *
+ * This hook manages the process of removing a player from the room using a 
+ * socket event. It updates the room state and displays relevant UI messages.
+ *
+ * @returns {UseRoomKickEventReturn} An object containing:
+ * - `handleKickPlayer`: Sends a request to kick a player, updates the room state,
+ *   and provides user feedback via toast notifications.
  */
 export function useRoomKickEvent(): UseRoomKickEventReturn {
   const { socket } = useSocketService()

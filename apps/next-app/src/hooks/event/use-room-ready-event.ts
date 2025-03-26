@@ -18,9 +18,14 @@ type UseRoomReadyEventReturn = {
 }
 
 /**
- * TODO: write doc
- * 
- * @returns 
+ * Provides an event handler for toggling a player's ready status in a room.
+ *
+ * This hook sends a request to update the player's ready state, updates the 
+ * UI accordingly, and displays relevant feedback messages.
+ *
+ * @returns {UseRoomReadyEventReturn} An object containing:
+ * - `toggleReady`: Toggles the player's ready status, updates the room state, 
+ *   and shows success or informational toasts based on the new state.
  */
 export function useRoomReadyEvent(): UseRoomReadyEventReturn {
   const { socket } = useSocketService()

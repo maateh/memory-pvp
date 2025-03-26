@@ -24,9 +24,16 @@ type UseRoomCloseEventReturn = {
 }
 
 /**
- * TODO: write doc
- * 
- * @returns 
+ * Provides event handlers for closing different types of game rooms.
+ *
+ * This hook manages the process of closing rooms, including waiting rooms, 
+ * cancelled rooms, and force-closing running rooms. It interacts with the 
+ * socket service and updates the UI accordingly.
+ *
+ * @returns {UseRoomCloseEventReturn} An object containing functions to handle room closing events:
+ * - `handleCloseWaitingRoom`: Closes a waiting room and redirects to the setup page.
+ * - `handleCloseCancelledRoom`: Closes a cancelled room and redirects to the game summary.
+ * - `handleForceCloseRunningRoom`: Force-closes a running session.
  */
 export function useRoomCloseEvent(): UseRoomCloseEventReturn {
   const router = useRouter()

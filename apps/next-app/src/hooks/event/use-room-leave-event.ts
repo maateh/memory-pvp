@@ -18,9 +18,14 @@ type UseRoomLeaveEventReturn = {
 }
 
 /**
- * TODO: write doc
- * 
- * @returns 
+ * Provides an event handler for leaving a room.
+ *
+ * This hook sends a request to leave the joined room, navigates the user back 
+ * to the room dashboard, and displays relevant UI messages.
+ *
+ * @returns {UseRoomLeaveEventReturn} An object containing:
+ * - `handleLeaveRoom`: Initiates the room leave process, updates the UI with 
+ *   loading and success states, and redirects the user upon completion.
  */
 export function useRoomLeaveEvent(): UseRoomLeaveEventReturn {
   const router = useRouter()
