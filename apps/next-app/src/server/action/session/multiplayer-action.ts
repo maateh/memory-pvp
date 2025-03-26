@@ -287,7 +287,10 @@ export const leaveOrCloseRoom = roomActionClient
 
 export const forceCloseMultiplayerSession = multiplayerSessionActionClient
   .action(async ({ ctx }) => {
-    await closeRunningRoom(ctx.activeRoom, ctx.player.id, "FORCE_CLOSED")
+    await closeRunningRoom(ctx.activeRoom, "FORCE_CLOSED", {
+      requesterPlayerId: ctx.player.id,
+      applyPenalty: true
+    })
 
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })

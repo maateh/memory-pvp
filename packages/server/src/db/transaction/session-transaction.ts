@@ -16,13 +16,13 @@ import { db } from "@/db"
  * 
  * @param {ClientSessionVariants} session The current session containing player data, mode, and stats.
  * @param {SessionStatus} status Session "action" status.
- * @param {string} requesterPlayerId The ID of the player requesting the session closure.
+ * @param {CloseSessionOpts} options Additional options to manage close session.
  * @returns A Prisma update operation for finalizing the game session.
  */
 export function closeSessionOperation(
   session: Parameters<typeof closeSession>["0"],
   status: Parameters<typeof closeSession>["1"],
-  requesterPlayerId?: Parameters<typeof closeSession>["2"]
+  options?: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__GameSessionClient<GameSession> {
   const { slug, format, owner, guest, cards, stats } = session
 
@@ -40,7 +40,10 @@ export function closeSessionOperation(
         createMany: {
           data: players.map((player) => ({
             playerId: player.id,
-            gainedElo: calculateElo(session, player.id, status, requesterPlayerId || player.id).gainedElo,
+            gainedElo: calculateElo(session, player.id, {
+              ...options,
+              requesterPlayerId: options?.requesterPlayerId || player.id
+            }).gainedElo,
             flips: stats.flips[player.id],
             matches: stats.matches[player.id],
             timer: stats.timer

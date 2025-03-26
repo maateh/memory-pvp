@@ -14,6 +14,7 @@ import { GlowingOverlay } from "@/components/shared"
 
 // hooks
 import { useRoomStore } from "@/components/provider/room-store-provider"
+import { useRoomReadyEvent } from "@/hooks/event/use-room-ready-event"
 
 const RoomReadyButton = ({
   className,
@@ -21,7 +22,8 @@ const RoomReadyButton = ({
 }: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "onClick" | "disabled">) => {
   const { connectionStatus, status } = useRoomStore((state) => state.room)
   const player = useRoomStore((state) => state.currentRoomPlayer)
-  const roomReady = useRoomStore((state) => state.roomReady)
+
+  const { toggleReady } = useRoomReadyEvent()
 
   const ReadyIcon = player.ready ? CircleX : CircleCheck
   const disabled = connectionStatus !== "online"
@@ -41,7 +43,7 @@ const RoomReadyButton = ({
       }, className)}
         variant="ghost"
         size="icon"
-        onClick={roomReady}
+        onClick={toggleReady}
         disabled={disabled}
         {...props}
       >

@@ -16,13 +16,13 @@ import { db } from "@/db"
  * 
  * @param {ClientSessionVariants} session The current session containing player data, mode, and stats.
  * @param {SessionStatus} status Session "action" status.
- * @param {string} requesterPlayerId The ID of the player requesting the session closure.
+ * @param {CloseSessionOpts} options Additional options to manage close session.
  * @returns An array of Prisma update operations for player statistics.
  */
 export function playerStatsUpdaterOperations(
   session: Parameters<typeof closeSession>["0"],
   status: Parameters<typeof closeSession>["1"],
-  requesterPlayerId?: Parameters<typeof closeSession>["2"]
+  options?: Parameters<typeof closeSession>["2"]
 ): Prisma.Prisma__PlayerProfileClient<PlayerProfile>[] {
   const { format, owner, guest, stats } = session
 
@@ -34,7 +34,10 @@ export function playerStatsUpdaterOperations(
       where: { id: player.id },
       data: {
         stats: {
-          elo: calculateElo(session, player.id, status, requesterPlayerId || player.id).newElo,
+          elo: calculateElo(session, player.id, {
+            ...options,
+            requesterPlayerId: options?.requesterPlayerId || player.id
+          }).newElo,
           flips: player.stats.flips + stats.flips[player.id],
           matches: player.stats.matches + stats.matches[player.id],
           timer: player.stats.timer + stats.timer,

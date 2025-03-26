@@ -19,7 +19,7 @@ export const useForceCloseSoloSessionAction = () => {
   return useAction(forceCloseSoloSession, {
     onSuccess() {
       const { owner, mode } = session
-      const { gainedElo } = calculateElo(session, owner.id, "FORCE_CLOSED")
+      const { gainedElo } = calculateElo(session, owner.id, { applyPenalty: true })
 
       toast.warning("Solo session has been force closed.", {
         description: mode === "CASUAL"

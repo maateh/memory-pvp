@@ -15,7 +15,7 @@ import { roomStore } from "@/lib/store/room-store"
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
-const RoomStoreContext = createContext<StoreApi<RoomStore> | null>(null)
+export const RoomStoreContext = createContext<StoreApi<RoomStore> | null>(null)
 
 type RoomStoreProviderProps = {
   initialRoom: RoomVariants
@@ -49,7 +49,8 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
       roomConnected,
       roomDisconnected,
       roomLeft,
-      roomClosed,
+      roomClosedWaiting,
+      roomForceClosedRunning,
       roomKicked,
       roomReadied,
       sessionStartingFailed,
@@ -60,9 +61,10 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
 
     socket.on("room:connected", roomConnected)
     socket.on("room:disconnected", roomDisconnected)
-    socket.on("room:left", roomLeft)
-    socket.on("room:closed", roomClosed)
     socket.on("room:kicked", roomKicked)
+    socket.on("room:left", roomLeft)
+    socket.on("room:closed:waiting", roomClosedWaiting)
+    socket.on("room:force_closed:running", roomForceClosedRunning)
     socket.on("room:readied", roomReadied)
     socket.on("session:starting:failed", sessionStartingFailed)
     socket.on("session:started", sessionStarted)
@@ -73,9 +75,10 @@ const RoomStoreProvider = ({ initialRoom, currentPlayerId, children }: RoomStore
     return () => {
       socket.off("room:connected", roomConnected)
       socket.off("room:disconnected", roomDisconnected)
-      socket.off("room:left", roomLeft)
-      socket.off("room:closed", roomClosed)
       socket.off("room:kicked", roomKicked)
+      socket.off("room:left", roomLeft)
+      socket.off("room:closed:waiting", roomClosedWaiting)
+      socket.off("room:force_closed:running", roomForceClosedRunning)
       socket.off("room:readied", roomReadied)
       socket.off("session:starting:failed", sessionStartingFailed)
       socket.off("session:started", sessionStarted)

@@ -61,7 +61,7 @@ export const sessionCardFlip: SocketEventHandler<
     const { isOver } = await handleCardPairing({ playerId, session })    
     if (!isOver) return response({ message: "Cards paired" })
 
-    await closeRunningRoom({ ...room, session }, playerId, "FINISHED")
+    await closeRunningRoom({ ...room, session }, "FINISHED", { requesterPlayerId: playerId })
     io.to(roomSlug).emit("session:finished", {
       message: "Session finished!",
       description: "Let's see the results...",

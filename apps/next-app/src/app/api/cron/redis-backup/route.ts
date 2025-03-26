@@ -44,8 +44,8 @@ export async function GET(req: Request) {
 
     const roomOperations = cancelledRooms.flatMap(({ session }) => {
       return [
-        ...playerStatsUpdaterOperations(session, "FORCE_CLOSED"),
-        closeSessionOperation(session, "FORCE_CLOSED")
+        ...playerStatsUpdaterOperations(session, "FORCE_CLOSED", { applyPenalty: true }),
+        closeSessionOperation(session, "FORCE_CLOSED", { applyPenalty: true })
       ]
     })
 

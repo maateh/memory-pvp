@@ -11,8 +11,8 @@ import { ServerError } from "@repo/server/error"
 // helper
 import { currentPlayerKey } from "@repo/helper/player"
 
-export const roomClose: SocketEventHandler = (socket) => async (_, response) => {
-  console.log("DEBUG - room:close -> ", socket.id)
+export const roomCloseWaiting: SocketEventHandler = (socket) => async (_, response) => {
+  console.log("DEBUG - room:close:waiting -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
@@ -41,7 +41,7 @@ export const roomClose: SocketEventHandler = (socket) => async (_, response) => 
     socket.ctx.connection = undefined!
 
     if (room.status !== "waiting") {
-      socket.broadcast.to(roomSlug).emit("room:closed", {
+      socket.broadcast.to(roomSlug).emit("room:closed:waiting", {
         message: `${playerTag} has closed the room.`,
         description: "This will not affect your Elo points."
       } satisfies SocketResponse)

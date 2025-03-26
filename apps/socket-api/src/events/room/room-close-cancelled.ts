@@ -15,8 +15,8 @@ import { ServerError } from "@repo/server/error"
 import { reconnectionTimeExpired } from "@repo/helper/connection"
 import { otherPlayerKey } from "@repo/helper/player"
 
-export const sessionClose: SocketEventHandler = (socket) => async (_, response) => {
-  console.log("DEBUG - session:close -> ", socket.id)
+export const roomCloseCancelled: SocketEventHandler = (socket) => async (_, response) => {
+  console.log("DEBUG - room:close:cancelled -> ", socket.id)
 
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
@@ -32,10 +32,10 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    const playerKey = otherPlayerKey(room.owner.id, playerId)
+    const otherPlayer = room[otherPlayerKey(room.owner.id, playerId)]
     if (
       room.session.mode === "RANKED" &&
-      !reconnectionTimeExpired(room[playerKey].connection)
+      !reconnectionTimeExpired(otherPlayer.connection)
     ) {
       ServerError.throw({
         thrownBy: "SOCKET_API",
@@ -45,7 +45,10 @@ export const sessionClose: SocketEventHandler = (socket) => async (_, response) 
       })
     }
 
-    await closeRunningRoom(room, playerId, "CLOSED")
+    await closeRunningRoom(room, "CLOSED", {
+      requesterPlayerId: otherPlayer.id,
+      applyPenalty: true
+    })
     socket.ctx.connection = undefined!
 
     response({

@@ -15,17 +15,19 @@ import { GlowingOverlay } from "@/components/shared"
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 import { useRoomStore } from "@/components/provider/room-store-provider"
+import { useRoomCloseEvent } from "@/hooks/event/use-room-close-event"
+import { useRoomLeaveEvent } from "@/hooks/event/use-room-leave-event"
 
 const RoomLeaveButton = ({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "onClick" | "disabled">) => {
   const { socket } = useSocketService()
-
   const { status, owner } = useRoomStore((state) => state.room)
   const player = useRoomStore((state) => state.currentRoomPlayer)
-  const roomClose = useRoomStore((state) => state.roomClose)
-  const roomLeave = useRoomStore((state) => state.roomLeave)
+
+  const { handleCloseWaitingRoom } = useRoomCloseEvent()
+  const { handleLeaveRoom } = useRoomLeaveEvent()
 
   const disabled = !socket.active || player.ready || status === "ready"
 
@@ -40,7 +42,7 @@ const RoomLeaveButton = ({
       <Button className={cn("z-10 relative size-full px-6 flex-col rounded-full text-muted transition-none", className)}
         variant="ghost"
         size="icon"
-        onClick={player.id === owner.id ? roomClose : roomLeave}
+        onClick={player.id === owner.id ? handleCloseWaitingRoom : handleLeaveRoom}
         disabled={disabled}
         {...props}
       >

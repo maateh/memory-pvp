@@ -19,7 +19,7 @@ export const useFinishSoloSessionAction = () => {
   return useAction(finishSoloSession, {
     onSuccess() {
       const { owner, mode } = session
-      const { gainedElo } = calculateElo(session, owner.id, "FINISHED")
+      const { gainedElo } = calculateElo(session, owner.id)
 
       toast.success("Solo game session finished!", {
         description: mode === "CASUAL"
