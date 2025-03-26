@@ -1,3 +1,4 @@
+import { use } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
@@ -10,9 +11,11 @@ import { ServerError } from "@repo/server/error"
 // utils
 import { handleServerError, logError } from "@/lib/util/error"
 
+// context
+import { RoomStoreContext } from "@/components/provider/room-store-provider"
+
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
-import { useRoomStore } from "@/components/provider/room-store-provider"
 
 type UseRoomCloseEventReturn = {
   handleCloseWaitingRoom: () => Promise<void>
@@ -27,8 +30,8 @@ type UseRoomCloseEventReturn = {
  */
 export function useRoomCloseEvent(): UseRoomCloseEventReturn {
   const router = useRouter()
+  const roomStore = use(RoomStoreContext)
   const { socket } = useSocketService()
-  const room = useRoomStore((state) => state.room)
 
   return {
     async handleCloseWaitingRoom() {
@@ -54,6 +57,16 @@ export function useRoomCloseEvent(): UseRoomCloseEventReturn {
     },
   
     async handleCloseCancelledRoom() {
+      const room = roomStore?.getState().room
+      
+      if (!room) {
+        toast.warning("Room is not initialized.", {
+          description: "You can only do this if you are joining a room.",
+          id: "room:close:cancelled"
+        })
+        return
+      }
+
       toast.loading("Closing session...", { id: "room:close:cancelled" })
   
       try {
@@ -76,6 +89,16 @@ export function useRoomCloseEvent(): UseRoomCloseEventReturn {
     },
   
     async handleForceCloseRunningRoom() {
+      const room = roomStore?.getState().room
+      
+      if (!room) {
+        toast.warning("Room is not initialized.", {
+          description: "You can only do this if you are joining a room.",
+          id: "room:close:cancelled"
+        })
+        return
+      }
+
       toast.loading("Force closing session...", { id: "room:force_close:running" })
   
       try {

@@ -15,7 +15,7 @@ import { roomStore } from "@/lib/store/room-store"
 // hooks
 import { useSocketService } from "@/components/provider/socket-service-provider"
 
-const RoomStoreContext = createContext<StoreApi<RoomStore> | null>(null)
+export const RoomStoreContext = createContext<StoreApi<RoomStore> | null>(null)
 
 type RoomStoreProviderProps = {
   initialRoom: RoomVariants

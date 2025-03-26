@@ -32,6 +32,7 @@ import {
 // hooks
 import { useSessionStore } from "@/components/provider/session-store-provider"
 import { useForceCloseSoloSessionAction } from "@/lib/safe-action/session/singleplayer"
+import { useRoomCloseEvent } from "@/hooks/event/use-room-close-event"
 
 const SessionActionsDropdown = ({
   className,
@@ -46,6 +47,7 @@ const SessionActionsDropdown = ({
     executeAsync: forceCloseSoloSession,
     status: forceCloseSoloSessionStatus
   } = useForceCloseSoloSessionAction()
+  const { handleForceCloseRunningRoom } = useRoomCloseEvent()
 
   const handleCloseSession = async () => {
     if (session.format === "OFFLINE") {
@@ -59,7 +61,12 @@ const SessionActionsDropdown = ({
     }
 
     try {
-      await forceCloseSoloSession(session)
+      if (session.format === "SOLO") {
+        await forceCloseSoloSession(session)
+        return
+      }
+      
+      await handleForceCloseRunningRoom()
     } catch (err) {
       logError(err)
     }
