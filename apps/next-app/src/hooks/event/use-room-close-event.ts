@@ -89,31 +89,16 @@ export function useRoomCloseEvent(): UseRoomCloseEventReturn {
     },
   
     async handleForceCloseRunningRoom() {
-      const room = roomStore?.getState().room
-      
-      if (!room) {
-        toast.warning("Room is not initialized.", {
-          description: "You can only do this if you are joining a room.",
-          id: "room:close:cancelled"
-        })
-        return
-      }
-
       toast.loading("Force closing session...", { id: "room:force_close:running" })
   
       try {
         const {
-          message,
-          description,
           error
         }: SocketResponse = await socket.emitWithAck("room:force_close:running", {})
   
         if (error) {
           throw ServerError.parser(error)
         }
-  
-        toast.warning(message, { description, id: "room:force_close:running:response" })
-        router.replace(`/game/summary/${room.slug}`)
       } catch (err) {
         handleServerError(err as ServerError)
         logError(err)

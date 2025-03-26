@@ -38,9 +38,10 @@ type RoomStateHandler = {
 type RoomListener = {
   roomConnected: (response: SocketResponse<RoomVariants>) => void
   roomDisconnected: (response: SocketResponse<Partial<JoinedRoom | RunningRoom>>) => void
+  roomKicked: (response: SocketResponse) => void
   roomLeft: (response: SocketResponse<WaitingRoom>) => void
   roomClosed: (response: SocketResponse) => void
-  roomKicked: (response: SocketResponse) => void
+  roomForceClosedRunning: (response: SocketResponse) => void
   roomReadied: (response: SocketResponse<JoinedRoom | RunningRoom>) => Promise<void>
   sessionStartingFailed: (response: SocketResponse) => void
   sessionStarted: (response: SocketResponse<RunningRoom>) => void
@@ -97,6 +98,14 @@ export const roomStore = ({
     })
   },
 
+  roomKicked({ message, description, error }) {
+    if (error) return handleServerError(error)
+
+    toast.warning(message, { description })
+    socket.emit("connection:clear")
+    router.replace("/dashboard/rooms")
+  },
+
   roomLeft({ data: room, message, description, error }) {
     if (error || !room) return handleServerError(error)
       
@@ -115,12 +124,11 @@ export const roomStore = ({
     router.replace("/dashboard/rooms")
   },
 
-  roomKicked({ message, description, error }) {
+  roomForceClosedRunning({ message, description, error }) {
     if (error) return handleServerError(error)
 
     toast.warning(message, { description })
-    socket.emit("connection:clear")
-    router.replace("/dashboard/rooms")
+    router.replace(`/game/summary/${initialRoom.slug}`)
   },
 
   async roomReadied({ data: room, message, description, error }) {
