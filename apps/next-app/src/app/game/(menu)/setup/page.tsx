@@ -38,37 +38,43 @@ const GameSetupPage = async ({ searchParams }: GameSetupPageProps) => {
 
   const [user, players, collection] = await Promise.all([
     signedIn(),
-    getPlayers({}, "withAvatar"),
+    getPlayers(),
     collectionId ? getCollection(collectionId) : getRandomCollection(tableSize)
   ])
 
   return (
     <>
-      <header className="text-center space-y-2">
+      <header className="text-center">
         <h1 className="w-fit mx-auto text-3xl font-heading font-semibold heading-decorator sm:text-4xl">
           Let&apos;s memorize!
         </h1>
 
-        <p className="text-muted-foreground text-xl font-heading sm:text-2xl">
+        <p className="text-muted-foreground text-xl font-heading">
           ...but first, <span className="text-accent">configure</span> your game session.
         </p>
 
+        <Separator className="w-2/5 bg-border/50 mx-auto mt-2.5 mb-1.5 sm:w-1/5 lg:w-1/6" />
+
         {user && (
-          <PlayerSelectButton className="w-full max-w-56 px-2.5 border border-border/25 hover:bg-border/10 dark:hover:bg-border/10"
-            avatarProps={{ className: "sm:size-7" }}
-            players={players}
-            showUserAvatar
-          />
+          <div className="flex justify-center items-center gap-x-1">
+            <p className="pb-0.5 text-muted-foreground small-caps">
+              playing as
+            </p>
+
+            <PlayerSelectButton className="w-fit pl-1 pr-1.5 justify-start gap-x-2"
+              size="sm"
+              players={players}
+            />
+          </div>
         )}
 
         {!user && (
           <UserManageButton className="mx-auto"
+            size="sm"
             showSignInIfLoggedOut
           />
         )}
       </header>
-
-      <Separator className="w-2/5 bg-border/60 mx-auto my-5 sm:w-1/5 lg:w-1/6" />
 
       <main className="flex-1 flex flex-col">
         <SessionForm
