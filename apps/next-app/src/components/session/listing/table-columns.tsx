@@ -118,7 +118,7 @@ export const columns: ColumnDef<ClientSessionVariants>[] = [
           {Object.values(players).map((player) => player && (
             <li key={player.tag}>
               <PlayerBadge
-                size="sm"
+                size={session.guest ? "sm" : "default"}
                 player={player}
                 key={player.tag}
               />
