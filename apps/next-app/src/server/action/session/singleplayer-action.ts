@@ -188,7 +188,7 @@ export const saveOfflineSession = playerActionClient
         cards,
         stats,
         startedAt,
-        slug: generateSessionSlug({ mode: "CASUAL", format: "OFFLINE" }, true),
+        slug: generateSessionSlug({ mode: "CASUAL", format: "OFFLINE", tableSize }),
         status: "FINISHED",
         mode: "CASUAL",
         format: "OFFLINE",
