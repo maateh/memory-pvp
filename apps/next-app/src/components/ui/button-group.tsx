@@ -1,5 +1,7 @@
 "use client"
 
+import type { LucideProps } from "lucide-react"
+
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { CheckCircle } from "lucide-react"
@@ -22,22 +24,32 @@ const ButtonGroup = React.forwardRef<
 });
 ButtonGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
+type ButtonGroupItemProps = {
+  indicatorProps?: React.ComponentProps<typeof RadioGroupPrimitive.RadioGroupIndicator>
+  iconProps?: LucideProps
+} & React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+  & VariantProps<typeof buttonVariants>
+
 const ButtonGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
-    & VariantProps<typeof buttonVariants>
->(({ className, variant, size, children, ...props }, ref) => {
+  ButtonGroupItemProps
+>(({ className, variant = "ghost", size, children, indicatorProps, iconProps, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "relative data-[state=checked]:bg-accent/70",
+        "flex items-center justify-center gap-x-2.5 gap-y-2 relative border border-border/35 data-[state=checked]:bg-accent/45",
         buttonVariants({ className, variant, size })
       )}
       {...props}
     >
-      <RadioGroupPrimitive.RadioGroupIndicator className="absolute top-1 right-1">
-        <CheckCircle className="size-4 shrink-0 text-primary" />
+      <RadioGroupPrimitive.RadioGroupIndicator {...indicatorProps}
+        className={cn("absolute top-1.5 right-1.5", indicatorProps?.className)}
+      >
+        <CheckCircle {...iconProps}
+          className={cn("size-3.5 shrink-0 text-foreground/75", iconProps?.className)}
+          strokeWidth={iconProps?.strokeWidth || 2.5}
+        />
       </RadioGroupPrimitive.RadioGroupIndicator>
 
       {children}
