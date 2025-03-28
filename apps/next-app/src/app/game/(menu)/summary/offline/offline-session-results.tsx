@@ -23,7 +23,7 @@ const OfflineSessionResults = () => {
     if (!session) return null
 
     return getRendererSessionStats({
-      ...session!,
+      ...session,
       ...offlineSessionMetadata
     }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt'])
   }, [session])
