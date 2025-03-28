@@ -23,7 +23,7 @@ import { CircleFadingPlus, ImageOff, Loader2, SquarePlay, WifiOff } from "lucide
 import { Button } from "@/components/ui/button"
 
 // components
-import { Form, NoListingData } from "@/components/shared"
+import { Form, GlowingOverlay, NoListingData } from "@/components/shared"
 import { CollectionCard } from "@/components/collection/listing"
 import SessionFormFields from "./session-form-fields"
 
@@ -44,9 +44,6 @@ type SessionFormProps = {
 
 const SessionForm = ({ search, collection }: SessionFormProps) => {
   const router = useRouter()
-
-  const setCache = useCacheStore<SessionFormFilter, "set">((state) => state.set)
-
   const form = useForm<SessionFormValidation>({
     resolver: zodResolver(sessionFormValidation),
     values: {
@@ -58,7 +55,8 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
       }
     }
   })
-
+  
+  const setCache = useCacheStore<SessionFormFilter, "set">((state) => state.set)
   const { execute: createOfflineSession } = useCreateOfflineSession()
   const {
     executeAsync: createSoloSession,
@@ -100,13 +98,17 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
   const collectionId = form.watch("settings.collectionId")
 
   const submitText = format === "SOLO" ? "Start game"
-    : format === "OFFLINE" ? "Play offline" : "Create waiting room"
+    : format === "OFFLINE" ? "Play offline" : "Create room"
   const SubmitIcon = format === "SOLO" ? SquarePlay
     : format === "OFFLINE" ? WifiOff : CircleFadingPlus
+  const submitDisabled = createSoloSessionStatus === "executing"
+    || createWaitingRoomStatus === "executing"
+    || !collectionId
+    || !collection
 
   return (
     <Form<SessionFormValidation>
-      className="py-7 h-full flex flex-col gap-y-6"
+      className="h-full pt-7 pb-2 flex flex-col gap-y-6"
       form={form}
       onSubmit={handleSubmit}
     >
@@ -122,14 +124,14 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
         onClick={openCollectionExplorer}
       >
         {collection ? (
-          <CollectionCard className="h-fit w-full bg-background/50"
+          <CollectionCard className="h-fit w-full bg-background/50 rounded-3xl"
             metadata={{ type: "listing" }}
             collection={collection}
             imageSize={28}
           />
         ) : (
           <NoListingData className="py-4"
-            iconProps={{ className: "size-6 sm:size-7 md:size-8", strokeWidth: 1.75 }}
+            iconProps={{ className: "size-6 sm:size-7 md:size-7", strokeWidth: 1.8 }}
             messageProps={{ className: "text-base sm:text-lg md:text-lg" }}
             Icon={ImageOff}
             message="No collection found for this table size."
@@ -138,27 +140,29 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
         )}
       </Button>
 
-      <div className="mt-auto flex flex-col items-center gap-y-4">
-        <Button className={cn("p-4 gap-x-2 rounded-2xl text-sm sm:p-5 sm:text-lg", {
-          "bg-muted-foreground/25 hover:bg-muted-foreground/30": format === "OFFLINE"
+      <GlowingOverlay className="w-32 sm:w-36 mt-5 mx-auto py-2.5"
+        overlayProps={{
+          className: cn("bg-accent opacity-90 dark:opacity-80", {
+            "bg-muted-foreground opacity-70 dark:opacity-55": format === "OFFLINE",
+            "opacity-35 dark:opacity-25": submitDisabled
+          })
+        }}
+      >
+        <Button className={cn("z-10 relative size-full flex-col justify-center gap-y-0.5 rounded-full text-foreground/90 text-sm sm:text-base font-heading", {
+          "text-foreground/75": format === "OFFLINE"
         })}
-          variant={format !== "OFFLINE" ? "secondary" : "ghost"}
-          size="lg"
-          disabled={
-            createSoloSessionStatus === "executing"
-              || createWaitingRoomStatus === "executing"
-              || !collectionId
-              || !collection
-          }
+          variant="ghost"
+          size="icon"
+          disabled={submitDisabled}
         >
           {createSoloSessionStatus === "executing" || createWaitingRoomStatus === "executing" ? (
-            <Loader2 className="size-5 sm:size-6 shrink-0 animate-spin" />
+            <Loader2 className="size-5 shrink-0 animate-spin" />
           ) : (
-            <SubmitIcon className="size-5 sm:size-6 shrink-0" />
+            <SubmitIcon className="size-5 shrink-0" />
           )}
           <span>{submitText}</span>
         </Button>
-      </div>
+      </GlowingOverlay>
     </Form>
   )
 }
