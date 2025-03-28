@@ -36,16 +36,18 @@ export const finishSoloSessionValidation = sessionStateUpdater
 export const forceCloseSoloSessionValidation = sessionStateUpdater
   .omit({ currentTurn: true, flipped: true })
 
-export const saveOfflineSessionValidation = z.object({
-  playerId: z.string(),
-  clientSession: offlineSessionStorage
-    .omit({ cards: true, updatedAt: true })
-    .extend({
-      cards: z.array(clientSessionCard.extend({
-        matchedBy: z.string()
-      }))
-    })
-})
+export const saveOfflineSessionValidation = offlineSessionStorage
+  .pick({
+    collectionId: true,
+    tableSize: true,
+    stats: true,
+    startedAt: true
+  })
+  .extend({
+    cards: z.array(clientSessionCard.extend({
+      matchedBy: z.string()
+    }))
+  })
 
 export type CreateSoloSessionValidation = z.infer<typeof createSoloSessionValidation>
 export type CreateMultiplayerSessionValidation = z.infer<typeof createMultiplayerSessionValidation>
