@@ -17,10 +17,11 @@ import { ChevronsUpDown, Hash } from "lucide-react"
 
 // shadcn
 import { Button } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 // components
 import { PlayerBadge } from "@/components/player"
-import { PlayerSelectPopover } from "@/components/player/select"
+import { PlayerSelectCommand } from "@/components/player/select"
 import { PlayerSelectPopup } from "@/components/player/popup"
 import { UserAvatar } from "@/components/user"
 
@@ -91,9 +92,18 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
       {button}
     </PlayerSelectPopup>
   ) : (
-    <PlayerSelectPopover players={players} asChild>
-      {button}
-    </PlayerSelectPopover>
+    <Popover>
+      <PopoverTrigger asChild>
+        {button}
+      </PopoverTrigger>
+
+      <PopoverContent className="px-2 pt-1.5 pb-1">
+        <PlayerSelectCommand
+          players={players}
+          showPopupLink
+        />
+      </PopoverContent>
+    </Popover>
   )
 })
 PlayerSelectButton.displayName = "PlayerSelectButton"
