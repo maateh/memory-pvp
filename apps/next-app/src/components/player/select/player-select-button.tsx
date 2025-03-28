@@ -49,7 +49,7 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
   const activePlayer = players.find((player) => player.isActive)
 
   const button = (
-    <Button className={cn("justify-between hover:bg-primary/15 dark:hover:bg-primary/10", className)}
+    <Button className={cn("justify-between", className)}
       variant={variant}
       size={size}
       ref={ref}
@@ -65,7 +65,9 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
         )}
 
         {activePlayer ? (
-          <PlayerBadge player={activePlayer} />
+          <PlayerBadge className="hover:bg-transparent dark:hover:bg-transparent"
+            player={activePlayer}
+          />
         ) : (
           <div className="flex items-center gap-x-2">
             <Hash className="size-3.5 shrink-0 text-muted-foreground group-hover:opacity-95"

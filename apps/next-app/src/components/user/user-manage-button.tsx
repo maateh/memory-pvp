@@ -51,7 +51,7 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
       />
 
       <span {...usernameProps}
-        className={cn("mt-0.5 font-heading tracking-wide", usernameProps?.className)}
+        className={cn("mt-1 font-heading tracking-wide", usernameProps?.className)}
       >
         {user ? user.username : "Sign In"}
       </span>

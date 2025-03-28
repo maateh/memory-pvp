@@ -24,7 +24,7 @@ const UserManagePopover = ({ ...props }: React.ComponentProps<typeof PopoverTrig
     <Popover>
       <PopoverTrigger {...props} />
 
-      <PopoverContent className="pt-5 pb-3 mx-2.5 border-border/25 rounded-xl">
+      <PopoverContent className="pt-6 pb-3.5">
         <h3 className="text-xl font-heading heading-decorator subheading">
           Your Account
         </h3>
