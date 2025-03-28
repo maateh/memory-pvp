@@ -25,28 +25,30 @@ const GameSummaryLayout = ({ children }: { children: React.ReactNode }) => {
         </p>
       </header>
 
-      <main className="flex-1 flex flex-col mx-auto px-2.5 sm:px-4">
+      <main className="flex-1 flex flex-col mx-auto px-2.5 pb-2 sm:px-4">
         {children}
 
-        <GlowingOverlay className="w-32 sm:w-44 mt-auto mx-auto py-2.5"
-          overlayProps={{ className: "bg-accent opacity-90 dark:opacity-50" }}
-        >
-          <Button className="z-10 relative mx-auto flex gap-x-2 rounded-full text-foreground/90 font-heading tracking-wider sm:text-base"
-            variant="ghost"
-            size="icon"
-            asChild
+        <div className="mt-auto pt-8">
+          <GlowingOverlay className="w-32 sm:w-44 mx-auto py-2"
+            overlayProps={{ className: "bg-accent opacity-90 dark:opacity-50" }}
           >
-            <Link href="/game/setup">
-              <ArrowBigLeftDash className="size-5 sm:size-6 shrink-0"
-                strokeWidth={1.75}
-              />
+            <Button className="z-10 relative mx-auto flex gap-x-2 rounded-full text-foreground/90 font-heading tracking-wider sm:text-base"
+              variant="ghost"
+              size="icon"
+              asChild
+            >
+              <Link href="/game/setup">
+                <ArrowBigLeftDash className="size-5 sm:size-6 shrink-0"
+                  strokeWidth={1.75}
+                />
 
-              <span className="mt-1">
-                New game
-              </span>
-            </Link>
-          </Button>
-        </GlowingOverlay>
+                <span className="mt-1">
+                  New game
+                </span>
+              </Link>
+            </Button>
+          </GlowingOverlay>
+        </div>
       </main>
     </>
   )
