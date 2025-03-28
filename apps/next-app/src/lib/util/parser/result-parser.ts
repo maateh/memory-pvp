@@ -1,10 +1,15 @@
 // types
+import type { Prisma } from "@repo/db"
 import type { ClientResult } from "@repo/schema/result"
+import type { ResultFilter } from "@repo/schema/session"
 import type { ResultWithPlayerWithSession } from "@repo/db/types"
 
+// schemas
+import { resultFilter } from "@repo/schema/session"
+
 // utils
-import { pickFields } from "@/lib/util/parser"
 import { parseSchemaToClientPlayer } from "@/lib/util/parser/player-parser"
+import { pickFields } from "@/lib/util/parser"
 
 /* Schema parser keys */
 export const clientResultKeys: (keyof ClientResult)[] = [
@@ -32,4 +37,23 @@ export function parseSchemaToClientResult(
     ...filteredResult,
     player: parseSchemaToClientPlayer(player)
   }
+}
+
+/**
+ * TODO: write doc
+ * 
+ * @param filter 
+ * @param userId 
+ * @returns 
+ */
+export function parseResultFilterToWhere(
+  filter: ResultFilter,
+  playerId: string,
+  userId: string
+): Prisma.ResultWhereInput {
+  let where: Prisma.ResultWhereInput = { player: { id: playerId, userId } }
+  const { success, data: parsedFilter } = resultFilter.safeParse(filter)
+
+  if (!success) return where
+  return { ...where, session: parsedFilter }
 }

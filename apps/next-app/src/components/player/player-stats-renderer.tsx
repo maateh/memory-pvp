@@ -4,7 +4,7 @@ import { useMemo } from "react"
 
 // types
 import type { ClientPlayer } from "@repo/schema/player"
-import type { SessionFilter } from "@repo/schema/session"
+import type { ResultFilter } from "@repo/schema/session"
 
 // trpc
 import { trpc } from "@/server/trpc/client"
@@ -27,10 +27,11 @@ type PlayerStatsRendererProps = {
 }
 
 const PlayerStatsRenderer = ({ player }: PlayerStatsRendererProps) => {
-  const filter = useFilterStore<SessionFilter>((state) => state.statistics)
+  const filter = useFilterStore<ResultFilter>((state) => state.statistics)
 
   const [stats] = trpc.player.getStats.useSuspenseQuery({
-    filter: { ...filter, playerId: player.id }
+    playerId: player.id,
+    filter
   })
 
   const playerStats = useMemo(() => getRendererPlayerStats({

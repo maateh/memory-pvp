@@ -1,10 +1,11 @@
 import { z } from "zod"
 
 // schemas
-import { sessionFilter } from "@/session"
+import { resultFilter } from "@/session"
 
 export const playerGetStatsValidation = z.object({
-  filter: sessionFilter
+  playerId: z.string(),
+  filter: resultFilter.default({})
 })
 
 export type PlayerGetStatsValidation = z.infer<typeof playerGetStatsValidation>

@@ -24,6 +24,9 @@ export const sessionFormFilter = sessionFilter
     collectionId: true
   })
 
+export const resultFilter = sessionFilter
+  .omit({ playerId: true })
+
 export const sessionSort = z.record(
   clientSession.pick({
     slug: true,
@@ -41,4 +44,5 @@ export const sessionSort = z.record(
 
 export type SessionFilter = z.infer<typeof sessionFilter>
 export type SessionFormFilter = z.infer<typeof sessionFormFilter>
+export type ResultFilter = z.infer<typeof resultFilter>
 export type SessionSort = z.infer<typeof sessionSort>
