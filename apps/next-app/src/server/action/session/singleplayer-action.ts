@@ -13,7 +13,6 @@ import { getActiveSession } from "@/server/db/query/session-query"
 // actions
 import {
   playerActionClient,
-  protectedActionClient,
   soloSessionActionClient
 } from "@/server/action"
 
@@ -163,53 +162,49 @@ export const forceCloseSoloSession = soloSessionActionClient
     redirect(`/game/summary/${ctx.activeSession.slug}`, RedirectType.replace)
   })
 
-export const saveOfflineSession = protectedActionClient
+export const saveOfflineSession = playerActionClient
   .schema(saveOfflineSessionValidation)
   .action(async ({ ctx, parsedInput }) => {
-    const { playerId } = parsedInput
-    const { collectionId, ...clientSession } = parsedInput.clientSession
-
-    const player = await ctx.db.playerProfile.findFirst({
-      where: {
-        userId: ctx.user.id,
-        id: playerId
-      }
-    })
-
-    if (!player) {
-      ServerError.throwInAction({
-        key: "PLAYER_PROFILE_NOT_FOUND",
-        message: "Player profile not found.",
-        description: "Select or create a new player to save your offline session."
-      })
-    }
+    const { collectionId, tableSize, cards, startedAt } = parsedInput
+    let { stats } = parsedInput
 
     /**
      * Replaces the default 'offlinePlayer.id' placeholder constant
      * which is used by default in offline session stats.
      */
-    const stats: PrismaJson.SessionStats = {
-      ...clientSession.stats,
+    stats = {
+      ...stats,
       flips: {
-        [playerId]: clientSession.stats.flips[offlinePlayerMetadata.id]
+        [ctx.player.id]: stats.flips[offlinePlayerMetadata.id]
       },
       matches: {
-        [playerId]: clientSession.stats.matches[offlinePlayerMetadata.id]
+        [ctx.player.id]: stats.matches[offlinePlayerMetadata.id]
       }
     }
 
     const { slug } = await ctx.db.gameSession.create({
       data: {
-        ...clientSession,
+        tableSize,
+        cards,
         stats,
+        startedAt,
         slug: generateSessionSlug({ mode: "CASUAL", format: "OFFLINE" }, true),
         status: "FINISHED",
         mode: "CASUAL",
         format: "OFFLINE",
-        currentTurn: player.id,
+        currentTurn: ctx.player.id,
         closedAt: new Date(),
         collection: { connect: { id: collectionId } },
-        owner: { connect: { id: player.id } }
+        owner: { connect: { id: ctx.player.id } },
+        results: {
+          create: {
+            playerId: ctx.player.id,
+            gainedElo: 0,
+            flips: stats.flips[ctx.player.id],
+            matches: stats.matches[ctx.player.id],
+            timer: stats.timer
+          }
+        }
       }
     })
 

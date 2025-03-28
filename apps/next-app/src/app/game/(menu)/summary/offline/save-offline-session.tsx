@@ -42,19 +42,8 @@ const SaveOfflineSession = ({ players }: SaveOfflineSessionProps) => {
       return
     }
 
-    const playerId = players.find((player) => player.isActive)?.id
-    if (!playerId) {
-      toast.warning("Player profile not selected.", {
-        description: "Select a player first to save the results."
-      })
-      return
-    }
-
     try {
-      await saveOfflineSession({
-        playerId,
-        clientSession: offlineSession as SaveOfflineSessionValidation["clientSession"]
-      })
+      await saveOfflineSession(offlineSession as SaveOfflineSessionValidation)
     } catch (err) {
       logError(err)
     }
