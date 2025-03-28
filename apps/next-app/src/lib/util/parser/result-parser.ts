@@ -40,11 +40,15 @@ export function parseSchemaToClientResult(
 }
 
 /**
- * TODO: write doc
- * 
- * @param filter 
- * @param userId 
- * @returns 
+ * Parses a `ResultFilter` object into a Prisma `ResultWhereInput` query.
+ *
+ * Ensures that the query is scoped to the given `playerId` and `userId`. If the filter 
+ * is valid, it applies additional session-based filtering.
+ *
+ * @param {ResultFilter} filter The filter object defining session criteria.
+ * @param {string} playerId The ID of the player whose results are being queried.
+ * @param {string} userId The ID of the user associated with the player.
+ * @returns {Prisma.ResultWhereInput} A Prisma `ResultWhereInput` object for querying results.
  */
 export function parseResultFilterToWhere(
   filter: ResultFilter,
