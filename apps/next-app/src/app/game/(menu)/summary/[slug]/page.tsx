@@ -28,7 +28,7 @@ const GameSummaryPage = async ({ params }: GameSummaryPageProps) => {
     <Suspense fallback={<StatisticListSkeleton />}>
       <Await promise={getResults(slug)}>
         {(results) => results.length > 0 ? (
-          <>
+          <div className="flex flex-col">
             <StatisticList className="px-2 max-w-4xl">
               {Object.values(getRendererSessionStats(results[0].session)).map((stat) => (
                 <StatisticItem className="min-w-36 max-w-52 sm:min-w-52"
@@ -49,7 +49,7 @@ const GameSummaryPage = async ({ params }: GameSummaryPageProps) => {
                 />
               ))}
             </div>
-          </>
+          </div>
         ) : (
           <RedirectFallback
             redirect="/game/setup"

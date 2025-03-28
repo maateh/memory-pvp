@@ -30,7 +30,7 @@ const OfflineSessionResults = dynamic(() => import("./offline-session-results"),
 
 const GameSummaryOfflinePage = () => {
   return (
-    <>
+    <div>
       <OfflineSessionResults />
 
       <Separator className="w-2/5 mx-auto my-5 bg-border/25" />
@@ -53,7 +53,7 @@ const GameSummaryOfflinePage = () => {
           )}
         </Await>
       </Suspense>
-    </>
+    </div>
   )
 }
 
