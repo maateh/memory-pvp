@@ -7,9 +7,6 @@ import { getResults } from "@/server/db/query/result-query"
 import { getRendererSessionStats } from "@/lib/util/stats"
 import { cn } from "@/lib/util"
 
-// shadcn
-import { Separator } from "@/components/ui/separator"
-
 // components
 import {
   Await,
@@ -35,15 +32,14 @@ const GameSummaryPage = async ({ params }: GameSummaryPageProps) => {
             <StatisticList className="px-2 max-w-4xl">
               {Object.values(getRendererSessionStats(results[0].session)).map((stat) => (
                 <StatisticItem className="min-w-36 max-w-52 sm:min-w-52"
+                  dataProps={{ className: cn({ "text-xs": stat.key === "startedAt" }) }}
                   statistic={stat}
                   key={stat.key}
                 />
               ))}
             </StatisticList>
 
-            <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
-
-            <div className={cn("mx-auto grid gap-x-16 gap-y-12", {
+            <div className={cn("mt-12 sm:mt-16 mx-auto grid gap-x-16 gap-y-10", {
               "lg:grid-cols-2": results[0].session.format === "PVP" || results[0].session.format === "COOP"
             })}>
               {results.map((result) => (

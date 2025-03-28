@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { StatisticItem, StatisticList } from "@/components/shared"
+import { PlayerBadge } from "@/components/player"
 
 type SessionPlayerResultKeys = Extract<RendererPlayerStatKeys, "elo" | "matches" | "flips" | "timer">
 
@@ -27,18 +28,23 @@ const SessionPlayerResult = ({ result }: SessionPlayerResultProps) => {
   const stats = getRendererPlayerStats(player, [...eloKey, "flips", "matches", "timer"])
 
   return (
-    <div>
-      <h3 className="mx-auto text-center text-2xl sm:text-3xl font-heading heading-decorator">
-        <span className="text-accent">
-          {player.tag}&apos;s
-        </span> stats
-      </h3>
+    <div className="space-y-2.5">
+      <Separator className="w-3/4 h-1 mx-auto bg-secondary/60 rounded-full" />
 
-      <Separator className="w-1/6 mx-auto mt-1 mb-2.5 bg-border/5" />
+      <div className="flex justify-center items-center gap-x-2">
+        <p className="pb-0.5 text-muted-foreground text-lg sm:text-xl tracking-wide small-caps">
+          <span className="text-accent font-semibold">S</span>tats of
+        </p>
 
-      <StatisticList className="w-fit mx-auto grid sm:grid-cols-2">
+        <PlayerBadge className="w-fit pl-1 pr-1.5 justify-start gap-x-2"
+          size="lg"
+          player={player}
+        />
+      </div>
+
+      <StatisticList className="w-full max-w-sm mx-auto flex flex-wrap">
         {Object.values(stats).map(({ key, ...stat }) => (
-          <StatisticItem className="w-full mx-auto max-w-48"
+          <StatisticItem className="flex-1 min-w-40 max-w-48"
             variant={key === "elo" ? result.gainedElo < 0 ? "destructive" : "default" : "default"}
             size="sm"
             statistic={{
