@@ -37,12 +37,20 @@ const GameSummaryOfflinePage = () => {
 
       <Suspense fallback={<Loader2 className="size-7 sm:size-8 shrink-0 mx-auto animate-spin text-muted-foreground" />}>
         <Await promise={Promise.all([signedIn(), getPlayers()])}>
-          {([user, players]) => !user ? (
-            <UserManageButton className="mx-auto text-base"
-              size="lg"
-              showSignInIfLoggedOut
-            />    
-          ): <SaveOfflineSession players={players} />}
+          {([user, players]) => user ? (
+            <SaveOfflineSession players={players} />
+          ) : (
+            <>
+              <p className="text-muted-foreground text-lg text-center font-heading font-medium small-caps">
+                Please <span className="text-destructive font-semibold">sign in</span> if you want to <span className="text-foreground font-semibold">save the results</span> of this offline session.
+              </p>
+
+              <UserManageButton className="mt-1 mx-auto text-base"
+                size="lg"
+                showSignInIfLoggedOut
+              />
+            </>
+          )}
         </Await>
       </Suspense>
     </>
