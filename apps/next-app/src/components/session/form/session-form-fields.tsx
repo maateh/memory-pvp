@@ -21,7 +21,7 @@ import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/for
 import { Separator } from "@/components/ui/separator"
 
 // components
-import SessionInfoSelect from "./session-info-select"
+import { PopoverSelect } from "@/components/input"
 
 // hooks
 import { useSearch } from "@/hooks/use-search"
@@ -39,31 +39,27 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
         name="settings.format"
         control={form.control}
         render={({ field }) => (
-          <FormItem className="w-2/5 mx-auto">
-            <FormLabel className="relative -inset-y-0.5 inset-x-2 text-lg font-heading font-medium dark:font-normal tracking-wider small-caps sm:text-xl">
+          <FormItem className="w-full max-w-96 mx-auto">
+            <FormLabel className="relative -inset-y-0.5 inset-x-2 text-lg font-heading font-medium dark:font-normal tracking-wider small-caps">
               Match format
             </FormLabel>
             
             <FormControl>
-              <SessionInfoSelect
-                LabelIcon={matchFormatPlaceholders[field.value].Icon}
-                label={matchFormatPlaceholders[field.value].label}
-                options={
-                  Object.values(matchFormatPlaceholders).map(({ key, label, Icon }) => ({
-                    value: key,
-                    label,
-                    Icon
-                  }))
-                }
-                value={field.value}
-                onValueChange={(format) => addSearchParam("format", format)}
+              <PopoverSelect className="w-full text-base bg-accent/15 hover:bg-accent/20 hover:scale-[1.025]"
+                heading="Formats"
+                options={Object.values(matchFormatPlaceholders).map(({ key, ...opts }) => ({ value: key, ...opts }))}
+                selectedValue={field.value}
+                onValueChange={(format) => {
+                  field.onChange(format)
+                  addSearchParam("format", format)
+                }}
               />
             </FormControl>
           </FormItem>
         )}
       />
 
-      <Separator className="w-2/5 mx-auto -my-1 bg-border/10" />
+      <Separator className="w-1/5 mx-auto -my-2.5 bg-border/20" />
 
       <FormField
         name="settings.mode"
@@ -79,7 +75,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                 }}
               >
                 {Object.values(sessionModePlaceholders).map(({ key, label, Icon }) => (
-                  <ButtonGroupItem className={cn("flex-1 min-w-32 max-w-52 rounded-2xl text-foreground/80 font-normal hover:scale-[1.025]", {
+                  <ButtonGroupItem className={cn("flex-1 min-w-32 max-w-52 rounded-2xl text-foreground/80 text-sm sm:text-base font-normal font-heading hover:scale-[1.025]", {
                     "text-foreground font-semibold": field.value === key
                   })}
                     size="lg"
@@ -87,9 +83,9 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                     value={key}
                     key={key}
                   >
-                    <Icon className="size-5 shrink-0" strokeWidth={1.85} />
+                    <Icon className="size-[1.125rem] sm:size-5 shrink-0" strokeWidth={1.85} />
 
-                    <span className="mt-1 text-base font-heading">
+                    <span className="mt-1">
                       {label}
                     </span>
                   </ButtonGroupItem>
@@ -114,7 +110,7 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                 }}
               >
                 {Object.values(tableSizePlaceholders).map(({ key, label, size, Icon }) => (
-                  <ButtonGroupItem className={cn("w-24 flex-col rounded-3xl text-foreground/80 font-normal hover:scale-[1.025] data-[state=checked]:bg-muted-foreground/20", {
+                  <ButtonGroupItem className={cn("w-20 sm:w-24 flex-col gap-y-1.5 sm:gap-y-2 rounded-3xl text-foreground/80 text-sm sm:text-base font-normal font-heading hover:scale-[1.025] data-[state=checked]:bg-muted-foreground/20", {
                     "text-foreground font-semibold": field.value === key
                   })}
                     indicatorProps={{ className: "top-2 right-2" }}
@@ -125,11 +121,9 @@ const SessionFormFields = ({ form }: SessionFormFieldsProps) => {
                   >
                     <Icon className="size-5 shrink-0" strokeWidth={2.5} />
 
-                    <div className="flex flex-col font-heading">
-                      <span className="text-base">
-                        {label}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
+                    <div className="flex flex-col">
+                      <span>{label}</span>
+                      <span className="-my-0.5 sm:my-0 text-xs text-muted-foreground">
                         {size}
                       </span>
                     </div>
