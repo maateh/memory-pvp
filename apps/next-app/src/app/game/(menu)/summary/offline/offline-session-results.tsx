@@ -1,7 +1,7 @@
 "use client"
 
-import { useMemo } from "react"
-import { redirect } from "next/navigation"
+import { useEffect, useMemo } from "react"
+import { useRouter } from "next/navigation"
 
 import { toast } from "sonner"
 
@@ -13,24 +13,42 @@ import { getSessionFromStorage } from "@/lib/util/storage"
 import { getRendererSessionStats } from "@/lib/util/stats"
 
 // components
-import { StatisticItem, StatisticList } from "@/components/shared"
+import { StatisticItem, StatisticList, StatisticListSkeleton } from "@/components/shared"
 
 const OfflineSessionResults = () => {
-  const session = getSessionFromStorage()
-  const isOver = session?.cards.every((card) => !!card.matchedBy)
+  const router = useRouter()
 
-  if (!session || !isOver) {
-    toast.warning("Offline session not found.", {
-      description: "Sorry, but we couldn't find any offline sessions ready to be saved.",
-      id: '_' /** Note: prevent re-render by adding a custom id. */
-    })
-    redirect('/game/setup')
+  const session = useMemo(getSessionFromStorage, [])
+  const stats = useMemo(() => {
+    if (!session) return null
+
+    return getRendererSessionStats({
+      ...session!,
+      ...offlineSessionMetadata
+    }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt'])
+  }, [session])
+
+  useEffect(() => {
+    const session = getSessionFromStorage()
+    const isOver = session?.cards.every((card) => !!card.matchedBy)
+
+    if (!session || !isOver) {
+      toast.warning("Offline session not found.", {
+        description: "Sorry, but we couldn't find any offline sessions ready to be saved.",
+        id: '_'
+      })
+      router.replace("/game/setup")
+    }
+  }, [router])
+
+  if (!stats) {
+    return (
+      <StatisticListSkeleton
+        skeletonProps={{ className: "h-10 sm:h-12" }}
+        length={5}
+      />
+    )
   }
-
-  const stats = useMemo(() => getRendererSessionStats({
-    ...session,
-    ...offlineSessionMetadata
-  }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt']), [session])
 
   return (
     <StatisticList className="px-2 max-w-4xl">
