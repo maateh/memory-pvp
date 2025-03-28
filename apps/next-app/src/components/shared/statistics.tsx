@@ -10,6 +10,7 @@ import { cn } from "@/lib/util"
 // shadcn
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const StatisticList = ({ className, ...props }: React.ComponentProps<"ul">) => (
   <ul className={cn("w-full flex flex-wrap justify-center gap-x-6 gap-y-3.5", className)}
@@ -139,8 +140,33 @@ const StatisticBadge = ({
   )
 }
 
+type StatisticListSkeletonProps = {
+  length?: number
+  skeletonProps?: React.ComponentProps<typeof Skeleton>
+} & React.ComponentProps<typeof StatisticList>
+
+const StatisticListSkeleton = ({
+  length = 6,
+  skeletonProps,
+  className,
+  ...props
+}: StatisticListSkeletonProps) => {
+  return (
+    <StatisticList className={cn("w-full px-2 max-w-4xl", className)} {...props}>
+      {Array.from({ length }).fill("").map((_, index) => (
+        <li key={index}>
+          <Skeleton {...skeletonProps}
+            className={cn("bg-muted-foreground/20 border border-border/35 rounded-xl h-12 sm:h-16 min-w-36 max-w-52 sm:min-w-52", skeletonProps?.className)}
+          />
+        </li>
+      ))}
+    </StatisticList>
+  )
+}
+
 export {
   StatisticList,
   StatisticItem,
-  StatisticBadge
+  StatisticBadge,
+  StatisticListSkeleton
 }

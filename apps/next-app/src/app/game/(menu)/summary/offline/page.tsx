@@ -16,12 +16,17 @@ import { Separator } from "@/components/ui/separator"
 // components
 import { Await } from "@/components/shared"
 import { UserManageButton } from "@/components/user"
-import { SessionStatisticsSkeleton } from "@/components/session/summary"
+import { StatisticListSkeleton } from "@/components/shared"
 import SaveOfflineSession from "./save-offline-session"
 
 const OfflineSessionResults = dynamic(() => import("./offline-session-results"), {
   ssr: !!false,
-  loading: SessionStatisticsSkeleton
+  loading: () => (
+    <StatisticListSkeleton
+      skeletonProps={{ className: "h-10 sm:h-12" }}
+      length={5}
+    />
+  )
 })
 
 const GameSummaryOfflinePage = () => {

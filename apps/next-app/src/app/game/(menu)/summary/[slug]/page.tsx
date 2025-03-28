@@ -11,8 +11,13 @@ import { cn } from "@/lib/util"
 import { Separator } from "@/components/ui/separator"
 
 // components
-import { Await, RedirectFallback } from "@/components/shared"
-import { SessionStatistics, SessionStatisticsSkeleton } from "@/components/session/summary"
+import {
+  Await,
+  RedirectFallback,
+  StatisticItem,
+  StatisticList,
+  StatisticListSkeleton
+} from "@/components/shared"
 import SessionPlayerResult from "./session-player-result"
 
 type GameSummaryPageProps = {
@@ -23,11 +28,18 @@ const GameSummaryPage = async ({ params }: GameSummaryPageProps) => {
   const { slug } = await params
 
   return (
-    <Suspense fallback={<SessionStatisticsSkeleton />}>
+    <Suspense fallback={<StatisticListSkeleton />}>
       <Await promise={getResults(slug)}>
         {(results) => results.length > 0 ? (
           <>
-            <SessionStatistics stats={getRendererSessionStats(results[0].session)} />
+            <StatisticList className="px-2 max-w-4xl">
+              {Object.values(getRendererSessionStats(results[0].session)).map((stat) => (
+                <StatisticItem className="min-w-36 max-w-52 sm:min-w-52"
+                  statistic={stat}
+                  key={stat.key}
+                />
+              ))}
+            </StatisticList>
 
             <Separator className="w-2/5 mx-auto mt-8 mb-12 bg-border/10" />
 

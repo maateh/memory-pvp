@@ -13,7 +13,7 @@ import { getSessionFromStorage } from "@/lib/util/storage"
 import { getRendererSessionStats } from "@/lib/util/stats"
 
 // components
-import { SessionStatistics } from "@/components/session/summary"
+import { StatisticItem, StatisticList } from "@/components/shared"
 
 const OfflineSessionResults = () => {
   const session = getSessionFromStorage()
@@ -32,7 +32,17 @@ const OfflineSessionResults = () => {
     ...offlineSessionMetadata
   }, ['tableSize', 'timer', 'matches', 'flips', 'startedAt']), [session])
 
-  return <SessionStatistics stats={stats} />
+  return (
+    <StatisticList className="px-2 max-w-4xl">
+      {Object.values(stats).map((stat) => (
+        <StatisticItem className="min-w-36 max-w-52 sm:min-w-52"
+          size="sm"
+          statistic={stat}
+          key={stat.key}
+        />
+      ))}
+    </StatisticList>
+  )
 }
 
 export default OfflineSessionResults
