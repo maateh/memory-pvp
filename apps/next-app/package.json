@@ -56,7 +56,7 @@
     "react-hook-form": "^7.53.0",
     "server-only": "^0.0.1",
     "socket.io-client": "^4.8.1",
-    "sonner": "^1.5.0",
+    "sonner": "^2.0.2",
     "superjson": "^2.2.1",
     "svix": "^1.32.0",
     "tailwind-merge": "^3.0.2",
