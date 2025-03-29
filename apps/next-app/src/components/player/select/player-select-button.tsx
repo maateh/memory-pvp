@@ -105,6 +105,5 @@ const PlayerSelectButton = ({
     </Popover>
   )
 }
-PlayerSelectButton.displayName = "PlayerSelectButton"
 
 export default PlayerSelectButton

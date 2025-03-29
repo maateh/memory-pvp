@@ -61,7 +61,6 @@ const ThemeToggle = ({
     </Button>
   )
 }
-ThemeToggle.displayName = "ThemeToggle"
 
 const ThemeToggleSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (
   <Skeleton className={cn("size-7 shrink-0 bg-border/50 rounded-xl", className)}
