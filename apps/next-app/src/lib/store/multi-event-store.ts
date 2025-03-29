@@ -32,7 +32,7 @@ type MultiEventStoreProps = {
   optimisticCardFlip: (clickedCard: ClientSessionCard) => void
   setStoreState: (
     partial: SessionStore | Partial<SessionStore> | ((state: SessionStore) => SessionStore | Partial<SessionStore>),
-    replace?: boolean | undefined
+    replace?: false | undefined
   ) => void
 }
 

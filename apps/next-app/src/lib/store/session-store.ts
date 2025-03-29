@@ -17,7 +17,7 @@ type SessionState = {
 type SessionAction = {
   setState: (
     partial: SessionStore | Partial<SessionStore> | ((state: SessionStore) => SessionStore | Partial<SessionStore>),
-    replace?: boolean | undefined
+    replace?: false | undefined
   ) => void
   sessionCardFlip: (clickedCard: ClientSessionCard) => void
   sessionCardMatch: () => void
