@@ -1,9 +1,17 @@
-# memory/pvp
+> # memory/pvp
 
-> This application is based on a memory game, but it is actually more.
-> You can customize your gameplay settings and also can play in casual or competitive modes; moreover, everyone can upload their own memory card collection to play with.
+> - A ranked memory card game.
+> - Customize your gameplay settings and play in casual or competitive modes.
+> - Upload your own memory card collection or play with another one that someone else has created.
+> - Earn as much Elo as you can and be at the top of the leaderboards.
 
 ---
 
-### WIP
-*Application is still under development; leaderboards and multiplayer features are missing right now.*
+> *Application is still under development.*
+#### WIP
+- [ ] Leaderboards
+
+#### TODO
+- [ ] Redesign gameplay UI
+- [ ] Better client side error handling in development mode
+- [ ] Add filter/sort/pagination support for waiting rooms
