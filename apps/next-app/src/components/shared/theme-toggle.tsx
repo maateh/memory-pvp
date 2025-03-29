@@ -1,6 +1,5 @@
 "use client"
 
-import { forwardRef } from "react"
 import { useTheme } from "next-themes"
 
 // types
@@ -22,7 +21,7 @@ type ThemeToggleProps = {
   iconProps?: LucideProps
 } & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
-const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
+const ThemeToggle = ({
   showTooltip = false,
   expandable = "none",
   iconProps,
@@ -30,7 +29,7 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
   variant = "ghost",
   size = "icon",
   ...props
-}, ref) => {
+}: ThemeToggleProps) => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
@@ -42,7 +41,6 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
       variant={variant}
       size={size}
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      ref={ref}
       {...props}
     >
       <Sun {...iconProps}
@@ -62,8 +60,7 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
       </div>
     </Button>
   )
-})
-ThemeToggle.displayName = "ThemeToggle"
+}
 
 const ThemeToggleSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (
   <Skeleton className={cn("size-7 shrink-0 bg-border/50 rounded-xl", className)}

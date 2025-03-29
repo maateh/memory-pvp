@@ -1,8 +1,4 @@
-"use client"
-
 import Link from "next/link"
-
-import { forwardRef } from "react"
 
 // types
 import type { LucideProps } from "lucide-react"
@@ -21,7 +17,7 @@ type WidgetQuickAccessProps = {
   iconProps?: LucideProps
 } & React.ComponentProps<typeof Button>
 
-const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(({
+const WidgetQuickAccess = ({
   href,
   iconProps,
   className,
@@ -30,7 +26,7 @@ const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(
   children,
   asChild,
   ...props
-}, ref) => {
+}: WidgetQuickAccessProps) => {
   const icon = (
     <ChevronsUpDown {...iconProps}
       className={cn("size-3 sm:size-3.5", iconProps?.className)}
@@ -43,7 +39,6 @@ const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(
       variant={variant}
       size={size}
       asChild={!!href || asChild}
-      ref={ref}
       {...props}
     >
       {!href ? icon : (
@@ -53,7 +48,6 @@ const WidgetQuickAccess = forwardRef<HTMLButtonElement, WidgetQuickAccessProps>(
       )}
     </Button>
   )
-})
-WidgetQuickAccess.displayName = "WidgetQuickAccess"
+}
 
 export default WidgetQuickAccess

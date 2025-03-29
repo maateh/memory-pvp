@@ -3,155 +3,106 @@ import * as React from "react"
 import { cn } from "@/lib/util"
 import { Skeleton } from "@/components/ui/skeleton"
 
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
+const Table = ({ className, ...props }: React.ComponentProps<"table">) => (
   <div className="relative w-full overflow-auto border border-border/15 rounded-xl">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+    <table className={cn("w-full caption-bottom text-sm", className)}
+      data-slot="table"
       {...props}
     />
   </div>
-))
-Table.displayName = "Table"
+)
 
-const TableHeader = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("bg-muted/25 [&_tr]:border-b", className)} {...props} />
-))
-TableHeader.displayName = "TableHeader"
-
-const TableBody = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn("[&_tr:last-child]:border-0", className)}
+const TableHeader = ({ className, ...props }: React.ComponentProps<"thead">) => (
+  <thead className={cn("bg-muted/25 [&_tr]:border-b", className)}
+    data-slot="table-header"
     {...props}
   />
-))
-TableBody.displayName = "TableBody"
+)
 
-const TableFooter = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tfoot
-    ref={ref}
-    className={cn(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-      className
-    )}
+const TableBody = ({ className, ...props }: React.ComponentProps<"tbody">) => (
+  <tbody className={cn("[&_tr:last-child]:border-0", className)}
+    data-slot="table-body"
     {...props}
   />
-))
-TableFooter.displayName = "TableFooter"
+)
 
-const TableRow = React.forwardRef<
-  HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b border-border/20 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className
-    )}
+const TableFooter = ({ className, ...props }: React.ComponentProps<"tfoot">) => (
+  <tfoot className={cn("border-t bg-muted/50 font-medium last:[&>tr]:border-b-0", className)}
+    data-slot="table-footer"
     {...props}
   />
-))
-TableRow.displayName = "TableRow"
+)
 
-const TableHead = React.forwardRef<
-  HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <th
-    ref={ref}
-    className={cn(
-      "h-12 pt-1.5 px-4 border-l border-l-border/5 text-left align-middle text-muted-foreground sm:text-base font-heading font-semibold small-caps tracking-wide [&:has([role=checkbox])]:pr-0",
-      className
-    )}
+const TableRow = ({ className, ...props }: React.ComponentProps<"tr">) => (
+  <tr className={cn("border-b border-border/20 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className)}
+    data-slot="table-row"
     {...props}
   />
-))
-TableHead.displayName = "TableHead"
+)
 
-const TableCell = React.forwardRef<
-  HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn("p-4 align-middle font-light [&:has([role=checkbox])]:pr-0", className)}
+const TableHead = ({ className, ...props }: React.ComponentProps<"th">) => (
+  <th className={cn("h-12 pt-1.5 px-4 border-l border-l-border/5 text-left align-middle text-muted-foreground sm:text-base font-heading font-semibold small-caps tracking-wide [&:has([role=checkbox])]:pr-0", className)}
+    data-slot="table-head"
     {...props}
   />
-))
-TableCell.displayName = "TableCell"
+)
 
-const TableCaption = React.forwardRef<
-  HTMLTableCaptionElement,
-  React.HTMLAttributes<HTMLTableCaptionElement>
->(({ className, ...props }, ref) => (
-  <caption
-    ref={ref}
-    className={cn("mt-4 text-sm text-muted-foreground", className)}
+const TableCell = ({ className, ...props }: React.ComponentProps<"td">) => (
+  <td className={cn("p-4 align-middle font-light [&:has([role=checkbox])]:pr-0", className)}
+    data-slot="table-cell"
     {...props}
   />
-))
-TableCaption.displayName = "TableCaption"
+)
 
-type TableSkeletonProps = {
+const TableCaption = ({ className, ...props }: React.ComponentProps<"caption">) => (
+  <caption className={cn("mt-4 text-sm text-muted-foreground", className)}
+    data-slot="table-caption"
+    {...props}
+  />
+)
+
+const TableSkeleton = ({ rows = 5, columns = 4, showFooter = false }: {
   rows?: number
   columns?: number
   showFooter?: boolean
-}
+}) => (
+  <Table>
+    <TableHeader>
+      <TableRow>
+        {Array.from({ length: columns }).map((_, index) => (
+          <TableHead className={cn({ "hidden sm:table-cell": index > 1 })} key={index}>
+            <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+          </TableHead>
+        ))}
+      </TableRow>
+    </TableHeader>
 
-const TableSkeleton = ({ rows = 5, columns = 4, showFooter = false }: TableSkeletonProps) => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          {Array.from({ length: columns }).map((_, index) => (
-            <TableHead className={cn({ "hidden sm:table-cell": index > 1 })} key={index}>
+    <TableBody>
+      {Array.from({ length: rows }).map((_, rowIndex) => (
+        <TableRow key={rowIndex}>
+          {Array.from({ length: columns }).map((_, colIndex) => (
+            <TableCell className={cn({ "hidden sm:table-cell": colIndex > 1 })} key={colIndex}>
               <Skeleton className="w-full h-6 bg-muted-foreground/10" />
-            </TableHead>
+            </TableCell>
           ))}
         </TableRow>
-      </TableHeader>
+      ))}
+    </TableBody>
 
-      <TableBody>
-        {Array.from({ length: rows }).map((_, rowIndex) => (
-          <TableRow key={rowIndex}>
-            {Array.from({ length: columns }).map((_, colIndex) => (
-              <TableCell className={cn({ "hidden sm:table-cell": colIndex > 1 })} key={colIndex}>
-                <Skeleton className="w-full h-6 bg-muted-foreground/10" />
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-
-      {showFooter && (
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3} className="sm:hidden">
-              <Skeleton className="w-full h-6 bg-muted-foreground/10" />
-            </TableCell>
-            <TableCell colSpan={columns} className="hidden sm:table-cell">
-              <Skeleton className="w-full h-6 bg-muted-foreground/10" />
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      )}
-    </Table>
-  )
-}
+    {showFooter && (
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={3} className="sm:hidden">
+            <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+          </TableCell>
+          <TableCell colSpan={columns} className="hidden sm:table-cell">
+            <Skeleton className="w-full h-6 bg-muted-foreground/10" />
+          </TableCell>
+        </TableRow>
+      </TableFooter>
+    )}
+  </Table>
+)
 
 export {
   Table,

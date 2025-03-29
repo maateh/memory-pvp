@@ -36,7 +36,7 @@ const PlayersPage = async ({ searchParams }: PlayersPageProps) => {
 
   return (
     <div className="page-wrapper relative flex flex-col gap-10 xl:flex-row">
-      <div className="flex-1 w-full xl:max-w-screen-sm xl:order-2">
+      <div className="flex-1 w-full xl:max-w-(--breakpoint-sm) xl:order-2">
         <PlayerCreateWidgetCard />
       </div>
 

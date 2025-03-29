@@ -1,121 +1,231 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@layer base {
-  :root {
-    --background: 0 0% 92%;
-    --foreground: 60 32% 8%;
-    --card: 0 0% 92%;
-    --card-foreground: 60 32% 8%;
-    --popover: 0 0% 92%;
-    --popover-foreground: 60 32% 8%;
-    --primary: 58 29% 83%;
-    --primary-foreground: 60 32% 8%;
-    --secondary: 106 39% 58%;
-    --secondary-foreground: 60 32% 8%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 120 20% 58%;
-    --accent-foreground: 60 32% 8%;
-    --destructive: 0 80% 65%;
-    --destructive-foreground: 60 32% 8%;
-    --border: 0 0% 63.5%;
-    --input: 0 0% 45%;
-    --ring: 120 20% 40%;
-    --radius: 0.5rem;
-    --sidebar-background: 84 14% 93%;
-    --sidebar-foreground: 83 32% 8%;
-    --sidebar-primary: 120 17% 64%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 120 20% 40%;
-  }
- 
-  .dark {
-    --background: 0 0% 8%;
-    --foreground: 60 32% 92%;
-    --card: 0 0% 8%;
-    --card-foreground: 60 32% 92%;
-    --popover: 0 0% 8%;
-    --popover-foreground: 60 32% 92%;
-    --primary: 80 9% 14%;
-    --primary-foreground: 60 32% 92%;
-    --secondary: 106 30% 64%;
-    --secondary-foreground: 0 0% 8%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 120 20% 58%;
-    --accent-foreground: 0 0% 8%;
-    --destructive: 0 72% 55%;
-    --destructive-foreground: 60 20% 5%;
-    --border: 0 0% 32.5%;
-    --input: 0 0% 55%;
-    --ring: 120 20% 60%;
-    --sidebar-background: 80 7% 8%;
-    --sidebar-foreground: 60 32% 92%;
-    --sidebar-primary: 120 17% 64%;
-    --sidebar-primary-foreground: 0 0% 8%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 120 20% 60%;
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.5rem;
+  --border: hsl(0 0% 63.5%);
+  --input: hsl(0 0% 45%);
+  --ring: hsl(120 20% 40%);
+  --background: hsl(0 0% 92%);
+  --foreground: hsl(60 32% 8%);
+
+  --primary: hsl(58 29% 83%);
+  --primary-foreground: hsl(60 32% 8%);
+
+  --secondary: hsl(106 39% 58%);
+  --secondary-foreground: hsl(60 32% 8%);
+
+  --accent: hsl(120 20% 58%);
+  --accent-foreground: hsl(60 32% 8%);
+
+  --destructive: hsl(0 80% 65%);
+  --destructive-foreground: hsl(60 32% 8%);
+
+  --muted: hsl(0 0% 96.1%);
+  --muted-foreground: hsl(0 0% 45.1%);
+
+  --card: hsl(0 0% 92%);
+  --card-foreground: hsl(60 32% 8%);
+  
+  --popover: hsl(0 0% 92%);
+  --popover-foreground: hsl(60 32% 8%);
+
+  --sidebar-background: hsl(84 14% 93%);
+  --sidebar-foreground: hsl(83 32% 8%);
+  --sidebar-primary: hsl(120 17% 64%);
+  --sidebar-primary-foreground: hsl(0 0% 8%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(120 20% 40%);
+}
+
+.dark {
+  --border: hsl(0 0% 32.5%);
+  --input: hsl(0 0% 55%);
+  --ring: hsl(120 20% 60%);
+  --background: hsl(0 0% 8%);
+  --foreground: hsl(60 32% 92%);
+
+  --primary: hsl(80 9% 14%);
+  --primary-foreground: hsl(60 32% 92%);
+
+  --secondary: hsl(106 30% 64%);
+  --secondary-foreground: hsl(0 0% 8%);
+
+  --accent: hsl(120 20% 58%);
+  --accent-foreground: hsl(0 0% 8%);
+
+  --destructive: hsl(0 72% 55%);
+  --destructive-foreground: hsl(60 20% 5%);
+
+  --muted: hsl(0 0% 14.9%);
+  --muted-foreground: hsl(0 0% 63.9%);
+
+  --card: hsl(0 0% 8%);
+  --card-foreground: hsl(60 32% 92%);
+
+  --popover: hsl(0 0% 8%);
+  --popover-foreground: hsl(60 32% 92%);
+
+  --sidebar-background: hsl(80 7% 8%);
+  --sidebar-foreground: hsl(60 32% 92%);
+  --sidebar-primary: hsl(120 17% 64%);
+  --sidebar-primary-foreground: hsl(0 0% 8%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(120 20% 60%);
+}
+
+@theme inline {
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-heading:
+    var(--font-josefin), ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-body:
+    var(--font-geologica), ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin-slow 6s linear infinite;
+
+  @keyframes spin-slow {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
 
-@layer utilities {
-  /* LAYOUT WRAPPERS */
-  .root-wrapper {
-    @apply py-5 px-2 sm:px-6;
-  }
-  .page-wrapper {
-    @apply mb-8 mt-6 mx-2 lg:mx-4;
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
   }
 
-  /* HEADING DECORATOR */
-  .heading-decorator {
-    @apply relative w-fit;
+  @media (width >= 1400px) {
+    max-width: 1400px;
   }
+}
 
-  .heading-decorator::before {
+@utility root-wrapper {
+  @apply py-5 px-2 sm:px-6;
+}
+
+@utility page-wrapper {
+  @apply mb-8 mt-6 mx-2 lg:mx-4;
+}
+
+@utility heading-decorator {
+  @apply relative w-fit;
+
+  &::before {
     @apply absolute w-2/3 h-[0.2rem] -top-[0.5rem] sm:-top-[0.65rem] bg-accent rounded-full content-[''];
   }
-  .heading-decorator.subheading::before {
+  &.subheading::before {
     @apply absolute w-4/5 h-[0.085rem] -top-[0.35rem] bg-secondary rounded-full content-[''];
   }
+}
 
-  /* EXPANDABLE (BUTTON) */
-  .expandable > div {
+@utility subheading {
+  &.heading-decorator::before {
+    @apply absolute w-4/5 h-[0.085rem] -top-[0.35rem] bg-secondary rounded-full content-[''];
+  }
+}
+
+@utility expandable {
+  & > div {
     @apply hidden;
   }
 
-  .expandable[data-state="open"] > div,
-  .expandable:hover > div {
+  &[data-state='open'] > div {
     @apply flex items-center justify-center px-1 animate-in slide-in-from-right-1/2 duration-300;
   }
 
-  .expandable[data-state="open"] > div,
-  .expandable:hover.expandable-left > div {
+  &:hover > div {
+    @apply flex items-center justify-center px-1 animate-in slide-in-from-right-1/2 duration-300;
+  }
+
+  &[data-state='open'] > div {
     @apply slide-in-from-left-1/2;
   }
 
-  /* IMAGE WRAPPER */
-  .img-wrapper {
-    @apply relative overflow-hidden flex-none;
+  &:hover.expandable-left > div {
+    @apply slide-in-from-left-1/2;
   }
-  .img-wrapper > img {
+}
+
+@utility expandable-left {
+  &.expandable.expandable-left > div {
+    @apply slide-in-from-left-1/2;
+  }
+}
+
+@utility img-wrapper {
+  @apply relative overflow-hidden flex-none;
+
+  & > img {
     @apply object-cover;
   }
 }

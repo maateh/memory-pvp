@@ -1,7 +1,5 @@
 "use client"
 
-import { forwardRef } from "react"
-
 // types
 import type { ClerkUser } from "@/lib/types/clerk"
 import type { ClientPlayer } from "@repo/schema/player"
@@ -34,7 +32,7 @@ type PlayerSelectButtonProps = {
   avatarProps?: Omit<React.ComponentProps<typeof UserAvatar>, 'user'>
 } & React.ComponentProps<typeof Button>
 
-const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps>(({
+const PlayerSelectButton = ({
   players,
   showUserAvatar = false,
   avatarProps,
@@ -42,7 +40,7 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
   variant = "ghost",
   size = "lg",
   ...props
-}, ref) => {
+}: PlayerSelectButtonProps) => {
   const { user } = useClerk()
   const isMobile = useIsMobile()
 
@@ -52,7 +50,6 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
     <Button className={cn("justify-between", className)}
       variant={variant}
       size={size}
-      ref={ref}
       {...props}
     >
       <div className="flex justify-center items-center gap-x-2">
@@ -107,7 +104,6 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
       </PopoverContent>
     </Popover>
   )
-})
-PlayerSelectButton.displayName = "PlayerSelectButton"
+}
 
 export default PlayerSelectButton

@@ -53,7 +53,7 @@ const MemoryCardWrapper = ({ card, isFlipped, onClick, children }: MemoryCardWra
     >
       {isFlipped && (
         <div className="absolute inset-0 -z-10 rounded-3xl animate-pulse-glow">
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-secondary/45 dark:from-secondary/25 to-secondary/95 dark:to-secondary/70 blur-xl animate-spin-slow" />
+          <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-secondary/45 dark:from-secondary/25 to-secondary/95 dark:to-secondary/70 blur-xl animate-spin-slow" />
         </div>
       )}
 

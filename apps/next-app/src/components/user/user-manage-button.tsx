@@ -1,7 +1,5 @@
 "use client"
 
-import { forwardRef } from "react"
-
 // types
 import type { ClerkUser } from "@/lib/types/clerk"
 
@@ -27,14 +25,14 @@ type UserManageButtonProps = {
   usernameProps?: React.ComponentProps<"span">
 } & React.ComponentProps<typeof Button>
 
-const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
+const UserManageButton = ({
   showSignInIfLoggedOut,
   avatarProps,
   usernameProps,
   className,
   variant = "ghost",
   ...props
-}, ref) => {
+}: UserManageButtonProps) => {
   const { user } = useClerk()
   const isMobile = useIsMobile()
 
@@ -42,7 +40,6 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
     <Button className={cn("flex items-center justify-center gap-x-1.5 border border-border/20 rounded-2xl bg-accent/15 hover:bg-accent/20 dark:bg-accent/5 dark:hover:bg-accent/10", {
       "bg-destructive/25 hover:bg-destructive/30 dark:bg-destructive/20 dark:hover:bg-destructive/25": !user
     }, className)}
-      ref={ref}
       {...props}
     >
       <UserAvatar
@@ -77,8 +74,7 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
       {button}
     </UserManagePopover>
   )
-})
-UserManageButton.displayName = "UserManageButton"
+}
 
 const UserManageButtonSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (
   <Skeleton className={cn("h-10 w-full bg-border/50 rounded-xl", className)}

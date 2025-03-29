@@ -31,7 +31,7 @@ type RoomState = {
 type RoomStateHandler = {
   setState: (
     partial: RoomStore | Partial<RoomStore> | ((state: RoomStore) => RoomStore | Partial<RoomStore>),
-    replace?: boolean | undefined
+    replace?: false | undefined
   ) => void
 }
 

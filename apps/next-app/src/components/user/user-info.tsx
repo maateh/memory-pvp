@@ -65,7 +65,7 @@ const UserInfo = ({
           <Slash className="inline size-3 shrink-0 mx-1 text-muted-foreground -rotate-[35deg]" />
 
           <span className={cn("cursor-pointer break-all", {
-            "blur-sm hover:blur-none transition": hideInfo && !copied
+            "blur-xs hover:blur-none transition": hideInfo && !copied
           })}
             onClick={() => handleCopy(info)}
           >

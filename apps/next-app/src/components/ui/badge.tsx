@@ -1,12 +1,13 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-
+import type { VariantProps } from "class-variance-authority"
 import type { LucideIcon, LucideProps } from "lucide-react"
+
+import * as React from "react"
+import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/util"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors shadow-sm focus:shadow-md dark:shadow-md dark:focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors shadow-xs focus:shadow-md dark:shadow-md dark:focus:shadow-lg focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
@@ -24,32 +25,35 @@ const badgeVariants = cva(
   }
 )
 
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+const Badge = ({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof badgeVariants>) => (
+  <div className={cn(badgeVariants({ variant }), className)}
+    data-slot="badge"
+    {...props}
+  />
+)
 
-function Badge({ className, variant, ...props }: BadgeProps) {
-  return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
-  )
-}
-
-export interface BadgeWithIconProps extends BadgeProps {
+const BadgeWithIcon = ({
+  Icon,
+  iconProps,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof Badge> & {
   Icon: LucideIcon
   iconProps?: LucideProps
-}
+}) => (
+  <Badge className={cn("gap-x-2", className)} {...props}>
+    <Icon {...iconProps}
+      className={cn("size-4 shrink-0", iconProps?.className)}
+      strokeWidth={iconProps?.strokeWidth || 1.75}
+    />
 
-function BadgeWithIcon({ Icon, iconProps, className, children, ...props }: BadgeWithIconProps) {
-  return (
-    <Badge className={cn("gap-x-2", className)} {...props}>
-      <Icon {...iconProps}
-        className={cn("size-4 shrink-0", iconProps?.className)}
-        strokeWidth={iconProps?.strokeWidth || 1.75}
-      />
-
-      {children}
-    </Badge>
-  )
-}
+    {children}
+  </Badge>
+)
 
 export { Badge, BadgeWithIcon, badgeVariants }

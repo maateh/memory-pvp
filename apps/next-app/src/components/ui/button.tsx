@@ -1,14 +1,11 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-
-// types
 import type { VariantProps } from "class-variance-authority"
 
-// utils
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority"
+
 import { cn } from "@/lib/util"
 
-// shadcn
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +14,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-transform focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -42,25 +39,22 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonProps = {
-  asChild?: boolean
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>
-} & React.ComponentProps<"button">
-  & VariantProps<typeof buttonVariants>
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
+const Button = ({
   tooltip,
   className,
   variant,
   size,
   asChild = false,
   ...props
-}, ref) => {
+}: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
+  asChild?: boolean
+  tooltip?: string | React.ComponentProps<typeof TooltipContent>
+}) => {
   const Comp = asChild ? Slot : "button"
 
   const button = (
     <Comp className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
+      data-slot="button"
       {...props}
     />
   )
@@ -85,7 +79,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       </Tooltip>
     </TooltipProvider>
   )
-})
-Button.displayName = "Button"
+}
 
 export { Button, buttonVariants }
