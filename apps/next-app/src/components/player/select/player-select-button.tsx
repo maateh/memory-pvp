@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 // types
 import type { ClerkUser } from "@/lib/types/clerk"
 import type { ClientPlayer } from "@repo/schema/player"
@@ -31,20 +32,15 @@ type PlayerSelectButtonProps = {
   avatarProps?: Omit<React.ComponentProps<typeof UserAvatar>, 'user'>
 } & React.ComponentProps<typeof Button>
 
-const PlayerSelectButton = (
-  {
-    ref,
-    players,
-    showUserAvatar = false,
-    avatarProps,
-    className,
-    variant = "ghost",
-    size = "lg",
-    ...props
-  }: PlayerSelectButtonProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+const PlayerSelectButton = ({
+  players,
+  showUserAvatar = false,
+  avatarProps,
+  className,
+  variant = "ghost",
+  size = "lg",
+  ...props
+}: PlayerSelectButtonProps) => {
   const { user } = useClerk()
   const isMobile = useIsMobile()
 
@@ -54,7 +50,6 @@ const PlayerSelectButton = (
     <Button className={cn("justify-between", className)}
       variant={variant}
       size={size}
-      ref={ref}
       {...props}
     >
       <div className="flex justify-center items-center gap-x-2">

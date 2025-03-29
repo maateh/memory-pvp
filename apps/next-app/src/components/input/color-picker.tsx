@@ -12,21 +12,16 @@ type ColorPickerProps = {
   onChange: (value: string) => void
 } & Omit<React.ComponentProps<typeof Button>, 'value' | 'onChange'>
 
-const ColorPicker = (
-  {
-    ref,
-    value,
-    onChange,
-    className,
-    tooltip = "Select color",
-    variant = "ghost",
-    size = "icon",
-    children,
-    ...props
-  }: ColorPickerProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+const ColorPicker = ({
+  value,
+  onChange,
+  className,
+  tooltip = "Select color",
+  variant = "ghost",
+  size = "icon",
+  children,
+  ...props
+}: ColorPickerProps) => {
   return (
     <Popover modal>
       <PopoverTrigger asChild>
@@ -35,7 +30,6 @@ const ColorPicker = (
           variant={variant}
           size={size}
           style={!children ? { backgroundColor: value } : undefined}
-          ref={ref}
           {...props}
         >
           {children}
@@ -51,6 +45,5 @@ const ColorPicker = (
     </Popover>
   )
 }
-ColorPicker.displayName = "ColorPicker"
 
 export default ColorPicker

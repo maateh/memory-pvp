@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import { useTheme } from "next-themes"
 
 // types
@@ -20,20 +21,15 @@ type ThemeToggleProps = {
   iconProps?: LucideProps
 } & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
-const ThemeToggle = (
-  {
-    ref,
-    showTooltip = false,
-    expandable = "none",
-    iconProps,
-    className,
-    variant = "ghost",
-    size = "icon",
-    ...props
-  }: ThemeToggleProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+const ThemeToggle = ({
+  showTooltip = false,
+  expandable = "none",
+  iconProps,
+  className,
+  variant = "ghost",
+  size = "icon",
+  ...props
+}: ThemeToggleProps) => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
@@ -45,7 +41,6 @@ const ThemeToggle = (
       variant={variant}
       size={size}
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      ref={ref}
       {...props}
     >
       <Sun {...iconProps}

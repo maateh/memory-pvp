@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link"
 
 // types
@@ -18,21 +17,16 @@ type WidgetQuickAccessProps = {
   iconProps?: LucideProps
 } & React.ComponentProps<typeof Button>
 
-const WidgetQuickAccess = (
-  {
-    ref,
-    href,
-    iconProps,
-    className,
-    variant = "ghost",
-    size = "icon",
-    children,
-    asChild,
-    ...props
-  }: WidgetQuickAccessProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+const WidgetQuickAccess = ({
+  href,
+  iconProps,
+  className,
+  variant = "ghost",
+  size = "icon",
+  children,
+  asChild,
+  ...props
+}: WidgetQuickAccessProps) => {
   const icon = (
     <ChevronsUpDown {...iconProps}
       className={cn("size-3 sm:size-3.5", iconProps?.className)}
@@ -45,7 +39,6 @@ const WidgetQuickAccess = (
       variant={variant}
       size={size}
       asChild={!!href || asChild}
-      ref={ref}
       {...props}
     >
       {!href ? icon : (
@@ -56,6 +49,5 @@ const WidgetQuickAccess = (
     </Button>
   )
 }
-WidgetQuickAccess.displayName = "WidgetQuickAccess"
 
 export default WidgetQuickAccess

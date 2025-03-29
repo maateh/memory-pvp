@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import { usePathname, useRouter } from "next/navigation"
 
 // types
@@ -20,18 +21,13 @@ type CollectionQuickSetupLinkProps = {
   collectionId: string
 } & React.ComponentProps<typeof Button>
 
-const CollectionQuickSetupLink = (
-  {
-    ref,
-    collectionId,
-    className,
-    variant = "ghost",
-    size = "icon",
-    ...props
-  }: CollectionQuickSetupLinkProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+const CollectionQuickSetupLink = ({
+  collectionId,
+  className,
+  variant = "ghost",
+  size = "icon",
+  ...props
+}: CollectionQuickSetupLinkProps) => {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -66,7 +62,6 @@ const CollectionQuickSetupLink = (
       variant={variant}
       size={size}
       onClick={handleNavigate}
-      ref={ref}
       {...props}
     >
       <ImagePlay className="size-5 sm:size-[1.325rem]"
@@ -75,6 +70,5 @@ const CollectionQuickSetupLink = (
     </Button>
   )
 }
-CollectionQuickSetupLink.displayName = "CollectionQuickSetupLink"
 
 export default CollectionQuickSetupLink
