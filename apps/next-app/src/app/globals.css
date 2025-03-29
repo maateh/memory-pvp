@@ -153,17 +153,6 @@
   }
 }
 
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
-}
-
 @layer base {
   *,
   ::after,
@@ -179,8 +168,20 @@
   }
 }
 
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
 @utility root-wrapper {
-  /* LAYOUT WRAPPERS */
   @apply py-5 px-2 sm:px-6;
 }
 
@@ -189,7 +190,6 @@
 }
 
 @utility heading-decorator {
-  /* HEADING DECORATOR */
   @apply relative w-fit;
 
   &::before {
@@ -207,7 +207,6 @@
 }
 
 @utility expandable {
-  /* EXPANDABLE (BUTTON) */
   & > div {
     @apply hidden;
   }
@@ -230,14 +229,14 @@
 }
 
 @utility expandable-left {
-  & .expandable.expandable-left > div {
+  &.expandable.expandable-left > div {
     @apply slide-in-from-left-1/2;
   }
 }
 
 @utility img-wrapper {
-  /* IMAGE WRAPPER */
   @apply relative overflow-hidden flex-none;
+
   & > img {
     @apply object-cover;
   }
