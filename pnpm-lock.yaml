@@ -168,9 +168,6 @@ importers:
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.17)
       uploadthing:
         specifier: ^7.1.0
         version: 7.5.2(express@4.21.2)(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(tailwindcss@4.0.17)
@@ -205,6 +202,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.17
         version: 4.0.17
+      tw-animate-css:
+        specifier: ^1.2.5
+        version: 1.2.5
 
   apps/socket-api:
     dependencies:
@@ -3434,11 +3434,6 @@ packages:
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
-  tailwindcss-animate@1.0.7:
-    resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
-    peerDependencies:
-      tailwindcss: '>=3.0.0 || insiders'
-
   tailwindcss@4.0.17:
     resolution: {integrity: sha512-OErSiGzRa6rLiOvaipsDZvLMSpsBZ4ysB4f0VKGXUrjw2jfkJRd6kjRKV2+ZmTCNvwtvgdDam5D7w6WXsdLJZw==}
 
@@ -3535,6 +3530,9 @@ packages:
   turbo@2.4.4:
     resolution: {integrity: sha512-N9FDOVaY3yz0YCOhYIgOGYad7+m2ptvinXygw27WPLQvcZDl3+0Sa77KGVlLSiuPDChOUEnTKE9VJwLSi9BPGQ==}
     hasBin: true
+
+  tw-animate-css@1.2.5:
+    resolution: {integrity: sha512-ABzjfgVo+fDbhRREGL4KQZUqqdPgvc5zVrLyeW9/6mVqvaDepXc7EvedA+pYmMnIOsUAQMwcWzNvom26J2qYvQ==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -6974,10 +6972,6 @@ snapshots:
 
   tailwind-merge@2.6.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.17):
-    dependencies:
-      tailwindcss: 4.0.17
-
   tailwindcss@4.0.17: {}
 
   tapable@2.2.1: {}
@@ -7064,6 +7058,8 @@ snapshots:
       turbo-linux-arm64: 2.4.4
       turbo-windows-64: 2.4.4
       turbo-windows-arm64: 2.4.4
+
+  tw-animate-css@1.2.5: {}
 
   type-check@0.4.0:
     dependencies:
