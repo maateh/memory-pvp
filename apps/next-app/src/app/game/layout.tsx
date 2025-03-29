@@ -10,7 +10,7 @@ const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), {
 
 const GameLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen p-1 mx-auto flex flex-col md:p-2 md:max-w-screen-lg lg:max-w-screen-2xl">
+    <div className="min-h-screen p-1 mx-auto flex flex-col md:p-2 md:max-w-(--breakpoint-lg) lg:max-w-(--breakpoint-2xl)">
       <div className="relative flex-1 flex bg-primary border-2 border-border/15 rounded-lg md:rounded-2xl">
         <ThemeToggle className="p-2 bg-accent/30 hover:bg-accent/40 absolute top-3 right-3 sm:top-4 sm:right-4"
           variant="ghost"

@@ -29,8 +29,8 @@ const drawerVariants = cva("border-border/25", {
 const dialogVariants = cva("border-border dark:border-border/40", {
   variants: {
     size: {
-      default: "xl:max-w-screen-lg",
-      sm: "px-4 pb-4 lg:max-w-screen-sm"
+      default: "xl:max-w-(--breakpoint-lg)",
+      sm: "px-4 pb-4 lg:max-w-(--breakpoint-sm)"
     }
   },
   defaultVariants: {

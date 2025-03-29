@@ -22,7 +22,7 @@ const HoverActionOverlay = ({
 
   const childrenElement = (
     <div className={cn("p-4", {
-      "filter blur-sm": isHovered && !disableOverlay
+      "filter blur-xs": isHovered && !disableOverlay
     }, className)} {...props} />
   )
 

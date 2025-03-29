@@ -28,7 +28,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex gap-x-2 cursor-default select-none items-center rounded-lg px-2 py-1.5 text-sm outline-none group focus:bg-muted/85 focus:text-muted-foreground data-[state=open]:bg-muted/85 data-[state=open]:text-muted-foreground",
+      "flex gap-x-2 cursor-default select-none items-center rounded-lg px-2 py-1.5 text-sm outline-hidden group focus:bg-muted/85 focus:text-muted-foreground data-[state=open]:bg-muted/85 data-[state=open]:text-muted-foreground",
       inset && "pl-8",
       className
     )}
@@ -76,7 +76,7 @@ const DropdownMenuContent = React.forwardRef<
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName
 
 const itemVariants = cva(
-  "group relative flex cursor-pointer select-none items-center gap-x-2 rounded-lg px-2 py-1.5 text-sm outline-none transition-colors focus:font-medium data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+  "group relative flex cursor-pointer select-none items-center gap-x-2 rounded-lg px-2 py-1.5 text-sm outline-hidden transition-colors focus:font-medium data-disabled:pointer-events-none data-disabled:opacity-50",
   {
     variants: {
       variant: {

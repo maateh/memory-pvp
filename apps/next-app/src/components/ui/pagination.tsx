@@ -74,7 +74,7 @@ const PaginationLink = ({
 PaginationLink.displayName = "PaginationLink"
 
 const PaginationFirst = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-[disabled=true]:hidden", className)}
+  <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
     aria-label="Go to first page"
     {...props}
   >
@@ -85,7 +85,7 @@ const PaginationFirst = ({ className, ...props }: React.ComponentProps<typeof Pa
 PaginationFirst.displayName = "PaginationFirst"
 
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-[disabled=true]:hidden", className)}
+  <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
     aria-label="Go to previous page"
     {...props}
   >
@@ -96,7 +96,7 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
 PaginationPrevious.displayName = "PaginationPrevious"
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-[disabled=true]:hidden", className)}
+  <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
     aria-label="Go to next page"
     {...props}
   >
@@ -107,7 +107,7 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
 PaginationNext.displayName = "PaginationNext"
 
 const PaginationLast = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-[disabled=true]:hidden", className)}
+  <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
     aria-label="Go to last page"
     {...props}
   >

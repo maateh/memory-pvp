@@ -21,7 +21,7 @@ const RootLayout = async ({ children }: React.PropsWithChildren) => {
             <header className="w-full">
               <Appbar />
 
-              <div className="py-0.5 flex items-center justify-center bg-sidebar border-y border-sidebar-border/10 shadow-sm dark:shadow-lg lg:hidden">
+              <div className="py-0.5 flex items-center justify-center bg-sidebar border-y border-sidebar-border/10 shadow-xs dark:shadow-lg lg:hidden">
                 <AppBreadcrumbs />
               </div>
             </header>

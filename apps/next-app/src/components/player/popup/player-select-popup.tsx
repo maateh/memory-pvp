@@ -37,7 +37,7 @@ const PlayerSelectPopup = ({ renderer, players, ...props }: PlayerSelectPopupPro
         <Separator className="w-5/6 mx-auto mb-3 bg-border/15" />
 
         {renderer === "trigger" && (
-          <PlayerSelectCommand className="max-w-screen-md mx-auto px-4 sm:px-8"
+          <PlayerSelectCommand className="max-w-(--breakpoint-md) mx-auto px-4 sm:px-8"
             listProps={{ className: "w-full max-w-lg mx-auto px-2" }}
             players={players}
           />
@@ -51,7 +51,7 @@ const PlayerSelectPopup = ({ renderer, players, ...props }: PlayerSelectPopupPro
           )}>
             <Await promise={getPlayers()}>
               {(players) => (
-                <PlayerSelectCommand className="max-w-screen-md mx-auto px-4 sm:px-8"
+                <PlayerSelectCommand className="max-w-(--breakpoint-md) mx-auto px-4 sm:px-8"
                   listProps={{ className: "w-full max-w-lg mx-auto px-2" }}
                   players={players}
                 />

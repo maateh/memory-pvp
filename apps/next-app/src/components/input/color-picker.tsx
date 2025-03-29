@@ -39,7 +39,7 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="z-[100]">
+      <PopoverContent className="z-100">
         <HexColorPicker
           color={value}
           onChange={onChange}

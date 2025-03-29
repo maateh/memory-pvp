@@ -14,7 +14,7 @@ const ThemeToggle = dynamic(() => import("@/components/shared/theme-toggle"), {
 const FooterTheme = () => {
   return (
     <SidebarMenuButton className="size-fit" asChild>
-      <ThemeToggle className="bg-sidebar-primary/15 hover:bg-sidebar-primary/20 dark:bg-sidebar-primary/5 dark:hover:bg-sidebar-primary/10 group-data-[collapsible=icon]:!p-2"
+      <ThemeToggle className="bg-sidebar-primary/15 hover:bg-sidebar-primary/20 dark:bg-sidebar-primary/5 dark:hover:bg-sidebar-primary/10 group-data-[collapsible=icon]:p-2!"
         showTooltip
       />
     </SidebarMenuButton>
