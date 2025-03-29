@@ -10,10 +10,15 @@ import { cn } from "@/lib/util"
 import { buttonVariants } from "./button"
 import { VariantProps } from "class-variance-authority"
 
-const ButtonGroup = React.forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => {
+const ButtonGroup = (
+  {
+    ref,
+    className,
+    ...props
+  }: React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> & {
+    ref: React.RefObject<React.ElementRef<typeof RadioGroupPrimitive.Root>>;
+  }
+) => {
   return (
     <RadioGroupPrimitive.Root
       className={cn("flex gap-5", className)}
@@ -21,7 +26,7 @@ const ButtonGroup = React.forwardRef<
       ref={ref}
     />
   );
-});
+};
 ButtonGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
 type ButtonGroupItemProps = {
@@ -30,10 +35,20 @@ type ButtonGroupItemProps = {
 } & React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
   & VariantProps<typeof buttonVariants>
 
-const ButtonGroupItem = React.forwardRef<
-  React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  ButtonGroupItemProps
->(({ className, variant = "ghost", size, children, indicatorProps, iconProps, ...props }, ref) => {
+const ButtonGroupItem = (
+  {
+    ref,
+    className,
+    variant = "ghost",
+    size,
+    children,
+    indicatorProps,
+    iconProps,
+    ...props
+  }: ButtonGroupItemProps & {
+    ref: React.RefObject<React.ElementRef<typeof RadioGroupPrimitive.Item>>;
+  }
+) => {
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
@@ -55,7 +70,7 @@ const ButtonGroupItem = React.forwardRef<
       {children}
     </RadioGroupPrimitive.Item>
   );
-});
+};
 ButtonGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
 
 export { ButtonGroup, ButtonGroupItem };

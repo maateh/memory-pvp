@@ -1,7 +1,4 @@
-"use client"
-
-import { forwardRef } from "react"
-
+"use client";
 // types
 import type { ClerkUser } from "@/lib/types/clerk"
 import type { ClientPlayer } from "@repo/schema/player"
@@ -34,15 +31,20 @@ type PlayerSelectButtonProps = {
   avatarProps?: Omit<React.ComponentProps<typeof UserAvatar>, 'user'>
 } & React.ComponentProps<typeof Button>
 
-const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps>(({
-  players,
-  showUserAvatar = false,
-  avatarProps,
-  className,
-  variant = "ghost",
-  size = "lg",
-  ...props
-}, ref) => {
+const PlayerSelectButton = (
+  {
+    ref,
+    players,
+    showUserAvatar = false,
+    avatarProps,
+    className,
+    variant = "ghost",
+    size = "lg",
+    ...props
+  }: PlayerSelectButtonProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   const { user } = useClerk()
   const isMobile = useIsMobile()
 
@@ -107,7 +109,7 @@ const PlayerSelectButton = forwardRef<HTMLButtonElement, PlayerSelectButtonProps
       </PopoverContent>
     </Popover>
   )
-})
+}
 PlayerSelectButton.displayName = "PlayerSelectButton"
 
 export default PlayerSelectButton

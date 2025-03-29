@@ -1,7 +1,4 @@
-"use client"
-
-import { forwardRef } from "react"
-
+"use client";
 // types
 import type { ClerkUser } from "@/lib/types/clerk"
 
@@ -27,14 +24,19 @@ type UserManageButtonProps = {
   usernameProps?: React.ComponentProps<"span">
 } & React.ComponentProps<typeof Button>
 
-const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
-  showSignInIfLoggedOut,
-  avatarProps,
-  usernameProps,
-  className,
-  variant = "ghost",
-  ...props
-}, ref) => {
+const UserManageButton = (
+  {
+    ref,
+    showSignInIfLoggedOut,
+    avatarProps,
+    usernameProps,
+    className,
+    variant = "ghost",
+    ...props
+  }: UserManageButtonProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   const { user } = useClerk()
   const isMobile = useIsMobile()
 
@@ -77,7 +79,7 @@ const UserManageButton = forwardRef<HTMLButtonElement, UserManageButtonProps>(({
       {button}
     </UserManagePopover>
   )
-})
+}
 UserManageButton.displayName = "UserManageButton"
 
 const UserManageButtonSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (

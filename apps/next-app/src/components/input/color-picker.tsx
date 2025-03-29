@@ -1,5 +1,3 @@
-import { forwardRef } from "react"
-
 import { HexColorPicker } from "react-colorful"
 
 // utils
@@ -14,16 +12,21 @@ type ColorPickerProps = {
   onChange: (value: string) => void
 } & Omit<React.ComponentProps<typeof Button>, 'value' | 'onChange'>
 
-const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
-  value,
-  onChange,
-  className,
-  tooltip = "Select color",
-  variant = "ghost",
-  size = "icon",
-  children,
-  ...props
-}, ref) => {
+const ColorPicker = (
+  {
+    ref,
+    value,
+    onChange,
+    className,
+    tooltip = "Select color",
+    variant = "ghost",
+    size = "icon",
+    children,
+    ...props
+  }: ColorPickerProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   return (
     <Popover modal>
       <PopoverTrigger asChild>
@@ -47,7 +50,7 @@ const ColorPicker = forwardRef<HTMLButtonElement, ColorPickerProps>(({
       </PopoverContent>
     </Popover>
   )
-})
+}
 ColorPicker.displayName = "ColorPicker"
 
 export default ColorPicker

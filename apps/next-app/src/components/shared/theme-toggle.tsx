@@ -1,6 +1,4 @@
-"use client"
-
-import { forwardRef } from "react"
+"use client";
 import { useTheme } from "next-themes"
 
 // types
@@ -22,15 +20,20 @@ type ThemeToggleProps = {
   iconProps?: LucideProps
 } & Omit<React.ComponentProps<typeof Button>, 'onClick'>
 
-const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
-  showTooltip = false,
-  expandable = "none",
-  iconProps,
-  className,
-  variant = "ghost",
-  size = "icon",
-  ...props
-}, ref) => {
+const ThemeToggle = (
+  {
+    ref,
+    showTooltip = false,
+    expandable = "none",
+    iconProps,
+    className,
+    variant = "ghost",
+    size = "icon",
+    ...props
+  }: ThemeToggleProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   const { theme, setTheme } = useTheme() as UseThemeProps
 
   return (
@@ -62,7 +65,7 @@ const ThemeToggle = forwardRef<HTMLButtonElement, ThemeToggleProps>(({
       </div>
     </Button>
   )
-})
+}
 ThemeToggle.displayName = "ThemeToggle"
 
 const ThemeToggleSkeleton = ({ className, ...props }: React.ComponentProps<typeof Skeleton>) => (

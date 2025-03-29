@@ -48,14 +48,19 @@ type ButtonProps = {
 } & React.ComponentProps<"button">
   & VariantProps<typeof buttonVariants>
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
-  tooltip,
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}, ref) => {
+const Button = (
+  {
+    ref,
+    tooltip,
+    className,
+    variant,
+    size,
+    asChild = false,
+    ...props
+  }: ButtonProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   const Comp = asChild ? Slot : "button"
 
   const button = (
@@ -85,7 +90,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
       </Tooltip>
     </TooltipProvider>
   )
-})
+}
 Button.displayName = "Button"
 
 export { Button, buttonVariants }

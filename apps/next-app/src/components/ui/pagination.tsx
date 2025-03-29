@@ -20,24 +20,29 @@ const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
 )
 Pagination.displayName = "Pagination"
 
-const PaginationContent = React.forwardRef<
-  HTMLUListElement,
-  React.ComponentProps<"ul">
->(({ className, ...props }, ref) => (
-  <ul
-    ref={ref}
-    className={cn("flex flex-row items-center gap-1.5", className)}
-    {...props}
-  />
-))
+const PaginationContent = (
+  {
+    ref,
+    className,
+    ...props
+  }: React.ComponentProps<"ul"> & {
+    ref: React.RefObject<HTMLUListElement>;
+  }
+) => (<ul
+  ref={ref}
+  className={cn("flex flex-row items-center gap-1.5", className)}
+  {...props}
+/>)
 PaginationContent.displayName = "PaginationContent"
 
-const PaginationItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentProps<"li">
->(({ ...props }, ref) => (
-  <li ref={ref} {...props} />
-))
+const PaginationItem = (
+  {
+    ref,
+    ...props
+  }: React.ComponentProps<"li"> & {
+    ref: React.RefObject<HTMLLIElement>;
+  }
+) => (<li ref={ref} {...props} />)
 PaginationItem.displayName = "PaginationItem"
 
 type PaginationLinkProps = {

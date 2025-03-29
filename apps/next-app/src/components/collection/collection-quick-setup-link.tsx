@@ -1,6 +1,4 @@
-"use client"
-
-import { forwardRef } from "react"
+"use client";
 import { usePathname, useRouter } from "next/navigation"
 
 // types
@@ -22,16 +20,18 @@ type CollectionQuickSetupLinkProps = {
   collectionId: string
 } & React.ComponentProps<typeof Button>
 
-const CollectionQuickSetupLink = forwardRef<
-  HTMLButtonElement,
-  CollectionQuickSetupLinkProps
->(({
-  collectionId,
-  className,
-  variant = "ghost",
-  size = "icon",
-  ...props
-}, ref) => {
+const CollectionQuickSetupLink = (
+  {
+    ref,
+    collectionId,
+    className,
+    variant = "ghost",
+    size = "icon",
+    ...props
+  }: CollectionQuickSetupLinkProps & {
+    ref: React.RefObject<HTMLButtonElement>;
+  }
+) => {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -74,7 +74,7 @@ const CollectionQuickSetupLink = forwardRef<
       />
     </Button>
   )
-})
+}
 CollectionQuickSetupLink.displayName = "CollectionQuickSetupLink"
 
 export default CollectionQuickSetupLink
