@@ -1,14 +1,11 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-
-// types
 import type { VariantProps } from "class-variance-authority"
 
-// utils
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority"
+
 import { cn } from "@/lib/util"
 
-// shadcn
 import {
   Tooltip,
   TooltipContent,
@@ -42,30 +39,22 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonProps = {
+const Button = ({
+  tooltip,
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
   asChild?: boolean
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
-} & React.ComponentProps<"button">
-  & VariantProps<typeof buttonVariants>
-
-const Button = (
-  {
-    ref,
-    tooltip,
-    className,
-    variant,
-    size,
-    asChild = false,
-    ...props
-  }: ButtonProps & {
-    ref: React.RefObject<HTMLButtonElement>;
-  }
-) => {
+}) => {
   const Comp = asChild ? Slot : "button"
 
   const button = (
     <Comp className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
+      data-slot="button"
       {...props}
     />
   )
@@ -91,6 +80,5 @@ const Button = (
     </TooltipProvider>
   )
 }
-Button.displayName = "Button"
 
 export { Button, buttonVariants }

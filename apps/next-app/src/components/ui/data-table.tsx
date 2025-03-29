@@ -1,7 +1,7 @@
 // types
 import type { z } from "zod"
 import type { LucideProps } from "lucide-react"
-import type { Table as RTable } from "@tanstack/react-table"
+import type { RowData, Table as RTable } from "@tanstack/react-table"
 import type { SortPattern } from "@/lib/types/search"
 
 // react-table
@@ -33,11 +33,9 @@ import {
 // components
 import { SortButton } from "@/components/shared"
 
-type DataTableProps<D> = {
+function DataTable<D extends RowData>({ table, ...props }: React.ComponentProps<typeof Table> & {
   table: RTable<D>
-} & React.ComponentProps<typeof Table>
-
-function DataTable<D>({ table, ...props }: DataTableProps<D>) {
+}) {
   return (
     <Table {...props}>
       <TableHeader>
@@ -84,19 +82,17 @@ function DataTable<D>({ table, ...props }: DataTableProps<D>) {
   )
 }
 
-type DataTableColumnSortingHeaderProps<S extends SortPattern> = {
-  sortSchema: z.ZodSchema<S>
-  header: string
-  sortValueKey: string
-} & React.ComponentProps<"div">
-
 function DataTableColumnSortingHeader<S extends SortPattern>({
   sortSchema,
   header,
   sortValueKey,
   className,
   ...props
-}: DataTableColumnSortingHeaderProps<S>) {
+}: React.ComponentProps<"div"> & {
+  sortSchema: z.ZodSchema<S>
+  header: string
+  sortValueKey: string
+}) {
   return (
     <div className={cn("flex justify-between items-center", className)} {...props}>
       <span className="mt-1">
@@ -112,11 +108,6 @@ function DataTableColumnSortingHeader<S extends SortPattern>({
   )
 }
 
-type DataTableColumnToggleProps<D> = {
-  table: RTable<D>
-  iconProps?: LucideProps
-} & React.ComponentProps<typeof Button>
-
 function DataTableColumnToggle<D>({
   table,
   iconProps,
@@ -124,9 +115,10 @@ function DataTableColumnToggle<D>({
   variant = "ghost",
   size = "icon",
   ...props
-}: DataTableColumnToggleProps<D>) {
-  const { getAllColumns } = table
-
+}: React.ComponentProps<typeof Button> & {
+  table: RTable<D>
+  iconProps?: LucideProps
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -141,7 +133,7 @@ function DataTableColumnToggle<D>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {getAllColumns()
+        {table.getAllColumns()
           .filter((column) => column.getCanHide())
           .map((column) => (
             <DropdownMenuCheckboxItem className="font-light capitalize"

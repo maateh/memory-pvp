@@ -1,65 +1,46 @@
 import * as React from "react"
 import Link from "next/link"
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MoreHorizontal
+} from "lucide-react"
 
-// utils
 import { cn } from "@/lib/util"
-
-// icons
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal } from "lucide-react"
-
-// shadcn
 import { Button } from "@/components/ui/button"
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-  <nav
+  <nav className={cn("mx-auto flex w-full justify-center", className)}
     role="navigation"
     aria-label="pagination"
-    className={cn("mx-auto flex w-full justify-center", className)}
+    data-slot="pagination"
     {...props}
   />
 )
-Pagination.displayName = "Pagination"
 
-const PaginationContent = (
-  {
-    ref,
-    className,
-    ...props
-  }: React.ComponentProps<"ul"> & {
-    ref: React.RefObject<HTMLUListElement>;
-  }
-) => (<ul
-  ref={ref}
-  className={cn("flex flex-row items-center gap-1.5", className)}
-  {...props}
-/>)
-PaginationContent.displayName = "PaginationContent"
+const PaginationContent = ({ className, ...props }: React.ComponentProps<"ul">) => (
+  <ul className={cn("flex flex-row items-center gap-1.5", className)}
+    data-slot="pagination-content"
+    {...props}
+  />
+)
 
-const PaginationItem = (
-  {
-    ref,
-    ...props
-  }: React.ComponentProps<"li"> & {
-    ref: React.RefObject<HTMLLIElement>;
-  }
-) => (<li ref={ref} {...props} />)
-PaginationItem.displayName = "PaginationItem"
-
-type PaginationLinkProps = {
-  isActive?: boolean
-} & Pick<React.ComponentProps<typeof Button>, "className" | "variant" | "size" | "disabled">
-  & React.ComponentProps<typeof Link>
+const PaginationItem = ({ ...props }: React.ComponentProps<"li">) => <li {...props} />
 
 const PaginationLink = ({
   isActive = false,
   className,
   variant = "ghost",
   size = "icon",
+  scroll = false,
   disabled,
   ...props
-}: PaginationLinkProps) => (
-  <Button
-    className={cn("size-10 text-muted-foreground font-normal rounded-xl", {
+}: Pick<React.ComponentProps<typeof Button>, "className" | "variant" | "size" | "disabled"> & React.ComponentProps<typeof Link> & {
+  isActive?: boolean
+}) => (
+  <Button className={cn("size-10 text-muted-foreground font-normal rounded-xl", {
       "text-foreground/90 font-medium border border-border/15": isActive
     }, className)}
     variant={isActive ? "default" : variant}
@@ -71,12 +52,12 @@ const PaginationLink = ({
       aria-current={isActive ? "page" : undefined}
       aria-disabled={disabled}
       tabIndex={disabled ? -1 : undefined}
-      scroll={false}
+      scroll={scroll}
+      data-slot="pagination-link"
       {...props}
     />
   </Button>
 )
-PaginationLink.displayName = "PaginationLink"
 
 const PaginationFirst = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
@@ -87,7 +68,6 @@ const PaginationFirst = ({ className, ...props }: React.ComponentProps<typeof Pa
     <span className="max-md:sr-only">First</span>
   </PaginationLink>
 )
-PaginationFirst.displayName = "PaginationFirst"
 
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
@@ -98,7 +78,6 @@ const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof
     <span>Previous</span>
   </PaginationLink>
 )
-PaginationPrevious.displayName = "PaginationPrevious"
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink className={cn("w-fit px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
@@ -109,7 +88,6 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
     <ChevronRight className="size-4 shrink-0" />
   </PaginationLink>
 )
-PaginationNext.displayName = "PaginationNext"
 
 const PaginationLast = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink className={cn("md:w-fit md:px-4 gap-x-2 border border-border/10 aria-disabled:hidden", className)}
@@ -120,19 +98,17 @@ const PaginationLast = ({ className, ...props }: React.ComponentProps<typeof Pag
     <ChevronsRight className="size-4 shrink-0" />
   </PaginationLink>
 )
-PaginationLast.displayName = "PaginationLast"
 
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<"span">) => (
-  <span
+  <span className={cn("flex size-10 items-center justify-center", className)}
     aria-hidden
-    className={cn("flex size-10 items-center justify-center", className)}
+    data-slot="pagination-ellipsis"
     {...props}
   >
     <MoreHorizontal className="size-4 shrink-0 text-muted-foreground/65" />
     <span className="sr-only">More pages</span>
   </span>
 )
-PaginationEllipsis.displayName = "PaginationEllipsis"
 
 export {
   Pagination,

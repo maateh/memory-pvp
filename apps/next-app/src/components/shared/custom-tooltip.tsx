@@ -1,11 +1,11 @@
-// shadnc
-import { Tooltip, TooltipContent, TooltipContentProps, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TooltipTriggerProps } from "@radix-ui/react-tooltip"
+// shadcn
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 type CustomTooltipProps = {
   tooltip: React.ReactNode
-  tooltipProps?: Omit<TooltipContentProps, 'children'>
-} & TooltipTriggerProps & React.PropsWithChildren
+  tooltipProps?: Omit<React.ComponentProps<typeof TooltipContent>, 'children'>
+  children: React.ReactNode
+} & React.ComponentProps<typeof TooltipTrigger>
 
 const CustomTooltip = ({ tooltip, tooltipProps, ...props }: CustomTooltipProps) => {
   return (
