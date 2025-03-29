@@ -12,8 +12,6 @@ import { ServerError } from "@repo/server/error"
 import { currentPlayerKey } from "@repo/helper/player"
 
 export const roomLeave: SocketEventHandler = (socket) => async (_, response) => {
-  console.log("DEBUG - room:leave -> ", socket.id)
-
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
   try {

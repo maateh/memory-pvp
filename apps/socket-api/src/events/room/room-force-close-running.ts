@@ -15,8 +15,6 @@ import { io } from "@/server"
 import { ServerError } from "@repo/server/error"
 
 export const roomForceCloseRunning: SocketEventHandler = (socket) => async (_, response) => {
-  console.log("DEBUG - room:force_close:running -> ", socket.id)
-
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
   try {

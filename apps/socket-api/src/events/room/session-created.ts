@@ -11,8 +11,6 @@ import { io } from "@/server"
 import { ServerError } from "@repo/server/error"
 
 export const sessionCreated: SocketEventHandler = (socket) => async () => {
-  console.log("session:created ->", socket.id)
-
   const { roomSlug } = socket.ctx.connection
 
   try {

@@ -92,7 +92,6 @@ export const roomLoader: SocketMiddlewareFn = async (socket, next) => {
     socket.ctx = { ...ctx, connection, room }
     next()
   } catch (err) {
-    console.log({err})
     return next(ServerError.asSocketError(err))
   }
 }

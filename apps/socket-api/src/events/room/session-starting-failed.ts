@@ -13,8 +13,6 @@ import { io } from "@/server"
 import { ServerError } from "@repo/server/error"
 
 export const sessionStartingFailed: SocketEventHandler = (socket) => async () => {
-  console.log("DEBUG - session:starting:failed -> ", socket.id)
-
   const { playerId, roomSlug } = socket.ctx.connection
 
   try {

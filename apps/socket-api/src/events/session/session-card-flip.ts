@@ -23,8 +23,6 @@ export const sessionCardFlip: SocketEventHandler<
   SessionCardFlipValidation,
   unknown
 > = (socket) => async (input, response) => {
-  console.log("DEBUG - session:card:flip -> ", socket.id)
-
   const { playerId, roomSlug } = socket.ctx.connection
 
   try {

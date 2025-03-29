@@ -12,8 +12,6 @@ export const roomKick: SocketEventHandler<
   unknown,
   WaitingRoom
 > = (socket) => async (_, response) => {
-  console.log("DEBUG - room:kick -> ", socket.id)
-
   const { playerId, playerTag, roomSlug } = socket.ctx.connection
 
   try {
@@ -49,7 +47,6 @@ export const roomKick: SocketEventHandler<
       data: waitingRoom
     })
   } catch (err) {
-    console.log(err)
     response({
       message: "Failed to kick player.",
       error: ServerError.parser(err)

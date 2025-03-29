@@ -12,8 +12,6 @@ import { offlinePlayerConnection } from "@repo/helper/connection"
 import { currentPlayerKey } from "@repo/helper/player"
 
 export const disconnect: SocketEventHandler = (socket) => async () => {
-  console.info("DEBUG - disconnect -> ", socket.id)
-
   /* Note: Player connection has already been closed in another event handler. */
   if (!socket.ctx.connection) return
 

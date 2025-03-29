@@ -19,8 +19,6 @@ export const roomReady: SocketEventHandler<
   unknown,
   boolean
 > = (socket) => async (_, response) => {
-  console.log("DEBUG - room:ready -> ", socket.id)
-
   const { playerId, roomSlug } = socket.ctx.connection
 
   try {
