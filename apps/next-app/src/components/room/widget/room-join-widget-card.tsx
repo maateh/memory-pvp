@@ -1,6 +1,10 @@
 import { Suspense } from "react"
 import Link from "next/link"
 
+// types
+import type { SessionFormFilter } from "@repo/schema/session"
+import type { Filter } from "@/lib/types/search"
+
 // db
 import { getPlayer } from "@/server/db/query/player-query"
 
@@ -57,7 +61,10 @@ const RoomJoinWidgetCard = () => {
                       size="icon"
                       asChild
                     >
-                      <Link href="/game/setup?mode=PVP">
+                      <Link href={{
+                        pathname: "/game/setup",
+                        query: { format: "PVP" } satisfies Filter<SessionFormFilter>
+                      }}>
                         <CircleFadingPlus className="size-4 sm:size-5 shrink-0"
                           strokeWidth={2.25}
                         />
