@@ -21,8 +21,8 @@ import { DataTableColumnSortingHeader, DataTableColumnToggle } from "@/component
 // components
 import { CustomDate } from "@/components/shared"
 import { PlayerBadge } from "@/components/player"
+import { RoomJoinButton } from "@/components/room/screen"
 import { SessionInfoBadge, SessionBadge } from "@/components/session"
-import { RoomJoinButton } from "@/components/room"
 
 export const columns: ColumnDef<WaitingRoom>[] = [
   {

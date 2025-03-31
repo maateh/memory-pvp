@@ -17,8 +17,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 // components
 import { PlayerBadge } from "@/components/player"
+import { RoomJoinButton } from "@/components/room/screen"
 import { SessionBadge, SessionInfoBadge } from "@/components/session"
-import { RoomJoinButton } from "@/components/room"
 import { CustomDate } from "@/components/shared"
 
 type WaitingRoomCardProps = {
