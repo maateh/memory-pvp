@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 
 // components
 import { Await, RedirectFallback } from "@/components/shared"
-import { ActiveRoom } from "@/components/room"
+import { ActiveRoomCard } from "@/components/room"
 import { WaitingRoomListing, WaitingRoomListingSkeleton } from "@/components/room/listing"
 
 const WaitingRoomsPage = async () => {
@@ -28,7 +28,7 @@ const WaitingRoomsPage = async () => {
               <>
                 {activeRoom && (
                   <>
-                    <ActiveRoom room={activeRoom} />
+                    <ActiveRoomCard room={activeRoom} />
 
                     <Separator className="my-6 bg-border/40" />
                   </>

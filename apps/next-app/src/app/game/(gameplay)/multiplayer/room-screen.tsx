@@ -22,7 +22,7 @@ import {
   RoomLeaveButton,
   RoomReadyButton,
   SessionCloseButton
-} from "@/components/room"
+} from "@/components/room/screen"
 
 // hooks
 import { useCopy } from "@/hooks/use-copy"

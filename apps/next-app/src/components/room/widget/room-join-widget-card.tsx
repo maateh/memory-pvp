@@ -24,7 +24,7 @@ import {
   WidgetSubtitle
 } from "@/components/widget"
 
-const WaitingRoomsWidgetCard = () => {
+const RoomJoinWidgetCard = () => {
   return (
     <WidgetCard
       title="Waiting Rooms"
@@ -111,4 +111,4 @@ const WaitingRoomsWidgetCard = () => {
   )
 }
 
-export default WaitingRoomsWidgetCard
+export default RoomJoinWidgetCard
