@@ -52,7 +52,7 @@ const RoomJoinWidgetCard = () => {
                   <GlowingOverlay className="size-18 sm:size-20"
                     overlayProps={{ className: "opacity-90 dark:opacity-45" }}
                   >
-                    <Button className="z-10 relative size-full flex-col justify-end gap-y-0.5 rounded-full transition-none"
+                    <Button className="z-10 relative size-full mt-1 flex-col gap-y-1 rounded-full transition-none"
                       variant="ghost"
                       size="icon"
                       asChild
@@ -72,7 +72,7 @@ const RoomJoinWidgetCard = () => {
                   <GlowingOverlay className="size-18 sm:size-20"
                     overlayProps={{ className: "bg-destructive opacity-90 dark:opacity-45" }}
                   >
-                    <Button className="z-10 relative size-full flex-col justify-end gap-y-0.5 rounded-full transition-none"
+                    <Button className="z-10 relative size-full mt-1 flex-col gap-y-1 rounded-full transition-none"
                       variant="ghost"
                       size="icon"
                       asChild
