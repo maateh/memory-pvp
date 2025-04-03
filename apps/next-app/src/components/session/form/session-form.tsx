@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { useClerk } from "@clerk/nextjs"
 
 // types
 import type { SessionFormValidation } from "@repo/schema/session-validation"
@@ -43,6 +44,8 @@ type SessionFormProps = {
 }
 
 const SessionForm = ({ search, collection }: SessionFormProps) => {
+  const { user: clerkUser, openSignIn } = useClerk()
+
   const router = useRouter()
   const form = useForm<SessionFormValidation>({
     resolver: zodResolver(sessionFormValidation),
@@ -82,6 +85,14 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
       return
     }
 
+    if (!clerkUser) {
+      const params = new URLSearchParams(search).toString()
+      const fallbackRedirectUrl = `/game/setup?${params}`
+
+      openSignIn({ fallbackRedirectUrl })
+      return
+    }
+
     try {
       if (settings.format === "SOLO") {
         await createSoloSession({ settings, forceStart })
@@ -97,8 +108,9 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
   const format = form.watch("settings.format")
   const collectionId = form.watch("settings.collectionId")
 
-  const submitText = format === "SOLO" ? "Start game"
-    : format === "OFFLINE" ? "Play offline" : "Create room"
+  const submitText = format === "OFFLINE" ? "Play offline"
+    : !clerkUser ? "Sign in first"
+    : format === "SOLO" ? "Start game" : "Create room"
   const SubmitIcon = format === "SOLO" ? SquarePlay
     : format === "OFFLINE" ? WifiOff : CircleFadingPlus
   const submitDisabled = createSoloSessionStatus === "executing"
@@ -144,6 +156,7 @@ const SessionForm = ({ search, collection }: SessionFormProps) => {
         overlayProps={{
           className: cn("bg-accent opacity-90 dark:opacity-80", {
             "bg-muted-foreground opacity-70 dark:opacity-55": format === "OFFLINE",
+            "bg-destructive opacity-70 dark:opacity-55": format !== "OFFLINE" && !clerkUser,
             "opacity-35 dark:opacity-25": submitDisabled
           })
         }}
