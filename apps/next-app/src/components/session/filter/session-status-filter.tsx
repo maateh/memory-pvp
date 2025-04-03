@@ -66,14 +66,14 @@ const SessionStatusFilter = ({ filterKey, filterService = "params" }: SessionSta
       <BreadcrumbList className="sm:gap-y-1 sm:gap-x-1.5">
         <BreadcrumbItemGroup className="flex-wrap">
           {options.status.map((status) => (
-            <BreadcrumbButton className={cn("capitalize", {
+            <BreadcrumbButton className={cn("block first-letter:uppercase", {
               "text-secondary-foreground bg-secondary/75 hover:bg-secondary/85": filter.status === status
             })}
               onClick={() => handleSelectStatus(status)}
               selected={filter.status === status}
               key={status}
             >
-              {status.toLowerCase()}
+              {status.replaceAll("_", " ").toLowerCase()}
             </BreadcrumbButton>
           ))}
         </BreadcrumbItemGroup>
