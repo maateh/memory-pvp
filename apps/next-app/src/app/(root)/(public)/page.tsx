@@ -29,7 +29,7 @@ const HomePage = async () => {
       </h1>
 
       <p className="max-w-2xl mt-2 text-muted-foreground text-sm sm:text-base font-light tracking-wide">
-        Low effort homepage. Please forgive me for that. But I tell you something; instead of looking at this simple page, just go and memorize memory cards and score some valuable points.
+        Low effort homepage. Please forgive me for that. But I tell you something; instead of looking this simple page, go and memorize memory cards and earn some valuable points.
       </p>
 
       <Separator className="w-1/3 mx-auto mt-4 mb-8 bg-border/10 rounded-full" />
